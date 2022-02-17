@@ -2,8 +2,9 @@
 #define _WINDOW_
 
 #include <iostream>
-#define GLEW_STATIC
-#include <GL/glew.h>
+//#define GLEW_STATIC
+//#include <GL/glew.h>
+#include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
 struct GLFWwindow;
@@ -17,6 +18,8 @@ public:
 	bool isShouldClose();
 	void swapBuffers();
 	void setShouldClose(bool);
+	void showWindow();
+
 private:
 	GLFWwindow* m_window = nullptr;
 	char* m_window_name;

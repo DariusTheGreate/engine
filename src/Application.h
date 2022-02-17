@@ -10,11 +10,13 @@ public:
 	virtual ~Application();
 public:
 	void Run();
+	void setCurrWindow(int i);
 protected:
 private:
 	bool m_running;
 	char* m_app_name;
 	int m_windows_count;
+	int m_curr_window;
 	Window** m_windows = nullptr;
 };
 
