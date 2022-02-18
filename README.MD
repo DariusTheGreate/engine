@@ -5,5 +5,5 @@
 - Shader
 - InputManager
 
-![output example] (/assets/example.png "output example")
+![output example](assets/example.png "output example")
 
