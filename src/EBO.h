@@ -14,8 +14,10 @@ public:
 	void bind(unsigned int* indices) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices_Len, indices, GL_STATIC_DRAW);
+	}
 
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
+	~EBO() {
+		glDeleteBuffers(1, &ebo_id);
 	}
 
 private:

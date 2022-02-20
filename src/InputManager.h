@@ -9,13 +9,13 @@ class InputManager
 {
 public:
 	//InputManager(std::function<void()> pi, std::function<void()> fbc) : processInput(pi), frame_buffer_callback(fbc) {}
-	static void processInput(GLFWwindow* window)
+	static void standart_input_processor(GLFWwindow* window)
 	{
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
 	}
 
-	static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+	static void framebuffer_size_standart_callback(GLFWwindow* window, int width, int height)
 	{
 		glViewport(0, 0, width, height);
 	}

@@ -14,12 +14,19 @@ public:
 
 	void bind(float* v) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-		glBufferData(GL_ARRAY_BUFFER, ArrayLen * sizeof(float), v, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, ArrayLen, v, GL_STATIC_DRAW);
 	}
 
 	void setVAO(int index, int size, GLenum type, GLboolean normalized, size_t stride, const void* ptr) {
 		glVertexAttribPointer(index, size, type, normalized, stride, ptr);
-		glEnableVertexAttribArray(0);
+	}
+	
+	void vboEnableVertexAttribArray(unsigned int id) {
+		glEnableVertexAttribArray(id);
+	}
+
+	~VBO(){
+		 glDeleteBuffers(1, &vbo_id);
 	}
 
 private:

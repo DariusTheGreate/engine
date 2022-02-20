@@ -1530,7 +1530,7 @@ PFNGLGETTRANSFORMFEEDBACKI_VPROC glad_glGetTransformFeedbacki_v = NULL;
 PFNGLGETTRANSFORMFEEDBACKIVPROC glad_glGetTransformFeedbackiv = NULL;
 PFNGLGETUNIFORMBLOCKINDEXPROC glad_glGetUniformBlockIndex = NULL;
 PFNGLGETUNIFORMINDICESPROC glad_glGetUniformIndices = NULL;
-PFNGLGETUNIFORMLOCATIONPROC glad_glGetUniformLocation = NULL;
+PFNGLGETUNIFORMLOCATIONPROC shader = NULL;
 PFNGLGETUNIFORMSUBROUTINEUIVPROC glad_glGetUniformSubroutineuiv = NULL;
 PFNGLGETUNIFORMDVPROC glad_glGetUniformdv = NULL;
 PFNGLGETUNIFORMFVPROC glad_glGetUniformfv = NULL;
@@ -5748,7 +5748,7 @@ static void load_GL_VERSION_2_0(GLADloadproc load) {
 	glad_glGetShaderiv = (PFNGLGETSHADERIVPROC)load("glGetShaderiv");
 	glad_glGetShaderInfoLog = (PFNGLGETSHADERINFOLOGPROC)load("glGetShaderInfoLog");
 	glad_glGetShaderSource = (PFNGLGETSHADERSOURCEPROC)load("glGetShaderSource");
-	glad_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
+	shader = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
 	glad_glGetUniformfv = (PFNGLGETUNIFORMFVPROC)load("glGetUniformfv");
 	glad_glGetUniformiv = (PFNGLGETUNIFORMIVPROC)load("glGetUniformiv");
 	glad_glGetVertexAttribdv = (PFNGLGETVERTEXATTRIBDVPROC)load("glGetVertexAttribdv");
@@ -11412,7 +11412,7 @@ static void load_GL_ES_VERSION_2_0(GLADloadproc load) {
 	glad_glGetTexParameteriv = (PFNGLGETTEXPARAMETERIVPROC)load("glGetTexParameteriv");
 	glad_glGetUniformfv = (PFNGLGETUNIFORMFVPROC)load("glGetUniformfv");
 	glad_glGetUniformiv = (PFNGLGETUNIFORMIVPROC)load("glGetUniformiv");
-	glad_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
+	shader = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
 	glad_glGetVertexAttribfv = (PFNGLGETVERTEXATTRIBFVPROC)load("glGetVertexAttribfv");
 	glad_glGetVertexAttribiv = (PFNGLGETVERTEXATTRIBIVPROC)load("glGetVertexAttribiv");
 	glad_glGetVertexAttribPointerv = (PFNGLGETVERTEXATTRIBPOINTERVPROC)load("glGetVertexAttribPointerv");
@@ -12632,7 +12632,7 @@ static void load_GL_SC_VERSION_2_0(GLADloadproc load) {
 	glad_glGetTexParameteriv = (PFNGLGETTEXPARAMETERIVPROC)load("glGetTexParameteriv");
 	glad_glGetnUniformfv = (PFNGLGETNUNIFORMFVPROC)load("glGetnUniformfv");
 	glad_glGetnUniformiv = (PFNGLGETNUNIFORMIVPROC)load("glGetnUniformiv");
-	glad_glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
+	shader = (PFNGLGETUNIFORMLOCATIONPROC)load("glGetUniformLocation");
 	glad_glGetVertexAttribfv = (PFNGLGETVERTEXATTRIBFVPROC)load("glGetVertexAttribfv");
 	glad_glGetVertexAttribiv = (PFNGLGETVERTEXATTRIBIVPROC)load("glGetVertexAttribiv");
 	glad_glGetVertexAttribPointerv = (PFNGLGETVERTEXATTRIBPOINTERVPROC)load("glGetVertexAttribPointerv");

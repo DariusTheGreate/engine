@@ -8,11 +8,14 @@ class VAO
 public:
 	VAO() {
 		glGenVertexArrays(1, &vao_id);
-		glBindVertexArray(vao_id);
 	}
 
 	void bind() {
 		glBindVertexArray(vao_id);
+	}
+
+	~VAO() {
+		glDeleteVertexArrays(1, &vao_id);
 	}
 
 private:

@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\own\c++\libs\glfw-3.3.6.bin.WIN32\include\;C:\own\c++\libs\glad\include\;$(IncludePath)</IncludePath>
+    <IncludePath>C:\own\c++\libs\glfw-3.3.6.bin.WIN32\include\;C:\own\c++\libs\glad\include\;C:\own\c++\gamedev\engine\Engine\libs\include\stb;C:\own\c++\libs\glm;$(IncludePath)</IncludePath>
     <LibraryPath>C:\own\c++\libs\glfw-3.3.6.bin.WIN32\lib-vc2019;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -146,18 +146,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\libs\glad\src\glad.c" />
+    <ClCompile Include="src\EBO.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\stb_image.cpp" />
     <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\VBO.cpp" />
+    <ClCompile Include="src\VAO.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\EBO.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\VBO.h" />
+    <ClInclude Include="src\VAO.h" />
+    <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
