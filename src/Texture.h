@@ -8,6 +8,7 @@ class Texture
 {
 public:
 	Texture(const std::string& path, unsigned int internalFormat, unsigned int format) {
+		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrChannels;
 		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 		glGenTextures(1, &texture);

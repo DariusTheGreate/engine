@@ -13,13 +13,24 @@ class Window
 {
 public:
 	Window(char* windowName, int w, int h);
-	virtual ~Window();
+	~Window();
 public:
 	bool isShouldClose();
 	void swapBuffers();
 	void setShouldClose(bool);
 	void showWindow();
 
+	GLFWwindow* getWindow() {
+		return m_window;//not cool
+	}
+
+	int getWidth() {
+		return width;
+	}
+
+	int getHeight() {
+		return height;
+	}
 private:
 	GLFWwindow* m_window = nullptr;
 	char* m_window_name;

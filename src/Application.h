@@ -6,18 +6,13 @@ class Window;
 class Application
 {
 public:
-	Application(char* name, int windowCount, int windowW, int windowH);
-	virtual ~Application();
+	Application(char* name, int windowW, int windowH);
+	~Application();
 public:
 	void Run();
-	void setCurrWindow(int i);
-protected:
 private:
-	bool m_running;
 	char* m_app_name;
-	int m_windows_count;
-	int m_curr_window;
-	Window** m_windows = nullptr;
+	Window* m_window;
 };
 
-#endif // ! _APP_
+#endif
