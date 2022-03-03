@@ -43,7 +43,7 @@ public:
         cameraFront = glm::normalize(front);
     }
 
-    void scroll_callback(double xoffset, double yoffset)
+    void setScroolState(double xoffset, double yoffset)
     {
         fov -= (float)yoffset;
         if (fov < 1.0f)

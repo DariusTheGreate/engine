@@ -33,24 +33,42 @@ public:
             glfwSetWindowShouldClose(window, true);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            GameState::cam.moveCameraForward();
+            GameState::ks.set_w(true);
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            GameState::cam.moveCameraBackward();
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            GameState::cam.moveCameraLeft();
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            GameState::cam.moveCameraRight();
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            GameState::ks.set_s(true);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            GameState::ks.set_a(true);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            GameState::ks.set_d(true);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
+            GameState::ks.set_w(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
+            GameState::ks.set_s(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) {
+            GameState::ks.set_a(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
+            GameState::ks.set_d(false);
+        }
     }
 
     static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     {
-        GameState::cam.setCameraLook(xposIn, yposIn);
+        GameState::ms.set_x((int)xposIn);
+        GameState::ms.set_y((int)yposIn);
     }
 
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        GameState::cam.scroll_callback(xoffset, yoffset);
+        GameState::ms.set_offset_x((int)xoffset);
+        GameState::ms.set_offset_y((int)(yoffset));
     }
 };
 

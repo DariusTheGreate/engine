@@ -43,11 +43,12 @@ public:
 		glCompileShader(shader);
 
 		int success;
-		char infoLog[512];
+		const int err_len = 2048;
+		char infoLog[err_len];
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shader, 512, NULL, infoLog);
+			glGetShaderInfoLog(shader, err_len, NULL, infoLog);
 			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 		}
 	}
@@ -58,10 +59,11 @@ public:
 		glAttachShader(shaderProgram, other.shader);
 		glLinkProgram(shaderProgram);
 		int success;
-		char infoLog[512];
+		const int err_len = 2048;
+		char infoLog[err_len];
 		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 		if (!success) {
-			glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+			glGetProgramInfoLog(shaderProgram, err_len, NULL, infoLog);
 			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 		}
 		
