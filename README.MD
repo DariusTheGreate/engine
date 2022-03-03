@@ -12,6 +12,9 @@
 ### Current result:
 
 ![output example](assets/example_gif.gif "output example")
+#### Some lighting:
+![output example](assets/light_example_gif.gif "output example")
+
 
 ### Some goals:
 - [X] 3D Camera
