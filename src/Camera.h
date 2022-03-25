@@ -68,12 +68,16 @@ public:
         cameraPos -= cameraFront * cameraSpeed;
     }
 
-    glm::mat4 getPerspective(int w, int h) {
+    glm::mat4 getPerspective(int w, int h) const {
         return glm::perspective(glm::radians(fov), (float)w / (float)h, 0.1f, 100.0f);
     }
 
-    glm::mat4 getBasicLook() {
+    glm::mat4 getBasicLook() const {
         return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    }
+
+    glm::vec3 getCameraPos() const {
+        return cameraPos;
     }
 
 private:

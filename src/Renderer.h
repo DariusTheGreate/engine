@@ -72,6 +72,7 @@ public:
             sv.setMat4("model", model, curr_shader_program);
             sv.setVec3("lightColor", lightColor, curr_shader_program);
             sv.setVec3("objectColor", objectColor, curr_shader_program);
+            sv.setVec3("lightPos", GameState::cam.getCameraPos(), curr_shader_program);
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
@@ -105,7 +106,7 @@ public:
         float timeValue = glfwGetTime();
         float greenValue = sin(timeValue) / 2.0f + 1.0f;
 
-        lightColor = glm::vec3(greenValue, greenValue, greenValue);
+        //lightColor = glm::vec3(0, greenValue, greenValue);
     }
 	
 private:

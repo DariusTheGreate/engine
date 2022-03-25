@@ -1,0 +1,7 @@
+Debug/
+Engine.sln
+Engine.vcxproj
+Engine.vcxproj.filters
+Engine.vcxproj.user
+libs/
+.vs/
