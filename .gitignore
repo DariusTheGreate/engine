@@ -5,3 +5,5 @@ Engine.vcxproj.filters
 Engine.vcxproj.user
 libs/
 .vs/
+src/glad.c
+src/stb_image.cpp
