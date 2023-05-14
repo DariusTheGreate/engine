@@ -44,7 +44,15 @@ public:
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             GameState::ks.set_d(true);
         }
-
+        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+            GameState::ks.set_0(true);
+        }
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+            GameState::ks.set_1(true);
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+            GameState::ks.set_2(true);
+        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
             GameState::ks.set_w(false);
         }
@@ -56,6 +64,15 @@ public:
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
             GameState::ks.set_d(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
+            GameState::ks.set_0(false);
+        }
+		if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
+            GameState::ks.set_1(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
+            GameState::ks.set_2(false);
         }
     }
 

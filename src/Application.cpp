@@ -20,3 +20,4 @@ void Application::Run()
         rendol.render(m_window);
     }
 }
+

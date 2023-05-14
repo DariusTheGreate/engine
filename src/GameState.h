@@ -13,4 +13,3 @@ public:
 	static KeyboardState ks;
 };
 
-

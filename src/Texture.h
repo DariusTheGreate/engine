@@ -7,7 +7,11 @@
 class Texture
 {
 public:
-	Texture(const std::string& path, unsigned int internalFormat, unsigned int format) {
+	Texture() = default;
+
+	Texture(unsigned int texture_in, const std::string& path_in, const std::string& type_in) : texture(texture_in), path(path_in), type(type_in) {}
+
+	Texture(const std::string& path_in, unsigned int internalFormat, unsigned int format) : path(path_in) {
 		stbi_set_flip_vertically_on_load(true);
 		int width, height, nrChannels;
 		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
@@ -24,8 +28,23 @@ public:
 		glActiveTexture(unit);
 		glBindTexture(target, texture);
 	}
+	
+	unsigned int get_texture() {
+		return texture;
+	}
+
+	std::string get_type() {
+		return type;
+	}
+	
+	std::string get_path() {
+		return path;
+	}
+
 private:
 	unsigned int texture;
+	std::string type;
+	std::string path;
 
 };
 

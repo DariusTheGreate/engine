@@ -62,3 +62,4 @@ void Window::showWindow()
 void Window::swapBuffers() {
 	glfwSwapBuffers(m_window);
 }
+

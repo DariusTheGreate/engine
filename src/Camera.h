@@ -43,6 +43,11 @@ public:
         cameraFront = glm::normalize(front);
     }
 
+    void setCameraPos(glm::vec3 pos_in)
+    {
+        cameraPos = pos_in;
+    }
+
     void setScroolState(double xoffset, double yoffset)
     {
         fov -= (float)yoffset;
@@ -75,9 +80,17 @@ public:
     glm::mat4 getBasicLook() const {
         return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     }
-
+    
     glm::vec3 getCameraPos() const {
         return cameraPos;
+    }
+
+    void setUnexpectedUpdate(bool in) {
+        unexpectedUpdate = in;
+    }
+
+    bool getUnexpectedUpdate() {
+        return unexpectedUpdate;
     }
 
 private:
@@ -94,4 +107,7 @@ private:
 
 	float cameraSpeed = 0.1f;
 	float lastFrame = 0.0f;
+
+    bool unexpectedUpdate = false;
 };
+

@@ -6,7 +6,7 @@
 class VAO
 {
 public:
-	VAO() {
+	void init() {
 		glGenVertexArrays(1, &vao_id);
 	}
 
@@ -15,10 +15,10 @@ public:
 	}
 
 	~VAO() {
-		glDeleteVertexArrays(1, &vao_id);
+		//glDeleteVertexArrays(1, &vao_id);
 	}
 
 private:
-	unsigned int vao_id;
+	unsigned int vao_id = 0;
 };
 

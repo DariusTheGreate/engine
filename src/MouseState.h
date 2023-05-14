@@ -15,7 +15,8 @@ public:
 		set_left(left_press);
 		set_right(right_press);
 	}
-
+	
+	//TODO(darius) make macro for this shit
 	void set_x(int x) {
 		curr_x.store(x);
 	}
@@ -73,3 +74,4 @@ private:
 	std::atomic_bool left_pressed;
 	std::atomic_bool right_pressed;
 };
+
