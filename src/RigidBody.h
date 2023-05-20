@@ -184,8 +184,8 @@ public:
 		return ez;
 	}
 
-private:
 	Transform& tr;
+
 	//euler angles;
 	float ex = 0;
 	float ey = 0;
@@ -195,17 +195,17 @@ private:
 	//vec3 position;
 	//quat orientation;
 
-	glm::vec3 velocity;
-	glm::vec3 angular_velocity;
+	glm::vec3 velocity = { 0,0,0 };
+	glm::vec3 angular_velocity = {0,0,0};
 
 	//mat4 inertia_tensor;
 	glm::mat4 inertia_tensor = glm::mat4(1.0);
 	glm::vec3 force_accumulator = { 0,0,0 };
 	glm::vec3 torque_accumulator = { 0,0,0 };
 
-	float restitution;
-	float friction;
+	float restitution = 0; 
+	float friction = 0;
 
-	bool is_static;
+	bool is_static = true;
 };
 

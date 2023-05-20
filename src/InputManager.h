@@ -53,6 +53,9 @@ public:
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
             GameState::ks.set_2(true);
         }
+        if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
+            GameState::ks.set_9(true);
+        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
             GameState::ks.set_w(false);
         }
@@ -73,6 +76,9 @@ public:
         }
         if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
             GameState::ks.set_2(false);
+        }
+        if (glfwGetKey(window, GLFW_KEY_9) == GLFW_RELEASE) {
+            GameState::ks.set_9(false);
         }
     }
 

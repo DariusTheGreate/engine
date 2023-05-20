@@ -27,11 +27,7 @@ struct Vertex {
 
 class Mesh {
 public:
-    std::vector<Vertex>       vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture>      textures;
-    VAO vao;
-
+    Mesh(){}
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
     {
@@ -41,13 +37,14 @@ public:
 
         setupMesh();
     }
-
+    
     void Draw(Shader& shader)
     {
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
         unsigned int normalNr = 1;
         unsigned int heightNr = 1;
+
         for (unsigned int i = 0; i < textures.size(); i++)
         {
             glActiveTexture(GL_TEXTURE0 + i); 
@@ -67,14 +64,33 @@ public:
         }
 
         vao.bind();
-        glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+        
+        //TODO(darius) perfomance issues?
+        if(draw_as_arrays)
+			glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        else
+			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
         glBindVertexArray(0);
 
         glActiveTexture(GL_TEXTURE0);
     }
-private:
+
+    void setDrawMode(bool mode)
+    {
+        draw_as_arrays = mode;
+    }
+
+protected:
+    //TODO(darius) memoryManage that
+    std::vector<Vertex>       vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture>      textures;
+
+    VAO vao;
     VBO vbo;
     EBO ebo;
+    bool draw_as_arrays = false;
 
     void setupMesh()
     {

@@ -14,6 +14,8 @@ public:
 	using ShaderType = int;
 	using ShaderProgram = unsigned int;
 
+	Shader(){}
+
 	Shader(const std::string& filepath, ShaderType type) {
 		std::ifstream shaderFile;
 		shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);

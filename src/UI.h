@@ -39,6 +39,7 @@ public:
 
         //testWindow();
         sceneWindow(scn);
+        showConsoleWindow();
 
         ImGui::Render();
     }
@@ -97,8 +98,6 @@ public:
             ImGuiTreeNodeFlags_Leaf
         };
 	    
-
-
         if (ImGui::Begin("Game Ojects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::LabelText("", "Game Objects in Scene.");
@@ -115,9 +114,24 @@ public:
                     ImGuiTreeNodeFlags node_flags = objects[i]->get_child_objects().empty() ? leaf_flags : parent_flags;
 
                     if (ImGui::TreeNodeEx(objects[i]->get_name().c_str(), parent_flags)) {
+						objects[i]->traverseObjects([&](Object* op) {
+
+							ImGuiTreeNodeFlags node_flags = op->get_child_objects().empty() ? leaf_flags : parent_flags;
+
+							if (ImGui::TreeNodeEx(op->get_name().c_str(), parent_flags)) {
+								bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
+								if (ImGui::IsItemClicked()) {
+									std::cout << "clicked " << (size_t)op << "\n";
+									show_object_window = true;
+                                    item_cicked = op;//objects[i];
+								}
+
+								ImGui::TreePop();
+							}
+						});
+
 						bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
                         if (ImGui::IsItemClicked()) {
-                            std::cout << "clicked\n";
                             show_object_window = true;
                             item_cicked = objects[i];
                         }
@@ -143,32 +157,24 @@ public:
     {
         if (!obj) {
             std::cout << "no obj provided. exsiting showObjectWindow(obj)\n";
+            return;
         }
 
 		ImGui::Begin("Object window", &show_object_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
 		ImGui::Text(obj -> get_name().c_str());
-		//if (ImGui::Button("Close Me"))
-        //    show_object_window = false;
 
 		if (ImGui::Button("Show Object") && obj) {
 			std::cout << obj->get_pos().x;
 			auto v = obj->get_pos();
 			v += glm::vec3{0, 0, 10};
 			GameState::cam.setCameraPos(v);
-			GameState::cam.setCameraLook(v.x,v.y);
 			GameState::cam.setUnexpectedUpdate(true);
 		}
         
 		ImGui::Checkbox("Hide Object", &obj -> object_hidden_state());
-
 		ImGui::Checkbox("Static Object", &obj -> getRigidBody().get_is_static_ref()); 
 
-        glm::vec3& objposref = obj->get_pos_ref();
-
-		//ImGui::SliderFloat("float", &objposref.x, 0.0f, 1.0f); 
-		//ImGui::SliderFloat("float", &objposref.y, 0.0f, 1.0f); 
-		//ImGui::SliderFloat("float", &objposref.z, 0.0f, 1.0f); 
-        //ImGui::DragFloat("DragFloat (0 -> 1)", &objposref.x, 0.005f, 0.0f, 1.0f, "%.3f", ImGuiColorEditFlags_NoAlpha);
+        glm::vec3& objposref = obj->getTransform().position;//obj->get_pos_ref();
         ImGui::Text("position vector %f, %f, %f", objposref.x, objposref.y, objposref.z);
         ImGui::DragFloat("position x", &objposref.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position y", &objposref.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
@@ -190,6 +196,16 @@ public:
         obj->getRigidBody().set_quat_from_angles();
 
 		ImGui::End();
+    }
+
+    void showConsoleWindow()
+    {
+        ImGui::Begin("console");
+
+        ImGui::TextWrapped("%s", GameState::debug_msg.c_str());
+        //ImGui::TextWrapped("%s", GameState::debug_msg.c_str());
+
+        ImGui::End();
     }
 
 private:

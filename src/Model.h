@@ -32,45 +32,68 @@ class Model
 public:
     static std::unordered_set<std::string_view> textures_set;
     static std::vector<Texture> textures_loaded;
+
     std::vector<Mesh>    meshes;
+
     Shader shader;
     std::function<void(Transform)> shaderRoutine;
-    std::string directory;
-    bool gammaCorrection;
-    bool rotate;
 
-    Model(std::string_view path, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in, bool gamma = false, bool rotate_in = false) 
-        : shader(shader_in), shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in)
+    std::string directory;
+    std::string path;
+
+    bool gammaCorrection = false;
+    bool rotate = false;
+    bool constructSubobjects = false;
+
+    Model(std::string_view path_in, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false) 
+        : shader(shader_in), shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
     {
-        loadModel(path);
+		loadModel();
     }
 
+    Model(Mesh& mesh_in, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
+    {
+        meshes.push_back(mesh_in);
+    }
+
+    Model(std::string path_in, bool rotate_in = false) : path(path_in), rotate(rotate_in)
+    {
+    }
+    
+    //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
     void Draw(Transform tr)
     {
         shaderRoutine(tr);
-        for (unsigned int i = 0; i < meshes.size(); i++)
+        for (unsigned int i = 0; i < meshes.size(); i++) {
+            //if(i == 3)
+			//	shaderRoutine(Transform{(tr.position + glm::vec3{3,3,3}), tr.scale});
             meshes[i].Draw(shader);
+        }
     }
 
-private:
-
-    void loadModel(std::string_view path)
+    std::vector<Mesh> loadModel()
     {
+        if (path == "")
+            return {};
         Assimp::Importer importer;
         std::cout << "Read started...\n";
         const aiScene* scene = importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
         std::cout << "Read ended!\n";
+
         if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
         {
             std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-            return;
+            return {};
         }
        
         directory = path.substr(0, path.find_last_of('/'));
 
         processNode(scene->mRootNode, scene);
+
+        return meshes;
     }
 
+private:
     //TODO(darius) Bench it for recursive BFS, i think recursive is faster
     //TODO(darius) Dont use std::queue
     void processNode(aiNode* root, const aiScene* scene)
@@ -82,6 +105,7 @@ private:
         while (!path.empty()) {
             auto* curr = path.front();
             path.pop();
+
             for (unsigned int i = 0; i < curr->mNumMeshes; ++i)
             {
                 aiMesh* mesh = scene->mMeshes[curr->mMeshes[i]];

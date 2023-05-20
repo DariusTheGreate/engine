@@ -4,7 +4,9 @@
 #include <bitset>
 
 #include <Object.h>
+#include <GameState.h>
 
+//TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
 constexpr size_t CHUNK_SZ = sizeof(Object) * CHUNK_COUNT;
 constexpr size_t POOL_SZ = 3;
@@ -102,10 +104,29 @@ public:
 	}
 
 	template<typename... Args>
-	void createObject(Args&&... args) {
+	Object* createObject(Args&&... args) {
 		Object* pt = mem_man.construct(std::forward<Args>(args)...);
 		sceneObjects.push_back(pt);
 		pt->startScript();
+
+		return pt;
+	}
+
+	Object* createEntity(Object* po, std::string path, Shader sv, std::function<void(Transform)> shaderRoutine_in, bool rotateTextures = false) {
+		Model m = Model(path, rotateTextures);
+		auto meshes = m.loadModel();
+
+		std::vector<Object*> subobjects;
+		for (int i = 0; i < meshes.size(); ++i) {
+			Object* pt = mem_man.construct(po, meshes[i], sv, shaderRoutine_in);
+			std::cout << "created pt\n";
+			subobjects.push_back(pt);
+		}
+		
+		po->set_child_objects(std::move(subobjects));
+
+		po->startScript();
+		return po;
 	}
 
 	void destroyObject(size_t id)
@@ -155,6 +176,7 @@ private:
 	void update_objects() {
 		// O(n^2) 
 		// sort by tag + traverse in O(Nlg + N)?
+		// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;
@@ -162,9 +184,22 @@ private:
 			for (int j = 0; j < sceneObjects.size(); ++j) {
 				if (!sceneObjects[j] || sceneObjects[i] -> getColider().get_tag() != sceneObjects[j] -> getColider().get_tag() || i == j)
 					continue;
-				bool colst =  sceneObjects[i] -> getColider().check_collision(sceneObjects[j] -> getColider());
-				//if (colst)
-				//	std::cout << "collision\n";
+
+				auto colst = sceneObjects[i]->getColider().gjk(&sceneObjects[i]->getColider(), &sceneObjects[j]->getColider());
+				//auto colst =  sceneObjects[i] -> getColider().check_collision((sceneObjects[j] -> getColider()));
+
+				if (colst) {
+					GameState::debug_msg.append("collision " + sceneObjects[i]->get_name() + "|" + sceneObjects[j]->get_name() + "\n");
+					//std::cout << "collision " << sceneObjects[i]->get_name() << "|" << sceneObjects[j]->get_name() << "\n";
+					//auto apos = sceneObjects[i]->getColider().get_pos();
+					//auto bpos = sceneObjects[j]->getColider().get_pos();
+					//std::cout << "positions: " << apos.x << apos.y << apos.z << "|" << bpos.x << bpos.y << bpos.z << "\n";
+					//std::cout << sceneObjects[i]->getColider().maxX() << "|" << sceneObjects[i]->getColider().minX() << "\n";
+					//std::cout << sceneObjects[i]->getColider().maxY() << "|" << sceneObjects[i]->getColider().minY() << "\n";
+					//std::cout << sceneObjects[i]->getColider().maxZ() << "|" << sceneObjects[i]->getColider().minZ() << "\n";
+					col = colst;
+					break;
+				}
 			}
 			if(!col)
 				sceneObjects[i] -> updatePos();
@@ -180,8 +215,7 @@ private:
 	}
 
 private:
-
-	std::vector<Object*> sceneObjects;
+	std::vector<Object*> sceneObjects;//more common way is to store indexes
 	SceneMemoryManager<> mem_man;
 };
 

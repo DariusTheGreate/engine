@@ -33,6 +33,10 @@ public:
 		pressed_2.store(state);
 	}
 
+	void set_9(bool state) {
+		pressed_9.store(state);
+	}
+
 	bool get_w() {
 		return w_pressed.load();
 	}
@@ -61,6 +65,10 @@ public:
 		return pressed_2.load();
 	}
 
+	bool get_9() {
+		return pressed_9.load();
+	}
+
 private:
 	std::atomic_bool w_pressed;
 	std::atomic_bool a_pressed;
@@ -69,5 +77,6 @@ private:
 	std::atomic_bool pressed_0;
 	std::atomic_bool pressed_1;
 	std::atomic_bool pressed_2;
+	std::atomic_bool pressed_9;
 };
 
