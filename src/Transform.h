@@ -14,7 +14,14 @@ struct Transform
 	glm::mat4 get_quatmat()
 	{
 		glm::mat4 RotationMatrix = glm::toMat4(q);
+		//RotationMatrix[3] = glm::vec4{ position.x,position.y,position.z,0  };
 		return RotationMatrix;
+	}
+
+	void set_from_quatmat(glm::mat4 m)
+	{
+		q = m;
+		position = m[3];
 	}
 
 	std::vector<double> get_matrix()

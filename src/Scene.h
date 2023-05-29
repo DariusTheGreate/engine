@@ -13,6 +13,7 @@ constexpr size_t POOL_SZ = 3;
 
 //kinda cool, but kinda cringe..The Idea is to make object destory fast, and collect garbage after
 //TODO(darius) test this shit 
+//TODO(darius) objects replication(if there is object copy - just point to same location)
 template<typename T = Object, size_t CHUNK_COUNT = CHUNK_COUNT, size_t CHUNK_SZ = CHUNK_SZ, size_t POOL_SZ = POOL_SZ>
 class SceneMemoryManager
 {
@@ -162,7 +163,7 @@ private:
 
 	void init_memory() 
 	{
-		mem_man.allocate(100);
+		mem_man.allocate(1000);
 	}
 
 	void start_scripts()
@@ -180,29 +181,45 @@ private:
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;
-			bool col = false;
+
+			//important(improvement from 40fps to 60) in oreder to update position of objects that not collide
+			if(!sceneObjects[i]->getColider().is_active()){
+				sceneObjects[i]->updatePos();
+				continue;
+			}
+
+			bool is_there_collision = false;
 			for (int j = 0; j < sceneObjects.size(); ++j) {
-				if (!sceneObjects[j] || sceneObjects[i] -> getColider().get_tag() != sceneObjects[j] -> getColider().get_tag() || i == j)
-					continue;
+				if (
+					i == j 
+					|| sceneObjects[i] -> getColider().get_tag() != sceneObjects[j] -> getColider().get_tag() 
+					|| !sceneObjects[j]->getColider().is_active()
+				)	continue;
 
-				auto colst = sceneObjects[i]->getColider().gjk(&sceneObjects[i]->getColider(), &sceneObjects[j]->getColider());
-				//auto colst =  sceneObjects[i] -> getColider().check_collision((sceneObjects[j] -> getColider()));
+				auto collision_state = sceneObjects[i]->getColider().gjk(&sceneObjects[i]->getColider(), &sceneObjects[j]->getColider());
 
-				if (colst) {
-					GameState::debug_msg.append("collision " + sceneObjects[i]->get_name() + "|" + sceneObjects[j]->get_name() + "\n");
-					//std::cout << "collision " << sceneObjects[i]->get_name() << "|" << sceneObjects[j]->get_name() << "\n";
-					//auto apos = sceneObjects[i]->getColider().get_pos();
-					//auto bpos = sceneObjects[j]->getColider().get_pos();
-					//std::cout << "positions: " << apos.x << apos.y << apos.z << "|" << bpos.x << bpos.y << bpos.z << "\n";
-					//std::cout << sceneObjects[i]->getColider().maxX() << "|" << sceneObjects[i]->getColider().minX() << "\n";
-					//std::cout << sceneObjects[i]->getColider().maxY() << "|" << sceneObjects[i]->getColider().minY() << "\n";
-					//std::cout << sceneObjects[i]->getColider().maxZ() << "|" << sceneObjects[i]->getColider().minZ() << "\n";
-					col = colst;
+				if (collision_state) {
+					is_there_collision = collision_state;
+					glm::vec3 epa = sceneObjects[i]->getColider().get_epa();
+					GameState::msg("epa value - " + std::to_string(epa.x) + std::to_string(epa.y) + std::to_string(epa.z));
+
+					if(epa.x == epa.x && epa.y == epa.y && epa.z == epa.z){
+						std::cout << sceneObjects[i]->get_name() << "\n";
+						sceneObjects[i]->getRigidBody().tr.position += glm::vec3{epa.x/4, epa.y/4, epa.z/4};
+					}
+
+					//sceneObjects[i]->getRigidBody().apply_impulse(-sceneObjects[i]->getRigidBody().force_accumulator);
+					//sceneObjects[i]->updatePos();
+					//sceneObjects[j]->getRigidBody().apply_impulse(-sceneObjects[j]->getRigidBody().force_accumulator);
+					//sceneObjects[j]->updatePos();
+
+					//break if we resolve only one collision at a time
 					break;
 				}
 			}
-			if(!col)
-				sceneObjects[i] -> updatePos();
+			if (!is_there_collision) {
+				sceneObjects[i]->updatePos();
+			}
 		}
 	}
 
@@ -218,4 +235,3 @@ private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
 	SceneMemoryManager<> mem_man;
 };
-

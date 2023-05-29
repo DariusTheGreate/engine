@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <vector>
 
 class Camera {
 public:
@@ -93,7 +94,38 @@ public:
         return unexpectedUpdate;
     }
 
+    std::vector<float> getRawView() const
+    {
+        std::vector<float> m16 =
+        { 1.f, 0.f, 0.f, 0.f,
+            0.f, 1.f, 0.f, 0.f,
+            0.f, 0.f, 1.f, 0.f,
+            0.f, 0.f, 0.f, 1.f };
+
+        return m16;
+    }
+
+    glm::mat4 getView() const
+    {
+        glm::mat4 viewRotation = { 1.f, 0.f, 0.f, 0.f,
+            0.f, 1.f, 0.f, 0.f,
+            0.f, 0.f, 1.f, 0.f,
+            0.f, 0.f, 0.f, 1.f };
+
+        return viewRotation;
+    }
+
+    glm::vec4 getRawViewPort(int w, int h)
+    {
+        glm::vec4 viewport(0.0f, 0.0f, w, h);
+        return viewport;
+    }
+
+public:
+    bool cursor_hidden = true;
+
 private:
+    //TODO(darius) make it transform
 	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -109,5 +141,6 @@ private:
 	float lastFrame = 0.0f;
 
     bool unexpectedUpdate = false;
+
 };
 

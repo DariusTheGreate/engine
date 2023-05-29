@@ -84,6 +84,17 @@ public:
 
     static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     {
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
+            GameState::ks.set_mouse_right_button(true);
+        }
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
+            GameState::ks.set_mouse_right_button(false);
+        }
+
+        //if (!GameState::cam.cursor_hidden)
+        //    return;
+
         GameState::ms.set_x((int)xposIn);
         GameState::ms.set_y((int)yposIn);
     }
@@ -94,4 +105,3 @@ public:
         GameState::ms.set_offset_y((int)(yoffset));
     }
 };
-

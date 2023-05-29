@@ -2,24 +2,25 @@
 
 ### Current result():
 
-![output example](assets/example_gif.gif "output example")
-
+![output example](assets/example_gif1.gif "output example")
 ![output example](assets/model_example_gif.gif "output example")
+![output example](assets/example_gif2.gif "output example")
+![output example](assets/example_gif3.gif "output example")
 
-### Current milestones:
+### Current milestones():
 - [X] Scenes
 - [X] Objects (can contain subobjects)
 - [X] Model loading
 - [X] Simple Renderer(duh, openGL only)
 - [X] Some editor UI 
 - [X] Ability to write scripts in C++
-- [X] RigidBody's using Quaternions and Inertia Matrix
-- [X] Cimple COllision Detection
+- [X] RigidBody's using Quaternions and Inertia Tensor 
+- [X] Cimple COllision Detection(GJK + EPA, but im working on it)
 
-### Future milestones:
-- [ ] Finish RigidBody's 
-- [ ] Check for collision detection using Gregory algorithm or SAT
-- [ ] More editor abilities
-- [ ] Debug rendering
-- [ ] Service stuf(debug thread + console; benchmarking, testing, etc)
-- [ ] Review (PVS, sanitizers, etc)
+### Future milestones():
+- [ ] Pytorch scripts integration
+- [ ] Own physics Engine (soft bodies, cloth, hair, navier-stocks stuff)
+- [ ] Better tools
+- [ ] Better scripting workflow
+- [ ] Better UI
+- [ ] Better renderer

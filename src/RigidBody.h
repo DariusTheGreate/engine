@@ -14,18 +14,8 @@ class RigidBody
 public:
 	RigidBody(float mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(mass_in), is_static(is_st)
 	{
-		//mass = mass_in;
-		float angleX = 90;
 		//startPosition = tr.position;
 		tr.q = construct_quat({0,0,0}, 0);
-		/*glm::vec3 RotationAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-		float x = RotationAxis.x * sin(angleX/ 2);
-		float y = RotationAxis.y * sin(angleX/ 2);
-		float z = RotationAxis.z * sin(angleX/ 2);
-		float w = cos(angleX/ 2);
-		tr.q = glm::quat(x,y,z,w);
-		*/
-		
 	}
 
 	void update(float dt)
@@ -33,14 +23,12 @@ public:
 		if (is_static)
 			return;
 	
-		//vec3 angular_accelerationtmp = inertia_tensor.inverse() * torque_accumulator;
 		glm::vec3 acceleration = force_accumulator;
 		acceleration /= mass;
 		velocity = velocity + dt * acceleration;
 		velocity *= 0.98;
 		tr.position = tr.position + dt * velocity;
 
-		
 		glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
 		glm::vec3 angular_acceleration = { angular_accelerationtmp.x, angular_accelerationtmp.y, angular_accelerationtmp.z};
 		angular_velocity = angular_velocity + dt * angular_acceleration;
@@ -54,29 +42,20 @@ public:
 			return;
 		}
 
+		if(glm::length(velocity) < 0.2)
+			return;
+
 		velocity = velocity + impulse;
 	}
+
+	void apply_epa(glm::vec3 epa)
+	{
+		if (is_static)
+			return;
+		apply_impulse({0,1,0});
+		//tr.position += epa;
+	}
 	
-	void set_pos(glm::vec3 pos) 
-	{
-		(tr.position) = pos;
-	}
-
-	glm::vec3 get_pos() const 
-	{
-		return tr.position;
-	}
-
-	void add_force(glm::vec3 force_in)
-	{
-		force_accumulator += glm::vec3(force_in.x, force_in.y, force_in.z);
-	}
-
-	void add_angular_force(glm::vec3 force_in)
-	{
-		angular_velocity = force_in;//vec3{ force_in.x, force_in.y, force_in.z };
-	}
-
 	void apply_rotational_impulse(const glm::vec3& point, const glm::vec3& impulse) {
 		if (is_static) {
 			return;
@@ -85,6 +64,18 @@ public:
 		glm::vec3 torque = glm::cross((point - tr.position), impulse);
 		glm::vec3 angular_acceleration = glm::inverse(inertia_tensor) * glm::vec4(torque.x, torque.y, torque.z, 0);
 		angular_velocity = angular_velocity + angular_acceleration;
+	}
+
+	void add_force(glm::vec3 force_in)
+	{
+		if(glm::length(force_in) < 0.2)
+			return;
+		force_accumulator += glm::vec3(force_in.x, force_in.y, force_in.z);
+	}
+
+	void add_angular_force(glm::vec3 force_in)
+	{
+		angular_velocity = force_in;//vec3{ force_in.x, force_in.y, force_in.z };
 	}
 
 	glm::mat4 create_box_inertia_tensor(float mass, const glm::vec3& half_lengths) {
@@ -103,7 +94,16 @@ public:
 	{
 		tr.position = {0,0,0};
 		velocity = { 0,0,0 };
-		//force = { 0,0,0 };
+	}
+
+	void set_pos(glm::vec3 pos) 
+	{
+		(tr.position) = pos;
+	}
+
+	glm::vec3 get_pos() const 
+	{
+		return tr.position;
 	}
 
 	glm::mat4 get_quatmat()
@@ -208,4 +208,3 @@ public:
 
 	bool is_static = true;
 };
-

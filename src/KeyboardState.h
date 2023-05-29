@@ -20,6 +20,11 @@ public:
 	void set_d(bool state) {
 		d_pressed.store(state);
 	}
+
+	void set_mouse_right_button(bool state)
+	{
+		mouse_right_button_pressed.store(state);
+	}
 	
 	void set_0(bool state) {
 		pressed_0.store(state);
@@ -69,6 +74,11 @@ public:
 		return pressed_9.load();
 	}
 
+	bool get_mouse_right_button()
+	{
+		return mouse_right_button_pressed.load();
+	}
+
 private:
 	std::atomic_bool w_pressed;
 	std::atomic_bool a_pressed;
@@ -78,5 +88,5 @@ private:
 	std::atomic_bool pressed_1;
 	std::atomic_bool pressed_2;
 	std::atomic_bool pressed_9;
+	std::atomic_bool mouse_right_button_pressed;
 };
-

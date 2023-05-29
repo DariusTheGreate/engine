@@ -6,3 +6,4 @@ vendor/
 lib/
 meshes/
 textures/
+*.obj
