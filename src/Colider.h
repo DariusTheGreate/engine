@@ -15,7 +15,7 @@ class Simplex;
 class Colider
 {
 public:
-    Colider(glm::vec3 size_in, Transform& tr_in, RigidBody& rb_in, int tag_in = 0, bool active_in = true);
+    Colider(glm::vec3 size_in, Transform& tr_in, int tag_in = 0, bool active_in = true);
 
     glm::vec3 get_position() const;
 
@@ -54,6 +54,9 @@ public:
 	float maxZ() const;
 
 	glm::vec3 get_render_start_point() const;
+	glm::vec3& get_render_shift();
+
+	glm::vec3 colider_position() const;
 
 	glm::vec3 get_epa() 
 	{
@@ -69,10 +72,10 @@ public:
 private:
     //not cool, dangle may happen
 	Transform& tr;
-    RigidBody& body;
 	glm::vec3 size = {1,1,1};
 	bool active = true;
 	int tag = 0;
+	glm::vec3 shift = {0,0,0};
 
 	glm::vec3 epa_collision_value = { 0,0,0 };
 };

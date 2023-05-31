@@ -40,7 +40,7 @@ public:
 
 		name = name_in;
 
-		colider.emplace(collider_in, tr, rbody.value());
+		colider.emplace(collider_in, tr);
 	}
 
 	Object(Object* parentObject, Mesh& m, Shader model_shader, std::function<void(Transform) > shaderRoutine_in)
@@ -57,7 +57,7 @@ public:
 
 		name = parentObject->get_name() + " child " + std::to_string((size_t)this);
 
-		colider.emplace(parentObject -> getColider().get_size(), tr, rbody.value(), 0, false);
+		colider.emplace(parentObject -> getColider().get_size(), tr, 0, false);
 
 		script = parentObject->getScript();
 		script -> setParentObject(this);
@@ -73,7 +73,7 @@ public:
 		rbody.value().get_is_static_ref() = true;
 		model = Model(m, model_shader, shaderRoutine_in);
 		script = Script(scn, this, std::move(st), std::move(upd));
-		colider.emplace(collider_in, tr, rbody.value(), 0, active);
+		colider.emplace(collider_in, tr, 0, active);
 	}
 
 	void setupScript(std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd)
@@ -91,13 +91,14 @@ public:
 
 	void updateScript() 
 	{
-		script.value().updateScript();
+		if(script.has_value())
+			script.value().updateScript();
 		//traverseObjects([](Object* op){op->updateScript()});
 	}
 
 	void renderObject() 
 	{
-		if(!object_hidden)
+		if(!object_hidden && model.has_value())
 			model.value().Draw(Transform(getTransform()));
 
 		//DANGER! -> traverseObjects([](Object* op) {op->renderObject(); });
@@ -129,8 +130,8 @@ public:
 	//TODO(darius) fuck you, incapsulation
 	glm::vec3& get_pos_ref()
 	{
-		if (parent.has_value())
-			return parent.value()->get_pos_ref();
+		if (parent)
+			return parent->get_pos_ref();
 		return getTransform().position;
 	}
 
@@ -144,6 +145,16 @@ public:
 		return rbody.value();
 	}
 
+	void frozeObject()
+	{
+		rbody.value().is_static = true;
+	}
+
+	void unfrozeObject()
+	{
+		rbody.value().is_static = false;
+	}
+
 	Transform& getTransform()
 	{
 		//if (parent.has_value())
@@ -153,8 +164,8 @@ public:
 
 	Transform& getParentTransform()
 	{
-		if (parent.has_value())
-			return parent.value()->getTransform(); 
+		if (parent)
+			return parent->getTransform(); 
 		return tr;
 	}	
 	
@@ -235,13 +246,18 @@ public:
 	}
 
 private:
+	//TODO(darius) make it Component system
+	// Obvious solution is to make use of virtual functions and stuff. And just store vector<Cmponent>
+	// and then just call component[i] -> virtualUpdateFunction(). But Virtual function dispatch for each scne update frame its to much work.
+	// So the idea is to allow object only one component of each type. And if you want more - just add subobject with this component.
+	// NOTE(darius) dont forget optional cant contain reference or heap object
 	std::optional<Model> model;
 	std::optional<RigidBody> rbody;
 	std::optional<Colider> colider;
 	std::optional<Script> script;
-	std::optional<Object*> parent;
 	std::optional<PointLight> pointLight;
 
+	Object* parent = nullptr;
 	Transform tr;
 	std::string name;
 	std::vector<Object*> child_opbjects = {};

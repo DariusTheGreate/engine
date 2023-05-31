@@ -19,6 +19,7 @@ public:
 	{
 		debug_msg.clear();
 	}
+	
 public:
 	static Camera cam;
 	static MouseState ms;

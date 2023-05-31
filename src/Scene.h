@@ -118,6 +118,7 @@ public:
 		auto meshes = m.loadModel();
 
 		std::vector<Object*> subobjects;
+		subobjects.reserve(meshes.size());
 		for (int i = 0; i < meshes.size(); ++i) {
 			Object* pt = mem_man.construct(po, meshes[i], sv, shaderRoutine_in);
 			std::cout << "created pt\n";
@@ -137,15 +138,8 @@ public:
 		sceneObjects[id] = nullptr;
 	}
 
-	void renderScene() {
-		for (auto& obj : sceneObjects)
-		{
-			if (!obj)
-				continue;
-			obj -> renderObject();
-		}
+	void updateScene() {
 		update_objects();
-		update_scripts();
 	}
 
 
@@ -175,18 +169,25 @@ private:
 	}
 	
 	void update_objects() {
-		// O(n^2) 
-		// sort by tag + traverse in O(Nlg + N)?
-		// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
+		//now its traverse of objects and update. Its much better to do it in one traverse
+		//TODO(darius) make it separated threads for collisions and rendering and update?
+
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;
 
-			//important(improvement from 40fps to 60) in oreder to update position of objects that not collide
+			sceneObjects[i] -> renderObject();
+			sceneObjects[i] -> updateScript();
+
 			if(!sceneObjects[i]->getColider().is_active()){
 				sceneObjects[i]->updatePos();
 				continue;
 			}
+
+			//COLLISIONS RESOLUTION:
+			// O(n^2) 
+			// sort by tag + traverse in O(Nlg + N)?
+			// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
 
 			bool is_there_collision = false;
 			for (int j = 0; j < sceneObjects.size(); ++j) {
@@ -201,19 +202,11 @@ private:
 				if (collision_state) {
 					is_there_collision = collision_state;
 					glm::vec3 epa = sceneObjects[i]->getColider().get_epa();
-					GameState::msg("epa value - " + std::to_string(epa.x) + std::to_string(epa.y) + std::to_string(epa.z));
 
 					if(epa.x == epa.x && epa.y == epa.y && epa.z == epa.z){
-						std::cout << sceneObjects[i]->get_name() << "\n";
 						sceneObjects[i]->getRigidBody().tr.position += glm::vec3{epa.x/4, epa.y/4, epa.z/4};
 					}
 
-					//sceneObjects[i]->getRigidBody().apply_impulse(-sceneObjects[i]->getRigidBody().force_accumulator);
-					//sceneObjects[i]->updatePos();
-					//sceneObjects[j]->getRigidBody().apply_impulse(-sceneObjects[j]->getRigidBody().force_accumulator);
-					//sceneObjects[j]->updatePos();
-
-					//break if we resolve only one collision at a time
 					break;
 				}
 			}

@@ -85,7 +85,6 @@ public:
 							if (ImGui::TreeNodeEx(op->get_name().c_str(), parent_flags)) {
 								bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
 								if (ImGui::IsItemClicked()) {
-									std::cout << "clicked " << (size_t)op << "\n";
 									show_object_window = true;
                                     item_cicked = op;
                                     objTr = item_cicked->getRigidBody().tr.get_quatmat();
@@ -138,7 +137,6 @@ public:
 		ImGui::Text(obj -> get_name().c_str());
 
 		if (ImGui::Button("Show Object") && obj) {
-			std::cout << obj->get_pos().x;
 			auto v = obj->get_pos();
 			v += glm::vec3{0, 0, 10};
 			GameState::cam.setCameraPos(v);
@@ -150,33 +148,55 @@ public:
 
         //TODO(darius) so objTr updates quaternion at the end of UI work, cause of Guizmos. This is ugly
 
-        ImGui::Text("position vector %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
-        ImGui::DragFloat("position x", &objTr[3][0], 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("position y", &objTr[3][1], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("position z", &objTr[3][2], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+        if (ImGui::CollapsingHeader("Position component")){
+            ImGui::Text("position vector %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
+            ImGui::DragFloat("position x", &objTr[3][0], 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position y", &objTr[3][1], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position z", &objTr[3][2], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+        }
 
-        auto q = glm::quat(objTr);
-        ImGui::Text("orientation quaternion %f, %f, %f, %f", q.x, q.y, q.z, q.w);
+        //auto q = glm::quat(objTr);
+        //ImGui::Text("orientation quaternion %f, %f, %f, %f", q.x, q.y, q.z, q.w);
 
-		ImGui::Text("orientation angles %f, %f, %f", &obj->getRigidBody().get_ex(), &obj->getRigidBody().get_ey(), &obj->getRigidBody().get_ez());
+		/*ImGui::Text("orientation angles %f, %f, %f", &obj->getRigidBody().get_ex(), &obj->getRigidBody().get_ey(), &obj->getRigidBody().get_ez());
         ImGui::DragFloat("orientation x", &obj->getRigidBody().get_ex(), 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("orientation y", &obj->getRigidBody().get_ey(), 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("orientation z", &obj->getRigidBody().get_ez(), 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         obj->getRigidBody().set_quat_from_angles();
+        */
 
-        glm::vec3& coliderSizeRef = obj->getColider().get_size_ref();
-        ImGui::Text("colider size %f, %f, %f", coliderSizeRef.x, coliderSizeRef.y, coliderSizeRef.z);
-        ImGui::DragFloat("size x", &coliderSizeRef.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("size y", &coliderSizeRef.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("size z", &coliderSizeRef.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+        //TODO(darius) custumize bar - https://stackoverflow.com/questions/73626738/in-imgui-is-it-possible-to-change-the-icon-at-the-left-of-a-collapsing-header
+        if (ImGui::CollapsingHeader("Colider component")){
+            glm::vec3& coliderSizeRef = obj->getColider().get_size_ref();
+            ImGui::Text("colider size %f, %f, %f", coliderSizeRef.x, coliderSizeRef.y, coliderSizeRef.z);
+            ImGui::DragFloat("size x", &coliderSizeRef.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("size y", &coliderSizeRef.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("size z", &coliderSizeRef.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
 
-        std::vector<ScriptProperty<glm::vec3>>& vecProperties = obj->getScript().getVectorProperties();
+            glm::vec3& coliderPoint = obj->getColider().get_render_shift();
+            ImGui::Text("colider point%f, %f, %f", coliderPoint.x, coliderPoint.y, coliderPoint.z);
+            ImGui::DragFloat("point x", &coliderPoint.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("point y", &coliderPoint.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("point z", &coliderPoint.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+        }
 
-        for(int i = 0; i < vecProperties.size(); ++i){
-            ImGui::Text((vecProperties[i].name).c_str());
-            ImGui::DragFloat((vecProperties[i].name + " x").c_str(), &vecProperties[i]->x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat((vecProperties[i].name + " y").c_str(), &vecProperties[i]->y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat((vecProperties[i].name + " z").c_str(), &vecProperties[i]->z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        if (ImGui::CollapsingHeader("Script component")){
+            std::vector<ScriptProperty<glm::vec3>>& vecProperties = obj->getScript().getVectorProperties();
+
+            for(int i = 0; i < vecProperties.size(); ++i){
+                if (ImGui::CollapsingHeader((vecProperties[i].name).c_str())){
+                    ImGui::DragFloat((vecProperties[i].name + " x").c_str(), &vecProperties[i]->x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                    ImGui::DragFloat((vecProperties[i].name + " y").c_str(), &vecProperties[i]->y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                    ImGui::DragFloat((vecProperties[i].name + " z").c_str(), &vecProperties[i]->z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                }
+            }
+
+            std::vector<ScriptProperty<float>>& floatProperties = obj->getScript().getFloatProperties();
+
+            for(int i = 0; i < floatProperties.size(); ++i){
+                if (ImGui::CollapsingHeader((vecProperties[i].name).c_str()))
+                    ImGui::DragFloat((floatProperties[i].name).c_str(), floatProperties[i].val, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            }
         }
 
         guizmoWindow();

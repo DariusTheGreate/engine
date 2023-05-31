@@ -1,6 +1,7 @@
 #pragma once
 #include <atomic>
 
+
 class MouseState
 {
 public:
@@ -18,6 +19,7 @@ public:
 	
 	//TODO(darius) make macro for this shit
 	void set_x(int x) {
+
 		curr_x.store(x);
 	}
 
@@ -64,6 +66,10 @@ public:
 	int get_offset_y() {
 		return offset_y.load();
 	}
+
+
+	int prev_x;
+	int prev_y;
 
 private:
 	//don need atomics at all?..

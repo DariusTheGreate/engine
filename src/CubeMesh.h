@@ -32,7 +32,7 @@ public:
         model = glm::translate(model, pos);
         model = glm::scale(model, scale);
 
-        shader.setMat4("model", model, sdrp);
+        shader.setMat4("model", model);
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);//IMPORTANT

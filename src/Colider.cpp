@@ -1,6 +1,6 @@
 #include "Colider.h"
 
-Colider::Colider(glm::vec3 size_in, Transform& tr_in, RigidBody& rb_in, int tag_in, bool active_in) : size(size_in), tr(tr_in), body(rb_in), tag(tag_in), active(active_in)
+Colider::Colider(glm::vec3 size_in, Transform& tr_in, int tag_in, bool active_in) : size(size_in), tr(tr_in), tag(tag_in), active(active_in)
 {
 }
 
@@ -37,8 +37,8 @@ std::vector<glm::vec3> Colider::get_points() {
 }
 
 bool Colider::contains_point(const glm::vec3& point) {
-	glm::mat4 transformation = glm::inverse(body.tr.get_quatmat());
-	glm::vec3 v3 = (point - body.tr.position);
+	glm::mat4 transformation = glm::inverse(tr.get_quatmat());
+	glm::vec3 v3 = (point - tr.position);
 	glm::vec3 box_point = transformation * glm::vec4{ v3.x, v3.y, v3.z, 0 };
 	glm::vec3 new_half_lengths = size + glm::vec3(0.01, 0.01, 0.01);
 
@@ -109,7 +109,7 @@ glm::vec3 dotSupport(glm::vec3 dir, std::vector<glm::vec3> vertices)
 //https://www.youtube.com/watch?v=ajv46BSqcK4&ab_channel=Reducible
 bool Colider::gjk(Colider* coll1, Colider* coll2) {
 	Simplex plex;
-	glm::vec3 dir =  coll2->tr.position - coll1->tr.position;
+	glm::vec3 dir =  coll2->colider_position() - coll1->colider_position();
 
 	plex.c = (coll1->support({ dir.x, dir.y, dir.z, 0 }) - coll2->support(glm::vec4{ -dir.x, -dir.y, -dir.z, 0 }));
 	if (glm::dot(plex.c, dir) < 0) { return false; }
@@ -169,35 +169,52 @@ int Colider::get_tag() const
 
 float Colider::minX() const
 {
-	return glm::min(tr.position.x, tr.position.x + size.x);
+	glm::vec3 position = colider_position();
+	return glm::min(position.x, position.x + size.x);
 }
 
 float Colider::minY() const 
 {
-	return glm::min(tr.position.y, tr.position.y + size.y);
+	glm::vec3 position = colider_position();
+	return glm::min(position.y, position.y + size.y);
 }
 
 float Colider::minZ() const
 {
-	return glm::min(tr.position.z, tr.position.z + size.z);
+	glm::vec3 position = colider_position();
+	return glm::min(position.z, position.z + size.z);
 }
 
 float Colider::maxX() const
 {
-	return glm::max(tr.position.x, tr.position.x + size.x);
+	glm::vec3 position = colider_position();
+	return glm::max(position.x, position.x + size.x);
 }
 
 float Colider::maxY() const
 {
-	return glm::max(tr.position.y, tr.position.y + size.y);
+	glm::vec3 position = colider_position();
+	return glm::max(position.y, position.y + size.y);
 }
 
 float Colider::maxZ() const
 {
-	return glm::max(tr.position.z, tr.position.z + size.z);
+	glm::vec3 position = colider_position();
+	return glm::max(position.z, position.z + size.z);
 }
 
 glm::vec3 Colider::get_render_start_point() const
 {
-	return glm::vec3{tr.position.x, tr.position.y, tr.position.z};
+	glm::vec3 position = colider_position();
+	return glm::vec3{position.x, position.y, position.z};
+}
+
+glm::vec3& Colider::get_render_shift() 
+{
+	return shift;
+}
+
+glm::vec3 Colider::colider_position() const
+{
+	return tr.position - shift;
 }

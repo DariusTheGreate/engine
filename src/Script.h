@@ -11,11 +11,16 @@ class Script;
 template<typename T>
 struct ScriptProperty
 {
-	ScriptProperty(glm::vec3* valp, std::string&& name_in) : val(valp), name(std::move(name_in)) {}
+	ScriptProperty(T* valp, std::string&& name_in) : val(valp), name(std::move(name_in)) {}
 
 	T* operator ->()
 	{
 		return val;	
+	}
+
+	T* get_val()
+	{
+		return val;
 	}
 
 	T* val;
@@ -69,6 +74,16 @@ public:
 		return vector_properties;		
 	}
 
+	void addFloatProperty(float* property, std::string&& name)
+	{
+		float_properties.push_back(ScriptProperty<float>(property, std::move(name)));
+	}
+
+	std::vector<ScriptProperty<float>>& getFloatProperties()
+	{
+		return float_properties;		
+	}
+
 private:
 	std::function<void(ScriptArgument*)> start;
 	std::function<void(ScriptArgument*)> update;
@@ -77,4 +92,5 @@ private:
 	Object* parentObj = nullptr;
 
 	std::vector<ScriptProperty<glm::vec3>> vector_properties;
+	std::vector<ScriptProperty<float>> float_properties;
 };

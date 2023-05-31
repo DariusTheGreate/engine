@@ -78,6 +78,7 @@ TODO(all):
         - https://www.youtube.com/watch?v=DGVZYdlw_uo&ab_channel=kuju
         - AOE networking - https://www.gamedeveloper.com/programming/1500-archers-on-a-28-8-network-programming-in-age-of-empires-and-beyond
         - Porting - https://gamedev.stackexchange.com/questions/103941/porting-sdl-opengl-game-to-android-and-ios
+        - Net - https://web.archive.org/web/20210419133753/https://gameserverarchitecture.com/
 */
 
 class DebugRenderer 
@@ -87,7 +88,7 @@ public:
     {
 		dsv.compile();
         dsf.compile();
-        curr_dbg_shader_program = dsv.link(dsf);
+        dsv.link(dsf);
 
         vbo.init();
         ebo.init();
@@ -143,7 +144,7 @@ public:
 
     void renderDebugColider(Window* wind, glm::vec3 position, glm::vec3 size, glm::mat4 q, glm::vec3 position_shift = glm::vec3{0.5,0.5,0.5})
     {
-        glUseProgram(curr_dbg_shader_program);
+        glUseProgram(dsv.getProgram());
         auto model = glm::mat4(1.0f);
         model = glm::translate(model, position + glm::vec3{size.x/2, size.y/2, size.z/2} - position_shift);
         model *= q;
@@ -151,8 +152,8 @@ public:
         model = glm::scale(model, size);
         //model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
         //model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
-        dsv.setVec4("objectColor", {0,1,0,0}, curr_dbg_shader_program);
-        dsv.setMat4("model", model, curr_dbg_shader_program);
+        dsv.setVec4("objectColor", {0,1,0,0});
+        dsv.setMat4("model", model);
         vao.bind();
 		glDrawArrays(GL_LINE_STRIP, 0, 36);
         glBindVertexArray(0);
@@ -160,24 +161,24 @@ public:
 
     void renderDebugGrid()
     {
-		glUseProgram(curr_dbg_shader_program);
+		glUseProgram(dsv.getProgram());
         auto model = glm::mat4(1.0f);
-        dsv.setVec4("objectColor", {0.4,0.4,0.4,0}, curr_dbg_shader_program);
-        dsv.setMat4("model", model, curr_dbg_shader_program);
+        dsv.setVec4("objectColor", {0.4,0.4,0.4,0});
+        dsv.setMat4("model", model);
         vao_grid.bind();
         glDrawElements(GL_LINES, length, GL_UNSIGNED_INT, NULL);
         glBindVertexArray(0);
     }
 
-    void renderDebugLightSource(PointLight& pl)
+    void renderDebugLightSource(glm::vec3 lightPos)
     {
-        glUseProgram(curr_dbg_shader_program);
+        glUseProgram(dsv.getProgram());
         auto model = glm::mat4(1.0f);
-        model = glm::translate(model, pl.position);
+        model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3{0.2,0.2,0.2});
 
-        dsv.setVec4("objectColor", {1,1,1,0}, curr_dbg_shader_program);
-        dsv.setMat4("model", model, curr_dbg_shader_program);
+        dsv.setVec4("objectColor", {1,1,1,0});
+        dsv.setMat4("model", model);
         vao.bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
@@ -185,9 +186,9 @@ public:
 
     void updateCamera(glm::mat4 projection, glm::mat4 view)
     {
-        glUseProgram(curr_dbg_shader_program);
-		dsv.setMat4("projection", projection, curr_dbg_shader_program);
-        dsv.setMat4("view", view, curr_dbg_shader_program);
+        glUseProgram(dsv.getProgram());
+		dsv.setMat4("projection", projection);
+        dsv.setMat4("view", view);
     }
 
 private:
@@ -252,22 +253,27 @@ private:
     VBO lightVbo;
 
     VAO vao;
+
     VAO vao_grid;
 
     EBO ebo;
 
     Shader dsv;
     Shader dsf;
-
-    unsigned int curr_dbg_shader_program;
 };
 
 class Renderer
 {
 public:
-    Renderer(Window* wind) : window(wind -> getWindow()), ui(wind -> getWindow()), sv("../../../shaders/vertexShader.glsl", GL_VERTEX_SHADER), sf("../../../shaders/directionalLightFragmentShader.glsl", GL_FRAGMENT_SHADER) {
-        pointLight = PointLight(glm::vec3(0,0,0), glm::vec3(1,1,1));
-        objectColor.color = {1,0,1};
+    Renderer(Window* wind) : window(wind -> getWindow()), ui(wind -> getWindow()), sv("../../../shaders/vertexShader.glsl", GL_VERTEX_SHADER), sf("../../../shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
+        pointLight = PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        directionalLight = DirectionalLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        spotLight = SpotLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(0,-1,0));
+
+        objectMaterial.ambient = {1,0,1};
+        objectMaterial.diffuse = {1,0,1};
+        objectMaterial.specular = {1,0,1};
+        objectMaterial.shininess = 32;
 
         glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
         GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
@@ -278,12 +284,14 @@ public:
         sf.compile();
         curr_shader_program = sv.link(sf);
 
-        auto currShaderRoutine = [sv = this -> sv, &pointLight = pointLight, &objectColor = this -> objectColor, curr_shader_program = this -> curr_shader_program]
+        auto currShaderRoutine = [sv = this -> sv, &directionalLight = directionalLight, &pointLight = pointLight, &spotLight = spotLight, &objectMaterial = this -> objectMaterial]
         (Transform tr) {
-            sv.setVec3("lightColor", pointLight.color, curr_shader_program);
-            sv.setVec3("lightPos", pointLight.position, curr_shader_program);
+            sv.setVec3("viewPos", GameState::cam.getCameraPos());
 
-            sv.setVec3("objectColor", objectColor, curr_shader_program);
+            directionalLight.setShaderLight(sv);
+            pointLight.setShaderLight(sv, 0);
+            //spotLight.setShaderLight(sv);
+            objectMaterial.setShaderMaterial(sv);
 
             glm::mat4 model = glm::mat4(1.0f);
             glm::vec3 pos = tr.position;
@@ -294,18 +302,25 @@ public:
             model *= q;
             model = glm::scale(model, scale);
 
-            sv.setMat4("model", model, curr_shader_program);
+            sv.setMat4("model", model);
         };
 
-        //currScene.createObject(glm::vec3{5,0,0 }, "../meshes/backpack/backpack.obj", sv, currShaderRoutine, false, true, 0);
-
         //TODO(darius) make something like ScriptCode class and load update anmd setup from precompilde .o file. But we need separate lib for user
-        auto objSetupRoutine = [&pointLight = pointLight, &objectColor = this -> objectColor](ScriptArgument* args) {
+        auto objSetupRoutine = [&directionalLight = directionalLight, &pointLight = pointLight,&spotLight = spotLight, &objectMaterial = this -> objectMaterial](ScriptArgument* args) {
             Object* obj = args->obj;
             Script* scr = args->script;
             float vectorv = 0;
-            scr -> addVectorProperty(&(pointLight.position), "light position");
-            scr -> addVectorProperty(&(objectColor.color), "object color");
+            scr -> addVectorProperty(&(directionalLight.direction), "directional light direction");
+            scr -> addVectorProperty(&(directionalLight.ambient), "directional light ambient");
+            scr -> addVectorProperty(&(directionalLight.diffuse), "directional light diffuse");
+            scr -> addVectorProperty(&(directionalLight.specular), "directional light specular");
+
+            scr -> addVectorProperty(&(pointLight.position), "point light position");
+            scr -> addVectorProperty(&(pointLight.ambient), "point light ambient");
+            scr -> addVectorProperty(&(pointLight.diffuse), "point light diffuse");
+            scr -> addVectorProperty(&(pointLight.specular), "point light specular");
+            scr -> addFloatProperty(&(pointLight.linear), "point light linear");
+            scr -> addFloatProperty(&(pointLight.quadratic), "point light quadratic");
 
             std::cout << "start\n";
             int max = 5;
@@ -330,7 +345,7 @@ public:
 			GameState::debug_msg.append("setup complete for " + obj -> get_name() + "\n");
         };
 
-        auto objSetupRoutine2 = [&pointLight = pointLight](ScriptArgument* args) {
+        auto objSetupRoutine2 = [](ScriptArgument* args) {
             Object* obj = args->obj;
             Script* scr = args->script;
 
@@ -362,18 +377,24 @@ public:
             return; 
         };
 
-        //for(int i = 0; i < 2; i += 1)
-        //    currScene.createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i + 5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine, false, false);
+        for(int i = 0; i < 2; i += 1){
+            auto* op = currScene.createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i + 5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", 
+                sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine, false, false);
+            op -> frozeObject();
+
+        }
 
 		currScene.createObject("backpack" + std::to_string(1), glm::vec3{5,5,0}, glm::vec3{1,1,1}, glm::vec3{1,1,3}, "../../../meshes/backpack/backpack.obj", sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine, false, true);
         auto* ob = currScene.createObject("backpackEntity", glm::vec3{-1,-13,1}, glm::vec3{ 1,1,1 }, glm::vec3{2,2,2}, "", sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine);
+        ob -> frozeObject();
         auto* entt = currScene.createEntity(ob,"../../../meshes/backpack/backpack.obj", sv, currShaderRoutine, true);
 
         cube.setDrawMode(1);
 
-        auto* cubeMeshObject1 = currScene.createObject("cube", glm::vec3{1,-9,0}, glm::vec3{1,1,1}, glm::vec3{1,1,1}, cube, sv, currShaderRoutine, &currScene, objSetupRoutine2, objUpdateRoutine);
-        auto* cubeMeshObject2 = currScene.createObject("cube2", glm::vec3{1,3,0}, glm::vec3{1,1,1}, glm::vec3{1.01, 1.01, 1.01}, cube, sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine);
-        //cubeMeshObject1 -> addPointLight(PointLight(pointLight));
+        //auto* cubeMeshObject1 = currScene.createObject("cube", glm::vec3{1,-9,0}, glm::vec3{1,1,1}, glm::vec3{1,1,1}, cube, sv, currShaderRoutine, &currScene, objSetupRoutine2, objUpdateRoutine);
+        //auto* cubeMeshObject2 = currScene.createObject("cube2", glm::vec3{1,3,0}, glm::vec3{1,1,1}, glm::vec3{1.01, 1.01, 1.01}, cube, sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine);
+        //auto* lightingObject = currScene.createObject("light source", glm::vec3{-1,-13,1}, glm::vec3{ 1,1,1 }, glm::vec3{2,2,2}, "", sv, currShaderRoutine, &currScene, objSetupRoutine, objUpdateRoutine);
+        //cubeMeshObject1 -> addPointLight((pointLight));
 
         particles = ParticleSystem(&currScene, 100);
         for(int i = 0; i < 100; ++i){
@@ -385,29 +406,29 @@ public:
 
     void render(Window* wind) {
         updateInput();
+        updateCamera();
         glfwPollEvents();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
 
         glEnable(GL_DEPTH_TEST);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glUseProgram(curr_shader_program);
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        std::cout << (GameState::cam.cursor_hidden || GameState::ks.get_mouse_right_button()) << "\n";
 
-		if (GameState::cam.cursor_hidden || GameState::ks.get_mouse_right_button()) {
+		if (GameState::cam.cursor_hidden) {
 			glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
 			glm::mat4  view = GameState::cam.getBasicLook();
-		    sv.setMat4("projection", projection, curr_shader_program);
-            sv.setMat4("view", view, curr_shader_program);
+		    sv.setMat4("projection", projection);
+            sv.setMat4("view", view);
         }
  
-        currScene.renderScene();
+        currScene.updateScene();
 
-        if (GameState::cam.cursor_hidden || GameState::ks.get_mouse_right_button()) {
+        if (GameState::cam.cursor_hidden) {
             glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
             glm::mat4  view = GameState::cam.getBasicLook();
             dbr.updateCamera(projection, view);
@@ -421,7 +442,7 @@ public:
                     dbr.renderDebugColider(wind, currScene.get_object_at(i)->getColider().get_render_start_point(), currScene.get_object_at(i)->getColider().get_size(),
                                                  currScene.get_object_at(i)->getRigidBody().tr.get_quatmat());
             dbr.renderDebugGrid();
-            dbr.renderDebugLightSource(pointLight);
+            dbr.renderDebugLightSource(pointLight.position);
         }
 
         particles.updateUniform3DDistribution(glfwGetTime());
@@ -445,22 +466,43 @@ public:
         if (GameState::ks.get_d()) {
             GameState::cam.moveCameraRight();
         }
-        if (GameState::ks.get_2()) {
+
+        /*if (GameState::ks.get_2()) {
             GameState::cam.cursor_hidden = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
         if (GameState::ks.get_1()) {
             GameState::cam.cursor_hidden = true;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(window, GameState::cam.getLastX(), GameState::cam.getLastY());
         }
+        */
         if (GameState::ks.get_0()) {
             debug_mode = true;
+
 			GameState::debug_msg.append("debug mode toogled\n");
         }
         if (GameState::ks.get_9()) {
             debug_mode = false;
+
         }
 
+        if(GameState::ks.get_mouse_right_button() != GameState::cam.cursor_hidden){
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
+            GameState::cam.cursor_hidden = true;
+        }
+        if(!GameState::ks.get_mouse_right_button()){
+            GameState::ms.prev_x = GameState::ms.get_x();
+            GameState::ms.prev_y = GameState::ms.get_y();
+            GameState::cam.cursor_hidden = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    void updateCamera()
+    {
+        std::cout << GameState::ms.get_x() << "|" << GameState::ms.get_y() << "\n";
         GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
         GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
     }
@@ -501,8 +543,11 @@ private:
 
     bool debug_mode = false;
 
-    Color objectColor;
+    Material objectMaterial;
+
     PointLight pointLight;
+    DirectionalLight directionalLight;
+    SpotLight spotLight;
 
     //glm::vec3 lightColor, objectColor, lightPos;
   };

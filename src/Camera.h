@@ -86,6 +86,16 @@ public:
         return cameraPos;
     }
 
+    float getLastX()
+    {
+        return lastX;
+    }
+
+    float getLastY()
+    {
+        return lastY;
+    }
+
     void setUnexpectedUpdate(bool in) {
         unexpectedUpdate = in;
     }
