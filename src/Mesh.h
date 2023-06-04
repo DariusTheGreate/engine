@@ -28,6 +28,7 @@ struct Vertex {
 class Mesh {
 public:
     Mesh(){}
+    Mesh(const Mesh& m) = default;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
     {

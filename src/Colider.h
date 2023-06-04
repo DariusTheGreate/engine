@@ -69,6 +69,11 @@ public:
 		return active;
 	}
 
+	Transform& get_transform()
+	{
+		return tr;
+	}
+
 private:
     //not cool, dangle may happen
 	Transform& tr;

@@ -131,6 +131,13 @@ public:
 		return po;
 	}
 
+	void AddEmpty(int i)
+	{
+		Object* pt;
+		pt = mem_man.construct("empty " + std::to_string(i));	
+		sceneObjects.push_back(pt);
+	}
+
 	void destroyObject(size_t id)
 	{
 		auto* ptr = sceneObjects[id];
@@ -140,6 +147,15 @@ public:
 
 	void updateScene() {
 		update_objects();
+	}
+
+	void renderScene()
+	{
+		for (int i = 0; i < sceneObjects.size(); ++i) {
+			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
+				continue;	
+			sceneObjects[i] -> renderObject();
+		}
 	}
 
 
@@ -176,10 +192,10 @@ private:
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;
 
-			sceneObjects[i] -> renderObject();
-			sceneObjects[i] -> updateScript();
 
-			if(!sceneObjects[i]->getColider().is_active()){
+			sceneObjects[i]->updateScript();
+
+			if(sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()){
 				sceneObjects[i]->updatePos();
 				continue;
 			}
@@ -193,18 +209,20 @@ private:
 			for (int j = 0; j < sceneObjects.size(); ++j) {
 				if (
 					i == j 
-					|| sceneObjects[i] -> getColider().get_tag() != sceneObjects[j] -> getColider().get_tag() 
-					|| !sceneObjects[j]->getColider().is_active()
+					|| !sceneObjects[i]->getColider()
+					|| !sceneObjects[j]->getColider()
+					|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j] -> getColider()->get_tag() 
+					|| !sceneObjects[j]->getColider()->is_active()
 				)	continue;
 
-				auto collision_state = sceneObjects[i]->getColider().gjk(&sceneObjects[i]->getColider(), &sceneObjects[j]->getColider());
+				auto collision_state = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
 
 				if (collision_state) {
 					is_there_collision = collision_state;
-					glm::vec3 epa = sceneObjects[i]->getColider().get_epa();
+					glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
 
-					if(epa.x == epa.x && epa.y == epa.y && epa.z == epa.z){
-						sceneObjects[i]->getRigidBody().tr.position += glm::vec3{epa.x/4, epa.y/4, epa.z/4};
+					if(sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z){
+						sceneObjects[i]->getRigidBody()->tr.position += glm::vec3{epa.x/4, epa.y/4, epa.z/4};
 					}
 
 					break;

@@ -4,6 +4,7 @@
 #include <string_view>
 #include <functional>
 #include <queue>
+#include <memory>
 
 #include <glm/glm.hpp>
 
@@ -21,6 +22,20 @@ class Colider;
 class Object
 {
 public:
+	Object(std::string name_in) : name(name_in)
+	{
+
+	}
+
+	Object(std::string name_in, Shader model_shader, std::function<void(Transform)> shaderRoutine_in)
+	{
+		model = Model("", model_shader, shaderRoutine_in, false, false);
+
+		tr.position = {0,0,0};
+		tr.scale = {0,0,0};
+		name = name_in;
+	}
+
 	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, std::function<void(Transform) > shaderRoutine_in,
 																									Scene* scn, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd, 
 																									bool gammaShader = false, bool rotateTextures = false)
@@ -57,11 +72,10 @@ public:
 
 		name = parentObject->get_name() + " child " + std::to_string((size_t)this);
 
-		colider.emplace(parentObject -> getColider().get_size(), tr, 0, false);
+		colider.emplace(parentObject -> getColider()->get_size(), tr, 0, false);
 
 		script = parentObject->getScript();
 		script -> setParentObject(this);
-
 	}
 
 	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, std::function<void(Transform)> shaderRoutine_in,
@@ -72,6 +86,18 @@ public:
 		rbody.emplace(0.1, tr, false);
 		rbody.value().get_is_static_ref() = true;
 		model = Model(m, model_shader, shaderRoutine_in);
+		script = Script(scn, this, std::move(st), std::move(upd));
+		colider.emplace(collider_in, tr, 0, active);
+	}
+
+	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Model& m, Shader model_shader, std::function<void(Transform)> shaderRoutine_in,
+																					Scene* scn, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd, bool active = true)
+	{
+		name = std::move(name_in);
+		tr = Transform(pos_in, scale_in);
+		rbody.emplace(0.1, tr, false);
+		rbody.value().get_is_static_ref() = true;
+		model = Model(m);//Model(m, model_shader, shaderRoutine_in);
 		script = Script(scn, this, std::move(st), std::move(upd));
 		colider.emplace(collider_in, tr, 0, active);
 	}
@@ -98,8 +124,9 @@ public:
 
 	void renderObject() 
 	{
-		if(!object_hidden && model.has_value())
-			model.value().Draw(Transform(getTransform()));
+		if(!object_hidden && model.has_value()){
+			model.value().Draw(Transform(getTransform()), getPointLight());
+		}
 
 		//DANGER! -> traverseObjects([](Object* op) {op->renderObject(); });
 
@@ -108,6 +135,8 @@ public:
 
 	void apply_force(glm::vec3 force) 
 	{
+		if(!rbody)
+			return;
 		rbody.value().add_force(force);
 	}
 
@@ -135,14 +164,19 @@ public:
 		return getTransform().position;
 	}
 
-	Colider& getColider() 
+	std::optional<Colider>& getColider() 
 	{
-		return colider.value();
+		return colider;
 	}
 
-	RigidBody& getRigidBody()
+	std::optional<RigidBody>& getRigidBody()
 	{
-		return rbody.value();
+		return rbody;
+	}
+
+	std::optional<Model>& getModel()
+	{
+		return model;
 	}
 
 	void frozeObject()
@@ -164,14 +198,12 @@ public:
 
 	Transform& getParentTransform()
 	{
-		if (parent)
-			return parent->getTransform(); 
 		return tr;
 	}	
 	
-	Script& getScript()
+	std::optional<Script>& getScript()
 	{
-		return script.value();
+		return script;
 	}
 	
 	void set_child_objects(std::vector<Object*>&& objects)
@@ -235,9 +267,19 @@ public:
 		return object_hidden;
 	}
 
-	void addPointLight(PointLight&& pl)
+	void addPointLight(PointLight&& pl = {}, glm::vec3 pos = {0,0,0})
 	{
+		if(pointLight)
+			return;
 		pointLight = pl;
+		//pointLight.position = pos;
+	}
+
+	void addCollider()
+	{
+		if(colider)
+			return;
+		colider.emplace(glm::vec3{0,0,0}, tr);
 	}
 
 	std::optional<PointLight>& getPointLight()
@@ -251,15 +293,20 @@ private:
 	// and then just call component[i] -> virtualUpdateFunction(). But Virtual function dispatch for each scne update frame its to much work.
 	// So the idea is to allow object only one component of each type. And if you want more - just add subobject with this component.
 	// NOTE(darius) dont forget optional cant contain reference or heap object
+	// use indexing?
+	// make it vector pointer to all components of specific type, for each component type
 	std::optional<Model> model;
 	std::optional<RigidBody> rbody;
 	std::optional<Colider> colider;
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
 
-	Object* parent = nullptr;
+
 	Transform tr;
 	std::string name;
+
 	std::vector<Object*> child_opbjects = {};
+	Object* parent = nullptr;
+
 	bool object_hidden = false;
 };

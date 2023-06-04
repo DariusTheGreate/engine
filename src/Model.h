@@ -13,6 +13,7 @@
 #include <Mesh.h>
 #include <Texture.h>
 #include <Transform.h>
+#include <PointLight.h>
 
 #include <string>
 #include <fstream>
@@ -24,6 +25,7 @@
 #include <unordered_set>
 #include <string_view>
 #include <functional>
+#include <optional>
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate);
 
@@ -59,10 +61,19 @@ public:
     Model(std::string path_in, bool rotate_in = false) : path(path_in), rotate(rotate_in)
     {
     }
-    
-    //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
-    void Draw(Transform tr)
+
+    Model(const Model& m) : meshes(m.meshes), shader(m.shader), shaderRoutine(m.shaderRoutine)
     {
+
+    } 
+    Model() = default;
+
+    //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
+    void Draw(Transform tr, std::optional<PointLight>& light)
+    {
+        if(light){
+            light->setShaderLight(shader);
+        }
         shaderRoutine(tr);
         for (unsigned int i = 0; i < meshes.size(); i++) {
             //if(i == 3)
@@ -91,6 +102,11 @@ public:
         processNode(scene->mRootNode, scene);
 
         return meshes;
+    }
+
+    void addMesh(const Mesh& m)
+    {
+        meshes.push_back(m);
     }
 
 private:

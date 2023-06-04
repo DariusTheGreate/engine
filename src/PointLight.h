@@ -1,25 +1,34 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <string>
+
+#include <Shader.h>
 
 class PointLight{
 public:
-	PointLight() = default;
+	PointLight()
+    {
+        //lightNumber = PointLight::LightsCount++;
+    }
+
 	PointLight(glm::vec3 position_in, glm::vec3 color_in, float intensity_in = 1.0f, float radius_in = 1.0f) : position(position_in), color(color_in), intensity(intensity_in), radius(radius_in) {
-		diffuse = color  * glm::vec3(0.5f); 
-        ambient = diffuse* glm::vec3(0.2f); 
+        lightNumber = PointLight::LightsCount++;
 	}
 
-	void setShaderLight(Shader sv, int i)
+	void setShaderLight(Shader sv)
     {
-    	sv.setVec3("pointLights[0].position", position);
-    	sv.setVec3("pointLights[0].ambient.ambient", ambient);
-        sv.setVec3("pointLights[0].diffuse", diffuse);
-        sv.setVec3("pointLights[0].specular", specular); 
+        diffuse = color  * glm::vec3(colorFactor); 
+        ambient = diffuse* glm::vec3(diffuseFactor); 
 
-        sv.setFloat("pointLights[0].constant",  constant);
-		sv.setFloat("pointLights[0].linear",    linear);
-		sv.setFloat("pointLights[0].quadratic", quadratic);	
+    	sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].position", position);
+    	sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].ambient", ambient);
+        sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].diffuse", diffuse);
+        sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].specular", specular); 
+
+        sv.setFloat("pointLights[" + std::to_string(lightNumber) + "].constant",  constant);
+		sv.setFloat("pointLights[" + std::to_string(lightNumber) + "].linear",    linear);
+		sv.setFloat("pointLights[" + std::to_string(lightNumber) + "].quadratic", quadratic);	
     }
 
 	//TODO(darius) make it Tranform?
@@ -36,6 +45,14 @@ public:
 
 	float intensity = 1.0f;	
 	float radius = 1.0f;
+
+    float colorFactor = 0.5f;
+    float diffuseFactor = 0.5f;
+
+    int lightNumber = 0;
+
+    //todo(darius) sync 
+    static int LightsCount;
 };
 
 

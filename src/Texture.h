@@ -8,6 +8,7 @@ class Texture
 {
 public:
 	Texture() = default;
+	Texture(const Texture& t) = default;
 
 	Texture(unsigned int texture_in, const std::string& path_in, const std::string& type_in) : texture(texture_in), path(path_in), type(type_in) {}
 

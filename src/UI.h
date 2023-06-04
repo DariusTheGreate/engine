@@ -41,6 +41,7 @@ public:
 
         sceneWindow(scn);
         showConsoleWindow();
+        componentAdderWindow();
 
         ImGui::Render();
     }
@@ -64,8 +65,13 @@ public:
             ImGuiTreeNodeFlags_Leaf
         };
 	    
-        if (ImGui::Begin("Game Ojects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
+        if (ImGui::Begin("Game Objects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
         {
+
+            if (ImGui::Button("Add Object")) {
+                scene.AddEmpty(emptyCreated++);        
+            }
+
             ImGui::LabelText("", "Game Objects in Scene.");
 
             if (ImGui::TreeNodeEx("Scene objects", parent_flags))
@@ -87,8 +93,9 @@ public:
 								if (ImGui::IsItemClicked()) {
 									show_object_window = true;
                                     item_cicked = op;
-                                    objTr = item_cicked->getRigidBody().tr.get_quatmat();
-                                    auto pos = item_cicked->getRigidBody().tr.position; 
+                                    if(item_cicked->getRigidBody())
+                                        objTr = item_cicked->getRigidBody()->tr.get_quatmat();
+                                    auto pos = item_cicked->getTransform().position; 
                                     objTr[3][0] = pos.x;
                                     objTr[3][1] = pos.y;
                                     objTr[3][2] = pos.z;
@@ -102,8 +109,9 @@ public:
                         if (ImGui::IsItemClicked()) {
                             show_object_window = true;
                             item_cicked = objects[i];
-                            objTr = item_cicked->getRigidBody().tr.get_quatmat();
-                            auto pos = item_cicked->getRigidBody().tr.position; 
+                            if(item_cicked->getRigidBody())
+                                objTr = item_cicked->getRigidBody()->tr.get_quatmat();
+                            auto pos = item_cicked->getTransform().position; 
                             objTr[3][0] = pos.x;
                             objTr[3][1] = pos.y;
                             objTr[3][2] = pos.z;
@@ -144,7 +152,8 @@ public:
 		}
         
 		ImGui::Checkbox("Hide Object", &obj -> object_hidden_state());
-		ImGui::Checkbox("Static Object", &obj -> getRigidBody().get_is_static_ref()); 
+        if(obj->getRigidBody())
+    		ImGui::Checkbox("Static Object", &obj -> getRigidBody()->get_is_static_ref()); 
 
         //TODO(darius) so objTr updates quaternion at the end of UI work, cause of Guizmos. This is ugly
 
@@ -165,24 +174,36 @@ public:
         obj->getRigidBody().set_quat_from_angles();
         */
 
+/*
+    std::optional<RigidBody> rbody;
+*/
+
         //TODO(darius) custumize bar - https://stackoverflow.com/questions/73626738/in-imgui-is-it-possible-to-change-the-icon-at-the-left-of-a-collapsing-header
-        if (ImGui::CollapsingHeader("Colider component")){
-            glm::vec3& coliderSizeRef = obj->getColider().get_size_ref();
+
+
+        auto& body = obj->getRigidBody();
+        if (body && ImGui::CollapsingHeader("RigidBody component")){
+            ImGui::DragFloat("mass", &body->mass, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        } 
+
+        auto& collider = obj->getColider();
+        if (collider && ImGui::CollapsingHeader("Colider component")){
+            glm::vec3& coliderSizeRef = collider->get_size_ref();
             ImGui::Text("colider size %f, %f, %f", coliderSizeRef.x, coliderSizeRef.y, coliderSizeRef.z);
             ImGui::DragFloat("size x", &coliderSizeRef.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("size y", &coliderSizeRef.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("size z", &coliderSizeRef.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
 
-            glm::vec3& coliderPoint = obj->getColider().get_render_shift();
+            glm::vec3& coliderPoint = collider->get_render_shift();
             ImGui::Text("colider point%f, %f, %f", coliderPoint.x, coliderPoint.y, coliderPoint.z);
             ImGui::DragFloat("point x", &coliderPoint.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("point y", &coliderPoint.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("point z", &coliderPoint.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         }
 
-        if (ImGui::CollapsingHeader("Script component")){
-            std::vector<ScriptProperty<glm::vec3>>& vecProperties = obj->getScript().getVectorProperties();
-
+        auto& script = obj->getScript();
+        if (script && ImGui::CollapsingHeader("Script component")){
+            std::vector<ScriptProperty<glm::vec3>>& vecProperties = script->getVectorProperties();
             for(int i = 0; i < vecProperties.size(); ++i){
                 if (ImGui::CollapsingHeader((vecProperties[i].name).c_str())){
                     ImGui::DragFloat((vecProperties[i].name + " x").c_str(), &vecProperties[i]->x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
@@ -191,18 +212,60 @@ public:
                 }
             }
 
-            std::vector<ScriptProperty<float>>& floatProperties = obj->getScript().getFloatProperties();
-
+            std::vector<ScriptProperty<float>>& floatProperties = script->getFloatProperties();
             for(int i = 0; i < floatProperties.size(); ++i){
                 if (ImGui::CollapsingHeader((vecProperties[i].name).c_str()))
                     ImGui::DragFloat((floatProperties[i].name).c_str(), floatProperties[i].val, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             }
         }
 
+        auto& light = obj->getPointLight();
+        if(light && ImGui::CollapsingHeader("PointLight"))
+        {
+            ImGui::DragFloat("position R", &light->position.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position G", &light->position.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position B", &light->position.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::ColorEdit3("color", (float*)&light->color);
+            /*light->color.x = clear_color.x;
+            light->color.y = clear_color.y;
+            light->color.z = clear_color.z;
+            */ 
+            //ImGui::DragFloat("color R", &light->color.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            //ImGui::DragFloat("color G", &light->color.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            //ImGui::DragFloat("color B", &light->color.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("color factor", &light->colorFactor, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("diffuse factor", &light->diffuseFactor, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("specular x", &light->specular.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("specular y", &light->specular.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("specular z", &light->specular.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        }
+
+        if(ImGui::Button("Add Component"))
+            show_component_adder = true;
+
         guizmoWindow();
 
 		ImGui::End();
     }
+
+    void componentAdderWindow()
+    {
+        if(!show_component_adder || !item_cicked)
+            return;
+
+        ImGui::Begin("Add Component");
+
+        if(ImGui::Button("Collider"))
+            item_cicked->addCollider();
+
+        if(ImGui::Button("PointLight"))
+            item_cicked->addPointLight();    
+
+        ImGui::End();
+    } 
 
     void guizmoWindow()
     {
@@ -233,13 +296,15 @@ public:
 
         ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
 
-        //TODO(darius) make it work for entities. Just do traverse, but it look garbage, consider making wome wrapper
-        item_cicked->getRigidBody().tr.set_from_quatmat(objTr);
+        //TODO(darius) make it separate function to change all stuff of object
+        item_cicked->getTransform().set_from_quatmat(objTr);
+        if(item_cicked->getPointLight()){
+            item_cicked->getPointLight()->position = item_cicked->getTransform().position;
+        }
         auto& objtrref = objTr;
         item_cicked->traverseObjects([&objtrref](Object* obj){
-            obj->getRigidBody().tr.set_from_quatmat(objtrref);
+            obj->getTransform().set_from_quatmat(objtrref);
         });
-
 
 		int viewManipulateRight = ImGui::GetWindowPos().x + 900;
 		int viewManipulateTop = ImGui::GetWindowPos().y;
@@ -267,6 +332,9 @@ private:
     bool show_demo_window = false;
     bool show_scene_window = false;
     bool show_object_window = false;
+    bool show_component_adder = false;
+
+    int emptyCreated = 0;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImGuiIO* io;
