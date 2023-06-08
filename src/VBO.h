@@ -16,6 +16,16 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, arr_len, v, GL_STATIC_DRAW);
 	}
 
+	void bind_at(int i)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, i);
+	}
+
+	void bind_only()
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);	
+	}
+
 	void setVAO(int index, int size, GLenum type, GLboolean normalized, size_t stride, const void* ptr) {
 		glVertexAttribPointer(index, size, type, normalized, stride, ptr);
 	}

@@ -14,6 +14,7 @@
 #include <Texture.h>
 #include <Transform.h>
 #include <PointLight.h>
+#include <LightingShaderRoutine.h>
 
 #include <string>
 #include <fstream>
@@ -34,11 +35,10 @@ class Model
 public:
     static std::unordered_set<std::string_view> textures_set;
     static std::vector<Texture> textures_loaded;
-
     std::vector<Mesh>    meshes;
 
     Shader shader;
-    std::function<void(Transform)> shaderRoutine;
+    LightingShaderRoutine shaderRoutine;
 
     std::string directory;
     std::string path;
@@ -47,34 +47,41 @@ public:
     bool rotate = false;
     bool constructSubobjects = false;
 
-    Model(std::string_view path_in, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false) 
+    Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false) 
         : shader(shader_in), shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
     {
 		loadModel();
     }
 
-    Model(Mesh& mesh_in, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
+    Model(Mesh mesh_in, Shader shader_in, LightingShaderRoutine shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
     {
         meshes.push_back(mesh_in);
     }
 
-    Model(std::string path_in, bool rotate_in = false) : path(path_in), rotate(rotate_in)
+    Model(Shader shader_in, LightingShaderRoutine& shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
+    {
+    }
+
+    Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, bool rotate_in = false) : path(path_in), rotate(rotate_in), shaderRoutine(sr), shader(shader_in)
     {
     }
 
     Model(const Model& m) : meshes(m.meshes), shader(m.shader), shaderRoutine(m.shaderRoutine)
     {
 
-    } 
-    Model() = default;
+    }
 
     //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
-    void Draw(Transform tr, std::optional<PointLight>& light)
+    void Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m)
     {
         if(light){
             light->setShaderLight(shader);
         }
+        if(m){
+            m->setShaderMaterial(shader);
+        }
         shaderRoutine(tr);
+
         for (unsigned int i = 0; i < meshes.size(); i++) {
             //if(i == 3)
 			//	shaderRoutine(Transform{(tr.position + glm::vec3{3,3,3}), tr.scale});
@@ -107,6 +114,11 @@ public:
     void addMesh(const Mesh& m)
     {
         meshes.push_back(m);
+    }
+
+    LightingShaderRoutine& getShaderRoutine()
+    {
+        return shaderRoutine; 
     }
 
 private:

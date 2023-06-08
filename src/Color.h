@@ -11,10 +11,10 @@ struct Color
 
 struct Material
 {
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-    float shininess;
+    glm::vec3 ambient = {0,0,0};
+    glm::vec3 diffuse = {0,0,0};
+    glm::vec3 specular = {0,0,0};
+    float shininess = 0;
 
     void setShaderMaterial(Shader sv)
     {

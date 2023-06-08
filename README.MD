@@ -3,7 +3,7 @@
 ### Current result():
 
 ![output example](assets/example_gif0.gif "output example")
-![output example](assets/model_example_gif.gif "output example")
+![output example](assets/example_gif1.gif "output example")
 ![output example](assets/example_gif2.gif "output example")
 ![output example](assets/example_gif3.gif "output example")
 

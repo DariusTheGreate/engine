@@ -8,7 +8,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-    //std::cout << filename << "\n";
+    std::cout << path  << "|" << directory << "|" <<  filename << "\n";
     unsigned int textureID;
     glGenTextures(1, &textureID);
     stbi_set_flip_vertically_on_load(rotate);
@@ -43,4 +43,3 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 
     return textureID;
 }
-

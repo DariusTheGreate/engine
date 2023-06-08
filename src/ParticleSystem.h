@@ -6,8 +6,12 @@
 #include <functional>
 #include <optional>
 
+#include <glad/glad.h>
+
 #include <Scene.h>
 #include <Object.h>
+#include <LightingShaderRoutine.h>
+#include <FlatMesh.h>
 
 
 class ParticleSystem{
@@ -19,24 +23,14 @@ public:
 		emitter = emitter_in;
 	}
 
-	void addParticle(const Model& m, glm::vec3 particleSize = {0.1, 0.1, 0.1})
-	{
-		//if(!currScene)
-		//	return 0;
-        //TODO(darius) make it so each particles is like reference to object, instread of being object on its own
-		//Object* particle = currScene->createObject(std::forward<Args>(args)...);
-		//particles.push_back(particle);
-        particle = Model(m);
-	}
-
-    void addParticle(Mesh& m, Shader& shader_in, std::function<void(Transform)> shaderRoutine_in, glm::vec3 particleSize = {0.1, 0.1, 0.1})
+    void addParticle(FlatMesh&& m, Shader&& shader_in, LightingShaderRoutine&& shaderRoutine_in, Material&& mat, glm::vec3 particleSize = {0.1, 0.1, 0.1})
     {
-        //if(!currScene)
-        //  return 0;
-        //TODO(darius) make it so each particles is like reference to object, instread of being object on its own
-        //Object* particle = currScene->createObject(std::forward<Args>(args)...);
-        //particles.push_back(particle);
-        particle = Model(m, shader_in, shaderRoutine_in);
+        shader = shader_in;
+        shaderRoutine = shaderRoutine_in;
+        particleMaterial = mat;
+        particle = m;
+
+        //particle.emplace(m, shader_in, shaderRoutine_in);
     }
 
     void changeShader()
@@ -49,56 +43,111 @@ public:
         positions.push_back(pos);
     }
 
+    void addPositions(size_t n)
+    {
+        for(int i = 0; i < n; ++i)
+            addPosition(glm::vec3{i,i,i});
+    }
+
     void renderParticles()
     {
-        std::optional<PointLight> pl = std::nullopt;
+        if(positions.size() < 3)
+            return;
+
+       /* unsigned int instanceVBO;
+        glGenBuffers(1, &instanceVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * positions.size(), &positions[0], GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+
+        glEnableVertexAttribArray(7);
+        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+        glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);   
+        glVertexAttribDivisor(2, 1);  
+        */
+
+        //if(particleMaterial)
+        //    particleMaterial->setShaderMaterial(*shader);
+
         for(auto& p : positions)
         {
-            particle.Draw(Transform(p, particle_size), pl);
+            shaderRoutine->operator()(Transform(p, particle_size));
+            //shader->setVec3("aOffset", glm::vec3{0,0,0});
+            particle->Draw(*shader, positions.size());
         }
+
+        //std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        /*for(auto& p : positions)
+        {
+            particle->Draw(Transform(p, particle_size), pl, particleMaterial);
+        }
+        */
     }
 
 	void updateUniform3DDistribution(float timeValue)
 	{
+        if(pause)
+            return;
+
         if (timeValue - lastTime > 1) {
             lastTime = timeValue;
             for (auto& position : positions)
             {
-                int max = 1;
-                int min = -1;
+                int max = maxBound * 100;
+                int min = minBound * 100;
                 float v1 = (rand() % (max - min)) + min;
                 float v2 = (rand() % (max - min)) + min;
                 float v3 = (rand() % (max - min)) + min;
-                position = {v1,v2,v3};
+                position = {v1/100,v2/100,v3/100};
             }
         }		
 	}
 
 	void updateSpawnFromEmitter(float timeValue)
 	{
+        if(pause)
+            return;
+
 	    if (timeValue - lastTime > 1) {
             lastTime = timeValue;
             for (auto& p: positions)
             {
-                int max = 1;
-                int min = -1;
+                int max = maxBound;
+                int min = minBound;
                 int v1 = (rand() % (max - min)) + min;
                 int v2 = (rand() % (max - 0));
                 int v3 = (rand() % (max - min)) + min;
-
-                //particle->get_pos_ref() = emitter;
-                //particle->getRigidBody().reset();
-                //particle->getRigidBody().add_force({v1/5,(v2 + 9.8)/5,v3/5});
 
                 p = emitter;
             }
         }		
 	}
 
-private:
+    void update(float timeValue)
+    {
+        if(pause)
+            return;
+        updateUniform3DDistribution(timeValue);
+    }
+
     std::vector<glm::vec3> positions;
-    Model particle; 
+
+    std::optional<FlatMesh> particle; 
+    std::optional<Material> particleMaterial;
+    std::optional<Shader> shader;
+    std::optional<LightingShaderRoutine> shaderRoutine;
+
+
     glm::vec3 particle_size = {0.1,0.1,0.1};
     glm::vec3 emitter = glm::vec3{0,0,0};
+
+    float maxBound = 1;
+    float minBound = -1;
+
     float lastTime = 0;
+
+    bool pause = false;
+
 };

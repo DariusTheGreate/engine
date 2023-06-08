@@ -1,6 +1,9 @@
 #pragma once
 #include <Scene.h>
 #include <GameState.h>
+#include <Renderer.h>
+#include <Mesh.h>
+#include <LightingShaderRoutine.h>
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -25,8 +28,8 @@ public:
         io -> ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
         // Setup Dear ImGui style
-        ImGui::StyleColorsDark();
-       // ImGui::StyleColorsLight();
+        //ImGui::StyleColorsDark();
+        //ImGui::StyleColorsLight();
 
         const char* glsl_version = "#version 130";
         // Setup Platform/Renderer backends
@@ -34,14 +37,14 @@ public:
         ImGui_ImplOpenGL3_Init(glsl_version);
 	}
 
-    void renderUI(Scene& scn) {
+    void renderUI(Scene& scn, Renderer& r) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        sceneWindow(scn);
+        sceneWindow(scn, r);
         showConsoleWindow();
-        componentAdderWindow();
+        //componentAdderWindow(r);
 
         ImGui::Render();
     }
@@ -52,7 +55,7 @@ public:
 
     //TODO(darius) MKAE IT ITERATIVE BFS(use Object -> traverseObjects()) 
     //TODO(darius) check this out https://github.com/tksuoran/erhe/blob/7617e6eda85219346aa92c2c980c699e659c359d/src/editor/windows/layers_window.cpp#LL56C4-L56C4
-    void sceneWindow(Scene& scene)
+    void sceneWindow(Scene& scene, Renderer& r)
     {
         const ImGuiTreeNodeFlags parent_flags{
 			ImGuiTreeNodeFlags_OpenOnArrow |
@@ -129,12 +132,12 @@ public:
 
 		if (show_object_window)
         {
-            showObjectWindow(item_cicked);
+            showObjectWindow(item_cicked, r, scene);
 	    }
 
     }
 
-    void showObjectWindow(Object* obj)
+    void showObjectWindow(Object* obj, Renderer& r, Scene& scene)
     {
         if (!obj) {
             std::cout << "no obj provided. exsiting showObjectWindow(obj)\n";
@@ -157,11 +160,18 @@ public:
 
         //TODO(darius) so objTr updates quaternion at the end of UI work, cause of Guizmos. This is ugly
 
-        if (ImGui::CollapsingHeader("Position component")){
-            ImGui::Text("position vector %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
+        auto tr = obj->getTransform();
+        if (ImGui::CollapsingHeader("Transform component")){
+            ImGui::Text("position %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
             ImGui::DragFloat("position x", &objTr[3][0], 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("position y", &objTr[3][1], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("position z", &objTr[3][2], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+
+            ImGui::Text("scale %f, %f, %f", tr.scale.x, tr.scale.y, tr.scale.z);
+            ImGui::DragFloat("scale x", &tr.scale.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("scale y", &tr.scale.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("scale z", &tr.scale.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+
         }
 
         //auto q = glm::quat(objTr);
@@ -180,10 +190,59 @@ public:
 
         //TODO(darius) custumize bar - https://stackoverflow.com/questions/73626738/in-imgui-is-it-possible-to-change-the-icon-at-the-left-of-a-collapsing-header
 
-
         auto& body = obj->getRigidBody();
         if (body && ImGui::CollapsingHeader("RigidBody component")){
             ImGui::DragFloat("mass", &body->mass, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        } 
+
+        auto& particles = obj->getParticleSystem();
+        if(particles && ImGui::CollapsingHeader("ParticleSystem component")){
+            ImGui::DragFloat("emitter x", &particles->emitter.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("emitter y", &particles->emitter.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("emitter z", &particles->emitter.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("size x", &particles->particle_size.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("size y", &particles->particle_size.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("size z", &particles->particle_size.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("max boundary", &particles->maxBound, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("min boundary", &particles->minBound, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::Checkbox("pause", &particles->pause);
+
+            ImGui::Text("particles count %i", particles->positions.size());
+
+            if(ImGui::CollapsingHeader("Particles Material")){
+                ImGui::DragFloat("ambient x", &particles->particleMaterial->ambient.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("ambient y", &particles->particleMaterial->ambient.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("ambient z", &particles->particleMaterial->ambient.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+                ImGui::DragFloat("diffuse x", &particles->particleMaterial->diffuse.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("diffuse y", &particles->particleMaterial->diffuse.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("diffuse z", &particles->particleMaterial->diffuse.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            }
+
+            if(ImGui::Button("Add Particle")){
+                particles->addPositions(100);             
+            }
+        }
+
+        auto& material = obj->getMaterial();
+        if (material && ImGui::CollapsingHeader("Material component")){
+            ImGui::DragFloat("ambient x", &material->ambient.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("ambient y", &material->ambient.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("ambient z", &material->ambient.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+
+            ImGui::DragFloat("diffuse x", &material->diffuse.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("diffuse y", &material->diffuse.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("diffuse z", &material->diffuse.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("specular x", &material->specular.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("specular y", &material->specular.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("specular z", &material->specular.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+            ImGui::DragFloat("shininess", &material->shininess, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         } 
 
         auto& collider = obj->getColider();
@@ -203,6 +262,7 @@ public:
 
         auto& script = obj->getScript();
         if (script && ImGui::CollapsingHeader("Script component")){
+
             std::vector<ScriptProperty<glm::vec3>>& vecProperties = script->getVectorProperties();
             for(int i = 0; i < vecProperties.size(); ++i){
                 if (ImGui::CollapsingHeader((vecProperties[i].name).c_str())){
@@ -214,8 +274,9 @@ public:
 
             std::vector<ScriptProperty<float>>& floatProperties = script->getFloatProperties();
             for(int i = 0; i < floatProperties.size(); ++i){
-                if (ImGui::CollapsingHeader((vecProperties[i].name).c_str()))
+                if (ImGui::CollapsingHeader((floatProperties[i].name).c_str())){
                     ImGui::DragFloat((floatProperties[i].name).c_str(), floatProperties[i].val, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                }
             }
         }
 
@@ -243,35 +304,102 @@ public:
             ImGui::DragFloat("specular z", &light->specular.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         }
 
-        if(ImGui::Button("Add Component"))
+        if(ImGui::CollapsingHeader("Add Component")){
             show_component_adder = true;
+            componentAdderWindow(r);
+        }
+
+        if(ImGui::Button("Add Child Object")){
+            Object* child = scene.createSubobject(obj, emptyCreated++);
+        }
 
         guizmoWindow();
 
 		ImGui::End();
     }
 
-    void componentAdderWindow()
+    void componentAdderWindow(Renderer& hui)
     {
         if(!show_component_adder || !item_cicked)
             return;
 
-        ImGui::Begin("Add Component");
+        //ImGui::Begin("Add Component");
 
         if(ImGui::Button("Collider"))
             item_cicked->addCollider();
 
-        if(ImGui::Button("PointLight"))
+        if(item_cicked->getModel() && ImGui::Button("PointLight")){
             item_cicked->addPointLight();    
+        }
 
-        ImGui::End();
+        if(item_cicked->getModel() && ImGui::Button("ParticleSystem")){
+            FlatMesh flat;
+            flat.setTexture("../../../textures", "dean.png");
+
+            Shader particleVertex = Shader("../../../shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
+            Shader particleFragment = Shader("../../../shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
+
+            particleVertex.compile();
+            particleFragment.compile();
+            particleVertex.link(particleFragment);
+
+            LightingShaderRoutine shaderRroutine = LightingShaderRoutine(Shader(particleVertex)); //hui.getCurrShaderRoutine();
+
+            Material m;
+            m.ambient = {1,1,1};
+            m.diffuse = {1,1,1};
+            m.specular = {1,1,1};
+            m.shininess = 32;
+
+            ParticleSystem ps = ParticleSystem();
+            ps.addParticle(FlatMesh(flat), Shader(particleVertex), LightingShaderRoutine(shaderRroutine), Material(m));
+
+            item_cicked->addParticleSystem(std::move(ps));    
+        }
+
+        if(item_cicked->getModel() && ImGui::Button("Material"))
+        {
+            Material m;
+
+            m.ambient = {1,0,1};
+            m.diffuse = {1,0,1};
+            m.specular = {1,0,1};
+            m.shininess = 32;
+            std::cout << "here\n";
+
+            item_cicked->setMaterial(m);
+        }
+
+        if(ImGui::CollapsingHeader("Model")){
+            size_t routine = hui.getShaderRoutine();
+            Shader shader = hui.getShader();
+
+            LightingShaderRoutine shadeRroutine = {Shader(shader)};
+
+            if(ImGui::CollapsingHeader("ModelFile")){
+                path.resize(100);
+                ImGui::InputText("path", (char*)path.c_str(), 100);
+                if(ImGui::Button("Load"))
+                    item_cicked->addModel(path, shader, shadeRroutine);
+            }
+                
+            if(ImGui::Button("Cube")){
+                CubeMesh cube;
+                cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
+                item_cicked->addModel(cube, shader, shadeRroutine);
+            }
+
+            if(ImGui::Button("Empty")){
+                item_cicked->addModel(shader, shadeRroutine);
+            }
+
+        }
+
+        //ImGui::End();
     } 
 
     void guizmoWindow()
     {
-        //ImGui::Begin("Editor");
-        //IMPORTANT!
-
         if (ImGui::Button("Translation tool"))
         {
             curr_operation = ImGuizmo::OPERATION::TRANSLATE;
@@ -280,6 +408,11 @@ public:
         if (ImGui::Button("Rotation tool"))
         {
             curr_operation = ImGuizmo::OPERATION::ROTATE;
+        }
+
+        if (ImGui::Button("Scale tool"))
+        {
+            curr_operation = ImGuizmo::OPERATION::SCALE;
         }
         
         ImGuizmo::SetDrawlist();
@@ -333,6 +466,8 @@ private:
     bool show_scene_window = false;
     bool show_object_window = false;
     bool show_component_adder = false;
+
+    std::string path{""};
 
     int emptyCreated = 0;
 

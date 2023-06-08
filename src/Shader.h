@@ -146,6 +146,11 @@ public:
 		return ID;
 	}
 
+	void use() 
+    { 
+        glUseProgram(ID); 
+    }
+
 	~Shader() {
 		glDeleteShader(shader);
 	}

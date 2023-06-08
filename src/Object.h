@@ -16,6 +16,8 @@
 #include <Scene.h>
 #include <CubeMesh.h>
 #include <PointLight.h>
+#include <LightingShaderRoutine.h>
+#include <ParticleSystem.h>
 
 class Colider;
 
@@ -27,20 +29,20 @@ public:
 
 	}
 
-	Object(std::string name_in, Shader model_shader, std::function<void(Transform)> shaderRoutine_in)
+	Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in)
 	{
-		model = Model("", model_shader, shaderRoutine_in, false, false);
+		model.emplace("", model_shader, shaderRoutine_in, false, false);
 
 		tr.position = {0,0,0};
 		tr.scale = {0,0,0};
 		name = name_in;
 	}
 
-	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, std::function<void(Transform) > shaderRoutine_in,
+	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
 																									Scene* scn, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd, 
 																									bool gammaShader = false, bool rotateTextures = false)
 	{
-		model = Model(model_path_in, model_shader, shaderRoutine_in, gammaShader, rotateTextures);
+		model.emplace(model_path_in, model_shader, shaderRoutine_in, gammaShader, rotateTextures);
 		
 		if(model.has_value())
 			model.value().loadModel();
@@ -58,10 +60,10 @@ public:
 		colider.emplace(collider_in, tr);
 	}
 
-	Object(Object* parentObject, Mesh& m, Shader model_shader, std::function<void(Transform) > shaderRoutine_in)
+	Object(Object* parentObject, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in)
 	{
 		parent = parentObject;
-		model = Model(m, model_shader, shaderRoutine_in);
+		model.emplace(m, model_shader, shaderRoutine_in);
 
 		tr = parentObject->getTransform();//TODO(darius) fix it
 
@@ -78,26 +80,26 @@ public:
 		script -> setParentObject(this);
 	}
 
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, std::function<void(Transform)> shaderRoutine_in,
+	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
 																					Scene* scn, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd, bool active = true)
 	{
 		name = std::move(name_in);
 		tr = Transform(pos_in, scale_in);
 		rbody.emplace(0.1, tr, false);
 		rbody.value().get_is_static_ref() = true;
-		model = Model(m, model_shader, shaderRoutine_in);
+		model.emplace(m, model_shader, shaderRoutine_in);
 		script = Script(scn, this, std::move(st), std::move(upd));
 		colider.emplace(collider_in, tr, 0, active);
 	}
 
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Model& m, Shader model_shader, std::function<void(Transform)> shaderRoutine_in,
+	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Model& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
 																					Scene* scn, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd, bool active = true)
 	{
 		name = std::move(name_in);
 		tr = Transform(pos_in, scale_in);
 		rbody.emplace(0.1, tr, false);
 		rbody.value().get_is_static_ref() = true;
-		model = Model(m);//Model(m, model_shader, shaderRoutine_in);
+		model.emplace(m);//Model(m, model_shader, shaderRoutine_in);
 		script = Script(scn, this, std::move(st), std::move(upd));
 		colider.emplace(collider_in, tr, 0, active);
 	}
@@ -124,13 +126,22 @@ public:
 
 	void renderObject() 
 	{
-		if(!object_hidden && model.has_value()){
-			model.value().Draw(Transform(getTransform()), getPointLight());
+		if(!object_hidden && model){
+			model.value().Draw(Transform(getTransform()), getPointLight(), getMaterial());
 		}
 
 		//DANGER! -> traverseObjects([](Object* op) {op->renderObject(); });
 
 		traverseChilds([](Object* op) {op->renderObject(); });
+	}
+
+	void updateParticleSystem(float dt)
+	{
+		return;
+		if(particles){
+			particles->updateUniform3DDistribution(dt);
+			particles->renderParticles();
+		}
 	}
 
 	void apply_force(glm::vec3 force) 
@@ -216,6 +227,11 @@ public:
 		return child_opbjects;
 	}
 
+	void addChild(Object* obj)
+	{
+		child_opbjects.push_back(obj);
+	}
+
 	void traverseChilds(std::function<void(Object*)> functor)
 	{
 		for (auto& i : child_opbjects) {
@@ -269,9 +285,10 @@ public:
 
 	void addPointLight(PointLight&& pl = {}, glm::vec3 pos = {0,0,0})
 	{
-		if(pointLight)
+		if(pointLight || !model)
 			return;
 		pointLight = pl;
+        pointLight->addLight();
 		//pointLight.position = pos;
 	}
 
@@ -282,9 +299,57 @@ public:
 		colider.emplace(glm::vec3{0,0,0}, tr);
 	}
 
+	void addModel(Mesh m, Shader sv, LightingShaderRoutine routine)
+	{
+		if(model)
+			return;
+		model.emplace(m, sv, routine);
+	}
+
+	void addModel(Shader sv, LightingShaderRoutine routine)
+	{
+		if(model)
+			return;
+		model.emplace(sv, routine);
+	}
+
+	//TODO(darius) when loading big models add threading
+	void addModel(std::string_view path, Shader sv, LightingShaderRoutine routine, bool rotate = false)
+	{
+		if(model)
+			return;
+		model.emplace(path, sv, routine, rotate);
+	}
+
+	void addParticleSystem(ParticleSystem&& ps)
+	{
+		if(particles)
+			return;
+
+		particles = ps;	
+		//particles->setEmitter(emitter);
+	}
+
+	std::optional<ParticleSystem>& getParticleSystem()
+	{
+		return particles;	
+	}
+
 	std::optional<PointLight>& getPointLight()
 	{
 		return pointLight;
+	}
+
+	void setMaterial(const Material& m)
+	{
+		if(material)
+			return;
+		material = m;
+	}
+
+	std::optional<Material>& getMaterial()
+	{
+		return material;
 	}
 
 private:
@@ -294,12 +359,14 @@ private:
 	// So the idea is to allow object only one component of each type. And if you want more - just add subobject with this component.
 	// NOTE(darius) dont forget optional cant contain reference or heap object
 	// use indexing?
-	// make it vector pointer to all components of specific type, for each component type
+	// make it vector pointer to all components of specific type, for each component type?
 	std::optional<Model> model;
 	std::optional<RigidBody> rbody;
 	std::optional<Colider> colider;
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
+	std::optional<Material> material;
+	std::optional<ParticleSystem> particles;
 
 
 	Transform tr;

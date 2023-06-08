@@ -3,6 +3,9 @@
 #include <functional>
 #include <vector>
 #include <memory>
+#include <string>
+
+#include <glm/glm.hpp>
 
 class Scene;
 class Object;

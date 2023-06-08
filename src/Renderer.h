@@ -15,13 +15,14 @@
 #include "EBO.h"
 #include "Model.h"
 #include <CubeMesh.h>
+#include <FlatMesh.h>
 #include <Scene.h>
 #include <Transform.h>
-#include <UI.h>
 #include <ParticleSystem.h>
 #include <Script.h>
 #include <Color.h>
 #include <PointLight.h>
+#include <LightingShaderRoutine.h>
 
 /*
 TODO(all):
@@ -276,6 +277,7 @@ class Renderer
 public:
     Renderer(Scene* currScene_in) : currScene(currScene_in), sv("../../../shaders/vertexShader.glsl", GL_VERTEX_SHADER), sf("../../../shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
         pointLight = PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        pointLight.addLight();
         directionalLight = DirectionalLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
         directionalLight.ambient = {0,0,0};
         spotLight = SpotLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(0,-1,0));
@@ -291,34 +293,14 @@ public:
         sf.compile();
         sv.link(sf);
 
-        auto currShaderRoutine = [sv = this -> sv, &directionalLight = directionalLight, &pointLight = pointLight, &objectMaterial = this -> objectMaterial]
-        (Transform tr) {
-            sv.setVec3("viewPos", GameState::cam.getCameraPos());
-            sv.setInt("lightsCount", PointLight::LightsCount);
-
-            directionalLight.setShaderLight(sv);
-            pointLight.setShaderLight(sv);
-            //spotLight.setShaderLight(sv);
-            objectMaterial.setShaderMaterial(sv);
-
-            glm::mat4 model = glm::mat4(1.0f);
-            glm::vec3 pos = tr.position;
-            glm::mat4 q = tr.get_quatmat();
-            glm::vec3 scale = tr.scale;
-
-            model = glm::translate(model, pos);
-            model *= q;
-            model = glm::scale(model, scale);
-
-            sv.setMat4("model", model);
-        };
+        currShaderRoutine = {Shader(sv), std::move(directionalLight), std::move(pointLight), std::move(objectMaterial)};
 
         //TODO(darius) make something like ScriptCode class and load update anmd setup from precompilde .o file. But we need separate lib for user
-        auto objSetupRoutine = [&directionalLight = directionalLight, &pointLight = pointLight,&spotLight = spotLight, &objectMaterial = this -> objectMaterial](ScriptArgument* args) {
+        auto objSetupRoutine = [](ScriptArgument* args) {
             Object* obj = args->obj;
             Script* scr = args->script;
             float vectorv = 0;
-            scr -> addVectorProperty(&(directionalLight.direction), "directional light direction");
+            /*scr -> addVectorProperty(&(directionalLight.direction), "directional light direction");
             scr -> addVectorProperty(&(directionalLight.ambient), "directional light ambient");
             scr -> addVectorProperty(&(directionalLight.diffuse), "directional light diffuse");
             scr -> addVectorProperty(&(directionalLight.specular), "directional light specular");
@@ -327,10 +309,13 @@ public:
             scr -> addVectorProperty(&(pointLight.ambient), "point light ambient");
             scr -> addVectorProperty(&(pointLight.diffuse), "point light diffuse");
             scr -> addVectorProperty(&(pointLight.specular), "point light specular");
+
             scr -> addFloatProperty(&(pointLight.linear), "point light linear");
             scr -> addFloatProperty(&(pointLight.quadratic), "point light quadratic");
+            scr -> addFloatProperty(&(gamma), "gamma factor");
+            */
 
-            std::cout << "start\n";
+            std::cout << "\n";
             int max = 5;
             int min = -5;
             int v1 = (rand() % (max - min)) + min;
@@ -388,12 +373,12 @@ public:
         };
 
         for(int i = 0; i < 1; i += 1){
-          auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i + 5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", 
+          auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", 
                 sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
             op -> frozeObject();
             //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
         }
-        auto* op = currScene->createObject("light1", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
+        /*auto* op = currScene->createObject("light1", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
                                             sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
         op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
         op = currScene->createObject("light2", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
@@ -410,34 +395,46 @@ public:
         op -> addPointLight(PointLight(glm::vec3{0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
         op = currScene->createObject("light5", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
                                             sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-        
+
         op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
 
+        */
 
-        auto* simpleLight = currScene->createObject("cimple light", sv, currShaderRoutine);
-        simpleLight -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
+        //auto* simpleLight = currScene->createObject("simple light", sv, currShaderRoutine);
+        //simpleLight -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
  
-       
         auto* ob = currScene->createObject("backpackEntity", glm::vec3{-1,-13,1}, glm::vec3{ 1,1,1 }, glm::vec3{2,2,2}, "", sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine);
+
+        ob -> frozeObject();
         auto* entt = currScene->createEntity(ob,"../../../meshes/backpack/backpack.obj", sv, currShaderRoutine, true);
 
+        cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
 
-        cube.setDrawMode(1);
+        CubeMesh cube2 = cube;
+        FlatMesh flat;
 
-        /*particles.addParticle(Model("../../../meshes/backpack/backpack.obj", sv, currShaderRoutine), {});
+        particles.addParticle(std::move(flat), Shader(sv), LightingShaderRoutine(currShaderRoutine), Material(objectMaterial));
+
         for(int i = 0; i < 10; ++i){
             particles.addPosition({i,i,i});
         } 
-        */
+
+        //currScene->get_object_at(0)->addParticleSystem(std::move(particles));
     }
 
     void render(Window* wind, bool& debug_mode) {
+
+
         glfwPollEvents();
         int display_w, display_h;
         glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
 
         glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);  
+
+        glEnable(GL_FRAMEBUFFER_SRGB); 
+
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -453,8 +450,10 @@ public:
             sv.setMat4("view", view);
         }
  
-        particles.updateUniform3DDistribution(glfwGetTime());
-        particles.renderParticles();
+        //TODO(darius) make it faster. Instanced rendering? Batching?
+        currScene->renderParticles(glfwGetTime());
+        //particles.updateUniform3DDistribution(glfwGetTime());
+        //particles.renderParticles();
 
         if (GameState::cam.cursor_hidden) {
             glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
@@ -470,10 +469,12 @@ public:
                     dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
                                                  currScene->get_object_at(i)->getRigidBody());
                     dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight()); 
+                    currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj){
+                        dbr.renderDebugLightSource(obj->getPointLight()); 
+                    });
                 }
             }
             dbr.renderDebugGrid();
-
         }
 
         //glfwSwapBuffers(wind->getWindow());
@@ -484,19 +485,38 @@ public:
         glfwSwapBuffers(wind->getWindow());
     }
 
+    auto getShaderRoutine()
+    {
+        return sv.getProgram(); 
+    }
+
+    LightingShaderRoutine& getCurrShaderRoutine()
+    {
+        return currShaderRoutine;
+    }
+
+    auto getShader()
+    {
+        return sv;
+    }
+
 private:
     DebugRenderer dbr;
     Shader sv;
     Shader sf;
 
     CubeMesh cube;
-    ParticleSystem particles;
 
     Scene* currScene;
 
     Material objectMaterial;
+    LightingShaderRoutine currShaderRoutine;
+
+    ParticleSystem particles;
 
     PointLight pointLight;
     DirectionalLight directionalLight;
     SpotLight spotLight;
+
+    float gamma = 1;
 };

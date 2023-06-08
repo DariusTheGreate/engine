@@ -5,6 +5,7 @@
 
 #include <Object.h>
 #include <GameState.h>
+#include <LightingShaderRoutine.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -113,8 +114,8 @@ public:
 		return pt;
 	}
 
-	Object* createEntity(Object* po, std::string path, Shader sv, std::function<void(Transform)> shaderRoutine_in, bool rotateTextures = false) {
-		Model m = Model(path, rotateTextures);
+	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) {
+		Model m = Model(path, shaderRoutine_in, sv, rotateTextures);
 		auto meshes = m.loadModel();
 
 		std::vector<Object*> subobjects;
@@ -131,11 +132,21 @@ public:
 		return po;
 	}
 
-	void AddEmpty(int i)
+	Object* AddEmpty(int i)
 	{
 		Object* pt;
 		pt = mem_man.construct("empty " + std::to_string(i));	
 		sceneObjects.push_back(pt);
+		return pt;
+	}
+
+	Object* createSubobject(Object* obj, int i)
+	{
+		Object* pt;
+		pt = mem_man.construct("empty " + std::to_string(i));	
+		obj->addChild(pt);
+
+		return pt;
 	}
 
 	void destroyObject(size_t id)
@@ -154,10 +165,20 @@ public:
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;	
-			sceneObjects[i] -> renderObject();
+			sceneObjects[i]->renderObject();
 		}
 	}
 
+	void renderParticles(double dt)
+	{
+		for(int i = 0; i < sceneObjects.size(); ++i){
+			if(!sceneObjects[i]->getParticleSystem())
+				continue;
+
+	        sceneObjects[i]->getParticleSystem()->updateUniform3DDistribution(glfwGetTime());
+	        sceneObjects[i]->getParticleSystem()->renderParticles();
+	    }
+	}
 
 	Object* get_object_at(int i) 
 	{
@@ -194,6 +215,7 @@ private:
 
 
 			sceneObjects[i]->updateScript();
+
 
 			if(sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()){
 				sceneObjects[i]->updatePos();

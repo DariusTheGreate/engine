@@ -1,5 +1,5 @@
 #pragma once
-
+#include <UI.h>
 class Editor
 {
 public:
@@ -13,11 +13,12 @@ public:
 	{
 		updateInput();
 		updateCamera();
+        printFPS();
 
 		currScene.updateScene();
         rendol.render(window, debug_mode);
 
-		ui.renderUI(currScene);
+		ui.renderUI(currScene, rendol);
         ui.apply();
        	rendol.updateBuffers(window); 
 	}
@@ -83,7 +84,7 @@ public:
         double currentTime = glfwGetTime();
         frame_number++;
         if (currentTime - lastTime >= 1.0) {
-            std::cout << "framerate: " << 1000.0 / double(frame_number);
+            std::cout << "framerate: " << 1000.0 / double(frame_number) << "\n";
             frame_number = 0;
             lastTime += 1.0;
         }

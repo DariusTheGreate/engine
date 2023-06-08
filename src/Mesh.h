@@ -25,6 +25,13 @@ struct Vertex {
     float m_Weights[MAX_BONE_INFLUENCE];
 };
 
+enum class DrawMode
+{
+    DRAW_AS_ARRAYS,
+    DRAW_AS_ELEMENTS,
+    DRAW_AS_INSTANCE,
+};
+
 class Mesh {
 public:
     Mesh(){}
@@ -67,19 +74,22 @@ public:
         vao.bind();
         
         //TODO(darius) perfomance issues?
-        if(draw_as_arrays)
+        if(mode == DrawMode::DRAW_AS_ARRAYS)
 			glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-        else
-			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        else if(mode == DrawMode::DRAW_AS_INSTANCE)
+            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
+        else            
+            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
 
         glBindVertexArray(0);
 
         glActiveTexture(GL_TEXTURE0);
     }
 
-    void setDrawMode(bool mode)
+    void setDrawMode(DrawMode mode_in)
     {
-        draw_as_arrays = mode;
+        mode = mode;
     }
 
 protected:
@@ -92,7 +102,8 @@ protected:
     VAO vao;
     VBO vbo;
     EBO ebo;
-    bool draw_as_arrays = false;
+
+    DrawMode mode;
 
     void setupMesh()
     {

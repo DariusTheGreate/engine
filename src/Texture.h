@@ -46,6 +46,4 @@ private:
 	unsigned int texture;
 	std::string type;
 	std::string path;
-
 };
-

@@ -20,7 +20,6 @@ struct DirectionalLight {
     vec3 specular;
 };
 
-
 struct PointLight {
     vec3 position;
 
@@ -38,6 +37,7 @@ uniform DirectionalLight dirLight;
 #define NR_POINT_LIGHTS 21 
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform int lightsCount;
+uniform float gammaFactor;
 
 uniform Material material;
 uniform vec3 viewPos;
@@ -75,7 +75,10 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
     
-    FragColor = texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f);
+    //FragColor = texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f);
+
+    //gamma corecion
+    FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
 }   
 
 

@@ -13,8 +13,13 @@ public:
     }
 
 	PointLight(glm::vec3 position_in, glm::vec3 color_in, float intensity_in = 1.0f, float radius_in = 1.0f) : position(position_in), color(color_in), intensity(intensity_in), radius(radius_in) {
-        lightNumber = PointLight::LightsCount++;
+        //lightNumber = PointLight::LightsCount++;
 	}
+
+    void addLight()
+    {
+        lightNumber = PointLight::LightsCount++;
+    }
 
 	void setShaderLight(Shader sv)
     {
