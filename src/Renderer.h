@@ -14,6 +14,7 @@
 #include "Texture.h"
 #include "EBO.h"
 #include "Model.h"
+#include <Animator.h>
 #include <CubeMesh.h>
 #include <FlatMesh.h>
 #include <Scene.h>
@@ -372,7 +373,7 @@ public:
             return; 
         };
 
-        for(int i = 0; i < 1; i += 1){
+        for(int i = 0; i < 10; i += 1){
           auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", 
                 sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
             op -> frozeObject();
@@ -420,6 +421,15 @@ public:
         } 
 
         //currScene->get_object_at(0)->addParticleSystem(std::move(particles));
+
+        ourShader = Shader("../../../shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
+        ourShader.compile();
+        ourShader.link(sf);
+
+        // load models
+        ourModel = Model("../../../meshes/animations/bot/bot.dae");
+        //danceAnimation = Animation("../../../meshes/animations/bot/bot.dae", &ourModel);
+        //animator = Animator(&danceAnimation);
     }
 
     void render(Window* wind, bool& debug_mode) {
@@ -441,7 +451,25 @@ public:
         glUseProgram(sv.getProgram());
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-        currScene->renderScene();
+        //currScene->renderScene();
+        float currentFrame = glfwGetTime();
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        //animator.UpdateAnimation(deltaTime);
+        ourShader.use();
+
+        auto transforms = animator.GetFinalBoneMatrices();
+        for (int i = 0; i < transforms.size(); ++i)
+            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+
+
+        // render the loaded model
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(.5f, .5f, .5f));    // it's a bit too big for our scene, so scale it down
+        ourShader.setMat4("model", model);
+        ourModel.Draw(ourShader);
 
 		if (GameState::cam.cursor_hidden) {
 			glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
@@ -449,9 +477,9 @@ public:
 		    sv.setMat4("projection", projection);
             sv.setMat4("view", view);
         }
- 
+     
         //TODO(darius) make it faster. Instanced rendering? Batching?
-        currScene->renderParticles(glfwGetTime());
+        //currScene->renderParticles(glfwGetTime());
         //particles.updateUniform3DDistribution(glfwGetTime());
         //particles.renderParticles();
 
@@ -504,6 +532,11 @@ private:
     DebugRenderer dbr;
     Shader sv;
     Shader sf;
+    Shader ourShader;
+
+    Model ourModel;
+    Animation danceAnimation;
+    Animator animator;
 
     CubeMesh cube;
 
@@ -519,4 +552,5 @@ private:
     SpotLight spotLight;
 
     float gamma = 1;
+    float lastFrame = 0;
 };
