@@ -19,7 +19,6 @@ struct AssimpNodeData
 class Animation
 {
 public:
-	Animation() = default;
 
 	Animation(const std::string& animationPath, Model* model)
 	{
@@ -69,7 +68,7 @@ private:
 		int& boneCount = model.GetBoneCount(); //getting the m_BoneCounter from Model class
 
 		//reading channels(bones engaged in an animation and their keyframes)
-		for (int i = 0; i < size; i++)
+		/*for (int i = 0; i < size; i++)
 		{
 			auto channel = animation->mChannels[i];
 			std::string boneName = channel->mNodeName.data;
@@ -82,6 +81,7 @@ private:
 			m_Bones.push_back(Bone(channel->mNodeName.data,
 				boneInfoMap[channel->mNodeName.data].id, channel));
 		}
+		*/
 
 		m_BoneInfoMap = boneInfoMap;
 	}

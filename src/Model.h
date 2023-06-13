@@ -15,6 +15,7 @@
 #include <Transform.h>
 #include <PointLight.h>
 #include <LightingShaderRoutine.h>
+#include <SkeletalAnimationShaderRoutine.h>
 
 #include <string>
 #include <fstream>
@@ -49,6 +50,7 @@ public:
 
     Shader shader;
     LightingShaderRoutine shaderRoutine;
+    std::optional<SkeletalAnimationShaderRoutine> animationShaderRoutine;
 
     std::string directory;
     std::string path;
@@ -87,7 +89,9 @@ public:
 
     }
 
-    Model(std::string path_in) : path(path_in){}
+    Model(std::string_view path_in) : path(path_in){
+        loadModel();
+    }
 
     //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
     void Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m)
@@ -98,21 +102,16 @@ public:
         if(m){
             m->setShaderMaterial(shader);
         }
-        shaderRoutine(tr);
+
+        if (animationShaderRoutine)
+            animationShaderRoutine->operator()(tr);
+        else
+			shaderRoutine(tr);
 
         for (unsigned int i = 0; i < meshes.size(); i++) {
             //if(i == 3)
 			//	shaderRoutine(Transform{(tr.position + glm::vec3{3,3,3}), tr.scale});
             meshes[i].Draw(shader);
-        }
-    }
-
-	void Draw(Shader sdr)
-    {
-        for (unsigned int i = 0; i < meshes.size(); i++) {
-            //if(i == 3)
-			//	shaderRoutine(Transform{(tr.position + glm::vec3{3,3,3}), tr.scale});
-            meshes[i].Draw(sdr);
         }
     }
 
@@ -146,6 +145,16 @@ public:
     LightingShaderRoutine& getShaderRoutine()
     {
         return shaderRoutine; 
+    }
+
+    void setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r)
+    {
+        animationShaderRoutine = r;
+    }
+
+    void setShader(Shader sdr)
+    {
+        shader = sdr;
     }
 
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }

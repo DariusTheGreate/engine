@@ -74,11 +74,11 @@ public:
         vao.bind();
         
         //TODO(darius) perfomance issues?
-        if(mode == DrawMode::DRAW_AS_ARRAYS)
-			glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-        else if(mode == DrawMode::DRAW_AS_INSTANCE)
-            glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
-        else            
+        //if(mode == DrawMode::DRAW_AS_ARRAYS)
+		//	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+        //else if(mode == DrawMode::DRAW_AS_INSTANCE)
+        //    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
+        //else            
             glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
 
@@ -118,19 +118,25 @@ protected:
 
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
         glEnableVertexAttribArray(1);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+
         glEnableVertexAttribArray(2);
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+
         glEnableVertexAttribArray(3);
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+
         glEnableVertexAttribArray(4);
         glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
         
         glEnableVertexAttribArray(5);
         glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+
         glEnableVertexAttribArray(6);
         glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+        
         glBindVertexArray(0);
     }
 };
