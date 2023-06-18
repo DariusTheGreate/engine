@@ -169,7 +169,7 @@ public:
 		}
 	}
 
-	void renderParticles(double dt)
+	void renderParticles()
 	{
 		for(int i = 0; i < sceneObjects.size(); ++i){
 			if(!sceneObjects[i]->getParticleSystem())
@@ -178,6 +178,15 @@ public:
 	        sceneObjects[i]->getParticleSystem()->updateUniform3DDistribution(glfwGetTime());
 	        sceneObjects[i]->getParticleSystem()->renderParticles();
 	    }
+	}
+
+	void updateAnimators(float dt)
+	{
+		for(auto& obj : sceneObjects){
+			if(!obj->getAnimator())
+				continue;
+			obj->updateAnimator(dt);
+		}
 	}
 
 	Object* get_object_at(int i) 

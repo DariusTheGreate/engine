@@ -18,6 +18,7 @@
 #include <PointLight.h>
 #include <LightingShaderRoutine.h>
 #include <ParticleSystem.h>
+#include <Animator.h>
 
 class Colider;
 
@@ -122,6 +123,13 @@ public:
 		if(script.has_value())
 			script.value().updateScript();
 		//traverseObjects([](Object* op){op->updateScript()});
+	}
+
+	void updateAnimator(float dt)
+	{
+		if(!animator)
+			return;
+		animator->UpdateAnimation(dt);
 	}
 
 	void renderObject() 
@@ -321,6 +329,13 @@ public:
 		model.emplace(path, sv, routine, rotate);
 	}
 
+	void addModel(std::string_view path)
+	{
+		if(model)
+			return;
+		model.emplace(path);
+	}
+
 	void addParticleSystem(ParticleSystem&& ps)
 	{
 		if(particles)
@@ -352,6 +367,18 @@ public:
 		return material;
 	}
 
+	void setAnimator(Animation* anim)
+	{
+		if(animator)
+			return;
+		animator.emplace(anim);
+	}
+
+	std::optional<Animator>& getAnimator()
+	{
+		return animator;
+	}
+
 private:
 	//TODO(darius) make it Component system
 	// Obvious solution is to make use of virtual functions and stuff. And just store vector<Cmponent>
@@ -367,6 +394,7 @@ private:
 	std::optional<PointLight> pointLight;
 	std::optional<Material> material;
 	std::optional<ParticleSystem> particles;
+	std::optional<Animator> animator;
 
 
 	Transform tr;

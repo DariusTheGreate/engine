@@ -4,6 +4,8 @@
 #include <Renderer.h>
 #include <Mesh.h>
 #include <LightingShaderRoutine.h>
+#include <SkeletalAnimationShaderRoutine.h>
+#include <Animator.h>
 
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
@@ -245,6 +247,12 @@ public:
             ImGui::DragFloat("shininess", &material->shininess, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         } 
 
+        auto& animator = obj->getAnimator(); 
+
+        if (animator && ImGui::CollapsingHeader("Animator component")){
+            ImGui::Text("timestamps %f, %f", animator->getCurrTime(), animator->getDeltaTime());
+        }
+
         auto& collider = obj->getColider();
         if (collider && ImGui::CollapsingHeader("Colider component")){
             glm::vec3& coliderSizeRef = collider->get_size_ref();
@@ -382,6 +390,26 @@ public:
                 if(ImGui::Button("Load"))
                     item_cicked->addModel(path, shader, shadeRroutine);
             }
+
+            if(ImGui::CollapsingHeader("Animated ModelFile")){
+                path.resize(100);
+                ImGui::InputText("path", (char*)path.c_str(), 100);
+                if(ImGui::Button("Load")){
+
+                    Shader animVertex = Shader("../../../shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader animFragment = Shader("../../../shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    animVertex.compile();
+                    animFragment.compile();
+                    animVertex.link(animFragment);
+
+                    item_cicked->addModel(path);
+                    Animation* danceAnimation = new Animation(path, &item_cicked->getModel().value());
+                    item_cicked->setAnimator(danceAnimation);
+                    SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(Shader(animVertex), &item_cicked->getAnimator().value());
+                    item_cicked->getModel()->setShader(Shader(animVertex));
+                    item_cicked->getModel()->setAnimationShaderRoutine(animationRroutine);
+                }
+            }
                 
             if(ImGui::Button("Cube")){
                 CubeMesh cube;
@@ -394,6 +422,12 @@ public:
             }
 
         }
+
+        /*if(item_cicked->getModel() && ImGui::Button("Animation")){
+            Animation* danceAnimation = new Animation("../../../meshes/animations/bot/bot.dae", &item_cicked->getModel().value());
+            item_cicked->setAnimator(danceAnimation);
+        }
+        */
 
         //ImGui::End();
     } 

@@ -8,128 +8,39 @@
 class Camera {
 public:
 
-    void setCameraLook(double xposIn, double yposIn)
-    {
-        float xpos = static_cast<float>(xposIn);
-        float ypos = static_cast<float>(yposIn);
+    void setCameraLook(double xposIn, double yposIn);
 
-        if (firstMouse)
-        {
-            lastX = xpos;
-            lastY = ypos;
-            firstMouse = false;
-        }
+    void setCameraPos(glm::vec3 pos_in);
 
-        float xoffset = xpos - lastX;
-        float yoffset = lastY - ypos;
-        lastX = xpos;
-        lastY = ypos;
+    void setScroolState(double xoffset, double yoffset);
 
-        float sensitivity = 0.1f;
-        xoffset *= sensitivity;
-        yoffset *= sensitivity;
+    void moveCameraLeft();
 
-        yaw += xoffset;
-        pitch += yoffset;
+    void moveCameraRight();
 
-        if (pitch > 89.0f)
-            pitch = 89.0f;
-        if (pitch < -89.0f)
-            pitch = -89.0f;
+    void moveCameraForward();
 
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(front);
-    }
+    void moveCameraBackward();
 
-    void setCameraPos(glm::vec3 pos_in)
-    {
-        cameraPos = pos_in;
-    }
+    glm::mat4 getPerspective(int w, int h) const;
 
-    void setScroolState(double xoffset, double yoffset)
-    {
-        fov -= (float)yoffset;
-        if (fov < 1.0f)
-            fov = 1.0f;
-        if (fov > 45.0f)
-            fov = 45.0f;
-    }
-
-    void moveCameraLeft() {
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-
-    void moveCameraRight() {
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    }
-
-    void moveCameraForward() {
-        cameraPos += cameraFront * cameraSpeed;
-    }
-
-    void moveCameraBackward() {
-        cameraPos -= cameraFront * cameraSpeed;
-    }
-
-    glm::mat4 getPerspective(int w, int h) const {
-        return glm::perspective(glm::radians(fov), (float)w / (float)h, 0.1f, 100.0f);
-    }
-
-    glm::mat4 getBasicLook() const {
-        return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    }
+    glm::mat4 getBasicLook() const;
     
-    glm::vec3 getCameraPos() const {
-        return cameraPos;
-    }
+    glm::vec3 getCameraPos() const;
 
-    float getLastX()
-    {
-        return lastX;
-    }
+    float getLastX();
 
-    float getLastY()
-    {
-        return lastY;
-    }
+    float getLastY();
 
-    void setUnexpectedUpdate(bool in) {
-        unexpectedUpdate = in;
-    }
+    void setUnexpectedUpdate(bool in);
 
-    bool getUnexpectedUpdate() {
-        return unexpectedUpdate;
-    }
+    bool getUnexpectedUpdate();
 
-    std::vector<float> getRawView() const
-    {
-        std::vector<float> m16 =
-        { 1.f, 0.f, 0.f, 0.f,
-            0.f, 1.f, 0.f, 0.f,
-            0.f, 0.f, 1.f, 0.f,
-            0.f, 0.f, 0.f, 1.f };
+    std::vector<float> getRawView() const;
 
-        return m16;
-    }
+    glm::mat4 getView() const;
 
-    glm::mat4 getView() const
-    {
-        glm::mat4 viewRotation = { 1.f, 0.f, 0.f, 0.f,
-            0.f, 1.f, 0.f, 0.f,
-            0.f, 0.f, 1.f, 0.f,
-            0.f, 0.f, 0.f, 1.f };
-
-        return viewRotation;
-    }
-
-    glm::vec4 getRawViewPort(int w, int h)
-    {
-        glm::vec4 viewport(0.0f, 0.0f, w, h);
-        return viewport;
-    }
+    glm::vec4 getRawViewPort(int w, int h);
 
 public:
     bool cursor_hidden = true;
@@ -147,10 +58,8 @@ private:
 	float lastY = 600.0 / 2.0;
 	float fov = 45.0f;
 
-	float cameraSpeed = 0.1f;
+	float cameraSpeed = 0.5f;
 	float lastFrame = 0.0f;
 
     bool unexpectedUpdate = false;
-
 };
-
