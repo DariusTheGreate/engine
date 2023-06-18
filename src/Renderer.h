@@ -422,7 +422,7 @@ public:
 
         // load models
         //ourModel = Model("../../../meshes/animations/bot/bot.dae");
-        //danceAnimation = Animation("../../../meshes/animations/bot/bot.dae", &ourModel);
+        //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
         //animator = Animator(&danceAnimation);
     }
 

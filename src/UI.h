@@ -405,7 +405,7 @@ public:
                     item_cicked->addModel(path);
                     Animation* danceAnimation = new Animation(path, &item_cicked->getModel().value());
                     item_cicked->setAnimator(danceAnimation);
-                    SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(std::move(animVertex), &item_cicked->getAnimator().value());
+                    SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(Shader(animVertex), &item_cicked->getAnimator().value());
                     item_cicked->getModel()->setShader(Shader(animVertex));
                     item_cicked->getModel()->setAnimationShaderRoutine(animationRroutine);
                 }
