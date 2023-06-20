@@ -14,6 +14,6 @@ int main()
 	Application* app = new Application((char*)"some app", 1600, 900);
 	app->Run();
 	std::cout << "------\n";
-	return 0;
+    return 0;
 }
 

@@ -1,4 +1,5 @@
 #include <FlatMesh.h>
+#include <OpenglWrapper.h>
 
 FlatMesh::FlatMesh()
 {
@@ -37,12 +38,12 @@ void FlatMesh::DrawRaw(Shader& shader, size_t sdrp)
 
     shader.setMat4("model", model);
     vao.bind();
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);//IMPORTANT
+    OpenglWrapper::DrawArrays(36);
+    OpenglWrapper::UnbindVAO();
 }
 
 //TODO(darius) instanced rendering here
-void FlatMesh::Draw(Shader& shader, size_t count)
+void FlatMesh::Draw(Shader& shader, size_t amount)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -51,7 +52,7 @@ void FlatMesh::Draw(Shader& shader, size_t count)
 
     for (unsigned int i = 0; i < textures.size(); i++)
     {
-        glActiveTexture(GL_TEXTURE0 + i); 
+        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i); 
         std::string number;
         std::string name = textures[i].get_type();
         if (name == "texture_diffuse")
@@ -63,15 +64,14 @@ void FlatMesh::Draw(Shader& shader, size_t count)
         else if (name == "texture_height")
             number = std::to_string(heightNr++); 
 
-        glUniform1i(glGetUniformLocation(shader.getShader(), (name + number).c_str()), i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].get_texture());
+        OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
+        OpenglWrapper::BindTexture(textures[i].get_texture());
     }
 
     vao.bind();
 
-    glDrawElementsInstanced(GL_TRIANGLES, indicesRaw.size(), GL_UNSIGNED_INT, 0, count);
-
-    glBindVertexArray(0);
-
-    glActiveTexture(GL_TEXTURE0);
+    OpenglWrapper::DrawInstances(0, amount);
+    OpenglWrapper::UnbindVAO();
+    OpenglWrapper::BindTexture(GL_TEXTURE0);
 }
+

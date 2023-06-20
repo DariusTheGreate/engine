@@ -1,37 +1,37 @@
 #pragma once
 
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
+#include <OpenglWrapper.h>
+
 #include <vector>
 
 class VBO
 {
 public:
 	void init() {
-		glGenBuffers(1, &vbo_id);
+        OpenglWrapper::GenerateBuffers(& vbo_id);
 	}
 
 	void bind(size_t arr_len, GLvoid* v) {
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-		glBufferData(GL_ARRAY_BUFFER, arr_len, v, GL_STATIC_DRAW);
+        OpenglWrapper::BindBuffer(vbo_id);
+        OpenglWrapper::SetBufferData(arr_len, v);
 	}
 
 	void bind_at(int i)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, i);
+        OpenglWrapper::BindBuffer(i);
 	}
 
 	void bind_only()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, vbo_id);	
+		OpenglWrapper::BindBuffer(vbo_id);	
 	}
 
 	void setVAO(int index, int size, GLenum type, GLboolean normalized, size_t stride, const void* ptr) {
-		glVertexAttribPointer(index, size, type, normalized, stride, ptr);
+        OpenglWrapper::AttributePointer(index, size, type, stride, ptr, normalized);
 	}
 	
 	void vboEnableVertexAttribArray(unsigned int id) {
-		glEnableVertexAttribArray(id);
+        OpenglWrapper::EnableAttribute(id);
 	}
 
 	~VBO(){
@@ -39,6 +39,6 @@ public:
 	}
 
 private:
-	unsigned int vbo_id = 0;
+	size_t vbo_id = 0;
 };
 

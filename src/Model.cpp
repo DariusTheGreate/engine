@@ -1,4 +1,5 @@
 #include "Model.h"
+#include <OpenglWrapper.h>
 #include <iostream>
 
 Model::Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
@@ -312,9 +313,10 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
-    std::cout << path  << "|" << directory << "|" <<  filename << "\n";
+
     unsigned int textureID;
-    glGenTextures(1, &textureID);
+    OpenglWrapper::GenerateTextures(&textureID);
+
     stbi_set_flip_vertically_on_load(rotate);
     int width, height, nrComponents;
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
@@ -328,14 +330,14 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
         else if (nrComponents == 4)
             format = GL_RGBA;
 
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        OpenglWrapper::BindTexture(textureID);
+        OpenglWrapper::ImageTexture(format, width, height, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         stbi_image_free(data);
     }
@@ -347,3 +349,4 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 
     return textureID;
 }
+

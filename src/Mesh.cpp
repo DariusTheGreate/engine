@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include <OpenglWrapper.h>
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
@@ -30,8 +31,8 @@ void Mesh::Draw(Shader& shader)
         else if (name == "texture_height")
             number = std::to_string(heightNr++); 
 
-        glUniform1i(glGetUniformLocation(shader.getShader(), (name + number).c_str()), i);
-        glBindTexture(GL_TEXTURE_2D, textures[i].get_texture());
+        OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
+        OpenglWrapper::BindTexture(textures[i].get_texture());
     }
 
     vao.bind();
@@ -42,12 +43,10 @@ void Mesh::Draw(Shader& shader)
     //else if(mode == DrawMode::DRAW_AS_INSTANCE)
     //    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
     //else            
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    OpenglWrapper::DrawElements(indices.size());
 
-
-    glBindVertexArray(0);
-
-    glActiveTexture(GL_TEXTURE0);
+    OpenglWrapper::UnbindVAO();
+    OpenglWrapper::ActivateTexture();
 }
 
 void Mesh::setupMesh()
@@ -61,26 +60,27 @@ void Mesh::setupMesh()
     
     ebo.bind(indices.size() * sizeof(unsigned int), &indices[0]);
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    OpenglWrapper::EnableAttribute(0);
+    OpenglWrapper::AttributePointer(0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
 
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    OpenglWrapper::EnableAttribute(1);
+    OpenglWrapper::AttributePointer(1, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    OpenglWrapper::EnableAttribute(2);
+    OpenglWrapper::AttributePointer(2, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+    OpenglWrapper::EnableAttribute(3);
+    OpenglWrapper::AttributePointer(3, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+    OpenglWrapper::EnableAttribute(4);
+    OpenglWrapper::AttributePointer(4, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
     
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    OpenglWrapper::EnableAttribute(5);
+    OpenglWrapper::AttributePointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    OpenglWrapper::EnableAttribute(6);
+    OpenglWrapper::AttributePointer(6, 4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
     
-    glBindVertexArray(0);
+    OpenglWrapper::UnbindVAO();
 }
+

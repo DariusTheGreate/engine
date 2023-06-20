@@ -24,6 +24,7 @@
 #include <Color.h>
 #include <PointLight.h>
 #include <LightingShaderRoutine.h>
+#include <OpenglWrapper.h>
 
 /*
 TODO(all):
@@ -85,6 +86,8 @@ TODO(all):
         - Net - https://web.archive.org/web/20210419133753/https://gameserverarchitecture.com/
         - Android port - https://arm-software.github.io/opengl-es-sdk-for-android/tutorials.html
                          https://keasigmadelta.com/store/wp-content/uploads/2017/03/GLES3-and-SDL2-Tutorials.pdf
+        - mesh optimizer - https://github.com/zeux/meshoptimizer
+        - https://www.youtube.com/watch?v=k2h9FORbLa4&ab_channel=Gamefromscratch
 */
 
 class DebugRenderer 
@@ -165,7 +168,7 @@ public:
         dsv.setMat4("model", model);
         vao.bind();
 		glDrawArrays(GL_LINE_STRIP, 0, 36);
-        glBindVertexArray(0)    ;
+        glBindVertexArray(0);
     }
 
     void renderDebugGrid()

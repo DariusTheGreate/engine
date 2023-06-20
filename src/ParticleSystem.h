@@ -6,8 +6,6 @@
 #include <functional>
 #include <optional>
 
-#include <glad/glad.h>
-
 #include <Scene.h>
 #include <Object.h>
 #include <LightingShaderRoutine.h>
