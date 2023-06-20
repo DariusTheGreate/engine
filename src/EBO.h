@@ -1,18 +1,18 @@
 #pragma once
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
 #include <vector>
+
+#include <OpenglWrapper.h>
 
 class EBO
 {
 public:
 	void init() {
-		glGenBuffers(1, &ebo_id);
+        OpenglWrapper::GenerateBuffers(&ebo_id);
 	}
 
 	void bind(size_t ind_len, GLvoid* indices) {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind_len, indices, GL_STATIC_DRAW);
+        OpenglWrapper::BindBuffer(ebo_id,GL_ELEMENT_ARRAY_BUFFER);
+        OpenglWrapper::SetBufferData(ind_len, indices, GL_ELEMENT_ARRAY_BUFFER);
 	}
 
 	~EBO() {
@@ -20,6 +20,6 @@ public:
 	}
 
 private:
-	unsigned int ebo_id = 0;
+	size_t ebo_id = 0;
 };
 

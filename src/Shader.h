@@ -4,9 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <glad/glad.h> 
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+#include <OpenglWrapper.h>
 
 class Shader
 {
@@ -17,9 +15,9 @@ public:
 	Shader(){}
 
 	Shader(const std::string& filepath, ShaderType type) {
+        //TODO(darius) make it filesystem
 		std::ifstream shaderFile;
 		shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		
 		try
 		{
 			shaderFile.open(filepath);
@@ -36,36 +34,37 @@ public:
 			std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
 		}
 		
-		shader = glCreateShader(type);
+		shader = OpenglWrapper::CreateShader(type);
 		auto ptr = source.c_str();
-		glShaderSource(shader, 1, &ptr, NULL);
+        OpenglWrapper::SetShaderSource(shader, ptr);
 	}
 	
 	void compile() const {
-		glCompileShader(shader);
+		OpenglWrapper::CompileShader(shader);
 
+        //TODO(darius) make it wrapper if needed
 		int success;
 		const int err_len = 2048;
 		char infoLog[err_len];
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        OpenglWrapper::GetShaderParam(shader, GL_COMPILE_STATUS, &success);
 		if (!success)
 		{
-			glGetShaderInfoLog(shader, err_len, NULL, infoLog);
+            OpenglWrapper::GetShaderLog(shader, infoLog);
 			std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
 		}
 	}
 
 	ShaderProgram link(const Shader& other) {
-		ShaderProgram shaderProgram = glCreateProgram();
-		glAttachShader(shaderProgram, shader);
-		glAttachShader(shaderProgram, other.shader);
-		glLinkProgram(shaderProgram);
+		ShaderProgram shaderProgram = OpenglWrapper::CreateProgram();
+        OpenglWrapper::AttachShader(shaderProgram, shader);
+		OpenglWrapper::AttachShader(shaderProgram, other.shader);
+        OpenglWrapper::LinkProgram(shaderProgram);
 		int success;
 		const int err_len = 2048;
 		char infoLog[err_len];
-		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        OpenglWrapper::GetProgramParam(shaderProgram, GL_LINK_STATUS, &success);
 		if (!success) {
-			glGetProgramInfoLog(shaderProgram, err_len, NULL, infoLog);
+            OpenglWrapper::GetProgramLog(shaderProgram, infoLog);
 			std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 		}
 		
@@ -80,61 +79,61 @@ public:
 
 	void setBool(const std::string& name, bool value) const
 	{
-		glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+        OpenglWrapper::SetShaderInt(ID, name.c_str(), (int)value);
 	}
 
 	void setInt(const std::string& name, int value) const
 	{
-		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+        OpenglWrapper::SetShaderInt(ID, name.c_str(), (int)value);
 	}
 
 	void setFloat(const std::string& name, float value) const
 	{
-		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+        OpenglWrapper::SetShaderFloat(ID, name.c_str(), value);
 	}
 
 	void setVec2(const std::string& name, const glm::vec2& value) const
 	{
-		glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+        OpenglWrapper::SetShaderVec2(ID, name.c_str(), value.x, value.y);
 	}
 
 	void setVec2(const std::string& name, float x, float y) const
 	{
-		glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+        OpenglWrapper::SetShaderVec2(ID, name.c_str(), x, y);
 	}
 
 	void setVec3(const std::string& name, const glm::vec3& value) const
 	{
-		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+        OpenglWrapper::SetShaderVec3(ID, name.c_str(), value.x, value.y, value.z);
 	}
 	void setVec3(const std::string& name, float x, float y, float z) const
 	{
-		glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+        OpenglWrapper::SetShaderVec3(ID, name.c_str(), x, y, z);
 	}
 
 	void setVec4(const std::string& name, const glm::vec4& value) const
 	{
-		glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+        OpenglWrapper::SetShaderVec4(ID, name.c_str(), value.x, value.y, value.z, value.w);
 	}
 
 	void setVec4(const std::string& name, float x, float y, float z, float w) const
 	{
-		glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w);
+        OpenglWrapper::SetShaderVec4(ID, name.c_str(), x, y, z, w);
 	}
 
 	void setMat2(const std::string& name, const glm::mat2& mat) const
 	{
-		glUniformMatrix2fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        OpenglWrapper::SetShaderMat2(ID, name.c_str(), &mat[0][0]);
 	}
 
 	void setMat3(const std::string& name, const glm::mat3& mat) const
 	{
-		glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        OpenglWrapper::SetShaderMat3(ID, name.c_str(), &mat[0][0]);
 	}
 
 	void setMat4(const std::string& name, const glm::mat4& mat) const
 	{
-		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+        OpenglWrapper::SetShaderMat4(ID, name.c_str(), &mat[0][0]);
 	}
 
 	unsigned int getShader() const {
@@ -148,11 +147,11 @@ public:
 
 	void use() 
     { 
-        glUseProgram(ID); 
+        OpenglWrapper::UseProgram(ID); 
     }
 
 	~Shader() {
-		glDeleteShader(shader);
+        OpenglWrapper::DeleteShader(shader);
 	}
 
 private:
