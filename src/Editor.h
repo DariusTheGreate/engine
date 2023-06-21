@@ -1,6 +1,7 @@
 #pragma once
 
 #include <UI.h>
+#include <ObjectSelector.h>
 
 class Editor
 {
@@ -22,6 +23,7 @@ private:
     Scene currScene;
     Window* window;
     Renderer rendol;
+    ObjectSelector selector;
 
     unsigned int frame_number = 0;
     double lastTime = 0;

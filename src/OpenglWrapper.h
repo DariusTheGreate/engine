@@ -15,14 +15,44 @@ public:
 		glGenBuffers(n, (GLuint*)ptr);
     }
 
-    static void BindBuffer(size_t ptr, size_t type = GL_ARRAY_BUFFER)
+    static void BindBuffer(size_t ID, size_t type = GL_ARRAY_BUFFER)
     {
-		glBindBuffer(type, (GLuint)ptr);
+		glBindBuffer(type, (GLuint)ID);
     }
 
     static void SetBufferData(size_t len, void* v, size_t type = GL_ARRAY_BUFFER, size_t draw_type = GL_STATIC_DRAW)
     {
 		glBufferData(type, len, v, draw_type);
+    }
+
+    static void GenerateFrameBuffers(size_t* ptr, size_t n = 1)
+    {
+        glGenFramebuffers(n, (GLuint*)ptr);
+    }
+
+    static void BindFrameBuffer(size_t ID)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, ID);
+    }
+
+    static void UnbindFrameBuffer()
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    }
+
+    static void ReadBuffer(size_t buff = GL_COLOR_ATTACHMENT0)
+    {
+        glReadBuffer(buff);
+    }
+
+    static void ReadZeroBuffer()
+    {
+        glReadBuffer(GL_NONE);
+    }
+
+    static void ReadPixels(int x, int y, void* pixel)
+    {
+        glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_INT, pixel);
     }
 
     static void GenerateArrays(void* ptr, size_t n = 1)
@@ -152,7 +182,7 @@ public:
         glVertexAttribPointer(index, size, type, normalize, stride, ptr);
     }
 
-    static void GenerateTextures(unsigned int* ID, size_t n = 1)
+    static void GenerateTextures(size_t* ID, size_t n = 1)
     {
         glGenTextures(n, (GLuint*)ID);
     }
@@ -162,9 +192,19 @@ public:
         glBindTexture(target, texture);
     }
 
+    static void UnbindTexture()
+    {
+        BindTexture(0);
+    }
+
     static void ImageTexture(size_t format, size_t width, size_t height, unsigned char* data, size_t target = GL_TEXTURE_2D, size_t type = GL_UNSIGNED_BYTE, int lvl = 0, int border = 0)
     {
         glTexImage2D(target, lvl, format, width, height, border, format, type, data);
+    }
+
+    static void ImageFrameBuffer(size_t ID)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
     }
 
     static void GenerateMipmap()
@@ -195,10 +235,10 @@ public:
     static void DrawInstances(size_t count, size_t amount, size_t primitives = GL_TRIANGLES, size_t type = GL_UNSIGNED_INT, const void* indices = nullptr)
     {
         glDrawElementsInstanced(GL_TRIANGLES, count, GL_UNSIGNED_INT, indices, amount);
-    }
+    } 
 
-	static void UnbindVAO()
-	{
+    static void UnbindVAO() 
+    {
         glBindVertexArray(0);
 	}
 
@@ -250,4 +290,5 @@ public:
 private:
 	//TODO(darius) add info struct for displaying amount of draw calls and stuff
 };
+
 

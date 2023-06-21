@@ -42,7 +42,7 @@ public:
 	}
 
 private:
-	unsigned int texture;
+	size_t texture;
 	std::string type;
 	std::string path;
 };

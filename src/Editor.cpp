@@ -54,16 +54,22 @@ void Editor::updateInput() {
 
     }
 
-    if(GameState::ks.get_mouse_right_button() != GameState::cam.cursor_hidden){
+    if(GameState::ks.get_mouse_right_button() != GameState::cam.cursor_hidden)
+    {
         glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         glfwSetCursorPos(window -> getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         GameState::cam.cursor_hidden = true;
     }
-    if(!GameState::ks.get_mouse_right_button()){
+    if(!GameState::ks.get_mouse_right_button())
+    {
         GameState::ms.prev_x = GameState::ms.get_x();
         GameState::ms.prev_y = GameState::ms.get_y();
         GameState::cam.cursor_hidden = false;
         glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    if(GameState::ks.get_mouse_left_button())
+    {
+        selector.ReadPixel(GameState::ms.get_x(), GameState::ms.get_y());
     }
 }
 

@@ -314,7 +314,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
     std::string filename = std::string(path);
     filename = directory + '/' + filename;
 
-    unsigned int textureID;
+    size_t textureID;
     OpenglWrapper::GenerateTextures(&textureID);
 
     stbi_set_flip_vertically_on_load(rotate);

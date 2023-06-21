@@ -79,6 +79,8 @@ void main()
 
     //gamma corecion
     FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
+    //FragColor.rgb = 0.1 * (texture(texture_diffuse1, TexCoords)).rgb;
+    FragColor.a = 1.0;
 }   
 
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)

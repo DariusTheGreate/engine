@@ -82,6 +82,13 @@ void InputManager::processInput(GLFWwindow* window)
         //GameState::cam.cursor_hidden = false;
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+        GameState::ks.set_mouse_left_button(true);
+    }
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE){
+        GameState::ks.set_mouse_left_button(false);
+    }
+
 }
 
 void InputManager::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)

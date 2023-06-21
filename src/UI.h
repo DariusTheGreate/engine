@@ -81,6 +81,12 @@ public:
                 scene.AddEmpty(emptyCreated++);        
             }
 
+            ImGuiDragDropFlags src_flags = 0;
+            src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
+            src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
+            //src_flags |= ImGuiDragDropFlags_SourceNoPreviewTooltip; // Hide the tooltip
+                    
+
             ImGui::LabelText("", "Game Objects in Scene.");
 
             if (ImGui::TreeNodeEx("Scene objects", parent_flags))
@@ -91,6 +97,20 @@ public:
                 {
                     if (!objects[i])
                         continue;
+
+                    //TODO(darius) selectalbes here? This chunk can be used to create selectable think
+                    /*
+                    ImGui::Selectable(objects[i]->get_name().c_str());
+                    if (ImGui::BeginDragDropSource(src_flags))
+                    {
+                        if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip)){
+
+                        }
+
+                        ImGui::SetDragDropPayload("DND_DEMO_NAME", &i, sizeof(int));
+                        ImGui::EndDragDropSource();
+                    }
+                    */
 
                     ImGuiTreeNodeFlags node_flags = objects[i]->get_child_objects().empty() ? leaf_flags : parent_flags;
 
@@ -113,7 +133,6 @@ public:
 							}
 						});
 
-                        //TODO(darius) add another traversal to scene
 						bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
                         if (ImGui::IsItemClicked()) {
                             show_object_window = true;
@@ -318,7 +337,9 @@ public:
 
         if(ImGui::CollapsingHeader("Add Component")){
             show_component_adder = true;
+            ImGui::Indent();
             componentAdderWindow(r);
+            ImGui::Unindent();
         }
 
         if(ImGui::Button("Add Child Object")){
@@ -382,19 +403,27 @@ public:
         }
 
         if(ImGui::CollapsingHeader("Model")){
+            ImGui::Indent();
+
             size_t routine = hui.getShaderRoutine();
             Shader shader = hui.getShader();
 
             LightingShaderRoutine shadeRroutine = {Shader(shader)};
 
             if(ImGui::CollapsingHeader("ModelFile")){
+                ImGui::Indent();
+
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load"))
                     item_cicked->addModel(path, shader, shadeRroutine);
+
+                ImGui::Unindent();
             }
 
             if(ImGui::CollapsingHeader("Animated ModelFile")){
+                ImGui::Indent();
+
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load")){
@@ -411,6 +440,8 @@ public:
                     item_cicked->getModel()->setShader(Shader(animVertex));
                     item_cicked->getModel()->setAnimationShaderRoutine(animationRroutine);
                 }
+
+                ImGui::Unindent();
             }
                 
             if(ImGui::Button("Cube")){
@@ -423,6 +454,7 @@ public:
                 item_cicked->addModel(shader, shadeRroutine);
             }
 
+            ImGui::Unindent();
         }
 
         /*if(item_cicked->getModel() && ImGui::Button("Animation")){
