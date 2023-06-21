@@ -8,6 +8,7 @@
 #include <Animator.h>
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
@@ -26,15 +27,15 @@ public:
 		IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         io = &ImGui::GetIO(); (void)io;
-        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io -> ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+        io -> ConfigDragClickToInputText = true;
 
-        // Setup Dear ImGui style
         //ImGui::StyleColorsDark();
         //ImGui::StyleColorsLight();
 
         const char* glsl_version = "#version 130";
-        // Setup Platform/Renderer backends
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 	}
@@ -44,18 +45,21 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        //TODO(darius) uncomment this in order to enable docking windows. But it brokes color of application idk (mb cause of srgb enbled but i tryed to disable it, and that didnt worked)
+        //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+        
         sceneWindow(scn, r);
         showConsoleWindow();
-        //componentAdderWindow(r);
 
+        //ImGui::EndFrame();
         ImGui::Render();
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     void apply() {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    //TODO(darius) MKAE IT ITERATIVE BFS(use Object -> traverseObjects()) 
     //TODO(darius) check this out https://github.com/tksuoran/erhe/blob/7617e6eda85219346aa92c2c980c699e659c359d/src/editor/windows/layers_window.cpp#LL56C4-L56C4
     void sceneWindow(Scene& scene, Renderer& r)
     {
@@ -373,7 +377,6 @@ public:
             m.diffuse = {1,0,1};
             m.specular = {1,0,1};
             m.shininess = 32;
-            std::cout << "here\n";
 
             item_cicked->setMaterial(m);
         }
@@ -395,7 +398,6 @@ public:
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load")){
-
                     Shader animVertex = Shader("../../../shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
                     Shader animFragment = Shader("../../../shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     animVertex.compile();

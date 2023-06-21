@@ -1,9 +1,5 @@
-src/glad.c
-src/stb_image.cpp
-src/imgui/
 Build/
 vendor/
-lib/
 meshes/
 textures/
 *.obj

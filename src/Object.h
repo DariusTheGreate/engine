@@ -311,6 +311,7 @@ public:
 	{
 		if(model)
 			return;
+        setDefaultMaterial();
 		model.emplace(m, sv, routine);
 	}
 
@@ -318,6 +319,7 @@ public:
 	{
 		if(model)
 			return;
+        setDefaultMaterial();
 		model.emplace(sv, routine);
 	}
 
@@ -326,6 +328,7 @@ public:
 	{
 		if(model)
 			return;
+        setDefaultMaterial();
 		model.emplace(path, sv, routine, rotate);
 	}
 
@@ -333,6 +336,7 @@ public:
 	{
 		if(model)
 			return;
+        setDefaultMaterial();
 		model.emplace(path);
 	}
 
@@ -354,6 +358,11 @@ public:
 	{
 		return pointLight;
 	}
+
+    void setDefaultMaterial()
+    {
+        material = Material(32);
+    }
 
 	void setMaterial(const Material& m)
 	{
@@ -405,3 +414,4 @@ private:
 
 	bool object_hidden = false;
 };
+

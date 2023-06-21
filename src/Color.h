@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 struct Color
 {
 	glm::vec3 color;	
@@ -13,15 +15,24 @@ struct Material
 {
     glm::vec3 ambient = {0,0,0};
     glm::vec3 diffuse = {0,0,0};
-    glm::vec3 specular = {0,0,0};
+    glm::vec3 specular = {1,1,1};
     float shininess = 0;
+
+    Material() = default;
+
+    Material(float s) : shininess(s)
+    {
+    }
 
     void setShaderMaterial(Shader sv)
     {
-        sv.setInt("material.diffuse", 0);
-        sv.setInt("material.specular", 1);
+        //TODO(darius) currently in shader there is samplers for diffuse and specular. 
+        /*sv.setVec3("material.diffuse", diffuse.x, diffuse.y, diffuse.z);
+        sv.setVec3("material.specular", specular.x, specular.y, specular.z);
+        sv.setVec3("material.ambient", ambient.x, ambient.y, ambient.z);
+        */
 
-        //sv.setVec3("material.specular", specular); 
         sv.setFloat("material.shininess", shininess);	
     }
 };
+

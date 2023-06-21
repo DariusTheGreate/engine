@@ -286,18 +286,13 @@ public:
         directionalLight.ambient = {0,0,0};
         spotLight = SpotLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(0,-1,0));
 
-        objectMaterial.ambient = {1,0,1};
-        objectMaterial.diffuse = {1,0,1};
-        objectMaterial.specular = {1,0,1};
-        objectMaterial.shininess = 32;
-
         //glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
 
         sv.compile();
         sf.compile();
         sv.link(sf);
 
-        currShaderRoutine = {Shader(sv), std::move(directionalLight), std::move(pointLight), std::move(objectMaterial)};
+        currShaderRoutine = {Shader(sv), std::move(directionalLight), std::move(pointLight), Material(32)};
 
         //TODO(darius) make something like ScriptCode class and load update anmd setup from precompilde .o file. But we need separate lib for user
         auto objSetupRoutine = [](ScriptArgument* args) {
@@ -383,50 +378,7 @@ public:
             //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
         }
         
-        /*auto* op = currScene->createObject("light1", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
-                                            sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-        op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
-        op = currScene->createObject("light2", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
-                                            sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-        
-        op -> addPointLight(PointLight(glm::vec3{-0.2f, 1.0f, -0.3f}, glm::vec3(1,1,1)));
-        op = currScene->createObject("light3", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
-                                            sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-        
-        op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
-        op = currScene->createObject("light4", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
-                                            sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-        
-        op -> addPointLight(PointLight(glm::vec3{0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
-        op = currScene->createObject("light5", glm::vec3{ 5,5,0 }, glm::vec3{ 1,1,1 }, glm::vec3{0,0,0}, ".obj", 
-                                            sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
-
-        op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
-
-        */
-
-        //auto* simpleLight = currScene->createObject("simple light", sv, currShaderRoutine);
-        //simpleLight -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, 0.3f}, glm::vec3(1,1,1)));
- 
-        //auto* ob = currScene->createObject("backpackEntity", glm::vec3{-1,-13,1}, glm::vec3{ 1,1,1 }, glm::vec3{2,2,2}, "", sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine);
-
-        //ob -> frozeObject();
-        //auto* entt = currScene->createEntity(ob,"../../../meshes/backpack/backpack.obj", sv, currShaderRoutine, true);
-
-        cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
-
-        //currScene->get_object_at(0)->addParticleSystem(std::move(particles));
-
-        //ourShader = Shader("../../../shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
-        //Shader ourFragmentShader = Shader("../../../shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
-        //ourShader.compile();
-        //ourFragmentShader.compile();
-        //ourShader.link(ourFragmentShader);
-
-        // load models
-        //ourModel = Model("../../../meshes/animations/bot/bot.dae");
         //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
-        //animator = Animator(&danceAnimation);
     }
 
     void render(Window* wind, bool& debug_mode) {
@@ -447,18 +399,6 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         currScene->renderScene();
-        /*float currentFrame = glfwGetTime();
-        float deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        //animator.UpdateAnimation(deltaTime);
-        ourShader.use();
-
-        auto transforms = animator.GetFinalBoneMatrices();
-        for (int i = 0; i < transforms.size(); ++i)
-            ourShader.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-            */
-
 
 		if (GameState::cam.cursor_hidden) {
 			glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
@@ -467,15 +407,6 @@ public:
             sv.setMat4("view", view);
         }
 
-        // render the loaded model
-        /*glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -0.4f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(.5f, .5f, .5f));    // it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-
-        ourModel.Draw(ourShader);
-        */
-     
         //TODO(darius) make it faster. Instanced rendering? Batching?
         currScene->renderParticles();
         float currentFrame = glfwGetTime();
@@ -483,7 +414,6 @@ public:
         lastFrame = currentFrame;
 
         currScene->updateAnimators(deltaTime);
-        particles.updateUniform3DDistribution(glfwGetTime());
 
         if (GameState::cam.cursor_hidden) {
             glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
@@ -506,8 +436,6 @@ public:
             }
             dbr.renderDebugGrid();
         }
-
-        //glfwSwapBuffers(wind->getWindow());
     }
 
     void updateBuffers(Window* wind)
@@ -534,21 +462,15 @@ private:
     DebugRenderer dbr;
     Shader sv;
     Shader sf;
-    Shader ourShader;
-
-    CubeMesh cube;
 
     Scene* currScene;
 
-    Material objectMaterial;
     LightingShaderRoutine currShaderRoutine;
 
-    ParticleSystem particles;
-
+    //TODO(darius) make it lighting system
     PointLight pointLight;
     DirectionalLight directionalLight;
     SpotLight spotLight;
 
-    float gamma = 1;
     float lastFrame = 0;
 };
