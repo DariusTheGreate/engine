@@ -17,6 +17,8 @@ public:
     void setPolygonMode(size_t type = GL_LINE);
 
     void printFPS();
+
+    Window* getWindow();
     
 private:
     UI ui;

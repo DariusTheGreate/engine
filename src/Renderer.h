@@ -93,7 +93,7 @@ TODO(all):
 class DebugRenderer 
 {
 public:
-    DebugRenderer() : dsv("../../../shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf("../../../shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
+    DebugRenderer() : dsv("E:/own/programming/engine/shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf("E:/own/programming/engine/shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
     {
 		dsv.compile();
         dsf.compile();
@@ -279,7 +279,7 @@ private:
 class Renderer
 {
 public:
-    Renderer(Scene* currScene_in) : currScene(currScene_in), sv("../../../shaders/vertexShader.glsl", GL_VERTEX_SHADER), sf("../../../shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
+    Renderer(Scene* currScene_in) : currScene(currScene_in), sv("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER), sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
         pointLight = PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
         pointLight.addLight();
         directionalLight = DirectionalLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
@@ -372,7 +372,7 @@ public:
         };
 
         for (int i = 0; i < 1; i += 1) {
-          auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "../../../meshes/pistol/homemade_lasergun_upload.obj", 
+          auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{1,1,3}, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj", 
                 sv, currShaderRoutine, currScene, objSetupRoutine, objUpdateRoutine, false, false);
             op -> frozeObject();
             //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));

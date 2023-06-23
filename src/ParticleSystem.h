@@ -147,5 +147,5 @@ public:
     float lastTime = 0;
 
     bool pause = false;
-
 };
+

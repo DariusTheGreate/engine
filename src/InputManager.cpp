@@ -73,14 +73,27 @@ void InputManager::processInput(GLFWwindow* window)
         GameState::ks.set_mouse_right_button(true);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         //glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
+        
+        //std::cout << "press right\n";
+        //save click position
+        GameState::ms.prev_x = GameState::ms.get_x();
+        GameState::ms.prev_y = GameState::ms.get_y();
         //GameState::cam.cursor_hidden = true;
     }
+    //this event HAPPENS every frame
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
         GameState::ks.set_mouse_right_button(false);
         //GameState::ms.prev_x = GameState::ms.get_x();
         //GameState::ms.prev_y = GameState::ms.get_y();
         //GameState::cam.cursor_hidden = false;
+        //
+        //glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        
+        //std::cout << "unpress right\n";
+        //place into prev saved click position
+        GameState::ms.set_x(GameState::ms.prev_x);
+        GameState::ms.set_y(GameState::ms.prev_y);
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
         GameState::ks.set_mouse_left_button(true);
@@ -88,15 +101,19 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE){
         GameState::ks.set_mouse_left_button(false);
     }
-
 }
 
 void InputManager::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-    if (!GameState::cam.cursor_hidden)
-        return;
+    if (!GameState::cam.cursor_hidden){
+    //    return;
+        //std::cout << "here " << xposIn << "|" << yposIn << "\n";
+        GameState::ms.click_x = xposIn;
+        GameState::ms.click_y = yposIn;
+    }
 
     GameState::ms.set_x((int)xposIn);
+    //GameState::msg(std::to_string(GameState::ms.get_x()) + "\n");
     GameState::ms.set_y((int)yposIn);
 }
 

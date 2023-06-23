@@ -46,36 +46,38 @@ void Editor::updateInput() {
     */
     if (GameState::ks.get_0()) {
         debug_mode = true;
-
 		GameState::debug_msg.append("debug mode toogled\n");
     }
     if (GameState::ks.get_9()) {
         debug_mode = false;
-
     }
 
-    if(GameState::ks.get_mouse_right_button() != GameState::cam.cursor_hidden)
+    if(GameState::ks.get_mouse_right_button())
     {
-        glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        glfwSetCursorPos(window -> getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         GameState::cam.cursor_hidden = true;
+        glfwSetCursorPos(window -> getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
+        glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
     if(!GameState::ks.get_mouse_right_button())
     {
-        GameState::ms.prev_x = GameState::ms.get_x();
-        GameState::ms.prev_y = GameState::ms.get_y();
+        //GameState::ms.prev_x = GameState::ms.get_x();
+        //GameState::ms.prev_y = GameState::ms.get_y();
         GameState::cam.cursor_hidden = false;
         glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
     if(GameState::ks.get_mouse_left_button())
     {
-        selector.ReadPixel(GameState::ms.get_x(), GameState::ms.get_y());
+        selector.ProbeSceneObjects(&currScene, GameState::ms.click_x, GameState::ms.click_y, getWindow());
     }
+    GameState::msg(std::to_string(GameState::ms.get_x()) + "\n");
 }
 
 void Editor::updateCamera()
 {
-    GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
+    if (!GameState::cam.cursor_hidden)
+        return;
+
+    GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
     GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
 }
 
@@ -92,3 +94,9 @@ void Editor::printFPS() {
         lastTime += 1.0;
     }
 }
+
+Window* Editor::getWindow()
+{
+    return window;
+}
+

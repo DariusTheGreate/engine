@@ -367,10 +367,10 @@ public:
 
         if(item_cicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture("../../../textures", "dean.png");
+            flat.setTexture("E:own/programming/engine/textures", "dean.png");
 
-            Shader particleVertex = Shader("../../../shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
-            Shader particleFragment = Shader("../../../shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
+            Shader particleVertex = Shader("E:/own/programming/engine/shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
+            Shader particleFragment = Shader("E:/own/programming/engine/shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
 
             particleVertex.compile();
             particleFragment.compile();
@@ -427,8 +427,8 @@ public:
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load")){
-                    Shader animVertex = Shader("../../../shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader animFragment = Shader("../../../shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    Shader animVertex = Shader("E:own/programming/engine/shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader animFragment = Shader("E:own/programming/engine/shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     animVertex.compile();
                     animFragment.compile();
                     animVertex.link(animFragment);

@@ -67,8 +67,11 @@ public:
 	}
 
 
-	int prev_x;
-	int prev_y;
+	int prev_x = 0;
+	int prev_y = 0;
+
+    int click_x = 0;
+    int click_y = 0;
 
 private:
 	//don need atomics at all?..

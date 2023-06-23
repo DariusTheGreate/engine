@@ -22,8 +22,10 @@ public:
 
     void moveCameraBackward();
 
+    //NOTE(darius) its actually projection matrix.
     glm::mat4 getPerspective(int w, int h) const;
 
+    //NOTe(darius) its actually view matrix
     glm::mat4 getBasicLook() const;
     
     glm::vec3 getCameraPos() const;
