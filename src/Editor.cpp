@@ -67,9 +67,8 @@ void Editor::updateInput() {
     }
     if(GameState::ks.get_mouse_left_button())
     {
-        selector.ProbeSceneObjects(&currScene, GameState::ms.click_x, GameState::ms.click_y, getWindow());
+        selector.ProbeSceneObjects(&currScene, GameState::ms.click_x, GameState::ms.click_y, getWindow(), getRenderer());
     }
-    GameState::msg(std::to_string(GameState::ms.get_x()) + "\n");
 }
 
 void Editor::updateCamera()
@@ -99,4 +98,10 @@ Window* Editor::getWindow()
 {
     return window;
 }
+
+Renderer* Editor::getRenderer()
+{
+    return &rendol;
+}
+
 

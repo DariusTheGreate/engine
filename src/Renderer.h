@@ -171,6 +171,39 @@ public:
         glBindVertexArray(0);
     }
 
+    void renderDebugCube(glm::vec3 pos, int r)
+    {
+        glUseProgram(dsv.getProgram());
+        auto model = glm::mat4(1.0f);
+        model = glm::translate(model, pos);
+        //TODO(darius) its not size, its scale
+        model = glm::scale(model, {r,r,r});
+        //model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
+        //model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
+        dsv.setVec4("objectColor", {0,1,0,0});
+        dsv.setMat4("model", model);
+        vao.bind();
+		glDrawArrays(GL_LINE_STRIP, 0, 36);
+        glBindVertexArray(0); 
+    }
+
+    void renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,1,0,0))
+    {
+        glUseProgram(dsv.getProgram());
+        auto model = glm::mat4(1.0f);
+        model = glm::translate(model, a);
+        model = glm::scale(model, {0.01,0.01,0.01});
+        //TODO(darius) its not size, its scale
+        //model = glm::scale(model, {r,r,r});
+        //model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
+        //model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
+        dsv.setVec4("objectColor", color);
+        dsv.setMat4("model", model);
+        vao.bind();
+		glDrawArrays(GL_LINE_STRIP, 0, 36);
+        glBindVertexArray(0);
+    }
+
     void renderDebugGrid()
     {
 		glUseProgram(dsv.getProgram());
@@ -204,6 +237,28 @@ public:
 		dsv.setMat4("projection", projection);
         dsv.setMat4("view", view);
     }
+
+    void renderPoints()
+    {
+        for(auto i : pointsToRender)
+            renderDebugPoint(i.point, i.color);
+    }
+
+    void clearPoints()
+    {
+        pointsToRender.clear();
+    }
+
+    struct PointToRender{
+        glm::vec3 point;
+        glm::vec4 color = {0,1,0,0};
+
+        PointToRender(glm::vec3 pos, glm::vec4 col = glm::vec4(0,1,0,0)) : point(pos), color(col)
+        {
+    
+        }
+    };
+    std::vector<PointToRender> pointsToRender;
 
 private:
     size_t length = 0;
@@ -432,8 +487,11 @@ public:
                     currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj){
                         dbr.renderDebugLightSource(obj->getPointLight()); 
                     });
+
+                    //dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
                 }
             }
+            dbr.renderPoints();
             dbr.renderDebugGrid();
         }
     }
@@ -456,6 +514,11 @@ public:
     auto getShader()
     {
         return sv;
+    }
+
+    auto& getDebugRenderer()
+    {
+        return dbr;
     }
 
 private:

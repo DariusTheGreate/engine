@@ -19,6 +19,7 @@ public:
     void printFPS();
 
     Window* getWindow();
+    Renderer* getRenderer();
     
 private:
     UI ui;

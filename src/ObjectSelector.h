@@ -9,6 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/intersect.hpp>
 
 class ObjectSelector
 {
@@ -39,8 +40,11 @@ public:
         OpenglWrapper::UnbindFrameBuffer();
     }
 
-    glm::vec3 GetRayFromMouse(int mouseX, int mouseY, Window* w)
+    glm::vec3 GetRayFromMouse(float mouseX, float mouseY, Window* w)
     {
+        mouseX = (2.0 * mouseX) / w->getWidth() - 1.0;
+        mouseY = (2.0 * mouseY) / w->getHeight() - 1.0;
+
         glm::vec2 ray_nds = glm::vec2(mouseX, mouseY);
         glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
         glm::mat4 invProjMat = glm::inverse(GameState::cam.getPerspective(w->getWidth(), w->getHeight()));
@@ -55,15 +59,24 @@ public:
         return rayDirection;
     }
 
-    bool RaySphere(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::vec3 position, float r) 
+    bool RaySphere(glm::vec3 ray_origin, glm::vec3 ray_direction, glm::vec3 position, float r, Renderer* renderer) 
     {
-        glm::vec3 v = glm::vec3(position.x, position.y, 0.5f) - GameState::cam.getCameraPos();
+
+        glm::vec3 v = glm::vec3(position.x, position.y, position.z) - ray_origin;
+
+        renderer->getDebugRenderer().pointsToRender.push_back({v, glm::vec4{0,0,1,0}});
+    
+        float dist = 100;
+        return glm::intersectRaySphere(ray_origin, ray_direction, position, r, dist);
+
         float a = glm::dot(ray_direction, ray_direction); 
         float b = 2 * glm::dot(v, ray_direction);
         float c = glm::dot(v, v) - r*r;
 
         float b_squared_minus_4ac = b * b - 4 * a * c;
 
+        if(b_squared_minus_4ac == 0)
+            return true;
         if (b_squared_minus_4ac > 0)
         {
             float x1 = (-b - sqrt(b_squared_minus_4ac)) / 2.0f;
@@ -77,15 +90,23 @@ public:
         return false;
     }
 
-    void ProbeSceneObjects(Scene* scene, int mouseX, int mouseY, Window* w)
+    void ProbeSceneObjects(Scene* scene, int mouseX, int mouseY, Window* w, Renderer* renderer)
     {
-        std::cout << "Coords: " << mouseX << "|" << mouseY << "\n";
-        GameState::msg("Coords: " + std::to_string(mouseX) + "|" + std::to_string(mouseY) + "\n");
+        //std::cout << "Coords: " << mouseX << "|" << mouseY << "\n";
+        //GameState::msg("Coords: " + std::to_string(mouseX) + "|" + std::to_string(mouseY) + "\n");
         auto& objects = scene->get_objects();
+
+        auto ray = GetRayFromMouse(mouseX, mouseY, w);
+        //render->getDebugRenderer().renderDebugPoint(ray);
+        //render->getDebugRenderer().renderDebugPoint({0,0,0});
+        renderer->getDebugRenderer().pointsToRender.push_back(ray);
+        renderer->getDebugRenderer().pointsToRender.push_back(glm::vec3{0,0,0});
+            
         for(size_t i = 0; i < objects.size(); ++i)
         {
-            if(RaySphere(GameState::cam.getCameraPos(), GetRayFromMouse(mouseX, mouseY, w), objects[i]->getTransform().position, 5)){
-                //std::cout << "clicked " << objects[i]->get_name() << "\n"; 
+            if(RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().position, 3, renderer)){
+                std::cout << "clicked " << objects[i]->get_name() << "\n"; 
+                GameState::msg("clicked: " +objects[i]->get_name());
             }
         }
     }
