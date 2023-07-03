@@ -1,6 +1,6 @@
 #include <Editor.h>
 
-Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow()), rendol(&currScene)
+Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state)
 {
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     lastTime = glfwGetTime();
@@ -46,7 +46,7 @@ void Editor::updateInput() {
     */
     if (GameState::ks.get_0()) {
         debug_mode = true;
-		GameState::debug_msg.append("debug mode toogled\n");
+		state.debug_msg.append("debug mode toogled\n");
     }
     if (GameState::ks.get_9()) {
         debug_mode = false;
@@ -68,6 +68,7 @@ void Editor::updateInput() {
     if(GameState::ks.get_mouse_left_button())
     {
         selector.ProbeSceneObjects(&currScene, GameState::ms.click_x, GameState::ms.click_y, getWindow(), getRenderer());
+        selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
     }
 }
 
@@ -103,5 +104,4 @@ Renderer* Editor::getRenderer()
 {
     return &rendol;
 }
-
 

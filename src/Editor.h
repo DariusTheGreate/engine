@@ -27,6 +27,7 @@ private:
     Window* window;
     Renderer rendol;
     ObjectSelector selector;
+    GameState state;
 
     unsigned int frame_number = 0;
     double lastTime = 0;

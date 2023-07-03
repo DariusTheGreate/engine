@@ -2,6 +2,13 @@
 #include <OpenglWrapper.h>
 #include <iostream>
 
+#include <stb_image.h>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+
 Model::Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
     : shader(shader_in), shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
 {

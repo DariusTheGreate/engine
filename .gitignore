@@ -3,3 +3,4 @@ vendor/
 meshes/
 textures/
 *.obj
+logicScripts/EngineLogic/

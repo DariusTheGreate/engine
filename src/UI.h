@@ -23,7 +23,8 @@
 class UI {
 
 public:
-	UI(GLFWwindow* window) {
+	UI(GLFWwindow* window, GameState* st) {
+        state = st;
 		IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         io = &ImGui::GetIO(); (void)io;
@@ -519,11 +520,12 @@ public:
     {
         ImGui::Begin("Console");
 
-        if (ImGui::Button("Clear console")){
-            GameState::clear_msg();
+        if (state && ImGui::Button("Clear console")){
+            state -> clear_msg();
         }
 
-        ImGui::TextWrappedV(GameState::debug_msg.c_str(), 0);
+        if(state)
+			ImGui::TextWrappedV(state->debug_msg.c_str(), 0);
 
         //ImGui::SetScrollY(GameState::debug_len*10);
 
@@ -551,4 +553,6 @@ private:
     ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
     glm::mat4 cameraProjection;
     glm::mat4 cameraView;
+
+    GameState* state= nullptr;
 };

@@ -38,6 +38,7 @@ public:
         OpenglWrapper::ReadZeroBuffer();
         //std::cout << pixel[0] << " " << pixel[1] << "\n";
         OpenglWrapper::UnbindFrameBuffer();
+        //GameState::msg("Pixel data: " + std::to_string(pixel[0]) + "|" + std::to_string(pixel[1]) + "|" + std::to_string(pixel[2]) + "|" + std::to_string(pixel[3]) + "\n");
     }
 
     glm::vec3 GetRayFromMouse(float mouseX, float mouseY, Window* w)
@@ -106,7 +107,7 @@ public:
         {
             if(RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().position, 3, renderer)){
                 std::cout << "clicked " << objects[i]->get_name() << "\n"; 
-                GameState::msg("clicked: " +objects[i]->get_name());
+                //msg("clicked: " +objects[i]->get_name());
             }
         }
     }

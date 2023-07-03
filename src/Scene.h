@@ -6,16 +6,19 @@
 #include <Object.h>
 #include <GameState.h>
 #include <LightingShaderRoutine.h>
+#include <RigidBody.h>
+#include <Colider.h>
+#include <ParticleSystem.h>
+#include <Script.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
-constexpr size_t CHUNK_SZ = sizeof(Object) * CHUNK_COUNT;
 constexpr size_t POOL_SZ = 3;
 
 //kinda cool, but kinda cringe..The Idea is to make object destory fast, and collect garbage after
 //TODO(darius) test this shit 
 //TODO(darius) objects replication(if there is object copy - just point to same location)
-template<typename T = Object, size_t CHUNK_COUNT = CHUNK_COUNT, size_t CHUNK_SZ = CHUNK_SZ, size_t POOL_SZ = POOL_SZ>
+template<typename T = Object, size_t CHUNK_COUNT = CHUNK_COUNT, size_t POOL_SZ = POOL_SZ>
 class SceneMemoryManager
 {
 public:
@@ -87,10 +90,10 @@ private:
 
 	void create_new_pool() 
 	{
-		char* p = bytes.allocate(POOL_SZ * CHUNK_SZ);
+		//TODO(darius) not 64!
+		char* p = bytes.allocate(POOL_SZ * 64 * CHUNK_COUNT);
 		
 		//TODO(darius) check p here
-
 		Pool newp = { p, 0, POOL_SZ };
 		mem_pools.push_back(newp);
 	}
@@ -99,181 +102,49 @@ private:
 class Scene 
 {
 public:
-	Scene()
-	{
-		init_memory();
-		start_scripts();
-	}
+	Scene();
 
 	template<typename... Args>
 	Object* createObject(Args&&... args) {
 		Object* pt = mem_man.construct(std::forward<Args>(args)...);
 		sceneObjects.push_back(pt);
-		pt->startScript();
+		//pt->startScript();
 
 		return pt;
 	}
 
-	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) {
-		Model m = Model(path, shaderRoutine_in, sv, rotateTextures);
-		auto meshes = m.loadModel();
+	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures);
 
-		std::vector<Object*> subobjects;
-		subobjects.reserve(meshes.size());
-		for (int i = 0; i < meshes.size(); ++i) {
-			Object* pt = mem_man.construct(po, meshes[i], sv, shaderRoutine_in);
-			std::cout << "created pt\n";
-			subobjects.push_back(pt);
-		}
-		
-		po->set_child_objects(std::move(subobjects));
+	Object* AddEmpty(int i);
 
-		po->startScript();
-		return po;
-	}
+	Object* createSubobject(Object* obj, int i);
 
-	Object* AddEmpty(int i)
-	{
-		Object* pt;
-		pt = mem_man.construct("empty " + std::to_string(i));	
-		sceneObjects.push_back(pt);
-		return pt;
-	}
+	void destroyObject(size_t id);
 
-	Object* createSubobject(Object* obj, int i)
-	{
-		Object* pt;
-		pt = mem_man.construct("empty " + std::to_string(i));	
-		obj->addChild(pt);
+	void updateScene();
 
-		return pt;
-	}
+	void renderScene();
 
-	void destroyObject(size_t id)
-	{
-		auto* ptr = sceneObjects[id];
-		mem_man.destroy(ptr);
-		sceneObjects[id] = nullptr;
-	}
+	void renderParticles();
 
-	void updateScene() {
-		update_objects();
-	}
+	void updateAnimators(float dt);
 
-	void renderScene()
-	{
-		for (int i = 0; i < sceneObjects.size(); ++i) {
-			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
-				continue;	
-			sceneObjects[i]->renderObject();
-		}
-	}
+	Object* get_object_at(int i);
 
-	void renderParticles()
-	{
-		for(int i = 0; i < sceneObjects.size(); ++i){
-			if(!sceneObjects[i]->getParticleSystem())
-				continue;
-
-	        sceneObjects[i]->getParticleSystem()->updateUniform3DDistribution(glfwGetTime());
-	        sceneObjects[i]->getParticleSystem()->renderParticles();
-	    }
-	}
-
-	void updateAnimators(float dt)
-	{
-		for(auto& obj : sceneObjects){
-			if(!obj->getAnimator())
-				continue;
-			obj->updateAnimator(dt);
-		}
-	}
-
-	Object* get_object_at(int i) 
-	{
-		return sceneObjects.at(i);
-	}
-
-	std::vector<Object*>& get_objects()
-	{
-		return sceneObjects;
-	}
+	std::vector<Object*>& get_objects();
 
 private:
 
-	void init_memory() 
-	{
-		mem_man.allocate(1000);
-	}
+	void init_memory();
 
-	void start_scripts()
-	{
-		for(auto& i : sceneObjects)
-		{
-			i->startScript();
-		}
-	}
+	void start_scripts();
 	
-	void update_objects() {
-		//now its traverse of objects and update. Its much better to do it in one traverse
-		//TODO(darius) make it separated threads for collisions and rendering and update?
+	void update_objects();
 
-		for (int i = 0; i < sceneObjects.size(); ++i) {
-			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
-				continue;
-
-
-			sceneObjects[i]->updateScript();
-
-
-			if(sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()){
-				sceneObjects[i]->updatePos();
-				continue;
-			}
-
-			//COLLISIONS RESOLUTION:
-			// O(n^2) 
-			// sort by tag + traverse in O(Nlg + N)?
-			// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
-
-			bool is_there_collision = false;
-			for (int j = 0; j < sceneObjects.size(); ++j) {
-				if (
-					i == j 
-					|| !sceneObjects[i]->getColider()
-					|| !sceneObjects[j]->getColider()
-					|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j] -> getColider()->get_tag() 
-					|| !sceneObjects[j]->getColider()->is_active()
-				)	continue;
-
-				auto collision_state = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
-
-				if (collision_state) {
-					is_there_collision = collision_state;
-					glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
-
-					if(sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z){
-						sceneObjects[i]->getRigidBody()->tr.position += glm::vec3{epa.x/4, epa.y/4, epa.z/4};
-					}
-
-					break;
-				}
-			}
-			if (!is_there_collision) {
-				sceneObjects[i]->updatePos();
-			}
-		}
-	}
-
-	void update_scripts()
-	{
-		for(auto& i : sceneObjects)
-		{
-			i->updateScript();
-		}
-	}
+	void update_scripts();
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
 	SceneMemoryManager<> mem_man;
 };
+

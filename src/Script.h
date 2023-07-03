@@ -7,6 +7,8 @@
 
 #include <glm/glm.hpp>
 
+#include <ScriptApi.h>
+
 class Scene;
 class Object;
 class Script;
@@ -30,36 +32,41 @@ struct ScriptProperty
 	std::string name;
 };
 
-struct ScriptArgument
-{
-	Scene* scene;
-	Object* obj;
-	Script* script; 
-};
-
 class Script 
 {
 public:
-	Script(Scene* scn, Object* pobj, std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd) : scriptScene(scn), parentObj(pobj), start(std::move(st)), update(std::move(upd)) 
+	Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r) : scriptScene(scn), parentObj(pobj), routine(r)
 	{
 	}
 
-	void set_scripts(std::function<void(ScriptArgument*)>&& st, std::function<void(ScriptArgument*)>&& upd)
+    Script(Scene* scn, Object* pobj) : scriptScene(scn), parentObj(pobj)
 	{
-		start = st;
-		update = upd;
 	}
+
+	void set_scripts(EmptyScriptRoutine* r)
+	{
+        routine = r;
+	}
+
+    void set_scripts_from_file()
+    {
+        
+    }
 
 	void startScript()
 	{
+        if(!routine)
+            return;
 		ScriptArgument tmpArgument = {scriptScene, parentObj, this}; 
-		start(&tmpArgument);
+		routine->start(tmpArgument);
 	}
 
 	void updateScript()
 	{
+        if(!routine)
+            return;
 		ScriptArgument tmpArgument = {scriptScene, parentObj, this}; 
-		update(&tmpArgument);
+		routine->update(tmpArgument);
 	}
 
 	void setParentObject(Object* newParent)
@@ -88,8 +95,9 @@ public:
 	}
 
 private:
-	std::function<void(ScriptArgument*)> start;
-	std::function<void(ScriptArgument*)> update;
+	//std::function<void(ScriptArgument*)> start;
+	//std::function<void(ScriptArgument*)> update;
+	EmptyScriptRoutine* routine;
 	
 	Scene* scriptScene = nullptr;
 	Object* parentObj = nullptr;
