@@ -18,7 +18,7 @@ public:
 		instance->msg("Iam super duper mega start");// + obj->get_name());
 	}
 	void update(ScriptArgument& args) override {
-		instance->msg("Iam super duper mega update");
+		//instance->msg("Iam super duper mega update");
 	}
 
 	void setInstance(GameState* p) override

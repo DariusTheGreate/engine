@@ -47,6 +47,7 @@ public:
             addPosition(glm::vec3{i,i,i});
     }
 
+    //https://www.youtube.com/watch?v=Y0Ko0kvwfgA&ab_channel=Acerola
     void renderParticles()
     {
         if(positions.size() < 3)
@@ -69,17 +70,17 @@ public:
         //if(particleMaterial)
         //    particleMaterial->setShaderMaterial(*shader);
 
-        for(auto& p : positions)
+        for (auto& p : positions)
         {
             shaderRoutine->operator()(Transform(p, particle_size));
             //shader->setVec3("aOffset", glm::vec3{0,0,0});
             particle->Draw(*shader, positions.size());
         }
 
-        //std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
-        /*for(auto& p : positions)
+        /*std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        for(auto& p : positions)
         {
-            particle->Draw(Transform(p, particle_size), pl, particleMaterial);
+            particle->DrawRaw(*shader, 0);
         }
         */
     }

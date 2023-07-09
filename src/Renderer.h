@@ -89,6 +89,8 @@ TODO(all):
         - mesh optimizer - https://github.com/zeux/meshoptimizer
         - https://www.youtube.com/watch?v=k2h9FORbLa4&ab_channel=Gamefromscratch
         - https://www.boost.org/doc/libs/1_82_0/doc/html/boost_dll/tutorial.html
+        - https://www.youtube.com/watch?v=nmxZmIOAosY&ab_channel=mohamedshaalan
+        - https://github.com/GarrettGunnell/CS2-Smoke-Grenades 
 */
 
 class DebugRenderer 
@@ -123,14 +125,16 @@ public:
     
         }
     };
-    std::vector<PointToRender> pointsToRender;
 
+    std::vector<PointToRender> pointsToRender;
+    bool debug_render_points = true;
 private:
     size_t length = 0;
-    size_t slices = 100;
+    size_t slices = 200;
 	std::vector<glm::vec3> vertices_grid;
 	std::vector<glm::uvec4> indices_grid;
     int grid_scale = 1;
+    int grid_mode = 3;
 
     //TODO(darius) use cubeMesh
     float vertices[48 * 6] = {
@@ -199,6 +203,7 @@ private:
 class Renderer
 {
 public:
+    Renderer() = default;
     Renderer(Scene* currScene_in, GameState* instance);
 
     void render(Window* wind, bool& debug_mode);
@@ -212,6 +217,8 @@ public:
     Shader getShader();
 
     DebugRenderer& getDebugRenderer();
+    
+    glm::vec3 backgroundColor = glm::vec3{0.0f, 0.0f, 0.0f};
 
 private:
     DebugRenderer dbr;

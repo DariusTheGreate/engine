@@ -3,6 +3,7 @@
 Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state)
 {
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
+    GameState::editor_mode = 3;
     lastTime = glfwGetTime();
 }
 
@@ -16,40 +17,60 @@ void Editor::update()
     rendol.render(window, debug_mode);
 
 	ui.renderUI(currScene, rendol);
-    ui.apply();
    	rendol.updateBuffers(window); 
+}
+
+void Editor::setEditorMode(int mode)
+{
+    GameState::editor_mode = mode;
 }
 
 void Editor::updateInput() {
     if (GameState::ks.get_w()) {
-        GameState::cam.moveCameraForward();
+        if(GameState::editor_mode == 3)
+            GameState::cam.moveCameraForward();
+        else
+            GameState::cam.moveCameraUp();
     }
     if (GameState::ks.get_a()) {
         GameState::cam.moveCameraLeft();
     }
     if (GameState::ks.get_s()) {
-        GameState::cam.moveCameraBackward();
+        if(GameState::editor_mode == 3)
+            GameState::cam.moveCameraBackward();
+        else
+            GameState::cam.moveCameraDown();
     }
     if (GameState::ks.get_d()) {
         GameState::cam.moveCameraRight();
     }
-
-    /*if (GameState::ks.get_2()) {
-        GameState::cam.cursor_hidden = false;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    if (GameState::ks.get_q()) {
+        GameState::cam.moveCameraBackward();
     }
-    if (GameState::ks.get_1()) {
-        GameState::cam.cursor_hidden = true;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        glfwSetCursorPos(window, GameState::cam.getLastX(), GameState::cam.getLastY());
+    if (GameState::ks.get_e()) {
+        GameState::cam.moveCameraForward();
     }
-    */
     if (GameState::ks.get_0()) {
         debug_mode = true;
 		state.debug_msg.append("debug mode toogled\n");
     }
+    if (GameState::ks.get_1()) {
+        setEditorMode(2);
+		state.debug_msg.append("2D\n");
+    }
+    if (GameState::ks.get_2()) {
+        setEditorMode(3);
+		state.debug_msg.append("3D\n");
+    }
+    if (GameState::ks.get_3()) {
+        rendol.getDebugRenderer().debug_render_points = false;
+    }
+    if (GameState::ks.get_4()) {
+        rendol.getDebugRenderer().debug_render_points = true;
+    }
     if (GameState::ks.get_9()) {
         debug_mode = false;
+        rendol.getDebugRenderer().clearPoints();
     }
 
     if(GameState::ks.get_mouse_right_button())

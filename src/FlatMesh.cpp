@@ -4,7 +4,6 @@
 FlatMesh::FlatMesh()
 {
     this->vertices.resize(verticesRaw.size()/7);
-    std::cout << "vert size is " << this->vertices.size() << "\n";
     
     //TODO(darius) UB and stuff
     for(int i = 0; i < verticesRaw.size(); i += 7)
@@ -70,7 +69,8 @@ void FlatMesh::Draw(Shader& shader, size_t amount)
 
     vao.bind();
 
-    OpenglWrapper::DrawInstances(0, amount);
+    OpenglWrapper::DrawInstances(36, amount);
+    //OpenglWrapper::DrawArrays(36);
     OpenglWrapper::UnbindVAO();
     OpenglWrapper::BindTexture(GL_TEXTURE0);
 }

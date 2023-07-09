@@ -22,6 +22,9 @@ public:
 
     void moveCameraBackward();
 
+    void moveCameraUp();
+
+    void moveCameraDown();
     //NOTE(darius) its actually projection matrix.
     glm::mat4 getPerspective(int w, int h) const;
 

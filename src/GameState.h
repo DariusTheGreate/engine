@@ -5,6 +5,7 @@
 #include "MouseState.h"
 #include "KeyboardState.h"
 
+//TODO(darius) fix this bullshit
 class GameState
 {
 public:
@@ -35,6 +36,7 @@ public:
 	static MouseState ms;
 	static KeyboardState ks;
 	static GameState* instance;
+    static int editor_mode;
 
 	//TODO(darius) make it a class
 	std::string debug_msg;

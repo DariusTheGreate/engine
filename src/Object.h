@@ -151,7 +151,7 @@ private:
 	std::optional<Colider> colider;
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
-	std::optional<Material> material;
+	std::optional<Material> material = std::nullopt;
 	std::optional<ParticleSystem> particles;
 	std::optional<Animator> animator;
 

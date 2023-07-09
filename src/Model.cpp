@@ -37,13 +37,12 @@ Model::Model(std::string_view path_in) : path(path_in){
     loadModel();
 }
 
-//TODO(darius) make it shaderRoutine(tr[i]) for each mesh
 void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m)
 {
     if(light){
         light->setShaderLight(shader);
     }
-    if(m){
+    if(m){//TODO(darius) why the fuck matrial not nullopt?
         m->setShaderMaterial(shader);
     }
 
@@ -53,8 +52,6 @@ void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<M
         shaderRoutine(tr);
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
-        //if(i == 3)
-        //  shaderRoutine(Transform{(tr.position + glm::vec3{3,3,3}), tr.scale});
         meshes[i].Draw(shader);
     }
 }
@@ -329,20 +326,19 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data)
     {
-        GLenum format;
+        GLenum format = GL_RGBA;
         if (nrComponents == 1)
             format = GL_RED;
         else if (nrComponents == 3)
             format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
+        
+        std::cout << "FKN FORMAT IS rgba? " << bool(format == GL_RGBA) << "\n";
         OpenglWrapper::BindTexture(textureID);
         OpenglWrapper::ImageTexture(format, width, height, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
-        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
         OpenglWrapper::TextureParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         OpenglWrapper::TextureParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

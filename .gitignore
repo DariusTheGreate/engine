@@ -3,4 +3,5 @@ vendor/
 meshes/
 textures/
 *.obj
+*.ini
 logicScripts/EngineLogic/

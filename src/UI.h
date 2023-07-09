@@ -27,16 +27,16 @@ public:
         state = st;
 		IMGUI_CHECKVERSION();
         ImGui::CreateContext();
-        io = &ImGui::GetIO(); (void)io;
-        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-        io -> ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io = &ImGui::GetIO();
+        //io -> ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        //io -> ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
         io -> ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io -> ConfigDragClickToInputText = true;
 
         //ImGui::StyleColorsDark();
         //ImGui::StyleColorsLight();
 
-        const char* glsl_version = "#version 130";
+        const char* glsl_version = "#version 330";
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init(glsl_version);
 	}
@@ -46,19 +46,33 @@ public:
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //TODO(darius) uncomment this in order to enable docking windows. But it brokes color of application idk (mb cause of srgb enbled but i tryed to disable it, and that didnt worked)
+        //TODO(darius) uncomment this in order to enable docking windows. But it brokes color of application cause you need to switch framebuffers
         //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
         
         sceneWindow(scn, r);
         showConsoleWindow();
+        showEditorSettingsWindow(r);
+        AssetBrowserWindow();
 
-        //ImGui::EndFrame();
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        ImGui::EndFrame();
         ImGui::Render();
-        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //glBindFramebuffer(GL_FRAMEBUFFER, renderer.FBO);
     }
 
     void apply() {
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
+
+    void AssetBrowserWindow()
+    {
+        ImGui::Begin("resources");
+        ImGui::BeginChild("path");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(">");
+        ImGui::EndChild();
+        ImGui::End();
     }
 
     //TODO(darius) check this out https://github.com/tksuoran/erhe/blob/7617e6eda85219346aa92c2c980c699e659c359d/src/editor/windows/layers_window.cpp#LL56C4-L56C4
@@ -123,12 +137,18 @@ public:
 								if (ImGui::IsItemClicked()) {
 									show_object_window = true;
                                     item_cicked = op;
-                                    if(item_cicked->getRigidBody())
+                                    if(item_cicked->getRigidBody()){
                                         objTr = item_cicked->getRigidBody()->tr.get_quatmat();
+                                    }
                                     auto pos = item_cicked->getTransform().position; 
+                                    auto scale = item_cicked->getTransform().scale; 
                                     objTr[3][0] = pos.x;
                                     objTr[3][1] = pos.y;
                                     objTr[3][2] = pos.z;
+
+                                    objScl[0][0] = scale.x;
+                                    objScl[1][1] = scale.y;
+                                    objScl[2][2] = scale.z;
 								}
 								ImGui::TreePop();
 							}
@@ -141,9 +161,16 @@ public:
                             if(item_cicked->getRigidBody())
                                 objTr = item_cicked->getRigidBody()->tr.get_quatmat();
                             auto pos = item_cicked->getTransform().position; 
+                            auto scale = item_cicked->getTransform().scale; 
+
                             objTr[3][0] = pos.x;
                             objTr[3][1] = pos.y;
                             objTr[3][2] = pos.z;
+
+                            objScl[0][0] = scale.x;
+                            objScl[1][1] = scale.y;
+                            objScl[2][2] = scale.z;
+
                         }
 
 						ImGui::TreePop();
@@ -328,7 +355,7 @@ public:
             //ImGui::DragFloat("color G", &light->color.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             //ImGui::DragFloat("color B", &light->color.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
 
-            ImGui::DragFloat("color factor", &light->colorFactor, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("color factor", &light->ambientFactor, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("diffuse factor", &light->diffuseFactor, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
 
             ImGui::DragFloat("specular x", &light->specular.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
@@ -368,7 +395,7 @@ public:
 
         if(item_cicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture("E:own/programming/engine/textures", "dean.png");
+            flat.setTexture("E:/own/programming/engine/textures", "grass.png");
 
             Shader particleVertex = Shader("E:/own/programming/engine/shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
             Shader particleFragment = Shader("E:/own/programming/engine/shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
@@ -428,8 +455,8 @@ public:
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load")){
-                    Shader animVertex = Shader("E:own/programming/engine/shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader animFragment = Shader("E:own/programming/engine/shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    Shader animVertex = Shader("E:/own/programming/engine/shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader animFragment = Shader("E:/own/programming/engine/shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     animVertex.compile();
                     animFragment.compile();
                     animVertex.link(animFragment);
@@ -449,6 +476,32 @@ public:
                 CubeMesh cube;
                 cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
                 item_cicked->addModel(cube, shader, shadeRroutine);
+            }
+
+            if(ImGui::CollapsingHeader("FlatMesh"))
+            {
+                FlatMesh flat;
+
+                //TODO(darius) leak here!!
+                Shader vshdr = Shader("E:/own/programming/engine/shaders/blendingVertexShader.glsl", GL_VERTEX_SHADER);
+                Shader fshdr = Shader("E:/own/programming/engine/shaders/blendingFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                vshdr.compile();
+                fshdr.compile();
+                vshdr.link(fshdr);
+
+                LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+
+                path.resize(100);
+                name.resize(100);
+                ImGui::InputText("path", (char*)path.c_str(), 100);
+                ImGui::InputText("name", (char*)name.c_str(), 100);
+
+                if(ImGui::Button("Load")){
+                    flat.setTexture(path, name);
+                    item_cicked->addModel(flat, vshdr, shaderRoutine);
+                }
+
+
             }
 
             if(ImGui::Button("Empty")){
@@ -496,12 +549,17 @@ public:
     		cameraView = (GameState::cam.getBasicLook());
         }
 
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
+        if(curr_operation != ImGuizmo::OPERATION::SCALE)
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
+        else
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objScl));
 
         //TODO(darius) make it separate function to change all stuff of object
         item_cicked->getTransform().set_from_quatmat(objTr);
+        item_cicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
         if(item_cicked->getPointLight()){
             item_cicked->getPointLight()->position = item_cicked->getTransform().position;
+            item_cicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
         }
         auto& objtrref = objTr;
         item_cicked->traverseObjects([&objtrref](Object* obj){
@@ -511,7 +569,7 @@ public:
 		int viewManipulateRight = ImGui::GetWindowPos().x + 900;
 		int viewManipulateTop = ImGui::GetWindowPos().y;
         //ImGuizmo::DrawGrid(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), glm::value_ptr(glm::mat4(1)), 100.f);
-		ImGuizmo::ViewManipulate(glm::value_ptr(cameraView), 8, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+		//ImGuizmo::ViewManipulate(glm::value_ptr(cameraView), 8, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
 
         //ImGui::End();
     }
@@ -531,6 +589,16 @@ public:
 
         ImGui::End();
     }
+    
+    void showEditorSettingsWindow(Renderer& hui)
+    {
+        ImGui::Begin("Editor Settings");
+        
+        ImGui::ColorEdit3("Background Color", (float*)&hui.backgroundColor);
+
+        ImGui::End();
+    }
+
 private:
     bool show_demo_window = false;
     bool show_scene_window = false;
@@ -538,6 +606,7 @@ private:
     bool show_component_adder = false;
 
     std::string path{""};
+    std::string name{""};
 
     int emptyCreated = 0;
 
@@ -546,9 +615,14 @@ private:
 
 	Object* item_cicked = nullptr;
     glm::mat4 objTr = { 1.f, 0.f, 0.f, 0.f,
-    0.f, 1.f, 0.f, 0.f,
-    0.f, 0.f, 1.f, 0.f,
-    0.f, 0.f, 0.f, 1.f };
+                        0.f, 1.f, 0.f, 0.f,
+                        0.f, 0.f, 1.f, 0.f,
+                        0.f, 0.f, 0.f, 1.f };
+
+    glm::mat4 objScl = { 1.f, 0.f, 0.f, 0.f,
+                        0.f, 1.f, 0.f, 0.f,
+                        0.f, 0.f, 1.f, 0.f,
+                        0.f, 0.f, 0.f, 1.f };
 
     ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
     glm::mat4 cameraProjection;

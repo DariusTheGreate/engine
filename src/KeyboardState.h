@@ -20,6 +20,14 @@ public:
 	void set_d(bool state) {
 		d_pressed.store(state);
 	}
+	
+	void set_q(bool state) {
+		q_pressed.store(state);
+	}
+	
+	void set_e(bool state) {
+		e_pressed.store(state);
+	}
 
 	void set_mouse_right_button(bool state)
 	{
@@ -43,6 +51,14 @@ public:
 		pressed_2.store(state);
 	}
 
+	void set_3(bool state) {
+		pressed_3.store(state);
+	}
+
+	void set_4(bool state) {
+		pressed_4.store(state);
+	}
+
 	void set_9(bool state) {
 		pressed_9.store(state);
 	}
@@ -63,6 +79,14 @@ public:
 		return d_pressed.load();
 	}
 
+	bool get_e() {
+		return e_pressed.load();
+	}
+
+	bool get_q() {
+		return q_pressed.load();
+	}
+
 	bool get_0() {
 		return pressed_0.load();
 	}
@@ -73,6 +97,14 @@ public:
 
 	bool get_2() {
 		return pressed_2.load();
+	}
+
+	bool get_3() {
+		return pressed_3.load();
+	}
+
+	bool get_4() {
+		return pressed_4.load();
 	}
 
 	bool get_9() {
@@ -94,9 +126,14 @@ private:
 	std::atomic_bool a_pressed;
 	std::atomic_bool s_pressed;
 	std::atomic_bool d_pressed;
+	std::atomic_bool q_pressed;
+	std::atomic_bool e_pressed;
+
 	std::atomic_bool pressed_0;
 	std::atomic_bool pressed_1;
 	std::atomic_bool pressed_2;
+	std::atomic_bool pressed_3;
+	std::atomic_bool pressed_4;
 	std::atomic_bool pressed_9;
 	std::atomic_bool mouse_right_button_pressed;
 	std::atomic_bool mouse_left_button_pressed;

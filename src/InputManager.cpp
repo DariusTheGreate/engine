@@ -33,6 +33,12 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         GameState::ks.set_d(true);
     }
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+        GameState::ks.set_q(true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        GameState::ks.set_e(true);
+    }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
         GameState::ks.set_0(true);
     }
@@ -41,6 +47,12 @@ void InputManager::processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
         GameState::ks.set_2(true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+        GameState::ks.set_3(true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+        GameState::ks.set_4(true);
     }
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
         GameState::ks.set_9(true);
@@ -57,6 +69,12 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
         GameState::ks.set_d(false);
     }
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE) {
+        GameState::ks.set_q(false);
+    }
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
+        GameState::ks.set_e(false);
+    }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
         GameState::ks.set_0(false);
     }
@@ -65,6 +83,12 @@ void InputManager::processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
         GameState::ks.set_2(false);
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) {
+        GameState::ks.set_3(false);
+    }
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) {
+        GameState::ks.set_4(false);
     }
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_RELEASE) {
         GameState::ks.set_9(false);

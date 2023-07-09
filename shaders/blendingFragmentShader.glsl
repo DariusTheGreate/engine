@@ -67,13 +67,6 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-    //vec4 texColor = texture(texture_diffuse1, TexCoords);
-    //if(texColor.a < 0.1)
-    //    discard;
-    //FragColor = texColor;
-
-    //return;
-
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     
@@ -82,12 +75,10 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
     
-   // FragColor = texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f);
-
-    FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
-
+    //TODO(darius) WTFWTFWTFWTFWTFWTFWFT??????????!!!!!!SUKAA
+    FragColor.rgb = pow(result, vec3(1.0/gammaFactor));
+    FragColor.a = 1.0;
 }   
-
 
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
@@ -100,7 +91,6 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-
     return (ambient + diffuse + specular);
 }
 

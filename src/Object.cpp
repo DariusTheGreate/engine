@@ -3,7 +3,7 @@
 
 Object::Object(std::string name_in) : name(name_in)
 {
-
+    material = std::nullopt;
 }
 
 Object::Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in)
@@ -287,7 +287,7 @@ void Object::addModel(Mesh m, Shader sv, LightingShaderRoutine routine)
 {
     if(model)
         return;
-    setDefaultMaterial();
+    //setDefaultMaterial();
     model.emplace(m, sv, routine);
 }
 
@@ -295,7 +295,7 @@ void Object::addModel(Shader sv, LightingShaderRoutine routine)
 {
     if(model)
         return;
-    setDefaultMaterial();
+    //setDefaultMaterial();
     model.emplace(sv, routine);
 }
 
@@ -304,7 +304,7 @@ void Object::addModel(std::string_view path, Shader sv, LightingShaderRoutine ro
 {
     if(model)
         return;
-    setDefaultMaterial();
+    //setDefaultMaterial();
     model.emplace(path, sv, routine, rotate);
 }
 
@@ -312,7 +312,7 @@ void Object::addModel(std::string_view path)
 {
     if(model)
         return;
-    setDefaultMaterial();
+    //setDefaultMaterial();
     model.emplace(path);
 }
 
@@ -337,7 +337,7 @@ std::optional<PointLight>& Object::getPointLight()
 
 void Object::setDefaultMaterial()
 {
-    material = Material(32);
+    setMaterial(Material(32));
 }
 
 void Object::setMaterial(const Material& m)

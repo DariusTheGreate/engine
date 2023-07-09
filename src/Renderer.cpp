@@ -24,12 +24,30 @@ DebugRenderer::DebugRenderer() : dsv("E:/own/programming/engine/shaders/debugVer
 
 void DebugRenderer::setupSceneGrid()
 {
+    grid_mode = GameState::editor_mode;
+    std::cout << "grid setup " << grid_mode << "\n";
+    indices_grid.clear();
+    vertices_grid.clear();
+    vertices_grid.shrink_to_fit();
+    indices_grid.shrink_to_fit();
+
 	for (int i = 0; i <= slices; ++i) {
 		for (int j = 0; j <= slices; ++j) {
-			float x = (float)j;// / (float)slices;
-			float y = 0;
-			float z = (float)i;// / (float)slices;
-			vertices_grid.push_back(glm::vec3((x-slices/2) * grid_scale, (y) * grid_scale, (z-slices/2) * grid_scale));
+			float x = (float)j;
+            float y = 0;
+            float z = (float)i;
+
+		    if(grid_mode == 2){	
+                x = (float)j;
+                y = (float)i;
+                z = 0;
+            }
+
+            if(grid_mode == 3)
+                vertices_grid.push_back(glm::vec3((x-slices/2) * grid_scale, (y) * grid_scale, (z-slices/2) * grid_scale));
+
+            else if(grid_mode == 2)
+                vertices_grid.push_back(glm::vec3((x-slices/2) * grid_scale, (y-slices/2) * grid_scale, (z) * grid_scale));
 		}
 	}
 
@@ -95,8 +113,11 @@ void DebugRenderer::renderDebugCube(glm::vec3 pos, int r)
 	glBindVertexArray(0); 
 }
 
+//TODO(darius) make it instanced. Dont upload each point individually
 void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,1,0,0))
 {
+    if(!debug_render_points)
+        return;
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, a);
@@ -114,6 +135,11 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 
 void DebugRenderer::renderDebugGrid()
 {
+    if(GameState::editor_mode != grid_mode)
+    {
+        setupSceneGrid(); 
+    }
+
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	dsv.setVec4("objectColor", {0.4,0.4,0.4,0});
@@ -155,24 +181,23 @@ void DebugRenderer::renderPoints()
 void DebugRenderer::clearPoints()
 {
 	pointsToRender.clear();
+	pointsToRender.shrink_to_fit();
 }
 
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug", instance) {
-    pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    pointLight.addLight();
-    directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    directionalLight.ambient = { 0,0,0 };
-    spotLight = SpotLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(0, -1, 0));
+sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug", instance){
+    //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    //pointLight.addLight();
+    //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    //directionalLight.ambient = { 0,0,0 };
+    //spotLight = SpotLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(0, -1, 0));
 
     //glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
 
     sv.compile();
     sf.compile();
     sv.link(sf);
-
-    currShaderRoutine = { Shader(sv), std::move(directionalLight), std::move(pointLight), Material(32) };
 
     //TODO(darius) make something like ScriptCode class and load update anmd setup from precompilde .o file. But we need separate lib for user
     auto objSetupRoutine = [](ScriptArgument* args) {
@@ -248,12 +273,13 @@ sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_
     };
 
 
-    for (int i = 0; i < 1; i += 1) {
+    /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj",
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
         //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
     }
+    */
 
     //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 }
@@ -267,9 +293,9 @@ void Renderer::render(Window* wind, bool& debug_mode) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
 
-    glEnable(GL_FRAMEBUFFER_SRGB);
+    //glDisable(GL_FRAMEBUFFER_SRGB);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(sv.getProgram());

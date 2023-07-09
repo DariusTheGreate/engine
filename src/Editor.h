@@ -16,18 +16,21 @@ public:
 
     void setPolygonMode(size_t type = GL_LINE);
 
+    void setEditorMode(int mode);
+
     void printFPS();
 
     Window* getWindow();
     Renderer* getRenderer();
     
 private:
+    GameState state;
     UI ui;
     Scene currScene;
     Window* window;
     Renderer rendol;
     ObjectSelector selector;
-    GameState state;
+
 
     unsigned int frame_number = 0;
     double lastTime = 0;

@@ -91,7 +91,7 @@ private:
 	void create_new_pool() 
 	{
 		//TODO(darius) not 64!
-		char* p = bytes.allocate(POOL_SZ * 64 * CHUNK_COUNT);
+		char* p = bytes.allocate(POOL_SZ * sizeof(Object) * CHUNK_COUNT);
 		
 		//TODO(darius) check p here
 		Pool newp = { p, 0, POOL_SZ };

@@ -23,8 +23,8 @@ public:
 
 	void setShaderLight(Shader sv)
     {
-        diffuse = color  * glm::vec3(colorFactor); 
-        ambient = diffuse* glm::vec3(diffuseFactor); 
+        diffuse = color  * glm::vec3(diffuseFactor); 
+        ambient = diffuse * glm::vec3(ambientFactor); 
 
     	sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].position", position);
     	sv.setVec3("pointLights[" + std::to_string(lightNumber) + "].ambient", ambient);
@@ -51,8 +51,8 @@ public:
 	float intensity = 1.0f;	
 	float radius = 1.0f;
 
-    float colorFactor = 0.5f;
     float diffuseFactor = 0.5f;
+    float ambientFactor = 0.5f;
 
     int lightNumber = 0;
 

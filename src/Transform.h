@@ -5,6 +5,7 @@
 #include <glm/gtc/quaternion.hpp >
 #include <vector>
 
+// https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
 struct Transform
 {
 	Transform() = default;
@@ -22,7 +23,16 @@ struct Transform
 	{
 		q = m;
 		position = m[3];
+
+        //scale.x = m[0][0];
+        //scale.y = m[1][1];
+        //scale.z = m[2][2];
 	}
+
+    void set_scale(glm::vec3 scl)
+    {
+        scale = scl;
+    }
 
 	std::vector<double> get_matrix()
 	{
