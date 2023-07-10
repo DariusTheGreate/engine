@@ -22,22 +22,22 @@ FlatMesh::FlatMesh()
 
 void FlatMesh::setTexture(std::string path, std::string name)
 {
+    //TODO(darius) make it single texture
     Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), name, "texture_diffuse");
     textures.push_back(texture);
 }
 
-void FlatMesh::DrawRaw(Shader& shader, size_t sdrp)
+void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, glm::vec3 scale = {1,1,1})
 {
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 pos = { 3,3,3 };
-    glm::vec3 scale = { 1,1,1 };
 
     model = glm::translate(model, pos);
     model = glm::scale(model, scale);
 
     shader.setMat4("model", model);
+
     vao.bind();
-    OpenglWrapper::DrawArrays(36);
+    OpenglWrapper::DrawElements(indices.size());
     OpenglWrapper::UnbindVAO();
 }
 
@@ -69,7 +69,9 @@ void FlatMesh::Draw(Shader& shader, size_t amount)
 
     vao.bind();
 
-    OpenglWrapper::DrawInstances(36, amount);
+    //OpenglWrapper::DrawInstances(36, amount);
+
+    OpenglWrapper::DrawElements(indices.size());
     //OpenglWrapper::DrawArrays(36);
     OpenglWrapper::UnbindVAO();
     OpenglWrapper::BindTexture(GL_TEXTURE0);

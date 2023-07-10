@@ -198,6 +198,8 @@ private:
 
     Shader dsv;
     Shader dsf;
+
+    FlatMesh flat;
 };
 
 class Renderer

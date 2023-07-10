@@ -441,10 +441,18 @@ public:
             if(ImGui::CollapsingHeader("ModelFile")){
                 ImGui::Indent();
 
+                Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                vshdr.compile();
+                fshdr.compile();
+                vshdr.link(fshdr);
+
+                LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 if(ImGui::Button("Load"))
-                    item_cicked->addModel(path, shader, shadeRroutine);
+                    item_cicked->addModel(path, vshdr, shaderRoutine);
 
                 ImGui::Unindent();
             }
@@ -483,8 +491,8 @@ public:
                 FlatMesh flat;
 
                 //TODO(darius) leak here!!
-                Shader vshdr = Shader("E:/own/programming/engine/shaders/blendingVertexShader.glsl", GL_VERTEX_SHADER);
-                Shader fshdr = Shader("E:/own/programming/engine/shaders/blendingFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
                 vshdr.compile();
                 fshdr.compile();
                 vshdr.link(fshdr);

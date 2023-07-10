@@ -121,16 +121,17 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, a);
-	model = glm::scale(model, {0.01,0.01,0.01});
+	model = glm::scale(model, {0.05,0.05,0.05});
 	//TODO(darius) its not size, its scale
 	//model = glm::scale(model, {r,r,r});
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", color);
-	dsv.setMat4("model", model);
-	vao.bind();
-	glDrawArrays(GL_LINE_STRIP, 0, 36);
-	glBindVertexArray(0);
+	//dsv.setMat4("model", model);
+	flat.DrawRaw(dsv, 228, a, {0.01,0.01,0.01});
+	//vao.bind();
+	//glDrawArrays(GL_LINE_STRIP, 0, 36);
+	//glBindVertexArray(0);
 }
 
 void DebugRenderer::renderDebugGrid()
@@ -187,10 +188,10 @@ void DebugRenderer::clearPoints()
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
 sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug", instance){
-    pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    pointLight.addLight();
-    directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    directionalLight.ambient = { 0,0,0 };
+    //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    //pointLight.addLight();
+    //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    //directionalLight.ambient = { 0,0,0 };
     //spotLight = SpotLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(0, -1, 0));
 
     //glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
@@ -199,7 +200,7 @@ sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_
     sf.compile();
     sv.link(sf);
 
-	currShaderRoutine = {Shader(sv), std::move(directionalLight)};
+	currShaderRoutine = {Shader(sv)};
 
     for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj",

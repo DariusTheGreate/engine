@@ -13,7 +13,7 @@ public:
 
     void setTexture(std::string path, std::string name);
 
-    void DrawRaw(Shader& shader, size_t sdrp);
+    void DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos, glm::vec3 scale);
 
     //TODO(darius) instanced rendering here
     void Draw(Shader& shader, size_t count);
