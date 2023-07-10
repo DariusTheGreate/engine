@@ -11,7 +11,7 @@ class LightingShaderRoutine
 {
 public:
 	LightingShaderRoutine()  = default;
-	LightingShaderRoutine(Shader&& sv_in, DirectionalLight&& dl_in, Material&& mat_in) : sv(sv_in), directionalLight(dl_in) {}
+	LightingShaderRoutine(Shader&& sv_in, DirectionalLight&& dl_in) : sv(sv_in), directionalLight(dl_in) {}
 
 	LightingShaderRoutine(Shader&& sv_in) : sv(sv_in) {}
 

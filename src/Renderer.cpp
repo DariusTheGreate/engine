@@ -187,10 +187,10 @@ void DebugRenderer::clearPoints()
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
 sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug", instance){
-    //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    //pointLight.addLight();
-    //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    //directionalLight.ambient = { 0,0,0 };
+    pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    pointLight.addLight();
+    directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
+    directionalLight.ambient = { 0,0,0 };
     //spotLight = SpotLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(0, -1, 0));
 
     //glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
@@ -199,87 +199,14 @@ sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_
     sf.compile();
     sv.link(sf);
 
-    //TODO(darius) make something like ScriptCode class and load update anmd setup from precompilde .o file. But we need separate lib for user
-    auto objSetupRoutine = [](ScriptArgument* args) {
-        Object* obj = args->obj;
-        Script* scr = args->script;
-        float vectorv = 0;
-        /*scr -> addVectorProperty(&(directionalLight.direction), "directional light direction");
-        scr -> addVectorProperty(&(directionalLight.ambient), "directional light ambient");
-        scr -> addVectorProperty(&(directionalLight.diffuse), "directional light diffuse");
-        scr -> addVectorProperty(&(directionalLight.specular), "directional light specular");
+	currShaderRoutine = {Shader(sv), std::move(directionalLight)};
 
-        scr -> addVectorProperty(&(pointLight.position), "point light position");
-        scr -> addVectorProperty(&(pointLight.ambient), "point light ambient");
-        scr -> addVectorProperty(&(pointLight.diffuse), "point light diffuse");
-        scr -> addVectorProperty(&(pointLight.specular), "point light specular");
-
-        scr -> addFloatProperty(&(pointLight.linear), "point light linear");
-        scr -> addFloatProperty(&(pointLight.quadratic), "point light quadratic");
-        scr -> addFloatProperty(&(gamma), "gamma factor");
-        */
-
-        std::cout << "\n";
-        int max = 5;
-        int min = -5;
-        int v1 = (rand() % (max - min)) + min;
-        int v2 = (rand() % (max - min)) + min;
-        int v3 = (rand() % (max - min)) + min;
-
-        //obj->getRigidBody().reset();
-        obj->apply_force({ 0,-1,0 });
-        //obj->getRigidBody().get_is_static_ref() = true;
-        //obj->getRigidBody().add_angular_force({ 1,0,0 });
-        //obj->getRigidBody().create_box_inertia_tensor(1, { 1,1,1 });
-
-        obj->traverseObjects([args](Object* obj) {
-            if (!obj->getRigidBody())
-                return;
-            obj->getRigidBody()->get_is_static_ref() = true;
-            //obj->getRigidBody().add_angular_force({ 5,0,0 });
-            obj->apply_force({ 0,-1,0 });
-            obj->getRigidBody()->create_box_inertia_tensor(1, { 1,1,1 });
-            });
-    };
-
-    auto objSetupRoutine2 = [](ScriptArgument* args) {
-        Object* obj = args->obj;
-        Script* scr = args->script;
-
-        std::cout << "start\n";
-        int max = 5;
-        int min = -5;
-        int v1 = (rand() % (max - min)) + min;
-        int v2 = (rand() % (max - min)) + min;
-        int v3 = (rand() % (max - min)) + min;
-
-        //obj->getRigidBody().reset();
-        obj->apply_force({ 0,1,0 });
-        //obj->getRigidBody().get_is_static_ref() = true;
-        //obj->getRigidBody().add_angular_force({ 1,0,0 });
-        //obj->getRigidBody().create_box_inertia_tensor(1, { 1,1,1 });
-
-        obj->traverseObjects([](Object* obj) {
-
-            obj->getRigidBody()->get_is_static_ref() = true;
-            obj->getRigidBody()->add_angular_force({ 1,0,0 });
-            obj->getRigidBody()->create_box_inertia_tensor(1, { 1,1,1 });
-            });
-    };
-
-    auto objUpdateRoutine = [](ScriptArgument* args) {
-        //GameState::debug_msg.append("update for " + obj -> get_name() + "\n");
-        return;
-    };
-
-
-    /*for (int i = 0; i < 1; i += 1) {
+    for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj",
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
         //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
     }
-    */
 
     //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 }

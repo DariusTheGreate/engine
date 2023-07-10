@@ -1,10 +1,10 @@
-#version 330 core
+#version 410 core
 
 out vec4 FragColor;
 
-in vec2 TexCoords;
-in vec3 Normal;
-in vec3 FragPos;
+layout (location = 0) in vec2 TexCoords;
+layout (location = 1) in vec3 Normal;
+layout (location = 2) in vec3 FragPos;
 
 struct Material {
     sampler2D diffuse;
@@ -67,6 +67,8 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
+    FragColor = vec4(1.0,0.0,1.0,1.0);
+    return;
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     
