@@ -21,12 +21,12 @@ public:
 		emitter = emitter_in;
 	}
 
-    void addParticle(FlatMesh&& m, Shader&& shader_in, LightingShaderRoutine&& shaderRoutine_in, Material&& mat, glm::vec3 particleSize = {0.1, 0.1, 0.1})
+    void addParticle(FlatMesh&& m, Shader&& shader_in, LightingShaderRoutine&& shaderRoutine_in, Material&& mat, glm::vec3 particleSize = {0.1, 0.1, 0.1}) noexcept
     {
         shader = shader_in;
         shaderRoutine = shaderRoutine_in;
         particleMaterial = mat;
-        particle = m;
+        //particle.emplace(std::move(m));
 
         //particle.emplace(m, shader_in, shaderRoutine_in);
     }
@@ -74,7 +74,7 @@ public:
         {
             shaderRoutine->operator()(Transform(p, particle_size));
             //shader->setVec3("aOffset", glm::vec3{0,0,0});
-            particle->Draw(*shader, positions.size());
+            //particle->Draw(*shader, positions.size());
         }
 
         /*std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
@@ -133,7 +133,7 @@ public:
 
     std::vector<glm::vec3> positions;
 
-    std::optional<FlatMesh> particle; 
+    //std::optional<FlatMesh> particle; 
     std::optional<Material> particleMaterial;
     std::optional<Shader> shader;
     std::optional<LightingShaderRoutine> shaderRoutine;

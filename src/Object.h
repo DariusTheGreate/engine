@@ -113,7 +113,7 @@ public:
 
 	void addCollider();
 
-	void addModel(Mesh m, Shader sv, LightingShaderRoutine routine);
+	void addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine);
 
 	void addModel(Shader sv, LightingShaderRoutine routine);
 
@@ -138,6 +138,10 @@ public:
 
 	std::optional<Animator>& getAnimator();
 
+    void addSpriteAnimation(SpriteAnimation&& anim);
+    std::optional<SpriteAnimation>& getSpriteAnimation();
+	void updateSpriteAnimation(float dt);
+
 private:
 	//TODO(darius) make it Component system
 	// Obvious solution is to make use of virtual functions and stuff. And just store vector<Cmponent>
@@ -154,6 +158,7 @@ private:
 	std::optional<Material> material = std::nullopt;
 	std::optional<ParticleSystem> particles;
 	std::optional<Animator> animator;
+    std::optional<SpriteAnimation> spriteAnimation;
 
 	Transform tr;
 	std::string name;

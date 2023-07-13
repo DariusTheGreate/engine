@@ -10,6 +10,8 @@
 
 #include <string>
 #include <vector>
+#include <thread>
+#include <mutex>
 
 constexpr int MAX_BONE_INFLUENCE = 4;
 
@@ -32,8 +34,11 @@ enum class DrawMode
 
 class Mesh {
 public:
-    Mesh(){}
-    Mesh(const Mesh& m) = default;
+    Mesh() noexcept {}
+  
+    //TODO(darius) make it moveable for fuck sake!!!!
+    //Mesh(cosnt Mesh& m) = delete;
+    //Mesh(Mesh&& m) = default;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
@@ -51,11 +56,15 @@ protected:
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
 
+
     VAO vao;
     VBO vbo;
     EBO ebo;
 
-    DrawMode mode;
+    DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
+    
+    //in order to synchronnize changes of vertecies data
+    //std::mutex draw_mutex;
 
     void setupMesh();
 };

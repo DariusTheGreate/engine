@@ -61,6 +61,7 @@ void Editor::updateInput() {
     if (GameState::ks.get_2()) {
         setEditorMode(3);
 		state.debug_msg.append("3D\n");
+        static_cast<FlatMesh*>(&currScene.get_object_at(2)->getModel()->meshes[0])->setTextureCoords(0.5,0.5,0,0);
     }
     if (GameState::ks.get_3()) {
         rendol.getDebugRenderer().debug_render_points = false;
@@ -110,7 +111,7 @@ void Editor::printFPS() {
     double currentTime = glfwGetTime();
     frame_number++;
     if (currentTime - lastTime >= 1.0) {
-        std::cout << "framerate: " << 1000.0 / double(frame_number) << "\n";
+        //std::cout << "framerate: " << 1000.0 / double(frame_number) << "\n";
         frame_number = 0;
         lastTime += 1.0;
     }

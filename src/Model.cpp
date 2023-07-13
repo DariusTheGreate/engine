@@ -122,11 +122,13 @@ void Model::SetVertexBoneData(Vertex& vertex, int boneID, float weight)
 
 //TODO(darius) Bench it for recursive BFS, i think recursive is faster
 //TODO(darius) Dont use std::queue
+//TODO(darius) Either somehow reserve meshes. Or make meshes move
 void Model::processNode(aiNode* root, const aiScene* scene)
 {
     std::queue<aiNode*> path;
 
     path.push(root);
+    meshes.reserve(scene -> mNumMeshes);
 
     while (!path.empty()) {
         auto* curr = path.front();
@@ -143,6 +145,7 @@ void Model::processNode(aiNode* root, const aiScene* scene)
             path.push(curr -> mChildren[i]);
         }
     }
+
 }
 
 Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)

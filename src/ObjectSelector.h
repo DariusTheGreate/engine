@@ -6,6 +6,7 @@
 #include <GameState.h>
 #include <Window.h>
 #include <Scene.h>
+#include <Renderer.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

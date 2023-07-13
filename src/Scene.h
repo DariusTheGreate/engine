@@ -128,6 +128,7 @@ public:
 	void renderParticles();
 
 	void updateAnimators(float dt);
+	void updateSpriteAnimations(float dt);
 
 	Object* get_object_at(int i);
 

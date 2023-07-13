@@ -27,8 +27,20 @@ void FlatMesh::setTexture(std::string path, std::string name)
     textures.push_back(texture);
 }
 
+void FlatMesh::setTextureCoords(float x1 = 1.0, float y1 = 1.0, float x2 = 0.0, float y2 = 0.0)
+{
+    //std::unique_lock<std::mutex>(draw_mutex);
+    //works
+    vertices[0].TexCoords = glm::vec2{x1, y1};
+    vertices[1].TexCoords = glm::vec2{x1, y2};
+    vertices[2].TexCoords = glm::vec2{x2, y2};
+    vertices[3].TexCoords = glm::vec2{x2, y1};
+    this -> setupMesh();
+}
+
 void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, glm::vec3 scale = {1,1,1})
 {
+    std::unique_lock<std::mutex>(draw_mutex);
     glm::mat4 model = glm::mat4(1.0f);
 
     model = glm::translate(model, pos);
@@ -44,6 +56,7 @@ void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, g
 //TODO(darius) instanced rendering here
 void FlatMesh::Draw(Shader& shader, size_t amount)
 {
+   // std::unique_lock<std::mutex>(draw_mutex);
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;

@@ -206,9 +206,9 @@ sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj",
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
-        //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
+        op->setMaterial(Material(32));
+        op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
     }
-
     //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 }
 
@@ -244,7 +244,8 @@ void Renderer::render(Window* wind, bool& debug_mode) {
     float deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
-    currScene->updateAnimators(deltaTime);
+    currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
+    currScene->updateSpriteAnimations(glfwGetTime());
 
     if (GameState::cam.cursor_hidden) {
         glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());

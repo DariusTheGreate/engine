@@ -12,6 +12,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 
 void Mesh::Draw(Shader& shader)
 {
+    //std::unique_lock<std::mutex>(draw_mutex);
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
@@ -51,6 +52,7 @@ void Mesh::Draw(Shader& shader)
 
 void Mesh::setupMesh()
 {
+    //std::unique_lock<std::mutex>(draw_mutex);
     vao.init();
     vbo.init();
     ebo.init();

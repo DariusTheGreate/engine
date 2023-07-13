@@ -121,10 +121,16 @@ void Object::renderObject()
 
 void Object::updateParticleSystem(float dt)
 {
-    return;
     if(particles){
         particles->updateUniform3DDistribution(dt);
         particles->renderParticles();
+    }
+}
+
+void Object::updateSpriteAnimation(float dt) 
+{
+    if (spriteAnimation) {
+        spriteAnimation->update(dt);
     }
 }
 
@@ -283,12 +289,12 @@ void Object::addCollider()
     colider.emplace(glm::vec3{0,0,0}, tr);
 }
 
-void Object::addModel(Mesh m, Shader sv, LightingShaderRoutine routine)
+void Object::addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine)
 {
     if(model)
         return;
     //setDefaultMaterial();
-    model.emplace(m, sv, routine);
+    model.emplace(std::move(m), sv, routine);
 }
 
 void Object::addModel(Shader sv, LightingShaderRoutine routine)
@@ -321,8 +327,7 @@ void Object::addParticleSystem(ParticleSystem&& ps)
     if(particles)
         return;
 
-    particles = ps;	
-    //particles->setEmitter(emitter);
+    particles.emplace(std::move(ps));	
 }
 
 std::optional<ParticleSystem>& Object::getParticleSystem()
@@ -364,4 +369,17 @@ std::optional<Animator>& Object::getAnimator()
     return animator;
 }
 
+void Object::addSpriteAnimation(SpriteAnimation&& anim)
+{
+    if(spriteAnimation)
+        return;
+    spriteAnimation.emplace(std::move(anim));
+    if (model && model->meshes.size() > 0)
+        spriteAnimation->setSprite((FlatMesh*) &model->meshes[0]);
+}
+
+std::optional<SpriteAnimation>& Object::getSpriteAnimation()
+{
+    return spriteAnimation;
+}
 

@@ -77,6 +77,14 @@ void Scene::renderParticles()
 	}
 }
 
+void Scene::updateSpriteAnimations(float dt) 
+{
+	for (int i = 0; i < sceneObjects.size(); ++i) 
+	{
+		sceneObjects[i]->updateSpriteAnimation(dt);
+	}
+}
+
 void Scene::updateAnimators(float dt)
 {
 	for (auto& obj : sceneObjects) {

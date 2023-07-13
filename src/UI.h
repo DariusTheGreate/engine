@@ -136,12 +136,12 @@ public:
 								bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
 								if (ImGui::IsItemClicked()) {
 									show_object_window = true;
-                                    item_cicked = op;
-                                    if(item_cicked->getRigidBody()){
-                                        objTr = item_cicked->getRigidBody()->tr.get_quatmat();
+                                    item_clicked = op;
+                                    if(item_clicked->getRigidBody()){
+                                        objTr = item_clicked->getRigidBody()->tr.get_quatmat();
                                     }
-                                    auto pos = item_cicked->getTransform().position; 
-                                    auto scale = item_cicked->getTransform().scale; 
+                                    auto pos = item_clicked->getTransform().position; 
+                                    auto scale = item_clicked->getTransform().scale; 
                                     objTr[3][0] = pos.x;
                                     objTr[3][1] = pos.y;
                                     objTr[3][2] = pos.z;
@@ -157,11 +157,11 @@ public:
 						bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
                         if (ImGui::IsItemClicked()) {
                             show_object_window = true;
-                            item_cicked = objects[i];
-                            if(item_cicked->getRigidBody())
-                                objTr = item_cicked->getRigidBody()->tr.get_quatmat();
-                            auto pos = item_cicked->getTransform().position; 
-                            auto scale = item_cicked->getTransform().scale; 
+                            item_clicked = objects[i];
+                            if(item_clicked->getRigidBody())
+                                objTr = item_clicked->getRigidBody()->tr.get_quatmat();
+                            auto pos = item_clicked->getTransform().position; 
+                            auto scale = item_clicked->getTransform().scale; 
 
                             objTr[3][0] = pos.x;
                             objTr[3][1] = pos.y;
@@ -185,7 +185,7 @@ public:
 
 		if (show_object_window)
         {
-            showObjectWindow(item_cicked, r, scene);
+            showObjectWindow(item_clicked, r, scene);
 	    }
 
     }
@@ -363,6 +363,24 @@ public:
             ImGui::DragFloat("specular z", &light->specular.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         }
 
+        auto& sprite = obj->getSpriteAnimation();
+        if (sprite && ImGui::CollapsingHeader("SpriteAnimation")) 
+        {
+            /*if (ImGui::Button("Play"))
+            {
+                sprite->play();
+            }
+            */
+
+            ImGui::DragFloat("delay", sprite->getDelay(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("rows", sprite->getRows(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("cols", sprite->getCols(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("length", sprite->getLength(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            if(ImGui::Button("CropPoints")){
+                sprite->initPoints();
+            }
+        }
+
         if(ImGui::CollapsingHeader("Add Component")){
             show_component_adder = true;
             ImGui::Indent();
@@ -381,19 +399,19 @@ public:
 
     void componentAdderWindow(Renderer& hui)
     {
-        if(!show_component_adder || !item_cicked)
+        if(!show_component_adder || !item_clicked)
             return;
 
         //ImGui::Begin("Add Component");
 
         if(ImGui::Button("Collider"))
-            item_cicked->addCollider();
+            item_clicked->addCollider();
 
-        if(item_cicked->getModel() && ImGui::Button("PointLight")){
-            item_cicked->addPointLight();    
+        if(item_clicked->getModel() && ImGui::Button("PointLight")){
+            item_clicked->addPointLight();    
         }
 
-        if(item_cicked->getModel() && ImGui::Button("ParticleSystem")){
+        if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
             flat.setTexture("E:/own/programming/engine/textures", "grass.png");
 
@@ -413,12 +431,12 @@ public:
             m.shininess = 32;
 
             ParticleSystem ps = ParticleSystem();
-            ps.addParticle(FlatMesh(flat), Shader(particleVertex), LightingShaderRoutine(shaderRroutine), Material(m));
+            ps.addParticle(std::move(flat), Shader(particleVertex), LightingShaderRoutine(shaderRroutine), Material(m));
 
-            item_cicked->addParticleSystem(std::move(ps));    
+            item_clicked->addParticleSystem(std::move(ps));    
         }
 
-        if(item_cicked->getModel() && ImGui::Button("Material"))
+        if(item_clicked->getModel() && ImGui::Button("Material"))
         {
             Material m;
 
@@ -427,7 +445,7 @@ public:
             m.specular = {1,0,1};
             m.shininess = 32;
 
-            item_cicked->setMaterial(m);
+            item_clicked->setMaterial(m);
         }
 
         if(ImGui::CollapsingHeader("Model")){
@@ -441,18 +459,19 @@ public:
             if(ImGui::CollapsingHeader("ModelFile")){
                 ImGui::Indent();
 
-                Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
-                vshdr.compile();
-                fshdr.compile();
-                vshdr.link(fshdr);
-
-                LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
-
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
-                if(ImGui::Button("Load"))
-                    item_cicked->addModel(path, vshdr, shaderRoutine);
+
+                if(ImGui::Button("Load")){
+                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    vshdr.compile();
+                    fshdr.compile();
+                    vshdr.link(fshdr);
+                    LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+
+                    item_clicked->addModel(path, vshdr, shaderRoutine);
+                }
 
                 ImGui::Unindent();
             }
@@ -462,6 +481,7 @@ public:
 
                 path.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
+
                 if(ImGui::Button("Load")){
                     Shader animVertex = Shader("E:/own/programming/engine/shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
                     Shader animFragment = Shader("E:/own/programming/engine/shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
@@ -469,12 +489,12 @@ public:
                     animFragment.compile();
                     animVertex.link(animFragment);
 
-                    item_cicked->addModel(path);
-                    Animation* danceAnimation = new Animation(path, &item_cicked->getModel().value());
-                    item_cicked->setAnimator(danceAnimation);
-                    SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(Shader(animVertex), &item_cicked->getAnimator().value());
-                    item_cicked->getModel()->setShader(Shader(animVertex));
-                    item_cicked->getModel()->setAnimationShaderRoutine(animationRroutine);
+                    item_clicked->addModel(path);
+                    Animation* danceAnimation = new Animation(path, &item_clicked->getModel().value());
+                    item_clicked->setAnimator(danceAnimation);
+                    SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(Shader(animVertex), &item_clicked->getAnimator().value());
+                    item_clicked->getModel()->setShader(Shader(animVertex));
+                    item_clicked->getModel()->setAnimationShaderRoutine(animationRroutine);
                 }
 
                 ImGui::Unindent();
@@ -483,37 +503,48 @@ public:
             if(ImGui::Button("Cube")){
                 CubeMesh cube;
                 cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
-                item_cicked->addModel(cube, shader, shadeRroutine);
+                item_clicked->addModel(std::move(cube), shader, shadeRroutine);
             }
 
             if(ImGui::CollapsingHeader("FlatMesh"))
             {
-                FlatMesh flat;
-
-                //TODO(darius) leak here!!
-                Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
-                vshdr.compile();
-                fshdr.compile();
-                vshdr.link(fshdr);
-
-                LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
-
                 path.resize(100);
                 name.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
                 ImGui::InputText("name", (char*)name.c_str(), 100);
 
-                if(ImGui::Button("Load")){
+                if(ImGui::Button("Load FlatMesh")){
+                    FlatMesh flat;
+
+                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                    vshdr.compile();
+                    fshdr.compile();
+                    vshdr.link(fshdr);
+                    LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+
                     flat.setTexture(path, name);
-                    item_cicked->addModel(flat, vshdr, shaderRoutine);
+                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
                 }
 
+                if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
+                    FlatMesh flat;
 
+                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                    vshdr.compile();
+                    fshdr.compile();
+                    vshdr.link(fshdr);
+                    LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+
+                    flat.setTexture(path, name);
+                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
+                    item_clicked->addSpriteAnimation(SpriteAnimation(4,8,500));
+                }
             }
 
             if(ImGui::Button("Empty")){
-                item_cicked->addModel(shader, shadeRroutine);
+                item_clicked->addModel(shader, shadeRroutine);
             }
 
             ImGui::Unindent();
@@ -563,14 +594,14 @@ public:
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objScl));
 
         //TODO(darius) make it separate function to change all stuff of object
-        item_cicked->getTransform().set_from_quatmat(objTr);
-        item_cicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
-        if(item_cicked->getPointLight()){
-            item_cicked->getPointLight()->position = item_cicked->getTransform().position;
-            item_cicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+        item_clicked->getTransform().set_from_quatmat(objTr);
+        item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+        if(item_clicked->getPointLight()){
+            item_clicked->getPointLight()->position = item_clicked->getTransform().position;
+            item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
         }
         auto& objtrref = objTr;
-        item_cicked->traverseObjects([&objtrref](Object* obj){
+        item_clicked->traverseObjects([&objtrref](Object* obj){
             obj->getTransform().set_from_quatmat(objtrref);
         });
 
@@ -621,7 +652,7 @@ private:
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     ImGuiIO* io;
 
-	Object* item_cicked = nullptr;
+	Object* item_clicked = nullptr;
     glm::mat4 objTr = { 1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
                         0.f, 0.f, 1.f, 0.f,

@@ -3,7 +3,6 @@
 
 void LightingShaderRoutine::operator() (Transform tr){
 	sv.setVec3("viewPos", GameState::cam.getCameraPos());
-    std::cout << PointLight::LightsCount << "\n";
     sv.setInt("lightsCount", PointLight::LightsCount);
     sv.setFloat("gammaFactor", 1); 
 
