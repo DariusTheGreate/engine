@@ -89,7 +89,7 @@ void Editor::updateInput() {
     }
     if(GameState::ks.get_mouse_left_button())
     {
-        selector.ProbeSceneObjects(&currScene, GameState::ms.click_x, GameState::ms.click_y, getWindow(), getRenderer());
+        selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
         selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
     }
 }
@@ -104,7 +104,7 @@ void Editor::updateCamera()
 }
 
 void Editor::setPolygonMode(size_t type) {
-    glPolygonMode(GL_FRONT_AND_BACK, type);
+    glPolygonMode(GL_FRONT_AND_BACK, static_cast<unsigned int>(type));
 }
 
 void Editor::printFPS() {

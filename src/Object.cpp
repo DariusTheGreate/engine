@@ -29,7 +29,7 @@ Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::v
     tr.position = pos_in;
     tr.scale = scale_in;
 
-    rbody.emplace(RigidBody(0.1, tr, false));
+    rbody.emplace(RigidBody(0.1f, tr, false));
     rbody.value().create_box_inertia_tensor(10, { 1,1,1 });
 
     name = name_in;
@@ -144,7 +144,7 @@ void Object::apply_force(glm::vec3 force)
 void Object::updatePos() 
 {
     if(rbody.has_value())
-        rbody.value().update(0.01);
+        rbody.value().update(0.01f);
 
     //DANGER! -> traverseObjects([](Object* op) {op->updatePos(); });
     traverseChilds([](Object* op) {op->updatePos(); });

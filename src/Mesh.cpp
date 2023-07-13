@@ -33,7 +33,7 @@ void Mesh::Draw(Shader& shader)
             number = std::to_string(heightNr++); 
 
         OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
-        OpenglWrapper::BindTexture(textures[i].get_texture());
+        OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
     }
 
     vao.bind();
@@ -44,7 +44,7 @@ void Mesh::Draw(Shader& shader)
     //else if(mode == DrawMode::DRAW_AS_INSTANCE)
     //    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
     //else            
-    OpenglWrapper::DrawElements(indices.size());
+    OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
 
     OpenglWrapper::UnbindVAO();
     OpenglWrapper::ActivateTexture();

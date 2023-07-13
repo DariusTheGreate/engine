@@ -94,11 +94,11 @@ public:
             lastTime = timeValue;
             for (auto& position : positions)
             {
-                int max = maxBound * 100;
-                int min = minBound * 100;
-                float v1 = (rand() % (max - min)) + min;
-                float v2 = (rand() % (max - min)) + min;
-                float v3 = (rand() % (max - min)) + min;
+                int max = static_cast<int>(maxBound) * 100;
+                int min = static_cast<int>(minBound) * 100;
+                float v1 = static_cast<float>((rand() % (max - min)) + min);
+                float v2 = static_cast<float>((rand() % (max - min)) + min);
+                float v3 = static_cast<float>((rand() % (max - min)) + min);
                 position = {v1/100,v2/100,v3/100};
             }
         }		
@@ -113,8 +113,8 @@ public:
             lastTime = timeValue;
             for (auto& p: positions)
             {
-                int max = maxBound;
-                int min = minBound;
+                int max = static_cast<int>(maxBound);
+                int min = static_cast<int>(minBound);
                 int v1 = (rand() % (max - min)) + min;
                 int v2 = (rand() % (max - 0));
                 int v3 = (rand() % (max - min)) + min;

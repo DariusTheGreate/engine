@@ -34,11 +34,17 @@ enum class DrawMode
 
 class Mesh {
 public:
+<<<<<<< HEAD
     Mesh() noexcept {}
   
     //TODO(darius) make it moveable for fuck sake!!!!
     //Mesh(cosnt Mesh& m) = delete;
     //Mesh(Mesh&& m) = default;
+=======
+    Mesh() noexcept{}
+
+    Mesh(const Mesh& m) = default;
+>>>>>>> refs/remotes/origin/master
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
@@ -46,7 +52,7 @@ public:
 
     void setDrawMode(DrawMode mode_in)
     {
-        mode = mode;
+        mode = mode_in;
     }
 
 protected:
@@ -62,9 +68,12 @@ protected:
     EBO ebo;
 
     DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
+<<<<<<< HEAD
     
     //in order to synchronnize changes of vertecies data
     //std::mutex draw_mutex;
+=======
+>>>>>>> refs/remotes/origin/master
 
     void setupMesh();
 };

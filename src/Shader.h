@@ -10,7 +10,7 @@ class Shader
 {
 public:
 	using ShaderType = int;
-	using ShaderProgram = unsigned int;
+	using ShaderProgram =  unsigned int;
 
 	Shader(){}
 
@@ -55,7 +55,7 @@ public:
 	}
 
 	ShaderProgram link(const Shader& other) {
-		ShaderProgram shaderProgram = OpenglWrapper::CreateProgram();
+		ShaderProgram shaderProgram = static_cast<unsigned int>(OpenglWrapper::CreateProgram());
         OpenglWrapper::AttachShader(shaderProgram, shader);
 		OpenglWrapper::AttachShader(shaderProgram, other.shader);
         OpenglWrapper::LinkProgram(shaderProgram);
@@ -156,7 +156,7 @@ public:
 
 private:
 	std::string source;
-	ShaderProgram ID;
-	unsigned int shader;
+	ShaderProgram ID = 0;
+	int shader = 0;
 };	
 

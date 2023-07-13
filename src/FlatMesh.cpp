@@ -49,7 +49,7 @@ void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, g
     shader.setMat4("model", model);
 
     vao.bind();
-    OpenglWrapper::DrawElements(indices.size());
+    OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
     OpenglWrapper::UnbindVAO();
 }
 
@@ -77,14 +77,14 @@ void FlatMesh::Draw(Shader& shader, size_t amount)
             number = std::to_string(heightNr++); 
 
         OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
-        OpenglWrapper::BindTexture(textures[i].get_texture());
+        OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
     }
 
     vao.bind();
 
     //OpenglWrapper::DrawInstances(36, amount);
 
-    OpenglWrapper::DrawElements(indices.size());
+    OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
     //OpenglWrapper::DrawArrays(36);
     OpenglWrapper::UnbindVAO();
     OpenglWrapper::BindTexture(GL_TEXTURE0);

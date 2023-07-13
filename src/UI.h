@@ -605,8 +605,8 @@ public:
             obj->getTransform().set_from_quatmat(objtrref);
         });
 
-		int viewManipulateRight = ImGui::GetWindowPos().x + 900;
-		int viewManipulateTop = ImGui::GetWindowPos().y;
+		float viewManipulateRight = ImGui::GetWindowPos().x + 900.0f;
+		float viewManipulateTop = ImGui::GetWindowPos().y;
         //ImGuizmo::DrawGrid(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), glm::value_ptr(glm::mat4(1)), 100.f);
 		//ImGuizmo::ViewManipulate(glm::value_ptr(cameraView), 8, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
 
