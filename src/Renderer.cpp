@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include <Colider.h>
 
-DebugRenderer::DebugRenderer() : dsv("E:/Dean/fedor/engine/shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf("E:/Dean/fedor/engine/shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
+DebugRenderer::DebugRenderer() : dsv(GameState::engine_path + "shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf(GameState::engine_path + "shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
 {
 	dsv.compile();
 	dsf.compile();
@@ -186,8 +186,8 @@ void DebugRenderer::clearPoints()
 }
 
 
-Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/Dean/fedor/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf("E:/Dean/fedor/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/Dean/fedor/engine/logicScripts/EngineLogic/x64/Debug", instance){
+Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
+sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance){
     //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
     //pointLight.addLight();
     //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
@@ -203,7 +203,7 @@ sf("E:/Dean/fedor/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADE
 	currShaderRoutine = {Shader(sv)};
 
     for (int i = 0; i < 1; i += 1) {
-        auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, "E:/own/programming/engine/meshes/pistol/homemade_lasergun_upload.obj",
+        auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
         op->setMaterial(Material(32));
@@ -245,7 +245,7 @@ void Renderer::render(Window* wind, bool& debug_mode) {
     lastFrame = currentFrame;
 
     currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
-    currScene->updateSpriteAnimations(glfwGetTime());
+    currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
 
     if (GameState::cam.cursor_hidden) {
         glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());

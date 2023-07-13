@@ -413,10 +413,10 @@ public:
 
         if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture("E:/own/programming/engine/textures", "grass.png");
+            flat.setTexture(GameState::engine_path + "engine/textures", "grass.png");
 
-            Shader particleVertex = Shader("E:/own/programming/engine/shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
-            Shader particleFragment = Shader("E:/own/programming/engine/shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
+            Shader particleVertex = Shader(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
+            Shader particleFragment = Shader(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
 
             particleVertex.compile();
             particleFragment.compile();
@@ -463,8 +463,8 @@ public:
                 ImGui::InputText("path", (char*)path.c_str(), 100);
 
                 if(ImGui::Button("Load")){
-                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     vshdr.compile();
                     fshdr.compile();
                     vshdr.link(fshdr);
@@ -483,8 +483,8 @@ public:
                 ImGui::InputText("path", (char*)path.c_str(), 100);
 
                 if(ImGui::Button("Load")){
-                    Shader animVertex = Shader("E:/own/programming/engine/shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader animFragment = Shader("E:/own/programming/engine/shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
+                    Shader animVertex = Shader(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader animFragment = Shader(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     animVertex.compile();
                     animFragment.compile();
                     animVertex.link(animFragment);
@@ -516,8 +516,8 @@ public:
                 if(ImGui::Button("Load FlatMesh")){
                     FlatMesh flat;
 
-                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
                     vshdr.compile();
                     fshdr.compile();
                     vshdr.link(fshdr);
@@ -530,8 +530,8 @@ public:
                 if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                     FlatMesh flat;
 
-                    Shader vshdr = Shader("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
                     vshdr.compile();
                     fshdr.compile();
                     vshdr.link(fshdr);
@@ -650,7 +650,7 @@ private:
     int emptyCreated = 0;
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    ImGuiIO* io;
+    ImGuiIO* io = nullptr;
 
 	Object* item_clicked = nullptr;
     glm::mat4 objTr = { 1.f, 0.f, 0.f, 0.f,
@@ -664,8 +664,8 @@ private:
                         0.f, 0.f, 0.f, 1.f };
 
     ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
-    glm::mat4 cameraProjection;
-    glm::mat4 cameraView;
+    glm::mat4 cameraProjection = glm::mat4(1.0f);
+    glm::mat4 cameraView = glm::mat4(1.0f);
 
     GameState* state= nullptr;
 };

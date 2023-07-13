@@ -4,3 +4,5 @@
 //size_t GameState::debug_len = 100;
 int GameState::editor_mode = 2;
 GameState* GameState::instance = nullptr;
+std::string GameState::engine_path = "E:/own/programming/engine/";
+

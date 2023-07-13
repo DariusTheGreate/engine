@@ -65,8 +65,8 @@ private:
 class SpriteAnimation
 {
 public:
-    SpriteAnimation(std::vector<glm::vec4> points_in, int delay) : points(points_in), delayMs(delay) {}
-    SpriteAnimation(float rows_in, float cols_in, int delay) :  delayMs(delay), rows(rows_in), cols(cols_in), length(rows*cols) 
+    SpriteAnimation(std::vector<glm::vec4> points_in, float delay) : points(points_in), delayMs(delay) {}
+    SpriteAnimation(float rows_in, float cols_in, float delay) :  delayMs(delay), rows(rows_in), cols(cols_in), length(rows*cols) 
 	{
         initPoints();
     }
@@ -86,22 +86,6 @@ public:
 	void setSprite(FlatMesh* mesh)
 	{
 		sprite = mesh;
-	}
-
-	//NOTE(darius) for future, make it thread pool and stuff. Same for ParticleSystem 
-	void play() 
-	{
-		 animationThread = std::thread([this](int delay){
-			while (1) {
-				for (auto p : points)
-				{
-					std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-					std::cout << "pospal\n";
-					if(sprite)
-						sprite->setTextureCoords(p.x, p.y, 0.0, 0.0);
-				}
-			}
-        }, delayMs);
 	}
 
 	void update(float currentTime) 

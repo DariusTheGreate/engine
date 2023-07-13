@@ -97,7 +97,7 @@ public:
 private:
 	//std::function<void(ScriptArgument*)> start;
 	//std::function<void(ScriptArgument*)> update;
-	EmptyScriptRoutine* routine;
+	EmptyScriptRoutine* routine = nullptr;
 	
 	Scene* scriptScene = nullptr;
 	Object* parentObj = nullptr;

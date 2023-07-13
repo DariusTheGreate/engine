@@ -37,6 +37,7 @@ public:
 	static KeyboardState ks;
 	static GameState* instance;
     static int editor_mode;
+	static std::string engine_path;
 
 	//TODO(darius) make it a class
 	std::string debug_msg;
