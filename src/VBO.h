@@ -26,7 +26,7 @@ public:
 		OpenglWrapper::BindBuffer(vbo_id);	
 	}
 
-	void setVAO(int index, int size, GLenum type, GLboolean normalized, size_t stride, const void* ptr) {
+	void setVAO(int index, int size, GLenum type, GLboolean normalized, int stride, const void* ptr) {
         OpenglWrapper::AttributePointer(index, size, type, stride, ptr, normalized);
 	}
 	

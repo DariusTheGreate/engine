@@ -256,7 +256,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
-    for (int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
+    for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
@@ -333,7 +333,7 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
             format = GL_RGB;
         
         std::cout << "FKN FORMAT IS rgba? " << bool(format == GL_RGBA) << "\n";
-        OpenglWrapper::BindTexture(textureID);
+        OpenglWrapper::BindTexture(static_cast<int>(textureID));
         OpenglWrapper::ImageTexture(format, width, height, data);
         glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -350,6 +350,6 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
         stbi_image_free(data);
     }
 
-    return textureID;
+    return static_cast<unsigned int>(textureID);
 }
 

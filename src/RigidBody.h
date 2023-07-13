@@ -12,7 +12,7 @@
 class RigidBody
 {
 public:
-	RigidBody(float mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(mass_in), is_static(is_st)
+	RigidBody(double mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(static_cast<float>(mass_in)), is_static(is_st)
 	{
 		//startPosition = tr.position;
 		tr.q = construct_quat({0,0,0}, 0);
@@ -136,11 +136,11 @@ public:
 
 	glm::quat construct_quat(const glm::vec3& v, float theta)
 	{
-		float temp = sin(theta / 2.0);
+		float temp = sin(theta / 2.0f);
 		float x = temp * v.x;
 		float y = temp * v.y;
 		float z = temp * v.z;
-		float w = cos(theta / 2.0);
+		float w = cos(theta / 2.0f);
 		glm::quat qres(w, x, y, z);
 
 		return normalize_quat(qres);

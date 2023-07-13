@@ -32,7 +32,8 @@ enum class DrawMode
 
 class Mesh {
 public:
-    Mesh(){}
+    Mesh() noexcept{}
+
     Mesh(const Mesh& m) = default;
 
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
@@ -41,7 +42,7 @@ public:
 
     void setDrawMode(DrawMode mode_in)
     {
-        mode = mode;
+        mode = mode_in;
     }
 
 protected:
@@ -55,7 +56,7 @@ protected:
     VBO vbo;
     EBO ebo;
 
-    DrawMode mode;
+    DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
 
     void setupMesh();
 };
