@@ -54,7 +54,7 @@ public:
 	template<typename... Args>
 	Object* construct(Args&&... args) 
 	{
-		assert(filled_pools < mem_pools.size(), "mem_pool size < filled pools value");
+		//assert(filled_pools < mem_pools.size(), "mem_pool size < filled pools value");
 		Pool& curp = mem_pools[filled_pools];
 		//std::construct_at c++20
 		char* construction_ptr = curp.p + curp.busy * sizeof(T);

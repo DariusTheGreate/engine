@@ -19,11 +19,11 @@ public:
     ObjectSelector(int W, int H)
     {
         OpenglWrapper::GenerateFrameBuffers(&pick_fbo);
-        OpenglWrapper::BindFrameBuffer(pick_fbo);
+        OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo));
         OpenglWrapper::GenerateTextures(&pick_texture);
-        OpenglWrapper::BindTexture(pick_texture);
+        OpenglWrapper::BindTexture(static_cast<int>(pick_texture));
         OpenglWrapper::ImageTexture(GL_DEPTH_COMPONENT, W, H, nullptr, GL_TEXTURE_2D, GL_FLOAT);
-        OpenglWrapper::ImageFrameBuffer(pick_texture);
+        OpenglWrapper::ImageFrameBuffer(static_cast<int>(pick_texture));
         OpenglWrapper::UnbindTexture();
         OpenglWrapper::UnbindFrameBuffer();
     } 
@@ -31,7 +31,7 @@ public:
     void ReadPixel(int x, int y)
     {
         //std::cout << x << "|" << y << "\n";
-        OpenglWrapper::BindFrameBuffer(pick_fbo);
+        OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo));
         OpenglWrapper::ReadBuffer();
         int pixel[4] = {0, 0, 0, 0};
         OpenglWrapper::ReadPixels(x, y, &pixel);
@@ -43,8 +43,8 @@ public:
 
     glm::vec3 GetRayFromMouse(float mouseX, float mouseY, Window* w)
     {
-        mouseX = (2.0 * mouseX) / w->getWidth() - 1.0;
-        mouseY = (2.0 * mouseY) / w->getHeight() - 1.0;
+        mouseX = (2.0f * mouseX) / static_cast<float>(w->getWidth()) - 1.0f;
+        mouseY = (2.0f * mouseY) / static_cast<float>(w->getHeight()) - 1.0f;
 
         glm::vec2 ray_nds = glm::vec2(mouseX, mouseY);
         glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
@@ -91,7 +91,7 @@ public:
         return false;
     }
 
-    void ProbeSceneObjects(Scene* scene, int mouseX, int mouseY, Window* w, Renderer* renderer)
+    void ProbeSceneObjects(Scene* scene, float mouseX, float mouseY, Window* w, Renderer* renderer)
     {
         //std::cout << "Coords: " << mouseX << "|" << mouseY << "\n";
         //GameState::msg("Coords: " + std::to_string(mouseX) + "|" + std::to_string(mouseY) + "\n");

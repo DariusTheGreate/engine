@@ -189,7 +189,7 @@ glm::vec3 Simplex::EPA(Colider* coll1, Colider* coll2) {
             faces[num_faces][2] = p;
             faces[num_faces][3] = glm::normalize(cross(loose_edges[i][0] - loose_edges[i][1], loose_edges[i][0] - p));
 
-            float bias = 0.000001;
+            float bias = 0.000001f;
             if (glm::dot(faces[num_faces][0], faces[num_faces][3]) + bias < 0) {
                 glm::vec3 temp = faces[num_faces][0];
                 faces[num_faces][0] = faces[num_faces][1];

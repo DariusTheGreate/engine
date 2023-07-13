@@ -16,7 +16,7 @@ public:
 		int width, height, nrChannels;
 		unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
         OpenglWrapper::GenerateTextures(&texture);
-        OpenglWrapper::BindTexture(texture);
+        OpenglWrapper::BindTexture(static_cast<int>(texture));
 		if (data) {
             OpenglWrapper::ImageTexture(internalFormat, width, height, data);
             OpenglWrapper::GenerateMipmap();
@@ -26,10 +26,10 @@ public:
 
 	void activate(GLenum unit, GLenum target = GL_TEXTURE_2D) {
         OpenglWrapper::ActivateTexture(unit);
-        OpenglWrapper::BindTexture(texture, target);
+        OpenglWrapper::BindTexture(static_cast<int>(texture), target);
 	}
 	
-	unsigned int get_texture() {
+	size_t get_texture() {
 		return texture;
 	}
 

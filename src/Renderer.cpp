@@ -1,7 +1,7 @@
 #include "Renderer.h"
 #include <Colider.h>
 
-DebugRenderer::DebugRenderer() : dsv("E:/own/programming/engine/shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf("E:/own/programming/engine/shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
+DebugRenderer::DebugRenderer() : dsv("E:/Dean/fedor/engine/shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf("E:/Dean/fedor/engine/shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
 {
 	dsv.compile();
 	dsf.compile();
@@ -53,8 +53,8 @@ void DebugRenderer::setupSceneGrid()
 
 	for (int i = 0; i < slices; ++i) {
 		for (int j = 0; j < slices; ++j) {
-			int row1 = j * (slices + 1);
-			int row2 = (i + 1) * (slices + 1);
+			int row1 = j * (static_cast<int>(slices) + 1);
+			int row2 = (i + 1) * (static_cast<int>(slices) + 1);
 
 			indices_grid.push_back(glm::vec4(row1 + j, row1 + j + 1, row1 + j + 1, row2 + j + 1));
 			indices_grid.push_back(glm::vec4(row2 + j + 1, row2 + j, row2 + j, row1 + j));
@@ -146,7 +146,7 @@ void DebugRenderer::renderDebugGrid()
 	dsv.setVec4("objectColor", {0.4,0.4,0.4,0});
 	dsv.setMat4("model", model);
 	vao_grid.bind();
-	glDrawElements(GL_LINES, length, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_LINES, static_cast<int>(length), GL_UNSIGNED_INT, NULL);
 	glBindVertexArray(0);
 }
 
@@ -175,7 +175,7 @@ void DebugRenderer::updateCamera(glm::mat4 projection, glm::mat4 view)
 
 void DebugRenderer::renderPoints()
 {
-	for(auto i : pointsToRender)
+	for(auto& i : pointsToRender)
 		renderDebugPoint(i.point, i.color);
 }
 
@@ -186,8 +186,8 @@ void DebugRenderer::clearPoints()
 }
 
 
-Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/own/programming/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf("E:/own/programming/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug", instance){
+Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv("E:/Dean/fedor/engine/shaders/vertexShader.glsl", GL_VERTEX_SHADER),
+sf("E:/Dean/fedor/engine/shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine("E:/Dean/fedor/engine/logicScripts/EngineLogic/x64/Debug", instance){
     //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
     //pointLight.addLight();
     //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
@@ -240,7 +240,7 @@ void Renderer::render(Window* wind, bool& debug_mode) {
 
     //TODO(darius) make it faster. Instanced rendering? Batching?
     currScene->renderParticles();
-    float currentFrame = glfwGetTime();
+    float currentFrame = static_cast<float>(glfwGetTime());
     float deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 

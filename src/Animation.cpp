@@ -6,8 +6,8 @@ Animation::Animation(const std::string& animationPath, Model* model)
 	const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	assert(scene && scene->mRootNode);
 	auto animation = scene->mAnimations[0];
-	m_Duration = animation->mDuration;
-	m_TicksPerSecond = animation->mTicksPerSecond;
+	m_Duration = static_cast<float>(animation->mDuration);
+	m_TicksPerSecond = static_cast<float>(animation->mTicksPerSecond);
 	ReadHierarchyData(m_RootNode, scene->mRootNode);
 	ReadMissingBones(animation, *model);
 }
@@ -57,7 +57,7 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
 	dest.transformation = Model::ConvertMatrixToGLMFormat(src->mTransformation);
 	dest.childrenCount = src->mNumChildren;
 
-	for (int i = 0; i < src->mNumChildren; i++)
+	for (unsigned int i = 0; i < src->mNumChildren; i++)
 	{
 		AssimpNodeData newData;
 		ReadHierarchyData(newData, src->mChildren[i]);

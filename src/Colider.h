@@ -10,7 +10,7 @@
 #include <RigidBody.h>
 #include <Simplex.h>
 
-class Simplex;
+struct Simplex;
 
 class Colider
 {

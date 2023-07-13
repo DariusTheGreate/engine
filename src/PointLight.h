@@ -40,13 +40,13 @@ public:
 	glm::vec3 position = {0,0,0};
 	glm::vec3 color = {1,1,1};
 
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
+    glm::vec3 ambient = {0,0,0};
+    glm::vec3 diffuse = {0,0,0};
     glm::vec3 specular = {1,1,1};
 
     float constant = 1.0f;
-    float linear = 0.09;
-    float quadratic = 0.032;
+    float linear = 0.09f;
+    float quadratic = 0.032f;
 
 	float intensity = 1.0f;	
 	float radius = 1.0f;
@@ -80,8 +80,8 @@ public:
 	glm::vec3 direction = {-0.2f, -1.0f, -0.3f};
 	glm::vec3 color = {1,1,1};
 
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
+    glm::vec3 ambient = {0,0,0};
+    glm::vec3 diffuse = {0,0,0};
     glm::vec3 specular = {1,1,1};
 
 	float intensity = 1.0f;
@@ -113,10 +113,10 @@ public:
 	float radius = glm::cos(glm::radians(12.5f));
 
     float constant = 1.0f;
-    float linear = 0.7;
-    float quadratic = 1.8;
+    float linear = 0.7f;
+    float quadratic = 1.8f;
 
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
+    glm::vec3 ambient = {0,0,0};
+    glm::vec3 diffuse = {0,0,0};
     glm::vec3 specular = {1,1,1};
 };

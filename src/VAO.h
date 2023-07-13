@@ -20,6 +20,6 @@ public:
 	}
 
 private:
-	size_t vao_id = 0;
+	int vao_id = 0;
 };
 
