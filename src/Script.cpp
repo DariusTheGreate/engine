@@ -1,4 +1,6 @@
 #include <Script.h>
+#include <Object.h>
+#include <iostream>
 
 Script::Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r) : scriptScene(scn), parentObj(pobj), routine(r)
 {
@@ -22,6 +24,7 @@ void Script::startScript()
 	if (!routine)
 		return;
 	ScriptArgument tmpArgument = { scriptScene, parentObj, this };
+
 	routine->start(tmpArgument);
 }
 
@@ -30,6 +33,7 @@ void Script::updateScript()
 	if (!routine)
 		return;
 	ScriptArgument tmpArgument = { scriptScene, parentObj, this };
+	std::cout << "NAME" <<  parentObj->get_name() << "\n";
 	routine->update(tmpArgument);
 }
 

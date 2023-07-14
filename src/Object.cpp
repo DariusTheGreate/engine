@@ -1,6 +1,5 @@
 #include <Object.h>
 
-
 Object::Object(std::string name_in) : name(name_in)
 {
     material = std::nullopt;

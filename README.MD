@@ -7,20 +7,21 @@
 ![output example](assets/example_gif2.gif "output example")
 ![output example](assets/example_gif3.gif "output example")
 
-### Current milestones():
-- [X] Scenes
-- [X] Objects (can contain subobjects)
-- [X] Model loading
-- [X] Simple Renderer(duh, openGL only)
-- [X] Some editor UI 
-- [X] Ability to write scripts in C++
-- [X] RigidBody's using Quaternions and Inertia Tensor 
-- [X] Cimple COllision Detection(GJK + EPA, but im working on it)
+### There is a lot of functional by now:
+- [X] 3D/2D modes, some editor
+- [X] Models loading
+- [X] Some shaders for lighting
+- [X] Some particle system
+- [X] Sprite Animations
+- [X] Entity Component System (we trying not to use virtual functions for it(But it wastes a lot of space, but its better than jumping to virtuall function every frame for every object. Although we didnt benchmark it. Maybe CPU will optimize one of approaches better than another, will see{))
+- [X] Our custom rigidbody physics(probably well have to utilise physX or bullet)
+- [X] Custom collider detection(GJK and stuff)
+- [X] Aility to write scripts in c++, and load scripts as a library into editor project
 
 ### Future milestones():
-- [ ] Pytorch scripts integration
-- [ ] Own physics Engine (soft bodies, cloth, hair, navier-stocks stuff)
-- [ ] Better tools
-- [ ] Better scripting workflow
-- [ ] Better UI
-- [ ] Better renderer
+- [ ] Scene serialization(via simdjson) 
+- [ ] Skeletal Animations (broken for now)
+- [ ] Better editor capabilities
+- [ ] Better rendering
+- [ ] Better everything
+

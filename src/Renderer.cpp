@@ -189,7 +189,7 @@ void DebugRenderer::clearPoints()
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
 sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
 	//TODO(darius) throws exception?
-	//routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
+	routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
 
     //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
     //pointLight.addLight();
@@ -210,12 +210,13 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
         op->setMaterial(Material(32));
-        op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
+        //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
     }
     //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 }
 
 void Renderer::render(Window* wind, bool& debug_mode) {
+
     glfwPollEvents();
     int display_w, display_h;
     glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
@@ -249,6 +250,7 @@ void Renderer::render(Window* wind, bool& debug_mode) {
 
     currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
     currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
+	currScene->updateScene();
 
     if (GameState::cam.cursor_hidden) {
         glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());

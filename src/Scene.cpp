@@ -8,7 +8,7 @@
 Scene::Scene()
 {
 	init_memory();
-	start_scripts();
+	//start_scripts();
 }
 
 Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) {
@@ -111,6 +111,7 @@ void Scene::init_memory()
 
 void Scene::start_scripts()
 {
+	std::cout << "Starting scripts..\n";
 	for (auto& i : sceneObjects)
 	{
 		i->startScript();

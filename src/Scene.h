@@ -134,11 +134,11 @@ public:
 
 	std::vector<Object*>& get_objects();
 
+	void start_scripts();
+
 private:
 
 	void init_memory();
-
-	void start_scripts();
 	
 	void update_objects();
 

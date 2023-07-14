@@ -8,11 +8,10 @@
 
 #include <glm/glm.hpp>
 
-
-//#include <Model.h>
+#include <Model.h>
 #include <Colider.h>
 #include <RigidBody.h>
-//#include <Transform.h>
+#include <Transform.h>
 #include <Script.h>
 #include <Scene.h>
 #include <CubeMesh.h>
@@ -20,23 +19,6 @@
 #include <LightingShaderRoutine.h>
 #include <ParticleSystem.h>
 #include <Animator.h>
-
-/*class Colider;
-class Animator;
-class Animation;
-class Model;
-class RigidBody;
-class Script;
-class PointLight;
-class Material;
-class ParticleSystem;
-class Scene;
-class EmptyScriptRoutine;
-class Shader;
-*/
-
-struct Transform;
-class Model;
 
 class Object
 {

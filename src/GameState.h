@@ -18,12 +18,17 @@ public:
 	GameState* get_instance();
 	
 public:
+	//TODO(darius) make it not static
 	static Camera cam;
 	static MouseState ms;
 	static KeyboardState ks;
 	static GameState* instance;
     static int editor_mode;
 	static std::string engine_path;
+	//NOTE(darius) nevermind it for now. I used that to test connection between scriptApi and engine app. We need to store objects, not static states. 
+	//Cause when logicScipt reads static field from instacne it actually reads its own state(one that present in engine.lib, that logicScripts uses)
+
+	int connect = 228;
 
 	//TODO(darius) make it a class
 	std::string debug_msg;

@@ -57,6 +57,8 @@ protected:
     VAO vao;
     VBO vbo;
     EBO ebo;
+    bool initialized = false;
+
 
     DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
     

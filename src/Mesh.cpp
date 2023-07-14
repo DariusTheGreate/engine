@@ -58,9 +58,14 @@ void Mesh::Draw(Shader& shader)
 void Mesh::setupMesh()
 {
     //std::unique_lock<std::mutex>(draw_mutex);
-    vao.init();
-    vbo.init();
-    ebo.init();
+
+    //DANGER(darius) TODO(darius) reinit, if was initialized before
+    if (!initialized) {
+        vao.init();
+        vbo.init();
+        ebo.init();
+        initialized = true;
+    }
 
 	vao.bind();
     vbo.bind(vertices.size() * sizeof(Vertex), &vertices[0]);

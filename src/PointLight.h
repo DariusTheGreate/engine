@@ -35,7 +35,8 @@ public:
 
     int lightNumber = 0;
 
-    //todo(darius) sync 
+    //todo(darius) sync
+    //todo(darius) curently in scripting this sheet is not updates. Cause we make static library from this project, and then use it in scripting project. This way scripting projects has its own lightscount.
     static int LightsCount;
 };
 

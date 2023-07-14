@@ -17,9 +17,9 @@ EmptyScriptRoutine::EmptyScriptRoutine(std::string_view path, GameState* inst) :
 }
 
 void EmptyScriptRoutine::update(ScriptArgument& arg) {
-	//plugin->update(arg);
+	plugin->update(arg);
 }
 
 void EmptyScriptRoutine::start(ScriptArgument& arg) {
-	//plugin->start(arg);
+	plugin->start(arg);
 }

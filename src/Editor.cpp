@@ -5,6 +5,7 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     GameState::editor_mode = 3;
     lastTime = glfwGetTime();
+    currScene.start_scripts();
 }
 
 void Editor::update()
@@ -61,7 +62,7 @@ void Editor::updateInput() {
     if (GameState::ks.get_2()) {
         setEditorMode(3);
 		state.debug_msg.append("3D\n");
-        static_cast<FlatMesh*>(&currScene.get_object_at(2)->getModel()->meshes[0])->setTextureCoords(0.5,0.5,0,0);
+        state.connect--;
     }
     if (GameState::ks.get_3()) {
         rendol.getDebugRenderer().debug_render_points = false;
