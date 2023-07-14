@@ -218,3 +218,19 @@ glm::vec3 Colider::colider_position() const
 {
 	return tr.position - shift;
 }
+
+glm::vec3 Colider::get_epa()
+{
+	auto res = epa_collision_value;
+	epa_collision_value = { 0,0,0 };
+	return res;
+}
+
+bool Colider::is_active() const {
+	return active;
+}
+
+Transform& Colider::get_transform()
+{
+	return tr;
+}

@@ -9,10 +9,10 @@
 #include <glm/glm.hpp>
 
 
-#include <Model.h>
+//#include <Model.h>
 #include <Colider.h>
 #include <RigidBody.h>
-#include <Transform.h>
+//#include <Transform.h>
 #include <Script.h>
 #include <Scene.h>
 #include <CubeMesh.h>
@@ -34,6 +34,9 @@ class Scene;
 class EmptyScriptRoutine;
 class Shader;
 */
+
+struct Transform;
+class Model;
 
 class Object
 {

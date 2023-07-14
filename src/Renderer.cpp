@@ -187,7 +187,10 @@ void DebugRenderer::clearPoints()
 
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), routine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance){
+sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
+	//TODO(darius) throws exception?
+	//routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
+
     //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
     //pointLight.addLight();
     //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));

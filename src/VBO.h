@@ -7,36 +7,19 @@
 class VBO
 {
 public:
-	void init() {
-        OpenglWrapper::GenerateBuffers(& vbo_id);
-	}
+	void init();
 
-	void bind(size_t arr_len, GLvoid* v) {
-        OpenglWrapper::BindBuffer(vbo_id);
-        OpenglWrapper::SetBufferData(arr_len, v);
-	}
+	void bind(size_t arr_len, GLvoid* v);
 
-	void bind_at(int i)
-	{
-        OpenglWrapper::BindBuffer(i);
-	}
+	void bind_at(int i);
 
-	void bind_only()
-	{
-		OpenglWrapper::BindBuffer(vbo_id);	
-	}
+	void bind_only();
 
-	void setVAO(int index, int size, GLenum type, GLboolean normalized, int stride, const void* ptr) {
-        OpenglWrapper::AttributePointer(index, size, type, stride, ptr, normalized);
-	}
+	void setVAO(int index, int size, GLenum type, GLboolean normalized, int stride, const void* ptr);
 	
-	void vboEnableVertexAttribArray(unsigned int id) {
-        OpenglWrapper::EnableAttribute(id);
-	}
+	void vboEnableVertexAttribArray(unsigned int id);
 
-	~VBO(){
-		 //glDeleteBuffers(1, &vbo_id);
-	}
+	~VBO();
 
 private:
 	size_t vbo_id = 0;

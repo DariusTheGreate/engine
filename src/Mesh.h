@@ -44,10 +44,7 @@ public:
     
     void Draw(Shader& shader);
 
-    void setDrawMode(DrawMode mode_in)
-    {
-        mode = mode_in;
-    }
+    void setDrawMode(DrawMode mode_in);
 
 protected:
     //TODO(darius) memoryManage that

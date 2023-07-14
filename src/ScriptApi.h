@@ -26,31 +26,13 @@ public:
 class EmptyScriptRoutine 
 {
 public:
-	EmptyScriptRoutine(std::string_view path, GameState* inst) : instance(inst)
-	{
-       /* / //"E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug"
-		boost::dll::fs::path lib_path(path);             
-
-		plugin = boost::dll::import_symbol<ScriptRoutine>(        
-			lib_path / "EngineLogic",                     
-			"script",                                    
-			boost::dll::load_mode::append_decorations          
-		);
-
-		if(instance)
-			plugin->setInstance(instance);
-		*/
-	}
+    EmptyScriptRoutine(std::string_view path, GameState* inst);
 
 	EmptyScriptRoutine() = default;
 
-    void update(ScriptArgument& arg){
-        //plugin->update(arg);
-    }
+    void update(ScriptArgument& arg);
 
-    void start(ScriptArgument& arg) {
-        //plugin->start(arg);
-    }
+	void start(ScriptArgument& arg);
 
 private:
 	GameState* instance = nullptr;

@@ -7,17 +7,11 @@
 class VAO
 {
 public:
-	void init() {
-        OpenglWrapper::GenerateArrays(&vao_id);
-	}
+	void init();
 
-	void bind() {
-        OpenglWrapper::BindArray(vao_id);
-	}
+	void bind();
 
-	~VAO() {
-		//glDeleteVertexArrays(1, &vao_id);
-	}
+	~VAO();
 
 private:
 	int vao_id = 0;

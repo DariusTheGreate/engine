@@ -6,18 +6,11 @@
 class EBO
 {
 public:
-	void init() {
-        OpenglWrapper::GenerateBuffers(&ebo_id);
-	}
+	void init();
 
-	void bind(size_t ind_len, GLvoid* indices) {
-        OpenglWrapper::BindBuffer(ebo_id,GL_ELEMENT_ARRAY_BUFFER);
-        OpenglWrapper::SetBufferData(ind_len, indices, GL_ELEMENT_ARRAY_BUFFER);
-	}
+	void bind(size_t ind_len, GLvoid* indices);
 
-	~EBO() {
-		//glDeleteBuffers(1, &ebo_id);
-	}
+	~EBO();
 
 private:
 	size_t ebo_id = 0;

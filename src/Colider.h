@@ -54,25 +54,16 @@ public:
 	float maxZ() const;
 
 	glm::vec3 get_render_start_point() const;
+
 	glm::vec3& get_render_shift();
 
 	glm::vec3 colider_position() const;
 
-	glm::vec3 get_epa() 
-	{
-		auto res = epa_collision_value;
-		epa_collision_value = {0,0,0};
-		return res;
-	}
+	glm::vec3 get_epa();
 	
-	bool is_active() const {
-		return active;
-	}
+	bool is_active() const;
 
-	Transform& get_transform()
-	{
-		return tr;
-	}
+	Transform& get_transform();
 
 private:
     //not cool, dangle may happen

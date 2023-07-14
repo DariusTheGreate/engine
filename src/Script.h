@@ -35,64 +35,27 @@ struct ScriptProperty
 class Script 
 {
 public:
-	Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r) : scriptScene(scn), parentObj(pobj), routine(r)
-	{
-	}
+	Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r);
 
-    Script(Scene* scn, Object* pobj) : scriptScene(scn), parentObj(pobj)
-	{
-	}
+	Script(Scene* scn, Object* pobj);
 
-	void set_scripts(EmptyScriptRoutine* r)
-	{
-        routine = r;
-	}
+	void set_scripts(EmptyScriptRoutine* r);
 
-    void set_scripts_from_file()
-    {
-        
-    }
+	void set_scripts_from_file();
 
-	void startScript()
-	{
-        if(!routine)
-            return;
-		ScriptArgument tmpArgument = {scriptScene, parentObj, this}; 
-		routine->start(tmpArgument);
-	}
+	void startScript();
 
-	void updateScript()
-	{
-        if(!routine)
-            return;
-		ScriptArgument tmpArgument = {scriptScene, parentObj, this}; 
-		routine->update(tmpArgument);
-	}
+	void updateScript();
 
-	void setParentObject(Object* newParent)
-	{
-		parentObj = newParent;
-	}
+	void setParentObject(Object* newParent);
 
-	void addVectorProperty(glm::vec3* property, std::string&& name)
-	{
-		vector_properties.push_back(ScriptProperty<glm::vec3>(property, std::move(name)));
-	}
+	void addVectorProperty(glm::vec3* property, std::string&& name);
 
-	std::vector<ScriptProperty<glm::vec3>>& getVectorProperties()
-	{
-		return vector_properties;		
-	}
+	std::vector<ScriptProperty<glm::vec3>>& getVectorProperties();
 
-	void addFloatProperty(float* property, std::string&& name)
-	{
-		float_properties.push_back(ScriptProperty<float>(property, std::move(name)));
-	}
+	void addFloatProperty(float* property, std::string&& name);
 
-	std::vector<ScriptProperty<float>>& getFloatProperties()
-	{
-		return float_properties;		
-	}
+	std::vector<ScriptProperty<float>>& getFloatProperties();
 
 private:
 	//std::function<void(ScriptArgument*)> start;

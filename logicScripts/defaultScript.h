@@ -2,7 +2,7 @@
 
 #include <ScriptApi.h>
 #include <GameState.h>
-//#include <Object.h>
+#include <Object.h>
 
 #include <boost/config.hpp> 
 #include <iostream>
@@ -13,9 +13,10 @@ public:
 		if(!instance)
 			std::cout << "Iam super duper mega start\n";
         
-        //auto* obj = args.obj;
+        auto* obj = args.obj;
+		//obj->addPointLight();//wont work
 
-		instance->msg("Iam super duper mega start");// + obj->get_name());
+		//instance->msg("Iam super duper mega start");// + obj->get_name());
 	}
 	void update(ScriptArgument& args) override {
 		//instance->msg("Iam super duper mega update");

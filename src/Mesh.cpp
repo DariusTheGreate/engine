@@ -10,6 +10,11 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     setupMesh();
 }
 
+void Mesh::setDrawMode(DrawMode mode_in)
+{
+    mode = mode_in;
+}
+
 void Mesh::Draw(Shader& shader)
 {
     //std::unique_lock<std::mutex>(draw_mutex);

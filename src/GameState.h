@@ -9,27 +9,13 @@
 class GameState
 {
 public:
-	void msg(std::string&& str)
-	{
-		if (debug_msg.size() >= debug_len)
-			clear_msg();
-		debug_msg.append(str);
-	}
+	void msg(std::string&& str);
 
-	void clear_msg()
-	{
-		debug_msg.clear();
-	}
+	void clear_msg();
 
-	static void set_instance(GameState* ptr) 
-	{
-		GameState::instance = ptr;
-	}
+	static void set_instance(GameState* ptr);
 
-	GameState* get_instance() 
-	{
-		return instance;
-	}
+	GameState* get_instance();
 	
 public:
 	static Camera cam;

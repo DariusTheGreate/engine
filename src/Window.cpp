@@ -57,7 +57,18 @@ void Window::setShouldClose(bool flag) {
 
 void Window::showWindow()
 {
-    
+}
+
+GLFWwindow* Window::getWindow() {
+	return m_window;//not cool
+}
+
+int Window::getWidth() {
+	return width;
+}
+
+int Window::getHeight() {
+	return height;
 }
 
 void Window::swapBuffers() {
