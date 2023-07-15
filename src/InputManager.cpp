@@ -22,79 +22,79 @@ void InputManager::processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        GameState::ks.set_w(true);
+        GameState::instance->ks.set_w(true);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        GameState::ks.set_s(true);
+        GameState::instance->ks.set_s(true);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        GameState::ks.set_a(true);
+        GameState::instance->ks.set_a(true);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        GameState::ks.set_d(true);
+        GameState::instance->ks.set_d(true);
     }
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-        GameState::ks.set_q(true);
+        GameState::instance->ks.set_q(true);
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-        GameState::ks.set_e(true);
+        GameState::instance->ks.set_e(true);
     }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-        GameState::ks.set_0(true);
+        GameState::instance->ks.set_0(true);
     }
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-        GameState::ks.set_1(true);
+        GameState::instance->ks.set_1(true);
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-        GameState::ks.set_2(true);
+        GameState::instance->ks.set_2(true);
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
-        GameState::ks.set_3(true);
+        GameState::instance->ks.set_3(true);
     }
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
-        GameState::ks.set_4(true);
+        GameState::instance->ks.set_4(true);
     }
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
-        GameState::ks.set_9(true);
+        GameState::instance->ks.set_9(true);
     }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
-        GameState::ks.set_w(false);
+        GameState::instance->ks.set_w(false);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_RELEASE) {
-        GameState::ks.set_s(false);
+        GameState::instance->ks.set_s(false);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE) {
-        GameState::ks.set_a(false);
+        GameState::instance->ks.set_a(false);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_RELEASE) {
-        GameState::ks.set_d(false);
+        GameState::instance->ks.set_d(false);
     }
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_RELEASE) {
-        GameState::ks.set_q(false);
+        GameState::instance->ks.set_q(false);
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
-        GameState::ks.set_e(false);
+        GameState::instance->ks.set_e(false);
     }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
-        GameState::ks.set_0(false);
+        GameState::instance->ks.set_0(false);
     }
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
-        GameState::ks.set_1(false);
+        GameState::instance->ks.set_1(false);
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
-        GameState::ks.set_2(false);
+        GameState::instance->ks.set_2(false);
     }
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_RELEASE) {
-        GameState::ks.set_3(false);
+        GameState::instance->ks.set_3(false);
     }
     if (glfwGetKey(window, GLFW_KEY_4) == GLFW_RELEASE) {
-        GameState::ks.set_4(false);
+        GameState::instance->ks.set_4(false);
     }
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_RELEASE) {
-        GameState::ks.set_9(false);
+        GameState::instance->ks.set_9(false);
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
-        GameState::ks.set_mouse_right_button(true);
+        GameState::instance->ks.set_mouse_right_button(true);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         //glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
         
@@ -106,7 +106,7 @@ void InputManager::processInput(GLFWwindow* window)
     }
     //this event HAPPENS every frame
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
-        GameState::ks.set_mouse_right_button(false);
+        GameState::instance->ks.set_mouse_right_button(false);
         //GameState::ms.prev_x = GameState::ms.get_x();
         //GameState::ms.prev_y = GameState::ms.get_y();
         //GameState::cam.cursor_hidden = false;
@@ -120,10 +120,10 @@ void InputManager::processInput(GLFWwindow* window)
         GameState::ms.set_y(GameState::ms.prev_y);
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-        GameState::ks.set_mouse_left_button(true);
+        GameState::instance->ks.set_mouse_left_button(true);
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE){
-        GameState::ks.set_mouse_left_button(false);
+        GameState::instance->ks.set_mouse_left_button(false);
     }
 }
 

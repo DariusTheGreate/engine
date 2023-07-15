@@ -74,6 +74,7 @@ public:
 
 	Transform& getParentTransform();
 	
+	void addScript(Scene* scn, EmptyScriptRoutine* routine);
 	std::optional<Script>& getScript();
 	
 	void set_child_objects(std::vector<Object*>&& objects);

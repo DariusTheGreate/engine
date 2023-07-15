@@ -6,7 +6,7 @@
 
 Camera GameState::cam;
 MouseState GameState::ms;
-KeyboardState GameState::ks;
+//KeyboardState GameState::ks;
 
 int main()
 {

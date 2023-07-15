@@ -583,7 +583,7 @@ public:
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::BeginFrame();
 
-        if(!(!GameState::cam.cursor_hidden && !GameState::ks.get_mouse_right_button())){
+        if(!(!GameState::cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
             cameraProjection = GameState::cam.getPerspective(1600, 900);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
     		cameraView = (GameState::cam.getBasicLook());
         }

@@ -9,6 +9,11 @@
 #include <iostream>
 #include <string>
 
+struct Player 
+{
+	float speed = 0.5;
+};
+
 class DefaultScript : public ScriptRoutine {
 public:
 	void start(ScriptArgument& args) override {
@@ -17,11 +22,11 @@ public:
 			return;
 		}
         
-        auto* obj = args.obj;
-		obj->addPointLight();//wont affect lighting 
-		obj->frozeObject();
+        //auto* obj = args.obj;
+		//obj->addPointLight();//wont affect lighting 
+		//obj->frozeObject();
 
-		instance->msg("Iam super duper mega start");// + obj->get_name());
+		//instance->msg("Iam super duper mega start");// + obj->get_name());
 	}
 
 	void update(ScriptArgument& args) override {
@@ -33,10 +38,16 @@ public:
         auto* obj = args.obj;
 
 		instance->msg(std::to_string((int)(instance->connect)));
-		if (instance->ks.get_w()) 
+		if (instance->ks.get_d()) 
 		{
-			obj->getTransform().position.x += 1;
-			instance->msg("Iam super duper mega update");
+			obj->getTransform().position.x += 1 * p.speed;
+			//instance->msg("Iam super duper mega update");
+		}
+
+		if (instance->ks.get_a()) 
+		{
+			obj->getTransform().position.x -= 1 * p.speed;
+			//instance->msg("Iam super duper mega update");
 		}
 	}
 
@@ -46,5 +57,6 @@ public:
 	}
 
 	GameState* instance = nullptr;
+	Player p;
 };
 

@@ -205,13 +205,21 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 
 	currShaderRoutine = {Shader(sv)};
 
-    for (int i = 0; i < 1; i += 1) {
+	FlatMesh flat;
+	flat.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
+	auto* obj = currScene->AddEmpty(228);
+	obj->addModel(std::move(flat), sv, currShaderRoutine);
+	obj->addSpriteAnimation(SpriteAnimation(4,8,500));
+	obj->addScript(currScene, &routine);
+
+    /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
             sv, currShaderRoutine, currScene, &routine, false, false);
         op->frozeObject();
         op->setMaterial(Material(32));
         //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
     }
+	*/
     //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 }
 

@@ -201,6 +201,13 @@ Transform& Object::getParentTransform()
     return tr;
 }	
 
+void Object::addScript(Scene* scn, EmptyScriptRoutine* routine)
+{
+    if (script.has_value())
+        return;
+    script = Script(scn, this, routine);
+}
+
 std::optional<Script>& Object::getScript()
 {
     return script;
