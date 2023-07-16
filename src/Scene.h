@@ -136,6 +136,10 @@ public:
 
 	void start_scripts();
 
+	//TODO(darius) make it factory or something
+	FlatMesh* createFlatMesh();
+	void deleteFlatMesh(FlatMesh* mesh);
+
 private:
 
 	void init_memory();

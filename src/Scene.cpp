@@ -118,6 +118,16 @@ void Scene::start_scripts()
 	}
 }
 
+FlatMesh* Scene::createFlatMesh()
+{
+	return new FlatMesh();//TODO(darius) new bad
+}
+
+void Scene::deleteFlatMesh(FlatMesh* mesh)
+{
+	delete mesh;
+}
+
 void Scene::update_objects() {
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?

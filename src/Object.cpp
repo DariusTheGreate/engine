@@ -384,6 +384,24 @@ void Object::addSpriteAnimation(SpriteAnimation&& anim)
         spriteAnimation->setSprite((FlatMesh*) &model->meshes[0]);
 }
 
+//todo(darius) check NRVO
+SpriteAnimation Object::excnahgeSpriteAnimation(SpriteAnimation&& anim)
+{
+    assert(spriteAnimation);
+
+    SpriteAnimation&& tmp = std::move(spriteAnimation.value());
+    spriteAnimation.emplace(std::move(anim));
+
+    return tmp;
+}
+
+void Object::setSpriteAnimation(SpriteAnimation& anim)
+{
+    spriteAnimation.emplace(anim);
+    if (model && model->meshes.size() > 0)
+        spriteAnimation->setSprite((FlatMesh*)&model->meshes[0]);
+}
+
 std::optional<SpriteAnimation>& Object::getSpriteAnimation()
 {
     return spriteAnimation;

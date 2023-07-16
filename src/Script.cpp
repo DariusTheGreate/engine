@@ -33,7 +33,6 @@ void Script::updateScript()
 	if (!routine)
 		return;
 	ScriptArgument tmpArgument = { scriptScene, parentObj, this };
-	std::cout << "NAME" <<  parentObj->get_name() << "\n";
 	routine->update(tmpArgument);
 }
 

@@ -376,6 +376,8 @@ public:
             ImGui::DragFloat("rows", sprite->getRows(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("cols", sprite->getCols(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("length", sprite->getLength(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("start", sprite->getStart(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+			ImGui::Checkbox("Play me", sprite->getPlay());
             if(ImGui::Button("CropPoints")){
                 sprite->initPoints();
             }
@@ -415,8 +417,8 @@ public:
             FlatMesh flat;
             flat.setTexture(GameState::engine_path + "engine/textures", "grass.png");
 
-            Shader particleVertex = Shader(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
-            Shader particleFragment = Shader(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
+            Shader particleVertex = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+            Shader particleFragment = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
 
             particleVertex.compile();
             particleFragment.compile();

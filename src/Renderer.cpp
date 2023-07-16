@@ -206,11 +206,31 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	currShaderRoutine = {Shader(sv)};
 
 	FlatMesh flat;
+	FlatMesh idle;
+	FlatMesh runAnimTexture;
+	FlatMesh runLeftAnimTexture;
+
 	flat.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
-	auto* obj = currScene->AddEmpty(228);
-	obj->addModel(std::move(flat), sv, currShaderRoutine);
-	obj->addSpriteAnimation(SpriteAnimation(4,8,500));
-	obj->addScript(currScene, &routine);
+	idle.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
+	runLeftAnimTexture.setTexture(GameState::engine_path + "textures", "spidRunLeft.png");
+	runAnimTexture.setTexture(GameState::engine_path + "textures", "spidRun.png");
+
+	auto* obj0 = currScene->AddEmpty(228);
+	auto* obj1 = currScene->AddEmpty(229);
+	auto* obj2 = currScene->AddEmpty(230);
+	auto* obj3 = currScene->AddEmpty(231);
+
+	obj0->hide();
+	obj1->hide();
+	obj3->hide();
+
+	obj0 ->addModel(std::move(flat), sv, currShaderRoutine);
+	obj1->addModel(std::move(runAnimTexture), sv, currShaderRoutine);
+	obj3->addModel(std::move(runLeftAnimTexture), sv, currShaderRoutine);
+	obj2->addModel(std::move(idle), sv, currShaderRoutine);
+
+	//obj->addSpriteAnimation(SpriteAnimation(4,8,500));
+	obj2->addScript(currScene, &routine);
 
     /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",

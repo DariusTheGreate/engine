@@ -91,6 +91,7 @@ TODO(all):
         - https://www.boost.org/doc/libs/1_82_0/doc/html/boost_dll/tutorial.html
         - https://www.youtube.com/watch?v=nmxZmIOAosY&ab_channel=mohamedshaalan
         - https://github.com/GarrettGunnell/CS2-Smoke-Grenades 
+        - https://github.com/frtru/GemParticles
 */
 
 class DebugRenderer 

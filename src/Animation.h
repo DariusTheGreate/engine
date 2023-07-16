@@ -65,6 +65,7 @@ private:
 class SpriteAnimation
 {
 public:
+	SpriteAnimation() = default;
     SpriteAnimation(std::vector<glm::vec4> points_in, float delay) : points(points_in), delayMs(delay) {}
     SpriteAnimation(float rows_in, float cols_in, float delay) :  delayMs(delay), rows(rows_in), cols(cols_in), length(rows*cols) 
 	{
@@ -82,7 +83,6 @@ public:
 		}
     }
 
-
 	void setSprite(FlatMesh* mesh)
 	{
 		sprite = mesh;
@@ -90,16 +90,18 @@ public:
 
 	void update(float currentTime) 
 	{
-		if ((currentTime - lastTime)*1000 < delayMs)
+		if ((currentTime - lastTime)*1000 < delayMs || !play)
 			return;
 
 		if (sprite) {
-            if(points.size() > frameNum && frameNum < length)
-                sprite->setTextureCoords(points[frameNum].x, points[frameNum].y, points[frameNum].z, points[frameNum].w);
+			if (points.size() > frameNum && frameNum < length) {
+				int id = static_cast<int>(frameNum);
+				sprite->setTextureCoords(points[id].x, points[id].y, points[id].z, points[id].w);
+			}
 
 			frameNum++;
-			if (frameNum > points.size()-1)
-				frameNum = 0;
+			if (frameNum > points.size()-1 || frameNum > length)
+				frameNum = start;
 
 		}
 
@@ -108,7 +110,7 @@ public:
 
 	void stop() 
 	{
-		animationThread.join();
+		//animationThread.join();
 	}
 
     float* getDelay()
@@ -131,19 +133,31 @@ public:
         return &length;
     }
 
+	float* getStart() 
+	{
+		return &start;
+	}
+
+	bool* getPlay() 
+	{
+		return &play;
+	}
 
 private:
     std::vector<glm::vec4> points;
 
-	int frameNum = 0;
+	float frameNum = 0;
 	float lastTime = 0;
 	float delayMs = 500;
     float rows = 0;
     float cols = 0;
     float length = 0;
+	float start = 0;
+
+	bool play = true;
 
     FlatMesh* sprite = nullptr;
 
-	std::thread animationThread;
+	//std::thread animationThread;
 };
 

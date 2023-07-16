@@ -5,3 +5,4 @@ textures/
 *.obj
 *.ini
 logicScripts/EngineLogic/
+logicScripts/EngineRunner/

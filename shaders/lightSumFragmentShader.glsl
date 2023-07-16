@@ -37,7 +37,7 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform int lightsCount;
 uniform float gammaFactor;
 
-uniform Material material;
+uniform Material material;//NOTE(darius) diable foe now
 uniform vec3 viewPos;
 
 uniform sampler2D texture_diffuse1;
@@ -80,15 +80,15 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
     
-    //FragColor = texColor;
+    if(lightsCount == 0)
+        FragColor = texColor;
+    else
+        FragColor = texColor * vec4(result, 1.0f);
 
-    FragColor = texColor * vec4(result, 1.0f);
-
-    return;
     //gamma corecion
-    FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
+    //FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
     //FragColor.rgb = 0.1 * (texture(texture_diffuse1, TexCoords)).rgb;
-    FragColor.a = 1.0;
+    //FragColor.a = 1.0;
 }   
 
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -97,7 +97,7 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
 
     vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
@@ -113,7 +113,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
     // attenuation
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    

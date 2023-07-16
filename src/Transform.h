@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/transform.hpp>
 #include <glm/gtc/quaternion.hpp >
 #include <vector>
 
@@ -19,6 +20,8 @@ struct Transform
 	void set_scale(glm::vec3 scl);
 
 	std::vector<double> get_matrix();
+
+	void rotateBy(float angleDegree, glm::vec3 axis);
 
 	glm::quat q = glm::quat{ 0.0,0.0,0.0,1.0 };
 	glm::vec3 position = {0,0,0};

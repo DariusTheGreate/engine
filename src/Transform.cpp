@@ -38,3 +38,15 @@ std::vector<double> Transform::get_matrix()
 		0.0, 0.0, 0.0, 1.0 };
 }
 
+//NOTE(darius) in progress
+void Transform::rotateBy(float angleDegree, glm::vec3 axis)
+{
+	glm::mat4 mat = get_quatmat();
+	glm::vec3 pos = mat[3];
+	glm::rotate(mat, glm::radians(angleDegree), axis);
+	mat[3][0] = pos[0];
+	mat[3][1] = pos[1];
+	mat[3][2] = pos[2];
+	set_from_quatmat(mat);
+}
+

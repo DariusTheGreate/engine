@@ -125,6 +125,8 @@ public:
 	std::optional<Animator>& getAnimator();
 
     void addSpriteAnimation(SpriteAnimation&& anim);
+	SpriteAnimation excnahgeSpriteAnimation(SpriteAnimation&& anim);
+	void setSpriteAnimation(SpriteAnimation& anim);
     std::optional<SpriteAnimation>& getSpriteAnimation();
 	void updateSpriteAnimation(float dt);
 

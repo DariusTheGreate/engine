@@ -11,6 +11,7 @@ struct Color
 	}
 };
 
+//TODO(darius) NOTE(darius) disabled in shader code for now.
 struct Material
 {
     glm::vec3 ambient = {0,0,0};

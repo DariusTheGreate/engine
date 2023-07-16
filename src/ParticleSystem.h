@@ -26,7 +26,7 @@ public:
         shader = shader_in;
         shaderRoutine = shaderRoutine_in;
         particleMaterial = mat;
-        //particle.emplace(std::move(m));
+        particle.emplace(std::move(m));
 
         //particle.emplace(m, shader_in, shaderRoutine_in);
     }
@@ -70,19 +70,20 @@ public:
         //if(particleMaterial)
         //    particleMaterial->setShaderMaterial(*shader);
 
-        for (auto& p : positions)
+        /*for (auto& p : positions)
         {
             shaderRoutine->operator()(Transform(p, particle_size));
             //shader->setVec3("aOffset", glm::vec3{0,0,0});
             //particle->Draw(*shader, positions.size());
         }
+        */
 
-        /*std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
         for(auto& p : positions)
         {
-            particle->DrawRaw(*shader, 0);
+            particle->Draw(*shader);
+            shaderRoutine->operator()(Transform(p, particle_size));
         }
-        */
     }
 
 	void updateUniform3DDistribution(float timeValue)
@@ -133,7 +134,7 @@ public:
 
     std::vector<glm::vec3> positions;
 
-    //std::optional<FlatMesh> particle; 
+    std::optional<Mesh> particle; 
     std::optional<Material> particleMaterial;
     std::optional<Shader> shader;
     std::optional<LightingShaderRoutine> shaderRoutine;
