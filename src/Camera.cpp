@@ -113,6 +113,11 @@ float Camera::getLastY()
     return lastY;
 }
 
+float* Camera::getCameraSpeed()
+{
+    return &cameraSpeed;
+}
+
 void Camera::setUnexpectedUpdate(bool in) {
     unexpectedUpdate = in;
 }

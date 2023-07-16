@@ -189,7 +189,7 @@ void DebugRenderer::clearPoints()
 Renderer::Renderer(Scene* currScene_in, GameState* instance) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
 sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
 	//TODO(darius) throws exception?
-	routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
+	//routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
 
     //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
     //pointLight.addLight();
@@ -206,11 +206,11 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	currShaderRoutine = {Shader(sv)};
 
 	FlatMesh flat;
-	flat.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
+	flat.setTexture(GameState::engine_path + "textures", "HollowSpid.jpg");
 	auto* obj = currScene->AddEmpty(228);
 	obj->addModel(std::move(flat), sv, currShaderRoutine);
 	obj->addSpriteAnimation(SpriteAnimation(4,8,500));
-	obj->addScript(currScene, &routine);
+	//obj->addScript(currScene, &routine);
 
     /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
