@@ -372,12 +372,12 @@ public:
             }
             */
 
-            ImGui::DragFloat("delay", sprite->getDelay(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat("rows", sprite->getRows(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat("cols", sprite->getCols(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat("length", sprite->getLength(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            ImGui::DragFloat("start", sprite->getStart(), 1.0f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-			ImGui::Checkbox("Play me", sprite->getPlay());
+            ImGui::DragFloat("delay", sprite->getDelay(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("rows", sprite->getRows(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("cols", sprite->getCols(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("length", sprite->getLength(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("start", sprite->getStart(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::Checkbox("Play me", sprite->getPlay());
             if(ImGui::Button("CropPoints")){
                 sprite->initPoints();
             }
@@ -634,6 +634,8 @@ public:
     void showEditorSettingsWindow(Renderer& hui)
     {
         ImGui::Begin("Editor Settings");
+
+        ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.5f, 0, FLT_MAX, "%.3f", 1);
         
         ImGui::ColorEdit3("Background Color", (float*)&hui.backgroundColor);
 
@@ -641,7 +643,6 @@ public:
     }
 
 private:
-    bool show_demo_window = false;
     bool show_scene_window = false;
     bool show_object_window = false;
     bool show_component_adder = false;
