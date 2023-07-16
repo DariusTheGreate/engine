@@ -12,8 +12,8 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 void Editor::update()
 {
 	updateInput();
-	updateCamera();
     printFPS();
+    updateCamera();
 
 	currScene.updateScene();
     rendol.render(window, debug_mode);
@@ -79,28 +79,30 @@ void Editor::updateInput() {
     if(GameState::instance->ks.get_mouse_right_button())
     {
         GameState::cam.cursor_hidden = true;
-        glfwSetCursorPos(window -> getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
-        glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
+        glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        
+        
     }
     if(!GameState::instance->ks.get_mouse_right_button())
     {
-        //GameState::ms.prev_x = GameState::ms.get_x();
-        //GameState::ms.prev_y = GameState::ms.get_y();
         GameState::cam.cursor_hidden = false;
-        glfwSetInputMode(window -> getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+       
     }
     if(GameState::instance->ks.get_mouse_left_button())
     {
         selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
         selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
+
     }
 }
 
 void Editor::updateCamera()
 {
-    if (!GameState::cam.cursor_hidden)
+    if (!GameState::cam.cursor_hidden) {
         return;
-
+    }
     GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
     GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
 }

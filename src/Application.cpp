@@ -13,8 +13,7 @@ Application::~Application()
 
 void Application::Run()
 {
-	Editor edik(m_window);
-
+    Editor edik(m_window);
     while (!m_window->isShouldClose()) {
         InputManager::processInput(m_window->getWindow());
         edik.update();
