@@ -42,7 +42,7 @@ class Model
 public:
     static std::unordered_set<std::string_view> textures_set;
     static std::vector<Texture> textures_loaded;
-	std::vector<Mesh>    meshes;
+	std::vector<Mesh>    meshes;//TODO(techmo0) serialize
 
     Shader shader;
     LightingShaderRoutine shaderRoutine;

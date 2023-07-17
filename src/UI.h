@@ -317,6 +317,8 @@ public:
             ImGui::DragFloat("point x", &coliderPoint.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("point y", &coliderPoint.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("point z", &coliderPoint.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+
+            ImGui::Checkbox("state", collider->get_collision_state());
         }
 
         auto& script = obj->getScript();
@@ -377,6 +379,7 @@ public:
             ImGui::DragFloat("cols", sprite->getCols(), 1.0f, 0, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("length", sprite->getLength(), 1.0f, 0, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("start", sprite->getStart(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("border", sprite->getBorder(), 0.1f, 0, FLT_MAX, "%.1f", 1);
             ImGui::Checkbox("Play me", sprite->getPlay());
             if(ImGui::Button("CropPoints")){
                 sprite->initPoints();

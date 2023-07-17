@@ -14,6 +14,16 @@ glm::vec3 Colider::get_size() const
 	return size;
 }
 
+void Colider::set_size(glm::vec3 v)
+{
+	size = v;
+}
+
+void Colider::set_shift(glm::vec3 v)
+{
+	shift = v;
+}
+
 glm::vec3& Colider::get_size_ref()
 {
 	return size;
@@ -124,32 +134,111 @@ bool Colider::gjk(Colider* coll1, Colider* coll2) {
 
 	for (int iterations = 0; iterations < 1000; iterations++)
 	{
-		if (dir.length() < 0.0001f)
+		if (dir.length() < 0.0001f) {
+			collision_state = false;
 			return false;
+		}
 
 		plex.a = (coll1->support(glm::vec4{ dir.x, dir.y, dir.z, 0 }) - coll2->support(-glm::vec4{ dir.x, dir.y, dir.z, 0 }));
 
-		if (glm::dot(plex.a, dir) < 0) 
-			return false; 
+		if (glm::dot(plex.a, dir) < 0) {
+			collision_state = false;
+			return false;
+		}
 
 		plex.sz++;
 
 		if (plex.update(dir)) {
 			epa_collision_value = plex.EPA(coll1, coll2);
+			collision_state = true;
 			return true;
 		}
 	}
 
+	collision_state = false;
 	return false;
 }
 
-bool Colider::check_collision(const Colider& c) const
+//NOTE(it only pushes *this colider)
+//NOTE(u dont check collision state for rigid body update)
+//NOTE(it has weird logic)
+//TODO(darius) fixit or switch to physX
+glm::vec3 Colider::check_collision(const Colider& c) const
 {
 	auto cpos = c.get_pos();
 	auto csize = c.get_size();
 
 	//cringe AND Float comparasion UB
-	return (minX() <= c.maxX()) && (c.minX() <= maxX()) && (minY() <= c.maxY()) && (c.minY() <= maxY()) && (minZ() <= c.maxZ()) && (c.minZ() <= maxZ());
+	glm::vec3 res = {0,0,0};
+
+	float lesserDiff = FLT_MAX;
+	float tmp = 0;
+
+
+	if ((minX() <= c.maxX()) && (c.minX() <= maxX()) && (minY() <= c.maxY()) && (c.minY() <= maxY()) && (minZ() <= c.maxZ()) && (c.minZ() <= maxZ())) 
+	{
+		std::cout << minX() << " " << maxX() << "\n";
+		std::cout << c.minX() << " " << c.maxX() << "\n";
+		std::cout << minY() << " " << maxY() << "\n";
+		std::cout << c.minY() << " " << c.maxY() << "\n";
+
+		if (maxX() >= c.minX()) 
+		{
+			tmp = -(maxX() - c.minX()) - collisionEpsilon;
+			//std::cout << "tmpx" << tmp << "\n";
+			if (std::abs(lesserDiff) > std::abs(tmp)) 
+			{
+				lesserDiff = std::abs(tmp);
+				res = {0,0,0};
+				res.x = -lesserDiff;
+			}
+		}
+
+		if (minX() <= c.maxX())
+		{
+			tmp = (c.maxX() - minX()) + collisionEpsilon;
+			//std::cout << "tmpx2" << tmp << "\n";
+			if (std::abs(lesserDiff) > std::abs(tmp))
+			{
+				lesserDiff = std::abs(tmp);
+				res = { 0,0,0 };
+				res.x = lesserDiff;
+			}
+		}
+	
+		//bottom - up
+		if (minY() <= c.maxY()) 
+		{
+			tmp = (c.maxY() - minY()) + collisionEpsilon;//0.2 - works;
+			std::cout << "tmpy" << tmp << "\n";
+			if (std::abs(lesserDiff) > std::abs(tmp)) 
+			{
+				lesserDiff = std::abs(tmp);
+				res = {0,0,0};
+				res.y = lesserDiff;
+			}
+		}
+
+		//up - botton
+		if (c.minY() <= maxY()) 
+		{
+			tmp = -(maxY() - c.minY()) - collisionEpsilon;//0.2 - works;
+			std::cout << "tmpy" << tmp << "\n";
+			if (std::abs(lesserDiff) > std::abs(tmp)) 
+			{
+				lesserDiff = std::abs(tmp);
+				res = {0,0,0};
+				//res.y = -lesserDiff;
+			}
+		}
+
+		if (maxZ() >= c.minZ()) 
+		{
+			//res.z = -(maxZ() - c.minZ()) - collisionEpsilon;
+		}
+	}
+
+	return res;
 }
 
 glm::vec3 Colider::get_pos() const 
@@ -228,6 +317,11 @@ glm::vec3 Colider::get_epa()
 
 bool Colider::is_active() const {
 	return active;
+}
+
+bool* Colider::get_collision_state()
+{
+	return &collision_state;
 }
 
 Transform& Colider::get_transform()

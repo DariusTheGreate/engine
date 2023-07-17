@@ -142,6 +142,10 @@ void Object::apply_force(glm::vec3 force)
 
 void Object::updatePos() 
 {
+
+    if (colider && *colider.value().get_collision_state() == true)
+        return;
+
     if(rbody.has_value())
         rbody.value().update(0.01f);
 
@@ -167,6 +171,11 @@ glm::vec3& Object::get_pos_ref()
 std::optional<Colider>& Object::getColider() 
 {
     return colider;
+}
+
+void Object::addRigidBody()
+{
+    rbody.emplace(0.1, tr, true);
 }
 
 std::optional<RigidBody>& Object::getRigidBody()
@@ -199,7 +208,15 @@ Transform& Object::getTransform()
 Transform& Object::getParentTransform()
 {
     return tr;
-}	
+}
+
+void Object::moveTransform(glm::vec3 v)
+{
+    if (colider && *colider.value().get_collision_state() == true)
+        return;
+
+    getTransform().position += v;
+}
 
 void Object::addScript(Scene* scn, EmptyScriptRoutine* routine)
 {
@@ -267,6 +284,32 @@ std::string& Object::get_name()
 void Object::hide()
 {
     object_hidden = true;
+}
+
+void Object::serialize()
+{
+    //fstream file;
+    //file >> "Name" >> get_name().c_str();
+    //CM std::to_string() to convert digit to string
+    {
+        //TODO(tecmo) serialize transform
+    }
+
+    if (rbody) 
+    {
+        //TODO(techmo) serialize 
+    }
+
+    if (colider) 
+    {
+
+    }
+
+    if (model) //HARD beware
+    {
+
+    }
+    //Object : {Name: "pistol"; Transform: }
 }
 
 void Object::unhide()

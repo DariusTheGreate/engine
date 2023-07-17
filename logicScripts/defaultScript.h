@@ -13,7 +13,7 @@
 struct Player 
 {
 	float speed = 0.05f;
-	int currAnim = 0;//0 - idle; 1 - runR; 2 - runL
+	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - dance
 };
 
 class DefaultScript : public ScriptRoutine {
@@ -31,12 +31,21 @@ public:
 
 		//scene->AddEmpty(555);
 
-		run = SpriteAnimation(1,6,100);
-		init = SpriteAnimation(4,8,100);
+		run = SpriteAnimation(1,8,100);
+		*run.getBorder() = 0.5;
+		run.initPoints();
+		init = SpriteAnimation(1,6,100);
+		*init.getBorder() = 0.8f;
+		init.initPoints();
+		dance = SpriteAnimation(1,9,100);
+		*dance.getLength() = 14;
+		*dance.getBorder() = 0.3f;
+		dance.initPoints();
 
 		initMesh = &scene->get_object_at(0)->getModel()->meshes[0];
 		runMesh = &scene->get_object_at(1)->getModel()->meshes[0];
 		runLeftMesh = &scene->get_object_at(3)->getModel()->meshes[0];
+		danceMesh = &scene->get_object_at(4)->getModel()->meshes[0];
 
 		obj = scene->get_object_at(2);
 		obj->unhide();
@@ -61,11 +70,11 @@ public:
 			//obj->getModel().value().meshes[0] = runMesh;
 
 			if (p.currAnim != 1) {
-				obj->getModel()->meshes[0] = *runMesh;
+				obj->getModel()->meshes[0] = *runLeftMesh;
 				obj->setSpriteAnimation(run);
 				p.currAnim = 1;
 			}
-			obj->getTransform().position.x += 1 * p.speed;
+			obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 		}
 		else if (instance->ks.get_a()) 
 		{
@@ -73,16 +82,32 @@ public:
 			//obj->setSpriteAnimation(run);
 
 			if (p.currAnim != 2) {
-				obj->getModel()->meshes[0] = *runLeftMesh;
+				obj->getModel()->meshes[0] = *runMesh;
 				obj->setSpriteAnimation(run);
 				p.currAnim = 2;
 			}
-			obj->getTransform().position.x -= 1 * p.speed;
+			obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
 			//obj->getTransform().rotateBy(180, {0,0,1});
 		}
 		else if (instance->ks.get_q()) 
 		{
-			
+			std::cout << "clicked";
+			if (p.currAnim != 3) {
+
+				std::cout << "anim checked\n";
+				if (obj) {
+					if (!obj->getModel()) {
+						std::cout << "object model checked\n";
+						if (obj->getModel()->meshes.size() > 0) {
+							obj->getModel()->meshes[0] = *danceMesh;
+						}
+					}
+				}
+				std::cout << "obj checked\n";
+				obj->setSpriteAnimation(dance);
+				obj->getRigidBody()->apply_impulse({0,6,0});
+				p.currAnim = 3;
+			}
 		}
 		else 
 		{
@@ -106,7 +131,7 @@ public:
 	Player p;
 	SpriteAnimation run;
 	SpriteAnimation init;
-	SpriteAnimation tmp;
+	SpriteAnimation dance;
 	 
 	//DANGER(darius) NOTE(darius) you cant create opengl entities, cause u have no opengl initialized here, TODO(darius) make some factory inside engine
 	//FlatMesh runMesh;
@@ -115,5 +140,6 @@ public:
 	Mesh* runMesh = nullptr;
 	Mesh* runLeftMesh = nullptr;
 	Mesh* initMesh = nullptr;
+	Mesh* danceMesh = nullptr;
 };
 

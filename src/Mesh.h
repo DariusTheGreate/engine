@@ -49,9 +49,9 @@ public:
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation
-    std::vector<Vertex>       vertices;
-    std::vector<unsigned int> indices;
-    std::vector<Texture>      textures;
+    std::vector<Vertex>       vertices;//TODO(techmo) serialize
+    std::vector<unsigned int> indices;//TODO(techmo) serialize
+    std::vector<Texture>      textures;//TODO(techmo) serialize
 
 
     VAO vao;

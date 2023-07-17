@@ -209,28 +209,49 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	FlatMesh idle;
 	FlatMesh runAnimTexture;
 	FlatMesh runLeftAnimTexture;
+	FlatMesh danceAnimation;
+	FlatMesh enemyAnimation;
 
-	flat.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
-	idle.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
-	runLeftAnimTexture.setTexture(GameState::engine_path + "textures", "spidRunLeft.png");
-	runAnimTexture.setTexture(GameState::engine_path + "textures", "spidRun.png");
+	flat.setTexture(GameState::engine_path + "textures/hornet", "iddle.png");
+	idle.setTexture(GameState::engine_path + "textures/hornet", "iddle.png");
+	enemyAnimation.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
+
+	runLeftAnimTexture.setTexture(GameState::engine_path + "textures/hornet", "runLeft.png");
+	runAnimTexture.setTexture(GameState::engine_path + "textures/hornet", "runRight.png");
+	danceAnimation.setTexture(GameState::engine_path + "textures/hornet", "jump.png");
 
 	auto* obj0 = currScene->AddEmpty(228);
 	auto* obj1 = currScene->AddEmpty(229);
-	auto* obj2 = currScene->AddEmpty(230);
+	auto* player= currScene->AddEmpty(230);
 	auto* obj3 = currScene->AddEmpty(231);
+	auto* obj4 = currScene->AddEmpty(232);
+	auto* enemy = currScene->AddEmpty(232);
 
 	obj0->hide();
 	obj1->hide();
 	obj3->hide();
+	obj4->hide();
 
 	obj0 ->addModel(std::move(flat), sv, currShaderRoutine);
 	obj1->addModel(std::move(runAnimTexture), sv, currShaderRoutine);
 	obj3->addModel(std::move(runLeftAnimTexture), sv, currShaderRoutine);
-	obj2->addModel(std::move(idle), sv, currShaderRoutine);
+	obj4->addModel(std::move(danceAnimation), sv, currShaderRoutine);
+	player->addModel(std::move(idle), sv, currShaderRoutine);
+	enemy->addModel(std::move(enemyAnimation), sv, currShaderRoutine);
+
+	auto enemySprite = SpriteAnimation(4, 8, 100);
+	enemy->setSpriteAnimation(enemySprite);
+	enemy->moveTransform({5,0,0});
+	enemy->addCollider();
+	enemy->getColider()->set_size({2,2,1});
+	enemy->getColider()->set_shift({1,1,0.5});
 
 	//obj->addSpriteAnimation(SpriteAnimation(4,8,500));
-	obj2->addScript(currScene, &routine);
+	player->addScript(currScene, &routine);
+	player->addCollider();
+	player->addRigidBody();
+	player->getColider()->set_size({1,1,1});
+	player->getColider()->set_shift({0.5,0.5,0.5});
 
     /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
@@ -301,7 +322,7 @@ void Renderer::render(Window* wind, bool& debug_mode) {
                 //dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
             }
         }
-        dbr.renderPoints();
+        //dbr.renderPoints();
         dbr.renderDebugGrid();
     }
 }

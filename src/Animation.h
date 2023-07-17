@@ -67,6 +67,7 @@ class SpriteAnimation
 public:
 	SpriteAnimation() = default;
     SpriteAnimation(std::vector<glm::vec4> points_in, float delay) : points(points_in), delayMs(delay) {}
+
     SpriteAnimation(float rows_in, float cols_in, float delay) :  delayMs(delay), rows(rows_in), cols(cols_in), length(rows*cols) 
 	{
         initPoints();
@@ -75,10 +76,11 @@ public:
     void initPoints()
     {
         points.clear();
+		float dc = border * (length - 1) * 0.001f;
         for (float i = 1; i <= rows; ++i) {
 			for (float j = 1; j <= cols; ++j) 
 			{
-				points.push_back(glm::vec4((j-1)/cols,(i-1)/rows, j/cols, i/rows));
+				points.push_back(glm::vec4((j-1)/cols + dc,(i-1)/rows, j/cols - dc, i/rows));
 			}
 		}
     }
@@ -137,6 +139,11 @@ public:
 	{
 		return &start;
 	}
+	
+	float* getBorder() 
+	{
+		return &border;
+	}
 
 	bool* getPlay() 
 	{
@@ -153,6 +160,7 @@ private:
     float cols = 0;
     float length = 0;
 	float start = 0;
+	float border = 0;
 
 	bool play = true;
 

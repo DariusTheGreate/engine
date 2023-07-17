@@ -62,6 +62,7 @@ public:
 
 	std::optional<Colider>& getColider(); 
 
+	void addRigidBody();
 	std::optional<RigidBody>& getRigidBody();
 
 	std::optional<Model>& getModel();
@@ -73,6 +74,8 @@ public:
 	Transform& getTransform();
 
 	Transform& getParentTransform();
+
+	void moveTransform(glm::vec3 v);
 	
 	void addScript(Scene* scn, EmptyScriptRoutine* routine);
 	std::optional<Script>& getScript();
@@ -90,6 +93,7 @@ public:
 	std::string& get_name(); 
 
 	void hide();
+	void serialize();
 
 	void unhide();
 
@@ -138,15 +142,15 @@ private:
 	// NOTE(darius) dont forget optional cant contain reference or heap object
 	// use indexing?
 	// make it vector pointer to all components of specific type, for each component type?
-	std::optional<Model> model;
-	std::optional<RigidBody> rbody;
-	std::optional<Colider> colider;
+	std::optional<Model> model;//TODO(techmo0) serilize!
+	std::optional<RigidBody> rbody;//TODO(techmo0) serialize!
+	std::optional<Colider> colider;//TODO(techmo0) serilize!
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
 	std::optional<Material> material = std::nullopt;
 	std::optional<ParticleSystem> particles;
 	std::optional<Animator> animator;
-    std::optional<SpriteAnimation> spriteAnimation;
+    std::optional<SpriteAnimation> spriteAnimation;//TODO(techmo0)
 
 	Transform tr;
 	std::string name;

@@ -12,6 +12,8 @@
 
 struct Simplex;
 
+constexpr float collisionEpsilon = 0.01f;
+
 class Colider
 {
 public:
@@ -20,6 +22,10 @@ public:
     glm::vec3 get_position() const;
 
     glm::vec3 get_size() const;
+	void set_size(glm::vec3 v);
+
+	void set_shift(glm::vec3 v);
+
     glm::vec3& get_size_ref();
 
     std::vector<glm::vec3> get_points();
@@ -32,8 +38,8 @@ public:
 
     //https://www.youtube.com/watch?v=ajv46BSqcK4&ab_channel=Reducible
 	bool gjk(Colider* coll1, Colider* coll2);
-	
-	bool check_collision(const Colider& c) const;
+
+	glm::vec3 check_collision(const Colider& c) const;
 
 	glm::vec3 get_pos() const;
 
@@ -62,6 +68,7 @@ public:
 	glm::vec3 get_epa();
 	
 	bool is_active() const;
+	bool* get_collision_state();
 
 	Transform& get_transform();
 
@@ -71,6 +78,7 @@ private:
 	glm::vec3 size = {1,1,1};
 	bool active = true;
 	int tag = 0;
+	bool collision_state = false;
 	glm::vec3 shift = {0,0,0};
 
 	glm::vec3 epa_collision_value = { 0,0,0 };

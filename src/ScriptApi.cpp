@@ -1,25 +1,65 @@
 #include <ScriptApi.h>
+#include <stdlib.h>
+#include <iostream>
 
 //TODO(darius) throws exception
-EmptyScriptRoutine::EmptyScriptRoutine(std::string_view path, GameState* inst) : instance(inst)
+EmptyScriptRoutine::EmptyScriptRoutine(std::string_view path_in, GameState* inst) : instance(inst), path(path_in)
 {
 	 //"E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug"
-	 boost::dll::fs::path lib_path(path);
+	loadDll(path);
+}
 
-	 plugin = boost::dll::import_symbol<ScriptRoutine>(
-		 lib_path / "EngineLogic",
-		 "script",
-		 boost::dll::load_mode::append_decorations
-	 );
+void EmptyScriptRoutine::loadDll(std::string_view path)
+{
+	boost::dll::fs::path lib_path(path);
 
-	 if(instance)
-		 plugin->setInstance(instance);
+	plugin = boost::dll::import_symbol<ScriptRoutine>(
+		lib_path / "EmptyLogic",
+		"script",
+		boost::dll::load_mode::append_decorations
+	);
+
+	auto pluginCopy = plugin;
+
+	do {
+		try {
+			plugin = boost::dll::import_symbol<ScriptRoutine>(
+				lib_path / "EngineLogic",
+				"script",
+				boost::dll::load_mode::append_decorations
+			);
+		}
+		catch (...)
+		{
+
+		}
+	} while (plugin == pluginCopy);
+
+
+	if (instance)
+		plugin->setInstance(instance);
+
+	time = checkTimeOfCreation();
 }
 
 void EmptyScriptRoutine::update(ScriptArgument& arg) {
+	if (checkTimeOfCreation() != time) 
+	{
+		loadDll(path);
+		return;
+	}
 	plugin->update(arg);
 }
 
 void EmptyScriptRoutine::start(ScriptArgument& arg) {
 	plugin->start(arg);
+}
+
+//TODO(darius) make own wrapper?
+long EmptyScriptRoutine::checkTimeOfCreation() 
+{
+	 struct stat result;
+	 if (stat("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug/EngineLogic.dll", &result) == 0)
+		 return result.st_mtime;
+	 return 0;
 }

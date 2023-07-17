@@ -148,6 +148,9 @@ private:
 
 	void update_scripts();
 
+	void serialize();
+
+
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
 	SceneMemoryManager<> mem_man;

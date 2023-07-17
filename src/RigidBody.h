@@ -71,7 +71,7 @@ public:
 
 	//mat4 inertia_tensor;
 	glm::mat4 inertia_tensor = glm::mat4(1.0);
-	glm::vec3 force_accumulator = { 0,0,0 };
+	glm::vec3 force_accumulator = { 0,-1,0 };
 	glm::vec3 torque_accumulator = { 0,0,0 };
 
 	float restitution = 0; 

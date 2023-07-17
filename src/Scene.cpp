@@ -160,15 +160,34 @@ void Scene::update_objects() {
 				|| !sceneObjects[j]->getColider()->is_active()
 				)	continue;
 
-			auto collision_state = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
+			//auto collision_state = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
+			auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
 
-			if (collision_state) {
-				is_there_collision = collision_state;
-				glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
+			if (collision_state != glm::vec3{0,0,0}) {
+				std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
+				////is_there_collision = true;
 
+				//glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
+				//std::cout << epa.x << " " << epa.y << " " << epa.z << "\n";
+				std::cout << collision_state.x << " " << collision_state.y << "\n";
+				
+				//NOTE(darius) this is a trick to check if float is Nan
+				//TODO(darius) not good
+				/*if (epa.x == epa.x && epa.y == epa.y && epa.z == epa.z)
+				{
+					sceneObjects[i]->getTransform().position += glm::vec3{ -0.1, -0.1,0};
+					*sceneObjects[i]->getColider()->get_collision_state() = false;
+				}
+				*/
+
+				sceneObjects[i]->getTransform().position += collision_state;
+				*sceneObjects[i]->getColider()->get_collision_state() = false;
+
+				/*
 				if (sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z) {
 					sceneObjects[i]->getRigidBody()->tr.position += glm::vec3{ epa.x / 4, epa.y / 4, epa.z / 4 };
 				}
+				*/
 
 				break;
 			}
@@ -184,6 +203,15 @@ void Scene::update_scripts()
 	for (auto& i : sceneObjects)
 	{
 		i->updateScript();
+	}
+}
+
+void Scene::serialize()
+{
+	for (auto& i : sceneObjects)
+	{
+		i->serialize();
+
 	}
 }
 
