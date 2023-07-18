@@ -205,7 +205,7 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 
 	currShaderRoutine = {Shader(sv)};
 
-	FlatMesh flat;
+	/*FlatMesh flat;
 	FlatMesh idle;
 	FlatMesh runAnimTexture;
 	FlatMesh runLeftAnimTexture;
@@ -252,6 +252,7 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	player->addRigidBody();
 	player->getColider()->set_size({1,1,1});
 	player->getColider()->set_shift({0.5,0.5,0.5});
+	*/
 
     /*for (int i = 0; i < 1; i += 1) {
         auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",

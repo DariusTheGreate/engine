@@ -3,15 +3,18 @@
 #include <iostream>
 
 //TODO(darius) throws exception
+// DLL info - https://learn.microsoft.com/en-us/troubleshoot/windows-client/deployment/dynamic-link-library
 EmptyScriptRoutine::EmptyScriptRoutine(std::string_view path_in, GameState* inst) : instance(inst), path(path_in)
 {
 	 //"E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug"
 	loadDll(path);
 }
 
+//NOTE(darius) kinda cool, kinda cringe. check this - https://serverfault.com/questions/503721/replacing-dll-files-while-the-application-is-running
 void EmptyScriptRoutine::loadDll(std::string_view path)
 {
 	boost::dll::fs::path lib_path(path);
+
 
 	plugin = boost::dll::import_symbol<ScriptRoutine>(
 		lib_path / "EmptyLogic",
@@ -46,6 +49,7 @@ void EmptyScriptRoutine::update(ScriptArgument& arg) {
 	if (checkTimeOfCreation() != time) 
 	{
 		loadDll(path);
+		start(arg);
 		return;
 	}
 	plugin->update(arg);

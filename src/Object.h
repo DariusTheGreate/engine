@@ -5,6 +5,7 @@
 #include <functional>
 #include <queue>
 #include <memory>
+#include <fstream>
 
 #include <glm/glm.hpp>
 
@@ -93,7 +94,8 @@ public:
 	std::string& get_name(); 
 
 	void hide();
-	void serialize();
+	void serialize(std::ofstream& file);
+	void deserialize(std::ofstream& file);
 
 	void unhide();
 

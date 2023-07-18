@@ -116,6 +116,7 @@ public:
 	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures);
 
 	Object* AddEmpty(int i);
+	Object* AddObject(const std::string& name);
 
 	Object* createSubobject(Object* obj, int i);
 
@@ -140,6 +141,12 @@ public:
 	FlatMesh* createFlatMesh();
 	void deleteFlatMesh(FlatMesh* mesh);
 
+	void serialize(std::string_view path);
+	void deserialize(std::string_view path);
+	std::string extractNameFromToken(std::string_view);
+	glm::vec3 extractTransformFromToekn(std::string_view);
+	Colider extractColliderFromToken(std::string_view);
+
 private:
 
 	void init_memory();
@@ -147,9 +154,6 @@ private:
 	void update_objects();
 
 	void update_scripts();
-
-	void serialize();
-
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes

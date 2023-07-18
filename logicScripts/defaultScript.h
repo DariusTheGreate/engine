@@ -76,7 +76,7 @@ public:
 			}
 			obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 		}
-		else if (instance->ks.get_a()) 
+		if (instance->ks.get_a()) 
 		{
 			//obj->getModel().value().meshes[0] = runMesh;
 			//obj->setSpriteAnimation(run);
@@ -89,36 +89,40 @@ public:
 			obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
 			//obj->getTransform().rotateBy(180, {0,0,1});
 		}
-		else if (instance->ks.get_q()) 
+        if (instance->ks.get_q()) 
 		{
-			std::cout << "clicked";
-			if (p.currAnim != 3) {
+			std::cout << "clicked\n";
+            instance->debug_msg.append("clicked q");
+			if (true) {
 
-				std::cout << "anim checked\n";
+				/*std::cout << "anim checked\n";
 				if (obj) {
+					std::cout << "obj checked\n";
 					if (!obj->getModel()) {
-						std::cout << "object model checked\n";
+						std::cout << "model checked\n";
 						if (obj->getModel()->meshes.size() > 0) {
-							obj->getModel()->meshes[0] = *danceMesh;
+							std::cout << "model meshes checked\n";
+
 						}
 					}
 				}
-				std::cout << "obj checked\n";
+                */
+
+                obj->getModel()->meshes[0] = *danceMesh;
 				obj->setSpriteAnimation(dance);
-				obj->getRigidBody()->apply_impulse({0,6,0});
+				obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
 				p.currAnim = 3;
 			}
 		}
-		else 
-		{
-			if (p.currAnim != 0) {
-				obj->getModel()->meshes[0] = *initMesh;
-				obj->setSpriteAnimation(init);
-				p.currAnim = 0;
-			}
-			//obj->getModel().value().meshes[0] = initMesh;
-			//obj->setSpriteAnimation(init);
-		}
+        if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a()){
+            if (p.currAnim != 0) {
+                obj->getModel()->meshes[0] = *initMesh;
+                obj->setSpriteAnimation(init);
+                p.currAnim = 0;
+            }
+        }
+        //obj->getModel().value().meshes[0] = initMesh;
+        //obj->setSpriteAnimation(init);
 	}
 
 	void setInstance(GameState* p) override

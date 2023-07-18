@@ -4,6 +4,10 @@
 #include <Model.h>
 #include <ParticleSystem.h>
 
+#include <string>
+#include <iostream>
+#include <fstream>
+
 
 Scene::Scene()
 {
@@ -33,6 +37,13 @@ Object* Scene::AddEmpty(int i)
 {
 	Object* pt;
 	pt = mem_man.construct("empty " + std::to_string(i));
+	sceneObjects.push_back(pt);
+	return pt;
+}
+Object* Scene::AddObject(const std::string& name) 
+{
+	Object* pt;
+	pt = mem_man.construct(name);
 	sceneObjects.push_back(pt);
 	return pt;
 }
@@ -206,12 +217,84 @@ void Scene::update_scripts()
 	}
 }
 
-void Scene::serialize()
+void Scene::serialize(std::string_view path)
 {
+	std::ofstream file(path.data());
+    if(!file.is_open())
+        return;
+    
 	for (auto& i : sceneObjects)
 	{
-		i->serialize();
+		i->serialize(file);
 
 	}
+
+    file.close();
+}
+
+//TODO(darius) check for names being different, and check if object that you created dont exist already
+void Scene::deserialize(std::string_view path)
+{
+
+	std::ifstream file(path.data());
+	if (!file.is_open())
+		return;
+	
+	std::string data;
+	std::string line;
+	//TODO(darius) optimize it
+	while (std::getline(file, line)) 
+	{
+		data += line;
+	}
+
+	std::vector<std::string> objectTokens;
+
+	{
+		size_t i = 0;
+
+		while (i < data.size()) 
+		{
+			size_t oPos1 = data.find("Object", i);
+			size_t oPos2 = data.find("Object", oPos1+1);
+			i = oPos2;
+			objectTokens.push_back(data.substr(oPos1, oPos2-oPos1));
+		}
+	}
+
+	std::vector<std::string> names;
+	for (std::string_view tkn : objectTokens) 
+	{
+		names.push_back(extractNameFromToken(tkn));
+	}
+
+	//Recreation here after
+
+	for (std::string_view name : names) 
+	{
+		AddObject(std::string(name));
+	}
+
+	file.close();
+}
+
+std::string Scene::extractNameFromToken(std::string_view tkn)
+{
+	size_t nameStart = tkn.find("Name");
+	size_t valueStart = nameStart + 9;
+	size_t valueEnd = tkn.find("\t", valueStart);
+	return std::string(tkn.substr(valueStart, valueEnd - valueStart));
+}
+
+glm::vec3 Scene::extractTransformFromToekn(std::string_view)
+{
+	return glm::vec3();
+}
+
+Colider Scene::extractColliderFromToken(std::string_view)
+{
+	//DANGER(darius) temp
+	Transform tr;
+	return Colider(glm::vec3{ 0,0,0 }, tr);
 }
 

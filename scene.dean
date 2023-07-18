@@ -1,0 +1,57 @@
+Object: {
+	Name: {
+		empty 228
+	}
+	Transform: {
+		position: {0.000000|0.000000|0.000000}
+	}
+}
+Object: {
+	Name: {
+		empty 229
+	}
+	Transform: {
+		position: {0.000000|0.000000|0.000000}
+	}
+}
+Object: {
+	Name: {
+		empty 230
+	}
+	Transform: {
+		position: {0.000000|0.000000|0.000000}
+	}
+	RigidBody: {0.100000|1}
+	Collider: {
+		Size: {1.000000|1.000000|1.000000}
+		Shift: {0.500000|0.500000|0.500000}
+	}
+}
+Object: {
+	Name: {
+		empty 231
+	}
+	Transform: {
+		position: {0.000000|0.000000|0.000000}
+	}
+}
+Object: {
+	Name: {
+		empty 232
+	}
+	Transform: {
+		position: {0.000000|0.000000|0.000000}
+	}
+}
+Object: {
+	Name: {
+		empty 232
+	}
+	Transform: {
+		position: {5.000000|0.000000|0.000000}
+	}
+	Collider: {
+		Size: {2.000000|2.000000|1.000000}
+		Shift: {1.000000|1.000000|0.500000}
+	}
+}

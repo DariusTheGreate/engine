@@ -12,7 +12,7 @@ void RigidBody::update(float dt)
 		return;
 
 	glm::vec3 acceleration = force_accumulator;
-	acceleration /= mass;
+	acceleration *= mass;
 	velocity = velocity + dt * acceleration;
 	velocity *= 0.98;
 	tr.position = tr.position + dt * velocity;

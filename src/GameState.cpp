@@ -2,9 +2,9 @@
 
 void GameState::msg(std::string&& str)
 {
-	if (debug_msg.size() >= debug_len)
-		clear_msg();
-	debug_msg.append(str);
+	//if (debug_msg.size() >= debug_len)
+	//	clear_msg();
+	debug_msg.append(std::move(str));
 }
 
 void GameState::clear_msg()

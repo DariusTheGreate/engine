@@ -18,8 +18,9 @@ void InputManager::framebuffer_size_standart_callback(GLFWwindow* window, int wi
 
 void InputManager::processInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
+    }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         GameState::instance->ks.set_w(true);

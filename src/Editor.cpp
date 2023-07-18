@@ -54,7 +54,8 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_0()) {
         debug_mode = true;
-		state.debug_msg.append("debug mode toogled\n");
+		//state.debug_msg.append("debug mode toogled\n");
+		state.msg("debug mode toogled\n");
     }
     if (GameState::instance->ks.get_1()) {
         setEditorMode(2);
@@ -67,15 +68,16 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render_points = false;
+        currScene.serialize("E:/own/programming/engine/scene.dean");
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render_points = true;
+        currScene.deserialize("E:/own/programming/engine/scene.dean");
     }
     if (GameState::instance->ks.get_9()) {
         debug_mode = false;
         rendol.getDebugRenderer().clearPoints();
     }
-
     if(GameState::instance->ks.get_mouse_right_button())
     {
         GameState::cam.cursor_hidden = true;

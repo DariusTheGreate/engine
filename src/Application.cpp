@@ -1,8 +1,8 @@
 #include "Application.h"
-#include "Window.h"
 
 #include "Renderer.h"
 #include <Editor.h>
+#include <windows.h>
 
 Application::Application(char* name, int windowW, int windowH) : m_app_name(name), m_window(new Window(name, windowW, windowH)) {}
 

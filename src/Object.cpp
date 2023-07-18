@@ -1,4 +1,7 @@
 #include <Object.h>
+#include <fstream>
+#include <iostream>
+#include <string>
 
 Object::Object(std::string name_in) : name(name_in)
 {
@@ -286,30 +289,45 @@ void Object::hide()
     object_hidden = true;
 }
 
-void Object::serialize()
+void Object::serialize(std::ofstream& file)
 {
-    //fstream file;
-    //file >> "Name" >> get_name().c_str();
+    file << "Object: {\n";
+    file <<           "\tName: {\n\t\t" << get_name().c_str() << "\n\t}\n";
     //CM std::to_string() to convert digit to string
     {
-        //TODO(tecmo) serialize transform
+		file << "\tTransform: {\n";
+        file <<"\t\tposition: {" << std::to_string(tr.position.x) << "|" << std::to_string(tr.position.y) << "|" << std::to_string(tr.position.z) << "}\n";
+		file << "\t}\n";
     }
 
     if (rbody) 
     {
-        //TODO(techmo) serialize 
+        file <<"\tRigidBody: {" << std::to_string(rbody->mass) << "|" << std::to_string(rbody->is_static) << "}\n";
     }
 
     if (colider) 
     {
-
+		file << "\tCollider: {\n";
+        file <<"\t\tSize: {" << std::to_string(colider->get_size().x) << "|" << std::to_string(colider->get_size().y) << "|" << std::to_string(colider->get_size().z) << "}\n";
+        file <<"\t\tShift: {" << std::to_string(colider->get_render_shift().x) << "|" << std::to_string(colider->get_render_shift().y) << "|" << std::to_string(colider->get_render_shift().z) << "}\n";
+		file << "\t}\n";
     }
 
     if (model) //HARD beware
     {
-
+        //NOTE(darius) just store name of model. Name of shader. Wheather or not it has routine
+        //NOTE(darius) in case it was created without path - store its meshes 
+        //NOTE(darius) mesh seriliztion is just 1) storing vector of Vertices
+                                              //2) indices
+                                              //3) textures, which is just storing path => FlatMesh.setexture()
     }
-    //Object : {Name: "pistol"; Transform: }
+
+    if (spriteAnimation) 
+    {
+        
+    }
+
+    file << "}\n";
 }
 
 void Object::unhide()

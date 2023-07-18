@@ -92,6 +92,10 @@ TODO(all):
         - https://www.youtube.com/watch?v=nmxZmIOAosY&ab_channel=mohamedshaalan
         - https://github.com/GarrettGunnell/CS2-Smoke-Grenades 
         - https://github.com/frtru/GemParticles
+        - profiler - https://github.com/FlaxEngine/FlaxEngine/blob/master/Source/Engine/Profiler/ProfilerCPU.cpp
+        - reddit thread om gpu memory - https://www.reddit.com/r/opengl/comments/oxl2fi/what_are_some_good_practices_to_manage_gpu_memory/
+        - lecture - https://www.youtube.com/watch?v=-bCeNzgiJ8I&list=PLckFgM6dUP2hc4iy-IdKFtqR9TeZWMPjm&ab_channel=SteamworksDevelopment
+        - opengl PBO - http://www.songho.ca/opengl/gl_pbo.html
 */
 
 class DebugRenderer 
