@@ -20,6 +20,8 @@ public:
 
     void printFPS();
 
+    bool lockFPS();
+
     Window* getWindow();
     Renderer* getRenderer();
     
@@ -34,6 +36,7 @@ private:
 
     unsigned int frame_number = 0;
     double lastTime = 0;
+    double numOfFrames = 60;
 
     bool debug_mode = false;
 };

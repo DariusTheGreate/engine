@@ -11,15 +11,15 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
 void Editor::update()
 {
-	updateInput();
+    if (!lockFPS()) { return; }
+    updateInput();
     printFPS();
     updateCamera();
+    currScene.updateScene();
 
-	currScene.updateScene();
     rendol.render(window, debug_mode);
-
-	ui.renderUI(currScene, rendol);
-   	rendol.updateBuffers(window); 
+    ui.renderUI(currScene, rendol);
+    rendol.updateBuffers(window);
 }
 
 void Editor::setEditorMode(int mode)
@@ -119,6 +119,16 @@ void Editor::printFPS() {
         frame_number = 0;
         lastTime += 1.0;
     }
+}
+
+bool Editor::lockFPS() {
+    double time = glfwGetTime();
+    double deltaTime = time - lastTime;
+    if (deltaTime >= 1.0 / numOfFrames) {
+        lastTime = time;
+        return 1;
+    }
+    return 0;
 }
 
 Window* Editor::getWindow()

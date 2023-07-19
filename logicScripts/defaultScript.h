@@ -12,7 +12,7 @@
 
 struct Player 
 {
-	float speed = 0.05f;
+	float speed = 0.0005f;
 	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - dance
 };
 
