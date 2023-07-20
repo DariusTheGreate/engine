@@ -152,3 +152,4 @@ glm::vec4 Camera::getRawViewPort(int w, int h)
     glm::vec4 viewport(0.0f, 0.0f, w, h);
     return viewport;
 }
+

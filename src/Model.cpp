@@ -28,7 +28,7 @@ Model::Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, b
 {
 }
 
-Model::Model(const Model& m) : meshes(m.meshes), shader(m.shader), shaderRoutine(m.shaderRoutine)
+Model::Model(const Model& m) : meshes(m.meshes), shader(m.shader), shaderRoutine(m.shaderRoutine), path(m.path)
 {
 
 }
@@ -42,6 +42,7 @@ void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<M
     if(light){
         light->setShaderLight(shader);
     }
+   
     if(m){//TODO(darius) why the fuck matrial not nullopt?
         m->setShaderMaterial(shader);
     }
@@ -60,6 +61,7 @@ std::vector<Mesh> Model::loadModel()
 {
     if (path == "")
         return {};
+    
     Assimp::Importer importer;
     std::cout << "Read started...\n";
     const aiScene* scene = importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
@@ -86,6 +88,11 @@ void Model::addMesh(const Mesh& m)
 LightingShaderRoutine& Model::getShaderRoutine()
 {
     return shaderRoutine; 
+}
+
+void Model::setShaderRoutine(const LightingShaderRoutine& routine) 
+{
+    shaderRoutine = routine;
 }
 
 void Model::setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r)
@@ -145,7 +152,6 @@ void Model::processNode(aiNode* root, const aiScene* scene)
             path.push(curr -> mChildren[i]);
         }
     }
-
 }
 
 Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
@@ -220,7 +226,6 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-
     ExtractBoneWeightForVertices(vertices,mesh,scene);
 
     return Mesh(vertices, indices, textures);
@@ -235,7 +240,6 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
         mat->GetTexture(type, i, &str);
         std::cout << "textures: " << str.C_Str() << "\n";
-
 
         auto fnd = Model::textures_set.find(str.C_Str());
         if (fnd != Model::textures_set.end()) 
@@ -312,21 +316,14 @@ glm::quat Model::GetGLMQuat(const aiQuaternion& pOrientation)
     return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
 }
 
-
-std::unordered_set<std::string_view> Model::textures_set = {};
-std::vector<Texture> Model::textures_loaded = {};
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate = false)
+unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate) 
 {
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
-
     size_t textureID;
     OpenglWrapper::GenerateTextures(&textureID);
 
     stbi_set_flip_vertically_on_load(rotate);
     int width, height, nrComponents;
-    unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+    unsigned char* data = stbi_load(filename, &width, &height, &nrComponents, 0);
     if (data)
     {
         GLenum format = GL_RGBA;
@@ -349,10 +346,21 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
     }
     else
     {
-        std::cout << "Texture failed to load at path: " << path << std::endl;
+        std::cout << "Texture failed to load at path: " << filename << std::endl;
         stbi_image_free(data);
     }
 
     return static_cast<unsigned int>(textureID);
+
 }
+
+unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate = false)
+{
+    std::string filename = std::string(path);
+    filename = directory + '/' + filename;
+    return TextureFromFile(filename.c_str(), gamma, rotate);
+}
+
+std::unordered_set<std::string_view> Model::textures_set = {};
+std::vector<Texture> Model::textures_loaded = {};
 

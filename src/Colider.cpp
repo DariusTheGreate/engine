@@ -19,6 +19,11 @@ void Colider::set_size(glm::vec3 v)
 	size = v;
 }
 
+glm::vec3 Colider::get_shift() const
+{
+	return shift;
+}
+
 void Colider::set_shift(glm::vec3 v)
 {
 	shift = v;

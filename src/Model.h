@@ -29,7 +29,9 @@
 #include <functional>
 #include <optional>
 
+unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate);
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate);
+
 
 struct BoneInfo
 {
@@ -81,6 +83,7 @@ public:
     void addMesh(const Mesh& m);
 
     LightingShaderRoutine& getShaderRoutine();
+    void setShaderRoutine(const LightingShaderRoutine& routine);
 
     void setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r);
 

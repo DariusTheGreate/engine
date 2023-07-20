@@ -150,6 +150,11 @@ public:
 		return &play;
 	}
 
+	std::vector<glm::vec4> getPoints() 
+	{
+		return points;
+	}
+
 private:
     std::vector<glm::vec4> points;
 
@@ -164,6 +169,7 @@ private:
 
 	bool play = true;
 
+	//TODO(darius) make it ID or something
     FlatMesh* sprite = nullptr;
 
 	//std::thread animationThread;

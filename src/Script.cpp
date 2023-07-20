@@ -61,3 +61,8 @@ std::vector<ScriptProperty<float>>& Script::getFloatProperties()
 	return float_properties;
 }
 
+EmptyScriptRoutine* Script::getRoutine()
+{
+	return routine;
+}
+

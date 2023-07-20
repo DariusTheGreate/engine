@@ -26,6 +26,7 @@ class Object
 public:
 	Object(std::string name_in);
 
+	//NOTE(darius) not sure about this stuff anymore. clean up constructors that we dont need and create new constructors that we need?
 	Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in);
 
 	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
@@ -37,8 +38,7 @@ public:
 	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
 																					Scene* scn, EmptyScriptRoutine* routine, bool active = true);
 
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Model& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
-																					Scene* scn, EmptyScriptRoutine* routine, bool active = true);
+	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, const Model& m, Scene* scn, EmptyScriptRoutine* routine, bool active);
 
 	void setupScript(EmptyScriptRoutine* r);
 
@@ -63,7 +63,7 @@ public:
 
 	std::optional<Colider>& getColider(); 
 
-	void addRigidBody();
+	void addRigidBody(float mass = 0.0);
 	std::optional<RigidBody>& getRigidBody();
 
 	std::optional<Model>& getModel();
@@ -103,7 +103,7 @@ public:
 
 	void addPointLight(PointLight&& pl = {}, glm::vec3 pos = { 0,0,0 });
 
-	void addCollider();
+	void addCollider(glm::vec3 size = {0,0,0}, glm::vec3 shift = { 0,0,0 });
 
 	void addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine);
 

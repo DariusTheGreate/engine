@@ -412,6 +412,9 @@ public:
         if(ImGui::Button("Collider"))
             item_clicked->addCollider();
 
+        if (ImGui::Button("RigidBody"))
+            item_clicked->addRigidBody();
+
         if(item_clicked->getModel() && ImGui::Button("PointLight")){
             item_clicked->addPointLight();    
         }
@@ -553,6 +556,21 @@ public:
             }
 
             ImGui::Unindent();
+        }
+
+        if (ImGui::CollapsingHeader("Script"))
+        {
+            path.resize(100);
+            path = GameState::engine_path + "logicScripts/EngineLogic/x64/Debug";
+			ImGui::InputText("path", (char*)path.c_str(), 100);
+            if (ImGui::Button("Load Script")) 
+            {
+                //DANGER(darius) leak
+                //TODO(darius) make factories
+                EmptyScriptRoutine* routine = new EmptyScriptRoutine(path.c_str(), GameState::instance);
+                //Script s(hui.getScene(), item_clicked, routine);
+                item_clicked->addScript(hui.getScene(), routine);
+            }
         }
 
         /*if(item_cicked->getModel() && ImGui::Button("Animation")){

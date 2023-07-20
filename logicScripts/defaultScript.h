@@ -114,7 +114,27 @@ public:
 				p.currAnim = 3;
 			}
 		}
-        if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a()){
+        if(instance->ks.get_w())
+        {
+            if (p.currAnim != 1) {
+                obj->getModel()->meshes[0] = *runLeftMesh;
+                obj->setSpriteAnimation(run);
+                p.currAnim = 1;
+            }
+            obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
+
+        }
+        if(instance->ks.get_s())
+        {
+            if (p.currAnim != 1) {
+                obj->getModel()->meshes[0] = *runLeftMesh;
+                obj->setSpriteAnimation(run);
+                p.currAnim = 1;
+            }
+            obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
+
+        }
+        if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             if (p.currAnim != 0) {
                 obj->getModel()->meshes[0] = *initMesh;
                 obj->setSpriteAnimation(init);

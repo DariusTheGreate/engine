@@ -101,8 +101,9 @@ void InputManager::processInput(GLFWwindow* window)
         
         //std::cout << "press right\n";
         //save click position
-        GameState::ms.prev_x = GameState::ms.get_x();
-        GameState::ms.prev_y = GameState::ms.get_y();
+
+        //GameState::ms.prev_x = GameState::ms.get_x();
+        //GameState::ms.prev_y = GameState::ms.get_y();
         //GameState::cam.cursor_hidden = true;
     }
     //this event HAPPENS every frame
@@ -117,8 +118,8 @@ void InputManager::processInput(GLFWwindow* window)
         
         //std::cout << "unpress right\n";
         //place into prev saved click position
-        GameState::ms.set_x(GameState::ms.prev_x);
-        GameState::ms.set_y(GameState::ms.prev_y);
+        //GameState::ms.set_x(GameState::ms.prev_x);
+        //GameState::ms.set_y(GameState::ms.prev_y);
     }
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
         GameState::instance->ks.set_mouse_left_button(true);
@@ -147,3 +148,4 @@ void InputManager::scroll_callback(GLFWwindow* window, double xoffset, double yo
     GameState::ms.set_offset_x((int)xoffset);
     GameState::ms.set_offset_y((int)(yoffset));
 }
+

@@ -23,7 +23,7 @@ FlatMesh::FlatMesh()
 void FlatMesh::setTexture(std::string path, std::string name)
 {
     //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), name, "texture_diffuse");
+    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), path + "/" + name, "texture_diffuse");
     textures.push_back(texture);
 }
 

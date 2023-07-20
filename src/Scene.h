@@ -10,6 +10,7 @@
 #include <Colider.h>
 #include <ParticleSystem.h>
 #include <Script.h>
+#include <Animation.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -141,11 +142,26 @@ public:
 	FlatMesh* createFlatMesh();
 	void deleteFlatMesh(FlatMesh* mesh);
 
+	EmptyScriptRoutine* createRoutine(std::string path);
+	void deleteRoutine(EmptyScriptRoutine*);
+
+	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will return later to it anyway
 	void serialize(std::string_view path);
 	void deserialize(std::string_view path);
+
 	std::string extractNameFromToken(std::string_view);
-	glm::vec3 extractTransformFromToekn(std::string_view);
-	Colider extractColliderFromToken(std::string_view);
+	bool extractHiddenStateFromToken(std::string_view tkn);
+	Transform extractTransformFromToken(std::string_view);
+	Model extractModelFromToken(std::string_view);
+	Model extractMeshesFromToken(std::string_view);
+	std::optional<Colider> extractColliderFromToken(std::string_view);
+	std::optional<RigidBody> extractRigidBodyFromToken(std::string_view);
+	std::optional<SpriteAnimation> extractSpriteAnimationFromToken(std::string_view);
+	std::string extractScriptFromToken(std::string_view);
+
+	glm::vec3 extractVectorFromToken(std::string_view);
+	glm::vec4 extractVector4FromToken(std::string_view);
+	bool extractBoolFromToken(std::string_view);
 
 private:
 

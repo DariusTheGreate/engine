@@ -80,32 +80,57 @@ void Editor::updateInput() {
     }
     if(GameState::instance->ks.get_mouse_right_button())
     {
-        GameState::cam.cursor_hidden = true;
-        glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
-        glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        
-        
+        if (GameState::cam.cursor_hidden == false) {
+            //GameState::ms.cursor_x = GameState::ms.get_x();
+            //GameState::ms.cursor_y = GameState::ms.get_y();
+
+			GameState::ms.set_x(GameState::ms.prev_x);
+			GameState::ms.set_y(GameState::ms.prev_y);
+
+			glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
+			GameState::cam.cursor_hidden = true;
+			glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        GameState::ms.prev_x = GameState::ms.get_x();
+        GameState::ms.prev_y = GameState::ms.get_y();
+
+        //glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
     }
     if(!GameState::instance->ks.get_mouse_right_button())
     {
-        GameState::cam.cursor_hidden = false;
-        glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-       
+        if (GameState::cam.cursor_hidden == true) {
+            //glfwSetCursorPos(window->getWindow(), GameState::ms.cursor_x, GameState::ms.cursor_y);
+
+            //GameState::ms.set_x(GameState::ms.cursor_x);
+            //GameState::ms.set_y(GameState::ms.cursor_y);
+
+			//glfwSetCursorPos(window->getWindow(), GameState::ms.cursor_x, GameState::ms.cursor_y);
+            glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+            GameState::cam.cursor_hidden = false;
+        }
+		GameState::ms.cursor_x = GameState::ms.get_x();
+		GameState::ms.cursor_y = GameState::ms.get_y();
+              
+        //GameState::ms.set_x(GameState::ms.prev_x);
+        //GameState::ms.set_y(GameState::ms.prev_y);
     }
+    //std::cout << GameState::ms.get_x() << " " << GameState::ms.get_y()<< "\n";
     if(GameState::instance->ks.get_mouse_left_button())
     {
         selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
         selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
-
     }
 }
 
 void Editor::updateCamera()
 {
-    if (!GameState::cam.cursor_hidden) {
+    if (GameState::cam.cursor_hidden == false) {
         return;
     }
     GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
+    //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
     GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
 }
 

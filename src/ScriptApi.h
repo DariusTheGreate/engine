@@ -43,6 +43,8 @@ public:
 
 	long checkTimeOfCreation();
 
+	std::string_view getPath();
+
 private:
 	GameState* instance = nullptr;
     boost::shared_ptr<ScriptRoutine> plugin;

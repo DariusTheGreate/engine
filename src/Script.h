@@ -57,6 +57,8 @@ public:
 
 	std::vector<ScriptProperty<float>>& getFloatProperties();
 
+	EmptyScriptRoutine* getRoutine();
+
 private:
 	//std::function<void(ScriptArgument*)> start;
 	//std::function<void(ScriptArgument*)> update;

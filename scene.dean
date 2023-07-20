@@ -2,56 +2,405 @@ Object: {
 	Name: {
 		empty 228
 	}
+	Hidden: {
+		true
+	}
 	Transform: {
-		position: {0.000000|0.000000|0.000000}
+		Position: {4.302591 4.141232 0.000000}
+		Scale: {6.638765 1.000000 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/hornet/iddle.png}
+				Type: {texture_diffuse}
+			}
+		}
 	}
 }
 Object: {
 	Name: {
 		empty 229
 	}
+	Hidden: {
+		true
+	}
 	Transform: {
-		position: {0.000000|0.000000|0.000000}
+		Position: {-2.412023 2.811910 0.000000}
+		Scale: {5.132681 1.000000 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/hornet/runRight.png}
+				Type: {texture_diffuse}
+			}
+		}
 	}
 }
 Object: {
 	Name: {
 		empty 230
 	}
-	Transform: {
-		position: {0.000000|0.000000|0.000000}
+	Hidden: {
+		false
 	}
-	RigidBody: {0.100000|1}
+	Transform: {
+		Position: {11.146704 5.336827 -0.600001}
+		Scale: {1.478863 1.894368 1.000000}
+	}
+	RigidBody: {5.400000 0 0}
 	Collider: {
-		Size: {1.000000|1.000000|1.000000}
-		Shift: {0.500000|0.500000|0.500000}
+		Size: {0.650000 1.500000 0.750000}
+		Shift: {0.350000 1.000000 0.350000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {0.504000 0.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {0.504000 1.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.662667 1.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.662667 0.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/hornet/iddle.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+	SpriteAnimation: {
+		 Point: {0.004000 0.000000 0.162667 1.000000}
+
+		 Point: {0.170667 0.000000 0.329333 1.000000}
+
+		 Point: {0.337333 0.000000 0.496000 1.000000}
+
+		 Point: {0.504000 0.000000 0.662667 1.000000}
+
+		 Point: {0.670667 0.000000 0.829333 1.000000}
+
+		 Point: {0.837333 0.000000 0.996000 1.000000}
+
+	}
+	Script: {
+		 Routine: {E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug}
 	}
 }
 Object: {
 	Name: {
 		empty 231
 	}
+	Hidden: {
+		true
+	}
 	Transform: {
-		position: {0.000000|0.000000|0.000000}
+		Position: {7.354072 0.114204 0.000000}
+		Scale: {6.089908 1.000000 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/hornet/runLeft.png}
+				Type: {texture_diffuse}
+			}
+		}
 	}
 }
 Object: {
 	Name: {
 		empty 232
 	}
+	Hidden: {
+		true
+	}
 	Transform: {
-		position: {0.000000|0.000000|0.000000}
+		Position: {0.000000 0.000000 0.000000}
+		Scale: {5.909826 1.000000 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/hornet/jump.png}
+				Type: {texture_diffuse}
+			}
+		}
 	}
 }
 Object: {
 	Name: {
 		empty 232
 	}
+	Hidden: {
+		false
+	}
 	Transform: {
-		position: {5.000000|0.000000|0.000000}
+		Position: {5.729341 0.907389 0.000000}
+		Scale: {6.488789 5.858500 1.000000}
 	}
 	Collider: {
-		Size: {2.000000|2.000000|1.000000}
-		Shift: {1.000000|1.000000|0.500000}
+		Size: {5.700000 5.200000 0.700000}
+		Shift: {3.050000 2.600000 0.300000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {0.375000 0.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {0.375000 0.250000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.500000 0.250000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.500000 0.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/HollowSpid.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+	SpriteAnimation: {
+		 Point: {0.000000 0.000000 0.125000 0.250000}
+
+		 Point: {0.125000 0.000000 0.250000 0.250000}
+
+		 Point: {0.250000 0.000000 0.375000 0.250000}
+
+		 Point: {0.375000 0.000000 0.500000 0.250000}
+
+		 Point: {0.500000 0.000000 0.625000 0.250000}
+
+		 Point: {0.625000 0.000000 0.750000 0.250000}
+
+		 Point: {0.750000 0.000000 0.875000 0.250000}
+
+		 Point: {0.875000 0.000000 1.000000 0.250000}
+
+		 Point: {0.000000 0.250000 0.125000 0.500000}
+
+		 Point: {0.125000 0.250000 0.250000 0.500000}
+
+		 Point: {0.250000 0.250000 0.375000 0.500000}
+
+		 Point: {0.375000 0.250000 0.500000 0.500000}
+
+		 Point: {0.500000 0.250000 0.625000 0.500000}
+
+		 Point: {0.625000 0.250000 0.750000 0.500000}
+
+		 Point: {0.750000 0.250000 0.875000 0.500000}
+
+		 Point: {0.875000 0.250000 1.000000 0.500000}
+
+		 Point: {0.000000 0.500000 0.125000 0.750000}
+
+		 Point: {0.125000 0.500000 0.250000 0.750000}
+
+		 Point: {0.250000 0.500000 0.375000 0.750000}
+
+		 Point: {0.375000 0.500000 0.500000 0.750000}
+
+		 Point: {0.500000 0.500000 0.625000 0.750000}
+
+		 Point: {0.625000 0.500000 0.750000 0.750000}
+
+		 Point: {0.750000 0.500000 0.875000 0.750000}
+
+		 Point: {0.875000 0.500000 1.000000 0.750000}
+
+		 Point: {0.000000 0.750000 0.125000 1.000000}
+
+		 Point: {0.125000 0.750000 0.250000 1.000000}
+
+		 Point: {0.250000 0.750000 0.375000 1.000000}
+
+		 Point: {0.375000 0.750000 0.500000 1.000000}
+
+		 Point: {0.500000 0.750000 0.625000 1.000000}
+
+		 Point: {0.625000 0.750000 0.750000 1.000000}
+
+		 Point: {0.750000 0.750000 0.875000 1.000000}
+
+		 Point: {0.875000 0.750000 1.000000 1.000000}
+
+	}
+}
+Object: {
+	Name: {
+		empty 0
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {10.156698 3.453228 -1.876343}
+		Scale: {1.000000 1.000000 1.000000}
+	}
+	Collider: {
+		Size: {2.350000 0.900000 3.550000}
+		Shift: {0.000000 0.000000 0.000000}
+	}
+}
+Object: {
+	Name: {
+		empty 1
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-9.812124 -4.242061 -3.575214}
+		Scale: {1.000000 1.000000 1.000000}
+	}
+	Collider: {
+		Size: {12.150000 0.450000 10.200000}
+		Shift: {0.000000 0.000000 0.000000}
 	}
 }

@@ -15,8 +15,24 @@ void Mesh::setDrawMode(DrawMode mode_in)
     mode = mode_in;
 }
 
+std::vector<Vertex> Mesh::getVertices()
+{
+    return vertices;
+}
+
+std::vector<unsigned int> Mesh::getIndices()
+{
+    return indices;
+}
+
+std::vector<Texture> Mesh::getTextures()
+{
+    return textures;
+}
+
 void Mesh::Draw(Shader& shader)
 {
+    //std::cout << "positions " << vertices[0].Position.x << " " << vertices[0].Position.x << vertices[0].Position.y << "\n";
     //std::unique_lock<std::mutex>(draw_mutex);
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;

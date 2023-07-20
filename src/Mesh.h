@@ -46,6 +46,10 @@ public:
 
     void setDrawMode(DrawMode mode_in);
 
+    std::vector<Vertex> getVertices();
+    std::vector<unsigned int> getIndices();
+    std::vector<Texture> getTextures();
+
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation

@@ -4,7 +4,6 @@
 class MouseState
 {
 public:
-
 	void init(int x_pos = 430, int y_pos = 300, int x_off = 0, int y_off = 0, bool left_press = 0, bool right_press = 0);
 	
 	//TODO(darius) make macro for this shit
@@ -37,6 +36,9 @@ public:
 
     int click_x = 0;
     int click_y = 0;
+
+	int cursor_x = 0;
+	int cursor_y = 0;
 
 private:
 	//don need atomics at all?..

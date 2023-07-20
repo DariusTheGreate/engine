@@ -96,6 +96,8 @@ TODO(all):
         - reddit thread om gpu memory - https://www.reddit.com/r/opengl/comments/oxl2fi/what_are_some_good_practices_to_manage_gpu_memory/
         - lecture - https://www.youtube.com/watch?v=-bCeNzgiJ8I&list=PLckFgM6dUP2hc4iy-IdKFtqR9TeZWMPjm&ab_channel=SteamworksDevelopment
         - opengl PBO - http://www.songho.ca/opengl/gl_pbo.html
+        - fast texture example - https://stackoverflow.com/questions/13358455/opengl-combine-textures
+        - J.Blow skeletal animations stuff - https://www.youtube.com/watch?v=4MBXWFfGYpo&ab_channel=UNOFFICIALJonathanBlowstreamarchive
 */
 
 class DebugRenderer 
@@ -223,9 +225,11 @@ public:
 
     Shader getShader();
 
+    Scene* getScene();
+
     DebugRenderer& getDebugRenderer();
     
-    glm::vec3 backgroundColor = glm::vec3{0.5f, 0.5f, 0.5f};
+    glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
 private:
     DebugRenderer dbr;

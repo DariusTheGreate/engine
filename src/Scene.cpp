@@ -139,6 +139,16 @@ void Scene::deleteFlatMesh(FlatMesh* mesh)
 	delete mesh;
 }
 
+EmptyScriptRoutine* Scene::createRoutine(std::string path)
+{
+	return new EmptyScriptRoutine(path, GameState::instance);
+}
+
+void Scene::deleteRoutine(EmptyScriptRoutine* r)
+{
+	delete r;
+}
+
 void Scene::update_objects() {
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?
@@ -226,7 +236,6 @@ void Scene::serialize(std::string_view path)
 	for (auto& i : sceneObjects)
 	{
 		i->serialize(file);
-
 	}
 
     file.close();
@@ -263,19 +272,75 @@ void Scene::deserialize(std::string_view path)
 	}
 
 	std::vector<std::string> names;
+	std::vector<bool> hiddenStates;
 	for (std::string_view tkn : objectTokens) 
 	{
 		names.push_back(extractNameFromToken(tkn));
+		hiddenStates.push_back(extractHiddenStateFromToken(tkn));
+	}
+
+	std::vector<Transform>  transs;
+	for (std::string_view tkn : objectTokens) 
+	{
+		transs.push_back(extractTransformFromToken(tkn));
+	}
+
+	std::vector<Model> models;
+	for (std::string_view tkn : objectTokens) 
+	{
+		models.push_back(extractModelFromToken(tkn));
+	}
+
+	std::vector<std::string> scripts;
+	for (std::string_view tkn : objectTokens) 
+	{
+		scripts.push_back(extractScriptFromToken(tkn));
 	}
 
 	//Recreation here after
+	Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+	Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+	vshdr.compile();
+	fshdr.compile();
+	vshdr.link(fshdr);
 
-	for (std::string_view name : names) 
+	for (int i = 0; i < objectTokens.size(); ++i)
 	{
-		AddObject(std::string(name));
+		LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+
+		auto* obj = AddObject(std::string(names[i]));
+		if (hiddenStates[i])
+			obj->hide();
+		else
+			obj->unhide();
+
+		obj->getTransform() = transs[i];
+
+		if (models.size() > i) 
+		{
+			obj->getModel() = (models[i]);
+			obj->getModel()->setShader(vshdr);
+			obj->getModel()->setShaderRoutine(shaderRoutine);
+			auto anim = extractSpriteAnimationFromToken(objectTokens[i]);
+			if(anim)
+				obj->addSpriteAnimation(std::move(*anim));
+			auto col = extractColliderFromToken(objectTokens[i]);
+			if (col)
+				obj->addCollider(col->get_size(), col -> get_shift());
+			auto body = extractRigidBodyFromToken(objectTokens[i]);
+			if (body)
+				obj->addRigidBody(body->mass);
+		}
+
+		if(scripts[i] != "None")
+			obj->addScript(this, createRoutine(scripts[i]));
+
+		//auto* obj = createObject(std::string(names[i]), transs[i].position, transs[i].scale, glm::vec3{0,0,0}, std::move(models[i]), vshdr, std::move(shaderRoutine), this, nullptr);
 	}
 
 	file.close();
+
+	start_scripts();
 }
 
 std::string Scene::extractNameFromToken(std::string_view tkn)
@@ -286,15 +351,306 @@ std::string Scene::extractNameFromToken(std::string_view tkn)
 	return std::string(tkn.substr(valueStart, valueEnd - valueStart));
 }
 
-glm::vec3 Scene::extractTransformFromToekn(std::string_view)
+bool Scene::extractHiddenStateFromToken(std::string_view tkn)
 {
-	return glm::vec3();
+	size_t stateStart = tkn.find("Hidden:");
+	if(stateStart == std::string::npos)
+		return false;
+	size_t stateEnd = tkn.find("}", stateStart);
+	auto st = tkn.substr(stateStart, stateEnd - stateStart);
+	return extractBoolFromToken(st);
 }
 
-Colider Scene::extractColliderFromToken(std::string_view)
+Transform Scene::extractTransformFromToken(std::string_view tkn)
 {
-	//DANGER(darius) temp
-	Transform tr;
-	return Colider(glm::vec3{ 0,0,0 }, tr);
+	size_t transStart = tkn.find("Transform");
+
+	size_t posStart = tkn.find("Position", transStart);
+	glm::vec3 pos = extractVectorFromToken(tkn.substr(posStart));
+
+	size_t scaleStart = tkn.find("Scale", transStart);
+	glm::vec3 scale = extractVectorFromToken(tkn.substr(scaleStart));
+
+	return Transform(pos, scale);
 }
+
+Model Scene::extractModelFromToken(std::string_view tkn)
+{
+	size_t pathStart = tkn.find("Path");
+	size_t pathEnd = tkn.find("}", pathStart);
+	
+	std::string path(tkn.substr(pathStart + 7, pathEnd - pathStart - 7));
+	if (path != "") {
+		/*Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+		Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+		vshdr.compile();
+		fshdr.compile();
+		vshdr.link(fshdr);
+		LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+		*/
+		return Model(path);
+	}
+	return extractMeshesFromToken(tkn);
+}
+
+Model Scene::extractMeshesFromToken(std::string_view tkn) 
+{	
+	Model res;
+	size_t i = 0;
+	while (i < tkn.size()) {
+		size_t verticesStart = tkn.find("Vertices", i+1);
+		i = verticesStart;
+		if (verticesStart == std::string::npos)
+			break;
+
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec3> normals;
+		std::vector<glm::vec2> texcoords;
+
+
+		size_t i = verticesStart;
+
+		while (i < tkn.size())
+		{
+			size_t pPos = tkn.find("Position", i);
+			if (pPos == std::string::npos)
+				break;
+			size_t nPos = tkn.find("Normal", pPos + 1);
+
+			positions.push_back(extractVectorFromToken(tkn.substr(pPos + 1, nPos - pPos)));
+
+			size_t tcPos = tkn.find("TexCoords", nPos + 1);
+			normals.push_back(extractVectorFromToken(tkn.substr(nPos + 1, tcPos - nPos)));
+
+			size_t pPos2 = tkn.find("Position", tcPos + 1);
+			texcoords.push_back(extractVectorFromToken(tkn.substr(tcPos + 1, pPos2 - tcPos)));
+
+			i = tcPos;
+		}
+
+		//NOTE(darius) separated step for testing purpses
+		std::vector<Vertex> vertices;
+
+		for (int i = 0; i < positions.size(); ++i)
+		{
+			vertices.push_back(Vertex{ positions[i], normals[i], texcoords[i] });
+			//std::cout << vertices[i].TexCoords.x << " " << vertices[i].TexCoords.y << "\n"; //<< vertices[i].Normal.z << "\n";
+		}
+
+		std::vector<unsigned int> indices;
+
+		size_t indicesStart = tkn.find("Indices:");
+		i = indicesStart;
+
+		while (i < tkn.size())
+		{
+			size_t indPos = tkn.find("Indice:", i);
+			if (indPos == std::string::npos)
+				break;
+
+			size_t brckStart = tkn.find("{", indPos);
+			size_t brckEnd = tkn.find("}", brckStart);
+			std::string ind(tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
+			//TODO(darius) cringe
+			indices.push_back(std::stoi(ind));
+			i = brckEnd;
+		}
+
+		std::vector<Texture> textures;
+		size_t texturesStart = tkn.find("Textures:");
+		i = texturesStart;
+
+		while (i < tkn.size())
+		{
+			size_t texPos = tkn.find("Texture:", i);
+			if (texPos == std::string::npos)
+				break;
+
+			size_t brckStart = tkn.find("{", texPos);
+			size_t brckEnd = tkn.find("}", brckStart);
+
+			std::string path(tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
+
+			textures.push_back(Texture(TextureFromFile(path.c_str(), false, false), path, "texture_diffuse"));
+
+			break;
+		}
+
+		/*
+		Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+		Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+		vshdr.compile();
+		fshdr.compile();
+		vshdr.link(fshdr);
+		LightingShaderRoutine shaderRoutine = { Shader(vshdr) };*/
+
+
+		Mesh m(vertices, indices, textures);
+		res.addMesh(m);
+	}
+
+	return res;
+	//return Model(m, vshdr, shaderRoutine);
+}
+
+std::optional<Colider> Scene::extractColliderFromToken(std::string_view tkn)
+{
+	size_t colStart = tkn.find("Collider:");
+
+	if (colStart == std::string::npos)
+		return std::nullopt;
+	
+	size_t sizeStart = tkn.find("Size:", colStart);
+	size_t shiftStart = tkn.find("Shift:", colStart);
+
+	glm::vec3 size = extractVectorFromToken(tkn.substr(sizeStart, shiftStart));
+	
+	size_t shiftEnd = tkn.find("Model", shiftStart);
+
+	glm::vec3 shift = extractVectorFromToken(tkn.substr(shiftStart, shiftEnd));
+	//std::cout << shift.x << "|" << shift.y << "|" << shift.z << "\n";
+
+	Transform tr;
+
+	Colider res(size, tr);
+	res.set_shift(shift);
+
+	return res;
+}
+
+std::optional<RigidBody> Scene::extractRigidBodyFromToken(std::string_view tkn)
+{
+	size_t bodyStart = tkn.find("RigidBody:");
+
+	if (bodyStart == std::string::npos)
+		return std::nullopt;
+	
+	size_t brcktStart = tkn.find("{", bodyStart);
+	size_t brcktEnd = tkn.find("}", brcktStart);
+	glm::vec3 vals = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+	Transform tr;
+	RigidBody res(vals.x, tr, vals.y);
+
+	return res;
+}
+
+std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::string_view tkn)
+{
+	size_t animStart = tkn.find("SpriteAnimation:");
+	
+	if (animStart == std::string::npos)
+		return std::nullopt;
+
+	size_t i = tkn.find("Point:", animStart);
+
+	if (i == std::string::npos)
+		return std::nullopt;
+
+	std::vector<glm::vec4> points;
+	while (i < tkn.size()) 
+	{
+		size_t vecEnd = tkn.find("}", i);
+		points.push_back(extractVector4FromToken(tkn.substr(i, vecEnd - i)));
+		i = tkn.find("Point:", vecEnd);
+	}
+
+	SpriteAnimation res = SpriteAnimation(points, 100);
+	*res.getLength() = static_cast<float>(points.size());
+	return res;
+}
+
+std::string Scene::extractScriptFromToken(std::string_view tkn)
+{
+	size_t scriptStart = tkn.find("Script:");
+	if (scriptStart == std::string::npos)
+		return "None";
+
+	size_t routineStart = tkn.find("Routine:", scriptStart);
+
+	size_t brcktStart = tkn.find("{", routineStart);
+	size_t brcktEnd = tkn.find("}", brcktStart);
+	std::string res(tkn.substr(brcktStart + 1 , brcktEnd - brcktStart - 1));
+
+	return res;
+}
+
+//TODO(darius) optimise, test and refactor this shit, or switch to simdjson
+//NOTE(darius) weird float magic when load from file result in wrong precision
+glm::vec3 Scene::extractVectorFromToken(std::string_view tkn)
+{
+	size_t brkctStart = tkn.find("{");
+	size_t brkctEnd = tkn.find("}");
+	std::string line(tkn.substr(brkctStart, brkctEnd - brkctStart));
+
+	float x = 0;
+	float y = 0;
+	float z = 0;
+
+	size_t xStart = 0;
+	size_t xEnd = line.find(" ");
+	std::string xstr(line.substr(xStart + 1, xEnd));
+	std::istringstream in(xstr);
+	in >> x;
+
+	size_t yStart = xEnd;
+	size_t yEnd = line.find(" ", xEnd + 1);
+	std::string ystr(line.substr(yStart + 1, yEnd - yStart - 1));
+	std::istringstream iny(ystr);
+	iny >> y;
+
+	size_t zStart = yEnd;
+	size_t zEnd = line.find(" ", yEnd + 1);
+	std::string zstr(line.substr(zStart + 1, zEnd - zStart - 1));
+	std::istringstream inz(zstr);
+	inz >> z;
+
+	return glm::vec3(x, y, z);
+}
+
+glm::vec4 Scene::extractVector4FromToken(std::string_view tkn)
+{
+	size_t brkctStart = tkn.find("{");
+	size_t brkctEnd = tkn.find("}");
+	std::string line(tkn.substr(brkctStart, brkctEnd - brkctStart));
+
+	float x = 0;
+	float y = 0;
+	float z = 0;
+	float w = 0;
+
+	size_t xStart = 0;
+	size_t xEnd = line.find(" ");
+	std::string xstr(line.substr(xStart + 1, xEnd));
+	std::istringstream in(xstr);
+	in >> x;
+
+	size_t yStart = xEnd;
+	size_t yEnd = line.find(" ", xEnd + 1);
+	std::string ystr(line.substr(yStart + 1, yEnd - yStart - 1));
+	std::istringstream iny(ystr);
+	iny >> y;
+
+	size_t zStart = yEnd;
+	size_t zEnd = line.find(" ", yEnd + 1);
+	std::string zstr(line.substr(zStart + 1, zEnd - zStart - 1));
+	std::istringstream inz(zstr);
+	inz >> z;
+
+	size_t wStart = zEnd;
+	size_t wEnd = line.find(" ", zEnd + 1);
+	std::string wstr(line.substr(wStart + 1, wEnd - wStart - 1));
+	std::istringstream inw(wstr);
+	inw >> w;
+
+	return glm::vec4(x, y, z, w);
+}
+
+bool Scene::extractBoolFromToken(std::string_view tkn)
+{
+	if (tkn.find("true") != std::string::npos)
+		return true;
+	return false;
+}
+
 

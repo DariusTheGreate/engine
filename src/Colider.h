@@ -24,6 +24,7 @@ public:
     glm::vec3 get_size() const;
 	void set_size(glm::vec3 v);
 
+	glm::vec3 get_shift() const;
 	void set_shift(glm::vec3 v);
 
     glm::vec3& get_size_ref();

@@ -64,22 +64,30 @@ Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm:
 {
     name = std::move(name_in);
     tr = Transform(pos_in, scale_in);
+
     rbody.emplace(0.1, tr, false);
     rbody.value().get_is_static_ref() = true;
+
     model.emplace(m, model_shader, shaderRoutine_in);
+
     script = Script(scn, this, routine);
+
     colider.emplace(collider_in, tr, 0, active);
 }
 
-Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Model& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
-                                                                                Scene* scn, EmptyScriptRoutine* routine, bool active)
+Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, const Model& m, Scene* scn, EmptyScriptRoutine* routine, bool active)
 {
     name = std::move(name_in);
+
     tr = Transform(pos_in, scale_in);
+
     rbody.emplace(0.1, tr, false);
     rbody.value().get_is_static_ref() = true;
+
     model.emplace(m);//Model(m, model_shader, shaderRoutine_in);
+
     script = Script(scn, this, routine);
+
     colider.emplace(collider_in, tr, 0, active);
 }
 
@@ -107,6 +115,7 @@ void Object::updateAnimator(float dt)
 {
     if(!animator)
         return;
+
     animator->UpdateAnimation(dt);
 }
 
@@ -140,12 +149,12 @@ void Object::apply_force(glm::vec3 force)
 {
     if(!rbody)
         return;
+
     rbody.value().add_force(force);
 }
 
 void Object::updatePos() 
 {
-
     if (colider && *colider.value().get_collision_state() == true)
         return;
 
@@ -168,6 +177,7 @@ glm::vec3& Object::get_pos_ref()
 {
     if (parent)
         return parent->get_pos_ref();
+
     return getTransform().position;
 }
 
@@ -176,9 +186,9 @@ std::optional<Colider>& Object::getColider()
     return colider;
 }
 
-void Object::addRigidBody()
+void Object::addRigidBody(float mass)
 {
-    rbody.emplace(0.1, tr, true);
+    rbody.emplace(mass, tr, true);
 }
 
 std::optional<RigidBody>& Object::getRigidBody()
@@ -226,6 +236,8 @@ void Object::addScript(Scene* scn, EmptyScriptRoutine* routine)
     if (script.has_value())
         return;
     script = Script(scn, this, routine);
+    //NOTE(darius) Should I start it here?
+    //script->startScript();
 }
 
 std::optional<Script>& Object::getScript()
@@ -289,47 +301,6 @@ void Object::hide()
     object_hidden = true;
 }
 
-void Object::serialize(std::ofstream& file)
-{
-    file << "Object: {\n";
-    file <<           "\tName: {\n\t\t" << get_name().c_str() << "\n\t}\n";
-    //CM std::to_string() to convert digit to string
-    {
-		file << "\tTransform: {\n";
-        file <<"\t\tposition: {" << std::to_string(tr.position.x) << "|" << std::to_string(tr.position.y) << "|" << std::to_string(tr.position.z) << "}\n";
-		file << "\t}\n";
-    }
-
-    if (rbody) 
-    {
-        file <<"\tRigidBody: {" << std::to_string(rbody->mass) << "|" << std::to_string(rbody->is_static) << "}\n";
-    }
-
-    if (colider) 
-    {
-		file << "\tCollider: {\n";
-        file <<"\t\tSize: {" << std::to_string(colider->get_size().x) << "|" << std::to_string(colider->get_size().y) << "|" << std::to_string(colider->get_size().z) << "}\n";
-        file <<"\t\tShift: {" << std::to_string(colider->get_render_shift().x) << "|" << std::to_string(colider->get_render_shift().y) << "|" << std::to_string(colider->get_render_shift().z) << "}\n";
-		file << "\t}\n";
-    }
-
-    if (model) //HARD beware
-    {
-        //NOTE(darius) just store name of model. Name of shader. Wheather or not it has routine
-        //NOTE(darius) in case it was created without path - store its meshes 
-        //NOTE(darius) mesh seriliztion is just 1) storing vector of Vertices
-                                              //2) indices
-                                              //3) textures, which is just storing path => FlatMesh.setexture()
-    }
-
-    if (spriteAnimation) 
-    {
-        
-    }
-
-    file << "}\n";
-}
-
 void Object::unhide()
 {
     object_hidden = false;
@@ -344,16 +315,19 @@ void Object::addPointLight(PointLight&& pl, glm::vec3 pos)
 {
     if(pointLight || !model)
         return;
+
     pointLight = pl;
     pointLight->addLight();
     //pointLight.position = pos;
 }
 
-void Object::addCollider()
+void Object::addCollider(glm::vec3 size, glm::vec3 shift)
 {
     if(colider)
         return;
-    colider.emplace(glm::vec3{0,0,0}, tr);
+    Colider col(size, tr);
+    col.set_shift(shift);
+    colider.emplace(std::move(col));
 }
 
 void Object::addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine)
@@ -459,6 +433,7 @@ SpriteAnimation Object::excnahgeSpriteAnimation(SpriteAnimation&& anim)
 void Object::setSpriteAnimation(SpriteAnimation& anim)
 {
     spriteAnimation.emplace(anim);
+
     if (model && model->meshes.size() > 0)
         spriteAnimation->setSprite((FlatMesh*)&model->meshes[0]);
 }
@@ -466,5 +441,111 @@ void Object::setSpriteAnimation(SpriteAnimation& anim)
 std::optional<SpriteAnimation>& Object::getSpriteAnimation()
 {
     return spriteAnimation;
+}
+
+
+void Object::serialize(std::ofstream& file)
+{
+    file << "Object: {\n";
+    file << "\tName: {\n\t\t" << get_name().c_str() << "\n\t}\n";
+    file << "\tHidden: {\n\t\t" << (object_hidden == true ? "true" : "false") << "\n\t}\n";
+    //CM std::to_string() to convert digit to string
+    {
+        file << "\tTransform: {\n";
+        file << "\t\tPosition: {" << std::to_string(tr.position.x) << " " << std::to_string(tr.position.y) << " " << std::to_string(tr.position.z) << "}\n";
+        file << "\t\tScale: {" << std::to_string(tr.scale.x) << " " << std::to_string(tr.scale.y) << " " << std::to_string(tr.scale.z) << "}\n";
+        file << "\t}\n";
+    }
+
+    if (rbody)
+    {
+        file << "\tRigidBody: {" << std::to_string(rbody->mass) << " " << std::to_string(rbody->is_static) << " " << 0 << "}\n";
+    }
+
+    if (colider)
+    {
+        file << "\tCollider: {\n";
+        file << "\t\tSize: {" << std::to_string(colider->get_size().x) << " " << std::to_string(colider->get_size().y) << " " << std::to_string(colider->get_size().z) << "}\n";
+        file << "\t\tShift: {" << std::to_string(colider->get_render_shift().x) << " " << std::to_string(colider->get_render_shift().y) << " " << std::to_string(colider->get_render_shift().z) << "}\n";
+        file << "\t}\n";
+    }
+
+    if (model)
+    {
+        //NOTE(darius) just store name of model. Name of shader. Wheather or not it has routine
+        //NOTE(darius) in case it was created without path - store its meshes 
+        //NOTE(darius) mesh seriliztion is just 1) storing vector of Vertices
+                                              //2) indices
+                                              //3) textures, which is just storing path => FlatMesh.setexture()
+
+        file << "\tModel: {\n";
+        model->path.shrink_to_fit();
+        file << "\t\tPath: {" << model->path << "}\n";
+
+        //NOTE(darius) basicly its a start for implementation of my own .obj file. But its slow asfuck and i wont get to it now. So here is boundary for object that I DO serialize -  it needs to be 1 mesh
+        if (model->meshes.size() < 2) {
+            file << "\t\tMeshes: {\n";
+
+            for (auto& i : model->meshes)
+            {
+                //TODO(darius) optim copy
+                auto vertices = i.getVertices();
+                auto indices = i.getIndices();
+                auto textures = i.getTextures();
+
+
+                file << "\t\t\tVertices: {\n";
+                for (auto& v : vertices)
+                {
+                    file << "\t\t\t\tPosition: {" << std::to_string(v.Position.x) << " " << std::to_string(v.Position.y) << " " << std::to_string(v.Position.z) << "}\n";
+                    file << "\t\t\t\tNormal: {" << std::to_string(v.Normal.x) << " " << std::to_string(v.Normal.y) << " " << std::to_string(v.Normal.z) << "}\n";
+                    file << "\t\t\t\tTexCoords: {" << std::to_string(v.TexCoords.x) << " " << std::to_string(v.TexCoords.y) << " " << std::to_string(0) << "}\n";
+                    file << "\n";
+                }
+                file << "\t\t\t}\n";
+
+                file << "\t\t\tIndices: {\n";
+                for (auto& i : indices)
+                {
+                    file << "\t\t\t\tIndice: {" << i << "}\n";
+                }
+                file << "\t\t\t}\n";
+
+                file << "\t\t\tTextures: {\n";
+                for (auto& t : textures)
+                {
+                    file << "\t\t\t\tTexture: {" << t.get_path() << "}\n";
+                    file << "\t\t\t\tType: {" << t.get_type() << "}\n";
+                }
+
+                file << "\t\t\t}\n";
+            }
+
+            file << "\t\t}\n";
+        }
+        file << "\t}\n";
+    }
+
+    if (spriteAnimation)
+    {
+        file << "\tSpriteAnimation: {\n";
+
+        for (auto& p : spriteAnimation->getPoints()) 
+        {
+            file << "\t\t Point: {" << std::to_string(p.x) << " " << std::to_string(p.y) << " " << std::to_string(p.z) << " " << std::to_string(p.w) << "}\n";
+            file << "\n";
+        }
+
+        file << "\t}\n";
+    }
+
+    if(script)
+    {
+        file << "\tScript: {\n";
+        file << "\t\t Routine: {" << script->getRoutine()->getPath() << "}\n";
+        file << "\t}\n";
+    }
+
+    file << "}\n";
 }
 

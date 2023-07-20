@@ -49,7 +49,7 @@ void EmptyScriptRoutine::update(ScriptArgument& arg) {
 	if (checkTimeOfCreation() != time) 
 	{
 		loadDll(path);
-		start(arg);
+	
 		return;
 	}
 	plugin->update(arg);
@@ -67,3 +67,9 @@ long EmptyScriptRoutine::checkTimeOfCreation()
 		 return result.st_mtime;
 	 return 0;
 }
+
+std::string_view EmptyScriptRoutine::getPath()
+{
+	return path;
+}
+
