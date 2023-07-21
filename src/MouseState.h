@@ -19,6 +19,9 @@ public:
 
 	void set_right(bool state);
 
+	void set_firstX(int x);
+	void set_firstY(int y);
+
 	int get_x();
 
 	int get_y();
@@ -31,6 +34,9 @@ public:
 
 	int get_offset_y();
 
+	int get_firstX();
+	int get_firstY();
+
 	int prev_x = 0;
 	int prev_y = 0;
 
@@ -39,6 +45,9 @@ public:
 
 	int cursor_x = 0;
 	int cursor_y = 0;
+
+	int firstX = 0;
+	int firstY = 0;
 
 private:
 	//don need atomics at all?..

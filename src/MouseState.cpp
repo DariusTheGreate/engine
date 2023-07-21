@@ -37,6 +37,14 @@ void MouseState::set_right(bool state) {
 	right_pressed.store(state);
 }
 
+void  MouseState::set_firstX(int x) {
+	firstX = x;
+}
+
+void  MouseState::set_firstY(int y) {
+	firstY = y;
+}
+
 int MouseState::get_x() {
 	return curr_x.load();
 }
@@ -61,3 +69,10 @@ int MouseState::get_offset_y() {
 	return offset_y.load();
 }
 
+int MouseState::get_firstX() {
+	return firstX;
+}
+
+int MouseState::get_firstY() {
+	return firstY;
+}

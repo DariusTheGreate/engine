@@ -87,9 +87,12 @@ void Editor::updateInput() {
 			GameState::ms.set_x(GameState::ms.prev_x);
 			GameState::ms.set_y(GameState::ms.prev_y);
 
-			glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
+            GameState::ms.set_firstX(GameState::ms.get_x());
+            GameState::ms.set_firstY(GameState::ms.get_y());
+
 			GameState::cam.cursor_hidden = true;
 			glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         }
 
         GameState::ms.prev_x = GameState::ms.get_x();
@@ -106,7 +109,9 @@ void Editor::updateInput() {
             //GameState::ms.set_y(GameState::ms.cursor_y);
 
 			//glfwSetCursorPos(window->getWindow(), GameState::ms.cursor_x, GameState::ms.cursor_y);
+            glfwSetCursorPos(window->getWindow(), GameState::ms.get_firstX(), GameState::ms.get_firstY());
             glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 
             GameState::cam.cursor_hidden = false;
         }
