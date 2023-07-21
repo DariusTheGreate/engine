@@ -37,6 +37,7 @@ public:
 
     float getLastY();
 
+
     float* getCameraSpeed();
 
     void setUnexpectedUpdate(bool in);
