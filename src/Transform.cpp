@@ -13,11 +13,23 @@ glm::mat4 Transform::get_quatmat()
 void Transform::set_from_quatmat(glm::mat4 m)
 {
 	q = m;
-	position = m[3];
+	//position = m[3];
 
 	//scale.x = m[0][0];
 	//scale.y = m[1][1];
 	//scale.z = m[2][2];
+}
+
+void Transform::setPosition(glm::mat4 m)
+{
+	position = m[3]; 
+}
+
+void Transform::setScale(glm::mat4 m)
+{
+	scale.x = m[0][0];
+	scale.y = m[1][1];
+	scale.z = m[2][2];
 }
 
 void Transform::set_scale(glm::vec3 scl)

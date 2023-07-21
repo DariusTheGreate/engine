@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <cctype>
 
 Object::Object(std::string name_in) : name(name_in)
 {
@@ -514,7 +515,15 @@ void Object::serialize(std::ofstream& file)
                 file << "\t\t\tTextures: {\n";
                 for (auto& t : textures)
                 {
-                    file << "\t\t\t\tTexture: {" << t.get_path() << "}\n";
+                    file << "\t\t\t\tTexture: {";// << t.get_path() << "}\n";
+                    
+                    std::string tkn = t.get_path(); 
+                    std::cout << tkn << "\n";
+                    for(auto c : tkn)
+                        if(c > -1 && c < 255 && c != '\0' && !std::isspace(c))
+                            file << c; 
+                    file << "}\n";
+
                     file << "\t\t\t\tType: {" << t.get_type() << "}\n";
                 }
 

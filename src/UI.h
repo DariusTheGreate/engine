@@ -146,9 +146,19 @@ public:
                                     objTr[3][1] = pos.y;
                                     objTr[3][2] = pos.z;
 
+                                    objRot = item_clicked->getTransform().get_quatmat();
+                                    objRot[3][0] = pos.x;
+                                    objRot[3][1] = pos.y;
+                                    objRot[3][2] = pos.z;
+
                                     objScl[0][0] = scale.x;
                                     objScl[1][1] = scale.y;
                                     objScl[2][2] = scale.z;
+									
+                                    objScl[3][0] = pos.x;
+                                    objScl[3][1] = pos.y;
+                                    objScl[3][2] = pos.z;
+
 								}
 								ImGui::TreePop();
 							}
@@ -167,9 +177,19 @@ public:
                             objTr[3][1] = pos.y;
                             objTr[3][2] = pos.z;
 
+                            objRot = item_clicked->getTransform().get_quatmat();
+                            objRot[3][0] = pos.x;
+                            objRot[3][1] = pos.y;
+                            objRot[3][2] = pos.z;
+
                             objScl[0][0] = scale.x;
                             objScl[1][1] = scale.y;
                             objScl[2][2] = scale.z;
+
+							objScl[3][0] = pos.x;
+							objScl[3][1] = pos.y;
+							objScl[3][2] = pos.z;
+
 
                         }
 
@@ -477,7 +497,7 @@ public:
                     fshdr.compile();
                     vshdr.link(fshdr);
                     LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
-
+                    path.shrink_to_fit();
                     item_clicked->addModel(path, vshdr, shaderRoutine);
                 }
 
@@ -496,7 +516,8 @@ public:
                     animVertex.compile();
                     animFragment.compile();
                     animVertex.link(animFragment);
-
+                    
+                    path.shrink_to_fit();
                     item_clicked->addModel(path);
                     Animation* danceAnimation = new Animation(path, &item_clicked->getModel().value());
                     item_clicked->setAnimator(danceAnimation);
@@ -531,6 +552,8 @@ public:
                     vshdr.link(fshdr);
                     LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
 
+                    path.shrink_to_fit();
+                    name.shrink_to_fit();
                     flat.setTexture(path, name);
                     item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
                 }
@@ -544,6 +567,9 @@ public:
                     fshdr.compile();
                     vshdr.link(fshdr);
                     LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+
+                    path.shrink_to_fit();
+                    name.shrink_to_fit();
 
                     flat.setTexture(path, name);
                     item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
@@ -565,6 +591,7 @@ public:
 			ImGui::InputText("path", (char*)path.c_str(), 100);
             if (ImGui::Button("Load Script")) 
             {
+                path.shrink_to_fit();
                 //DANGER(darius) leak
                 //TODO(darius) make factories
                 EmptyScriptRoutine* routine = new EmptyScriptRoutine(path.c_str(), GameState::instance);
@@ -611,17 +638,24 @@ public:
     		cameraView = (GameState::cam.getBasicLook());
         }
 
-        if(curr_operation != ImGuizmo::OPERATION::SCALE)
+
+        if(curr_operation == ImGuizmo::OPERATION::TRANSLATE)
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
-        else
+        if(curr_operation == ImGuizmo::OPERATION::ROTATE)
+            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objRot));
+        if(curr_operation == ImGuizmo::OPERATION::SCALE)
             ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objScl));
 
         //TODO(darius) make it separate function to change all stuff of object
-        item_clicked->getTransform().set_from_quatmat(objTr);
-        item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+        //TODO(darius) make it Scale, Rotation, Transition
+
+        item_clicked->getTransform().setScale(objScl);
+        item_clicked->getTransform().set_from_quatmat(objRot);
+		item_clicked->getTransform().setPosition(objTr);
+
         if(item_clicked->getPointLight()){
             item_clicked->getPointLight()->position = item_clicked->getTransform().position;
-            item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+            //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
         }
         auto& objtrref = objTr;
         item_clicked->traverseObjects([&objtrref](Object* obj){
@@ -683,6 +717,11 @@ private:
                         0.f, 0.f, 0.f, 1.f };
 
     glm::mat4 objScl = { 1.f, 0.f, 0.f, 0.f,
+                        0.f, 1.f, 0.f, 0.f,
+                        0.f, 0.f, 1.f, 0.f,
+                        0.f, 0.f, 0.f, 1.f };
+
+    glm::mat4 objRot  = { 1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
                         0.f, 0.f, 1.f, 0.f,
                         0.f, 0.f, 0.f, 1.f };

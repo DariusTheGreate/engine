@@ -377,6 +377,9 @@ Transform Scene::extractTransformFromToken(std::string_view tkn)
 Model Scene::extractModelFromToken(std::string_view tkn)
 {
 	size_t pathStart = tkn.find("Path");
+	if(pathStart == std::string::npos)
+		return extractMeshesFromToken(tkn);
+
 	size_t pathEnd = tkn.find("}", pathStart);
 	
 	std::string path(tkn.substr(pathStart + 7, pathEnd - pathStart - 7));

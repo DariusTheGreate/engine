@@ -16,6 +16,8 @@ struct Transform
 	glm::mat4 get_quatmat();
 
 	void set_from_quatmat(glm::mat4 m);
+	void setPosition(glm::mat4 m);
+	void setScale(glm::mat4 m);
 
 	void set_scale(glm::vec3 scl);
 

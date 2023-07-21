@@ -6,7 +6,7 @@ Object: {
 		true
 	}
 	Transform: {
-		Position: {4.302591 4.141232 0.000000}
+		Position: {4.093136 -5.709790 0.000000}
 		Scale: {6.638765 1.000000 1.000000}
 	}
 	Model: {
@@ -100,10 +100,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {11.146704 5.336827 -0.600001}
+		Position: {-40.990337 2.616089 -9.700019}
 		Scale: {1.478863 1.894368 1.000000}
 	}
-	RigidBody: {5.400000 0 0}
+	RigidBody: {5.400000 1 0}
 	Collider: {
 		Size: {0.650000 1.500000 0.750000}
 		Shift: {0.350000 1.000000 0.350000}
@@ -114,19 +114,19 @@ Object: {
 			Vertices: {
 				Position: {0.500000 0.500000 0.000000}
 				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {0.504000 0.000000 0}
+				TexCoords: {0.337333 0.000000 0}
 
 				Position: {0.500000 -0.500000 0.000000}
 				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {0.504000 1.000000 0}
+				TexCoords: {0.337333 1.000000 0}
 
 				Position: {-0.500000 -0.500000 0.000000}
 				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.662667 1.000000 0}
+				TexCoords: {0.496000 1.000000 0}
 
 				Position: {-0.500000 0.500000 0.000000}
 				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.662667 0.000000 0}
+				TexCoords: {0.496000 0.000000 0}
 
 			}
 			Indices: {
@@ -263,7 +263,7 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {5.729341 0.907389 0.000000}
+		Position: {14.157940 0.907389 0.000000}
 		Scale: {6.488789 5.858500 1.000000}
 	}
 	Collider: {
@@ -276,19 +276,19 @@ Object: {
 			Vertices: {
 				Position: {0.500000 0.500000 0.000000}
 				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {0.375000 0.000000 0}
+				TexCoords: {0.375000 0.250000 0}
 
 				Position: {0.500000 -0.500000 0.000000}
 				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {0.375000 0.250000 0}
+				TexCoords: {0.375000 0.500000 0}
 
 				Position: {-0.500000 -0.500000 0.000000}
 				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.500000 0.250000 0}
+				TexCoords: {0.500000 0.500000 0}
 
 				Position: {-0.500000 0.500000 0.000000}
 				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.500000 0.000000 0}
+				TexCoords: {0.500000 0.250000 0}
 
 			}
 			Indices: {
@@ -380,12 +380,17 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {10.156698 3.453228 -1.876343}
+		Position: {-15.296425 -0.136735 -9.492638}
 		Scale: {1.000000 1.000000 1.000000}
 	}
 	Collider: {
-		Size: {2.350000 0.900000 3.550000}
+		Size: {25.100000 0.300000 15.950000}
 		Shift: {0.000000 0.000000 0.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
 	}
 }
 Object: {
@@ -396,11 +401,280 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-9.812124 -4.242061 -3.575214}
+		Position: {-2.479707 4.008774 -3.798341}
+		Scale: {26.682325 9.642653 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\B\Greenpath/nailmaster_hut_EXT_0000_1.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 0
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {0.000000 0.000000 0.000000}
 		Scale: {1.000000 1.000000 1.000000}
 	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 1
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {0.000000 0.000000 0.000000}
+		Scale: {1.000000 1.000000 1.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 2
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-19.726210 1.307762 0.000000}
+		Scale: {7.475535 13.296751 1.000000}
+	}
 	Collider: {
-		Size: {12.150000 0.450000 10.200000}
-		Shift: {0.000000 0.000000 0.000000}
+		Size: {6.400000 0.450000 1.250000}
+		Shift: {3.250000 1.650000 0.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\Lifts/elev_lift.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 3
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-27.330507 5.962418 0.000000}
+		Scale: {5.299778 8.606771 1.000000}
+	}
+	Collider: {
+		Size: {4.750000 0.350000 0.900000}
+		Shift: {2.250000 2.900000 0.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:/own/programming/engine/textures/HK/HK/A/Lifts/elev_lift.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 0
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-34.885326 5.206089 0.000000}
+		Scale: {7.558973 8.202851 1.000000}
+	}
+	Collider: {
+		Size: {6.050000 0.400000 1.150000}
+		Shift: {3.150000 4.000000 0.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\Lifts/elev_back.png}
+				Type: {texture_diffuse}
+			}
+		}
+	}
+}
+Object: {
+	Name: {
+		empty 0
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-21.759531 9.362624 0.000008}
+		Scale: {4.576054 6.920727 1.000000}
+	}
+	Collider: {
+		Size: {3.500000 0.350000 0.750000}
+		Shift: {1.950000 2.850000 0.000000}
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\Lifts/deepnest_spider_pieces_0010_a.png}
+				Type: {texture_diffuse}
+			}
+		}
 	}
 }
