@@ -63,8 +63,25 @@ uniform sampler2D texture_height4;
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
+
+float near = 0.1; 
+float far  = 100.0; 
+  
+float LinearizeDepth(float depth) 
+{
+    float z = depth * 2.0 - 1.0; // back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));	
+}
+
 void main()
 {
+    //float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
+    //FragColor = vec4(vec3(depth), 1.0);
+    //return;
+
+    //FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
+    //return;
+
     //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
     //return;
 
@@ -79,8 +96,8 @@ void main()
 
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
-    
-    if(lightsCount == 0)
+        
+   if(lightsCount == 0)
         FragColor = texColor;
     else
         FragColor = texColor * vec4(result, 1.0f);
@@ -124,5 +141,16 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
-    return (ambient + diffuse + specular);
+ 
+    //float intensity = 0.4 * spec;
+
+ 	//if (intensity > 0.9) 
+ 	//	intensity = 1.1;
+ 	//else if (intensity > 0.5) 
+ 	//	intensity = 0.7;
+ 	//else 
+ 	//	intensity = 0.5;
+
+
+    return (ambient + diffuse + specular);// * intensity;
 }

@@ -332,7 +332,6 @@ unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate)
         else if (nrComponents == 3)
             format = GL_RGB;
         
-        std::cout << "FKN FORMAT IS rgba? " << bool(format == GL_RGBA) << "\n";
         OpenglWrapper::BindTexture(static_cast<int>(textureID));
         OpenglWrapper::ImageTexture(format, width, height, data);
         glGenerateMipmap(GL_TEXTURE_2D);

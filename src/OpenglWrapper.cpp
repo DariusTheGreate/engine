@@ -279,3 +279,9 @@ void OpenglWrapper::SwapBuffers(Window* wind)
     glfwSwapBuffers(wind->getWindow());
 }
 
+void OpenglWrapper::CullFaces()
+{
+    //NOTE do we need specify which faces?
+    glEnable(GL_CULL_FACE);
+}
+

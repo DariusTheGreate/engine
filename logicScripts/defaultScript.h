@@ -23,6 +23,7 @@ public:
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
 		}
+        return;
         
         auto* obj = args.obj;
 		auto* scene = args.scene;
@@ -56,6 +57,7 @@ public:
 	}
 
 	void update(ScriptArgument& args) override {
+        return;
         auto* obj = args.obj;
 		auto* scene = args.scene;
 		if (!instance || !obj) {

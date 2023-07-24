@@ -98,6 +98,14 @@ TODO(all):
         - opengl PBO - http://www.songho.ca/opengl/gl_pbo.html
         - fast texture example - https://stackoverflow.com/questions/13358455/opengl-combine-textures
         - J.Blow skeletal animations stuff - https://www.youtube.com/watch?v=4MBXWFfGYpo&ab_channel=UNOFFICIALJonathanBlowstreamarchive
+        - Texture framebuffer multisample  https://stackoverflow.com/questions/42878216/opengl-how-to-draw-to-a-multisample-framebuffer-and-then-use-the-result-as-a-n
+        - RDR2 - https://imgeself.github.io/posts/2020-06-19-graphics-study-rdr2/
+        - DOOM - https://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/
+        - Godot - https://godotengine.org/article/godot-3-renderer-design-explained/
+        - Frustrum culling https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/frustum-culling-r4613/
+        - GTA5 - https://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/
+        - Far Objects - https://www.reddit.com/r/opengl/comments/8z5egn/rendering_large_and_distant_object/?utm_source=share&utm_medium=web2x&context=3
+        - GTA6 - https://vk.com/video-120800128_456251871?ysclid=lkfo8jp8lg311066769
 */
 
 class DebugRenderer 
@@ -213,7 +221,7 @@ class Renderer
 {
 public:
     Renderer() = default;
-    Renderer(Scene* currScene_in, GameState* instance);
+    Renderer(Scene* currScene_in, GameState* instance, Window* wind);
 
     void render(Window* wind, bool& debug_mode);
 
@@ -231,10 +239,19 @@ public:
     
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
+    unsigned int framebuffer;
+	unsigned int textureColorBufferMultiSampled;
+	unsigned int intermediateFBO;
+	unsigned int screenTexture;
+
 private:
     DebugRenderer dbr;
     Shader sv;
     Shader sf;
+
+    Shader qv;
+    Shader qf;
+	unsigned int quadVAO, quadVBO;
 
     Scene* currScene;
 

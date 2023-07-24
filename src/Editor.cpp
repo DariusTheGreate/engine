@@ -1,6 +1,6 @@
 #include <Editor.h>
 
-Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state)
+Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind)
 {
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     GameState::instance = &state;

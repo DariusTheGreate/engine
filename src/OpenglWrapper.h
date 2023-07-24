@@ -115,6 +115,8 @@ public:
 
 	static void SwapBuffers(Window* wind);
 
+	static void CullFaces();
+
 private:
 	//TODO(darius) add info struct for displaying amount of draw calls and stuff
 };

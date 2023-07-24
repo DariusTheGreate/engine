@@ -29,6 +29,60 @@ public:
         particle.emplace(std::move(m));
 
         //particle.emplace(m, shader_in, shaderRoutine_in);
+
+        modelMatrices.resize(amount);
+        srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
+        float radius = 150.0;
+        float offset = 25.0f;
+        for (int i = 0; i < amount; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            // 1. translation: displace along circle with 'radius' in range [-offset, offset]
+            float angle = (float)i / (float)amount * 360.0f;
+            float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+            float x = sin(angle) * radius + displacement;
+            displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+            float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
+            displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+            float z = cos(angle) * radius + displacement;
+            model = glm::translate(model, glm::vec3(x, y, z));
+
+            // 2. scale: Scale between 0.05 and 0.25f
+            float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
+            model = glm::scale(model, glm::vec3(scale));
+
+            // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
+            float rotAngle = static_cast<float>((rand() % 360));
+            model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+            // 4. now add to list of matrices
+            modelMatrices[i] = model;
+        }
+
+        glGenBuffers(1, &buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+        glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+
+
+        //NOTE(darius) looks like problem is here
+        unsigned int VAO = particle->getVao().get();
+        glBindVertexArray(VAO);
+        // set attribute pointers for matrix (4 times vec4)
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+        glEnableVertexAttribArray(4);
+        glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
+        glEnableVertexAttribArray(5);
+        glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
+        glEnableVertexAttribArray(6);
+        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
+
+        glVertexAttribDivisor(3, 1);
+        glVertexAttribDivisor(4, 1);
+        glVertexAttribDivisor(5, 1);
+        glVertexAttribDivisor(6, 1);
+
+        glBindVertexArray(0);
     }
 
     void changeShader()
@@ -50,22 +104,8 @@ public:
     //https://www.youtube.com/watch?v=Y0Ko0kvwfgA&ab_channel=Acerola
     void renderParticles()
     {
-        if(positions.size() < 3)
-            return;
-
-       /* unsigned int instanceVBO;
-        glGenBuffers(1, &instanceVBO);
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * positions.size(), &positions[0], GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0); 
-
-
-        glEnableVertexAttribArray(7);
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-        glVertexAttribPointer(7, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);   
-        glVertexAttribDivisor(2, 1);  
-        */
+        //if(positions.size() < 3)
+         //   return;
 
         //if(particleMaterial)
         //    particleMaterial->setShaderMaterial(*shader);
@@ -78,12 +118,16 @@ public:
         }
         */
 
-        std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
+        /*std::optional<PointLight> pl = std::nullopt;//PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1));
         for(auto& p : positions)
         {
-            particle->Draw(*shader);
+            particle->Draw(*shader, amount);
             shaderRoutine->operator()(Transform(p, particle_size));
         }
+        */
+
+        shaderRoutine->operator()(Transform({0,0,0}, particle_size));
+		particle->Draw(*shader, amount);
     }
 
 	void updateUniform3DDistribution(float timeValue)
@@ -134,13 +178,19 @@ public:
 
     std::vector<glm::vec3> positions;
 
+    //NOTE(darius) DANGER(darius) for some reason when its uncomented u have explosion at deserealization in EngineLogic.dll
+    std::vector<glm::mat4> modelMatrices;
+
+	unsigned int buffer;
+	int amount = 100;
+
     std::optional<Mesh> particle; 
     std::optional<Material> particleMaterial;
     std::optional<Shader> shader;
     std::optional<LightingShaderRoutine> shaderRoutine;
 
 
-    glm::vec3 particle_size = {0.1,0.1,0.1};
+    glm::vec3 particle_size = {1,1,1};
     glm::vec3 emitter = glm::vec3{0,0,0};
 
     float maxBound = 1;

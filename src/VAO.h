@@ -11,6 +11,8 @@ public:
 
 	void bind();
 
+	int get();
+
 	~VAO();
 
 private:

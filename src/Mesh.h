@@ -43,6 +43,7 @@ public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
     void Draw(Shader& shader);
+    void Draw(Shader& shader, size_t);
 
     void setDrawMode(DrawMode mode_in);
 
@@ -50,6 +51,7 @@ public:
     std::vector<unsigned int> getIndices();
     std::vector<Texture> getTextures();
 
+    VAO getVao();
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation

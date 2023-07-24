@@ -8,7 +8,9 @@ Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsign
 	OpenglWrapper::BindTexture(static_cast<int>(texture));
 	if (data) {
 		OpenglWrapper::ImageTexture(internalFormat, width, height, data);
-		OpenglWrapper::GenerateMipmap();
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//OpenglWrapper::GenerateMipmap();
 	}
 	stbi_image_free(data);
 }

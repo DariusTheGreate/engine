@@ -441,10 +441,10 @@ public:
 
         if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture(GameState::engine_path + "engine/textures", "grass.png");
+            flat.setTexture(GameState::engine_path + "/textures", "grass.png");
 
-            Shader particleVertex = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-            Shader particleFragment = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+            Shader particleVertex = Shader(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
+            Shader particleFragment = Shader(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
 
             particleVertex.compile();
             particleFragment.compile();

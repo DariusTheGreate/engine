@@ -30,6 +30,11 @@ std::vector<Texture> Mesh::getTextures()
     return textures;
 }
 
+VAO Mesh::getVao()
+{
+    return vao;
+}
+
 void Mesh::Draw(Shader& shader)
 {
     //std::cout << "positions " << vertices[0].Position.x << " " << vertices[0].Position.x << vertices[0].Position.y << "\n";
@@ -38,6 +43,8 @@ void Mesh::Draw(Shader& shader)
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
+
+    vao.bind();
 
     for (unsigned int i = 0; i < textures.size(); i++)
     {
@@ -55,9 +62,9 @@ void Mesh::Draw(Shader& shader)
 
         OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
+		//OpenglWrapper::ActivateTexture();
     }
 
-    vao.bind();
     
     //TODO(darius) perfomance issues?
     //if(mode == DrawMode::DRAW_AS_ARRAYS)
@@ -67,8 +74,47 @@ void Mesh::Draw(Shader& shader)
     //else            
     OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
 
+    //OpenglWrapper::UnbindVAO();
+}
+
+void Mesh::Draw(Shader& shader, size_t amount)
+{
+    // std::unique_lock<std::mutex>(draw_mutex);
+    unsigned int diffuseNr = 1;
+    unsigned int specularNr = 1;
+    unsigned int normalNr = 1;
+    unsigned int heightNr = 1;
+
+    for (unsigned int i = 0; i < textures.size(); i++)
+    {
+
+        std::string number;
+        std::string name = textures[i].get_type();
+        if (name == "texture_diffuse")
+            number = std::to_string(diffuseNr++);
+        else if (name == "texture_specular")
+            number = std::to_string(specularNr++);
+        else if (name == "texture_normal")
+            number = std::to_string(normalNr++);
+        else if (name == "texture_height")
+            number = std::to_string(heightNr++);
+
+        OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
+        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);
+        OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
+    }
+
+    vao.bind();
+
+    //OpenglWrapper::DrawInstances(36, amount);
+    //glDrawElementsInstanced(
+    //    GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount
+    //);
+
+    OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
+    //OpenglWrapper::DrawArrays(36);
     OpenglWrapper::UnbindVAO();
-    OpenglWrapper::ActivateTexture();
+    //OpenglWrapper::BindTexture(GL_TEXTURE0);
 }
 
 void Mesh::setupMesh()
@@ -88,6 +134,7 @@ void Mesh::setupMesh()
     
     ebo.bind(indices.size() * sizeof(unsigned int), &indices[0]);
 
+    //NOTE(darius) TODO(darius) try batching approach using glBufferSubData(...)?
     OpenglWrapper::EnableAttribute(0);
     OpenglWrapper::AttributePointer(0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
 
