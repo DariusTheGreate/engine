@@ -128,7 +128,7 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", color);
 	//dsv.setMat4("model", model);
-	flat.DrawRaw(dsv, 228, a, {0.01,0.01,0.01});
+	flat.DrawRaw(dsv, a, {0.01,0.01,0.01});
 	//vao.bind();
 	//glDrawArrays(GL_LINE_STRIP, 0, 36);
 	//glBindVertexArray(0);
@@ -187,26 +187,10 @@ void DebugRenderer::clearPoints()
 
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER) {
-	//TODO(darius) throws exception?
-	//routine = EmptyScriptRoutine(GameState::engine_path + "logicScripts/EngineLogic/x64/Debug", instance);
-
-    //pointLight = PointLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    //pointLight.addLight();
-    //directionalLight = DirectionalLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(1, 1, 1));
-    //directionalLight.ambient = { 0,0,0 };
-    //spotLight = SpotLight(glm::vec3{ -0.2f, -1.0f, -0.3f }, glm::vec3(0, -1, 0));
-
-    //glfwSetCursorPos(wind->getWindow(), wind->getWidth() / 2, wind->getHeight() / 2);
-
+sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
     sv.compile();
     sf.compile();
     sv.link(sf);
-
-	qv.compile();
-	qf.compile();
-	qv.link(qf);
-
 	currShaderRoutine = {Shader(sv)};
 
 	/*FlatMesh flat;
@@ -257,155 +241,85 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	player->getColider()->set_size({1,1,1});
 	player->getColider()->set_shift({0.5,0.5,0.5});
 
-    /*for (int i = 0; i < 1; i += 1) {
-        auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
-            sv, currShaderRoutine, currScene, &routine, false, false);
-        op->frozeObject();
-        op->setMaterial(Material(32));
-        //op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
-    }
+	/*for (int i = 0; i < 1; i += 1) {
+		auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
+			sv, currShaderRoutine, currScene, &routine, false, false);
+		op->frozeObject();
+		op->setMaterial(Material(32));
+		//op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
+	}
+
+	//danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 	*/
-    //danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
-
-	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-		// positions   // texCoords
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		-1.0f, -1.0f,  0.0f, 0.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-
-		-1.0f,  1.0f,  0.0f, 1.0f,
-		 1.0f, -1.0f,  1.0f, 0.0f,
-		 1.0f,  1.0f,  1.0f, 1.0f
-	};
 
 
-	glGenVertexArrays(1, &quadVAO);
-	glGenBuffers(1, &quadVBO);
-	glBindVertexArray(quadVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+	framebuffer.AttachTexture(wind->getWidth(), wind->getHeight(), true);
+	renderBuffer = RenderBuffer(wind->getWidth(), wind->getHeight());
 
+	intermidiateFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
+	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);
 
-	OpenglWrapper::GenerateFrameBuffers((size_t*)(&framebuffer));
-	OpenglWrapper::BindFrameBuffer(framebuffer);
-
-	glGenTextures(1, &textureColorBufferMultiSampled);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, wind->getWidth(), wind->getHeight(), GL_TRUE);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled, 0);
-
-	unsigned int rbo;
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH32F_STENCIL8, wind->getWidth(), wind->getHeight());
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-	
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-
-
-	glGenFramebuffers(1, &intermediateFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, intermediateFBO);
-
-
-	glGenTextures(1, &screenTexture);
-	glBindTexture(GL_TEXTURE_2D, screenTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, wind->getWidth(), wind->getHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		std::cout << "ERROR::FRAMEBUFFER:: Intermediate framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
-void Renderer::render(Window* wind, bool& debug_mode) {
-	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-	glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-    glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void Renderer::render(Window* wind){
+	framebuffer.Bind();
+	OpenglWrapper::EnableDepthTest();
+	OpenglWrapper::EnableMultisample();
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
 
     int display_w, display_h;
     glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
-    glViewport(0, 0, display_w, display_h);
-
-    //glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_MULTISAMPLE);
+	OpenglWrapper::SetWindow(display_w, display_h);
 
 	//NOTE(darius) 50%+ perfomance bust, but may work weird
 	//OpenglWrapper::CullFaces();
 
-    //glDisable(GL_FRAMEBUFFER_SRGB);
-    //glUseProgram(sv.getProgram());
-
-    currScene->renderScene();
-
-    if (GameState::cam.cursor_hidden) {
-        glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
-        glm::mat4  view = GameState::cam.getBasicLook();
-        sv.setMat4("projection", projection);
-        sv.setMat4("view", view);
-    }
-
-    //TODO(darius) make it faster. Instanced rendering? Batching?
-    currScene->renderParticles();
     float currentFrame = static_cast<float>(glfwGetTime());
     float deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
+	renderDebug(wind);
+    currScene->renderScene();
+    currScene->renderParticles();
     currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
     currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
 	currScene->updateScene();
 
+	intermidiateFramebuffer.Bind();
+	glBlitFramebuffer(0, 0, wind->getWidth(), wind->getHeight(), 0, 0, wind->getWidth(), wind->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+	glDisable(GL_DEPTH_TEST);
+	OpenglWrapper::ClearScreen(backgroundColor);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());//(unsigned int)screenTexture.get_texture());
+}
+
+void Renderer::renderDebug(Window* wind) 
+{
     if (GameState::cam.cursor_hidden) {
         glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
         glm::mat4  view = GameState::cam.getBasicLook();
         dbr.updateCamera(projection, view);
     }
 
-    if (debug_mode)
-    {
-        //render debug coiders
-        for (int i = 0; i < currScene->get_objects().size(); ++i) {
-            if (currScene->get_objects()[i]) {
-                dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
-                    currScene->get_object_at(i)->getRigidBody());
-                dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight());
-                currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
-                    dbr.renderDebugLightSource(obj->getPointLight());
-                    });
+	for (int i = 0; i < currScene->get_objects().size(); ++i) {
+		if (currScene->get_objects()[i]) {
+			dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
+				currScene->get_object_at(i)->getRigidBody());
+			dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight());
+			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
+				dbr.renderDebugLightSource(obj->getPointLight());
+				});
 
-                //dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
-            }
-        }
-        //dbr.renderPoints();
-        dbr.renderDebugGrid();
-    }
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
-	glBlitFramebuffer(0, 0, wind->getWidth(), wind->getHeight(), 0, 0, wind->getWidth(), wind->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
-	glDisable(GL_DEPTH_TEST);
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glUseProgram(qv.getProgram());
-	glBindVertexArray(quadVAO);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, screenTexture); // use the now resolved color attachment as the quad's texture
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+			//dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
+		}
+	}
+	//dbr.renderPoints();
+	dbr.renderDebugGrid();
 }
 
 void Renderer::updateBuffers(Window* wind)

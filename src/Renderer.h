@@ -108,6 +108,7 @@ TODO(all):
         - GTA6 - https://vk.com/video-120800128_456251871?ysclid=lkfo8jp8lg311066769
 */
 
+
 class DebugRenderer 
 {
 public:
@@ -217,13 +218,180 @@ private:
     FlatMesh flat;
 };
 
+class FrameBuffer
+{
+public:
+    FrameBuffer() 
+    {
+        OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
+    }
+
+    void AttachTexture(unsigned int W, unsigned int H, bool multisample = false)
+    {
+        Width = W;
+        Height = H;
+
+        Bind();
+
+        if(multisample)
+			texture.bind(GL_TEXTURE_2D_MULTISAMPLE);
+        else
+			texture.bind();
+
+        //glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, Width, Height, GL_TRUE);
+
+        if(multisample)
+			OpenglWrapper::ImageMultisampleTexture(GL_RGB, Width, Height, 4);
+        else {
+            OpenglWrapper::ImageTexture(GL_RGB, Width, Height, 0);
+            texture.filters();
+        }
+
+        //OpenglWrapper::UnbindTexture();
+        if(multisample)
+			OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE);
+        else
+			OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
+        Unbind();
+    }
+
+    void Bind()
+    {
+        OpenglWrapper::BindFrameBuffer(ID, target);
+    }
+
+    void Unbind() 
+    {
+        OpenglWrapper::UnbindFrameBuffer(target);
+    }
+
+    Texture& getTexture() 
+    {
+        return texture;
+    }
+
+    void setTaget(GLenum newTarget) 
+    {
+        target = newTarget;
+    }
+
+    unsigned int getID() 
+    {
+        return ID;
+    }
+
+private:
+    unsigned int ID = 0;
+
+    unsigned int Width = 0;
+    unsigned int Height = 0;
+
+    GLenum target = GL_FRAMEBUFFER;
+
+    Texture texture;
+
+    bool depthAndStencil = true;
+};
+
+class RenderBuffer 
+{
+public:
+    RenderBuffer() = default;
+    RenderBuffer(unsigned int W, unsigned int H) 
+    {
+        glGenRenderbuffers(1, &ID);
+        glBindRenderbuffer(GL_RENDERBUFFER, ID);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH32F_STENCIL8, W, H);
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID);
+    }
+
+private:
+    unsigned int ID = 0;
+};
+
+class RendererQuad 
+{
+public:
+    RendererQuad() : qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), 
+        qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
+    {
+		qv.compile();
+		qf.compile();
+		qv.link(qf);
+
+        /*vao.init();
+        vbo.init();
+        vao.bind();
+        vbo.bind(vertices.size() * sizeof(float), &vertices[0]);
+        vbo.vboEnableVertexAttribArray(0);
+        vbo.setVAO(0,2,GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+
+        vbo.vboEnableVertexAttribArray(1);
+        vbo.setVAO(1,2,GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 + sizeof(float)));*/
+
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    }
+
+    void DrawQuad(unsigned int screenTexture)
+    {
+        /*glUseProgram(qv.getProgram());
+        vao.bind();
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, screenTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        */
+
+        glUseProgram(qv.getProgram());
+        glBindVertexArray(quadVAO);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, screenTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+private:
+    VAO vao;
+    VBO vbo;
+    unsigned int quadVAO;
+    unsigned int quadVBO;
+
+    Shader qv;
+    Shader qf;
+
+    std::vector<float> vertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+    // positions   // texCoords
+    -1.0f,  1.0f,  0.0f, 1.0f,
+    -1.0f, -1.0f,  0.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 0.0f,
+
+    -1.0f,  1.0f,  0.0f, 1.0f,
+     1.0f, -1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 1.0f
+	};
+};
+
 class Renderer
 {
 public:
     Renderer() = default;
     Renderer(Scene* currScene_in, GameState* instance, Window* wind);
 
-    void render(Window* wind, bool& debug_mode);
+    void render(Window* wind);
+    void renderDebug(Window* wind);
 
     void updateBuffers(Window* wind);
 
@@ -239,19 +407,16 @@ public:
     
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
-    unsigned int framebuffer;
-	unsigned int textureColorBufferMultiSampled;
-	unsigned int intermediateFBO;
-	unsigned int screenTexture;
+    FrameBuffer framebuffer;
+    FrameBuffer intermidiateFramebuffer;
+    RenderBuffer renderBuffer;
 
 private:
     DebugRenderer dbr;
     Shader sv;
     Shader sf;
-
-    Shader qv;
-    Shader qf;
-	unsigned int quadVAO, quadVBO;
+    
+    RendererQuad quad;
 
     Scene* currScene;
 

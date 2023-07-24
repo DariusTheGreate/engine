@@ -14,10 +14,7 @@ public:
     //TODO(darius) throws dangerous exception when name = Spid.png
     void setTexture(std::string path, std::string name);
 
-    void DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos, glm::vec3 scale);
-
-    //TODO(darius) instanced rendering here
-    void Draw(Shader& shader, size_t count);
+    void DrawRaw(Shader& shader, glm::vec3 pos, glm::vec3 scale);
 
     void setTextureCoords(float x1, float y1, float x2, float y2);
     

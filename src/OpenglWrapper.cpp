@@ -22,14 +22,14 @@ void OpenglWrapper::GenerateFrameBuffers(size_t* ptr, int n)
     glGenFramebuffers(n, (GLuint*)ptr);
 }
 
-void OpenglWrapper::BindFrameBuffer(int ID)
+void OpenglWrapper::BindFrameBuffer(int ID, GLenum target)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, ID);
+    glBindFramebuffer(target, ID);
 }
 
-void OpenglWrapper::UnbindFrameBuffer()
+void OpenglWrapper::UnbindFrameBuffer(GLenum target)
 {
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    glBindFramebuffer(target, 0);
 }
 
 void OpenglWrapper::ReadBuffer(int buff)
@@ -174,7 +174,7 @@ void OpenglWrapper::AttributePointer(int index, int size, int type, int stride, 
     glVertexAttribPointer(index, size, type, normalize, stride, ptr);
 }
 
-void OpenglWrapper::GenerateTextures(size_t* ID, int n)
+void OpenglWrapper::GenerateTextures(unsigned int* ID, int n)
 {
     glGenTextures(n, (GLuint*)ID);
 }
@@ -194,9 +194,14 @@ void OpenglWrapper::ImageTexture(int format, int width, int height, unsigned cha
     glTexImage2D(target, lvl, format, width, height, border, format, type, data);
 }
 
-void OpenglWrapper::ImageFrameBuffer(int ID)
+void OpenglWrapper::ImageMultisampleTexture(int format, int width, int height, unsigned int samples, int target)
 {
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, ID, 0);
+    glTexImage2DMultisample(target, samples, format, width, height, GL_TRUE);
+}
+
+void OpenglWrapper::ImageFrameBuffer(int ID, GLenum attach, GLenum target)
+{
+    glFramebufferTexture2D(GL_FRAMEBUFFER, attach, target, ID, 0);
 }
 
 void OpenglWrapper::GenerateMipmap()
@@ -264,9 +269,9 @@ void OpenglWrapper::EnableSRGB()
     glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
-void OpenglWrapper::ClearScreen()
+void OpenglWrapper::ClearScreen(glm::vec3 color)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(color.x, color.y, color.z, 1.0f);
 }
 
 void OpenglWrapper::ClearBuffer()

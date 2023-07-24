@@ -38,7 +38,7 @@ void FlatMesh::setTextureCoords(float x1 = 1.0, float y1 = 1.0, float x2 = 0.0, 
     this -> setupMesh();
 }
 
-void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, glm::vec3 scale = {1,1,1})
+void FlatMesh::DrawRaw(Shader& shader, glm::vec3 pos = { 0,0,0 }, glm::vec3 scale = {1,1,1})
 {
     std::unique_lock<std::mutex>(draw_mutex);
     glm::mat4 model = glm::mat4(1.0f);
@@ -46,7 +46,7 @@ void FlatMesh::DrawRaw(Shader& shader, size_t sdrp, glm::vec3 pos = { 0,0,0 }, g
     model = glm::translate(model, pos);
     model = glm::scale(model, scale);
 
-    shader.setMat4("model", model);
+    //shader.setMat4("model", model);
 
     vao.bind();
     OpenglWrapper::DrawElements(static_cast<int>(indices.size()));

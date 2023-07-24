@@ -1,5 +1,6 @@
 #pragma once
 #include <Window.h>
+#include <glm/glm.hpp>
 
 class OpenglWrapper // : GraphicsWrapper
 {
@@ -13,9 +14,9 @@ public:
 
 	static void GenerateFrameBuffers(size_t* ptr, int n = 1);
 
-	static void BindFrameBuffer(int ID);
+	static void BindFrameBuffer(int ID, GLenum target = GL_FRAMEBUFFER);
 
-	static void UnbindFrameBuffer();
+	static void UnbindFrameBuffer(GLenum target = GL_READ_FRAMEBUFFER);
 
 	static void ReadBuffer(int buff = GL_COLOR_ATTACHMENT0);
 
@@ -73,7 +74,7 @@ public:
 
 	static void AttributePointer(int index, int size, int type, int stride, const void* ptr, bool normalize = GL_FALSE);
 
-	static void GenerateTextures(size_t* ID, int n = 1);
+	static void GenerateTextures(unsigned int* ID, int n = 1);
 
 	static void BindTexture(int texture, int target = GL_TEXTURE_2D);
 
@@ -81,7 +82,9 @@ public:
 
 	static void ImageTexture(int format, int width, int height, unsigned char* data, int target = GL_TEXTURE_2D, int type = GL_UNSIGNED_BYTE, int lvl = 0, int border = 0);
 
-	static void ImageFrameBuffer(int ID);
+	static void ImageMultisampleTexture(int format, int width, int height, unsigned int samples, int target = GL_TEXTURE_2D_MULTISAMPLE);
+
+	static void ImageFrameBuffer(int ID, GLenum attachment = GL_DEPTH_ATTACHMENT, GLenum target = GL_TEXTURE_2D);
 
 	static void GenerateMipmap();
 
@@ -109,7 +112,7 @@ public:
 
 	static void EnableSRGB();
 
-	static void ClearScreen();
+	static void ClearScreen(glm::vec3 color = {0,0,0});
 
 	static void ClearBuffer();
 

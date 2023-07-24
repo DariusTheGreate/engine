@@ -318,7 +318,7 @@ glm::quat Model::GetGLMQuat(const aiQuaternion& pOrientation)
 
 unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate) 
 {
-    size_t textureID;
+    unsigned int textureID;
     OpenglWrapper::GenerateTextures(&textureID);
 
     stbi_set_flip_vertically_on_load(rotate);

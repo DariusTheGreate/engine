@@ -29,6 +29,6 @@ public:
 
 private:
     size_t pick_fbo = 0;
-    size_t pick_texture = 0;
+    unsigned int pick_texture = 0;
 };
 

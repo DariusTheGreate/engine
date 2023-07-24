@@ -17,7 +17,7 @@ void Editor::update()
     updateCamera();
     currScene.updateScene();
 
-    rendol.render(window, debug_mode);
+    rendol.render(window);
     ui.renderUI(currScene, rendol);
     rendol.updateBuffers(window);
 }
