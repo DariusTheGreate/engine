@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include <OpenglWrapper.h>
+#include <Renderer.h>
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
@@ -46,26 +47,39 @@ void Mesh::Draw(Shader& shader)
 
     vao.bind();
 
-    for (unsigned int i = 0; i < textures.size(); i++)
+    /*if (Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::SHADOWS)
     {
-        glActiveTexture(GL_TEXTURE0 + i); 
-        std::string number;
-        std::string name = textures[i].get_type();
-        if (name == "texture_diffuse")
-            number = std::to_string(diffuseNr++);
-        else if (name == "texture_specular")
-            number = std::to_string(specularNr++); 
-        else if (name == "texture_normal")
-            number = std::to_string(normalNr++); 
-        else if (name == "texture_height")
-            number = std::to_string(heightNr++); 
-
-        OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
-        OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
-		//OpenglWrapper::ActivateTexture();
+        std::cout << "suka\n";
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, static_cast<int>(textures[0].get_texture()));
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, Renderer::shaderLibInstance->depthMap);
     }
 
-    
+    else*/
+    {
+        for (unsigned int i = 0; i < textures.size(); i++)
+        {
+            glActiveTexture(GL_TEXTURE0 + i);
+            std::string number;
+            std::string name = textures[i].get_type();
+            if (name == "texture_diffuse")
+                number = std::to_string(diffuseNr++);
+            else if (name == "texture_specular")
+                number = std::to_string(specularNr++);
+            else if (name == "texture_normal")
+                number = std::to_string(normalNr++);
+            else if (name == "texture_height")
+                number = std::to_string(heightNr++);
+
+            OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
+            OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
+
+            //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
+            //OpenglWrapper::ActivateTexture();
+        }
+
+    }
     //TODO(darius) perfomance issues?
     //if(mode == DrawMode::DRAW_AS_ARRAYS)
 	//	glDrawArrays(GL_TRIANGLES, 0, vertices.size());

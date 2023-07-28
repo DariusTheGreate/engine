@@ -1,6 +1,8 @@
 #include "Renderer.h"
 #include <Colider.h>
 
+#include <optional>
+
 DebugRenderer::DebugRenderer() : dsv(GameState::engine_path + "shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf(GameState::engine_path + "shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
 {
 	dsv.compile();
@@ -186,12 +188,21 @@ void DebugRenderer::clearPoints()
 }
 
 
-Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : currScene(currScene_in), sv(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER) {
-    sv.compile();
-    sf.compile();
-    sv.link(sf);
-	currShaderRoutine = {Shader(sv)};
+Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : currScene(currScene_in) {
+	//v.compile();
+	//sf.compile();
+	//sv.link(sf);
+	shaderLibInstance = new ShaderLibrary();
+
+	//depthv.compile();
+	//depthf.compile();
+	//depthv.link(depthf);
+
+	//currShaderRoutine = { Shader(sv) };
+	FlatMesh flat;
+	m.addMesh(flat);
+	m.setShader(shaderLibInstance->getDepthShader());
+	m.setShaderRoutine(shaderLibInstance->getShaderRoutine());
 
 	/*FlatMesh flat;
 	FlatMesh idle;
@@ -253,49 +264,91 @@ sf(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_S
 	*/
 
 
+	OpenglWrapper::EnableDepthTest();
+	
+
+
 	framebuffer.AttachTexture(wind->getWidth(), wind->getHeight(), true);
 	renderBuffer = RenderBuffer(wind->getWidth(), wind->getHeight());
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
+	depthFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
+	depthTexture.AttachTexture(wind->getWidth(), wind->getHeight());
+
+
+	//u draw inside of this one
 	intermidiateFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
 	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void Renderer::render(Window* wind){
-	framebuffer.Bind();
+void Renderer::render(Window* wind)
+{
+	int display_w, display_h;
+	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
+
+	shaderLibInstance->stage = ShaderLibrary::STAGE::DEPTH;
+	depthFramebuffer.Bind();
 	OpenglWrapper::EnableDepthTest();
 	OpenglWrapper::EnableMultisample();
-	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearScreen({ 1,0,0.5 });
 	OpenglWrapper::ClearBuffer();
-
-    int display_w, display_h;
-    glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
 	OpenglWrapper::SetWindow(display_w, display_h);
 
-	//NOTE(darius) 50%+ perfomance bust, but may work weird
-	//OpenglWrapper::CullFaces();
+	renderScene(wind);
 
-    float currentFrame = static_cast<float>(glfwGetTime());
-    float deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
-
-	renderDebug(wind);
-    currScene->renderScene();
-    currScene->renderParticles();
-    currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
-    currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
-	currScene->updateScene();
-
-	intermidiateFramebuffer.Bind();
-	glBlitFramebuffer(0, 0, wind->getWidth(), wind->getHeight(), 0, 0, wind->getWidth(), wind->getHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	depthTexture.setTaget(GL_DRAW_FRAMEBUFFER);
+	depthTexture.Bind();
+	depthTexture.Blit();
+	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
+	//m.meshes[0].getTextures().push_back(depthTexture.getTexture());
 
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	glDisable(GL_DEPTH_TEST);
-	OpenglWrapper::ClearScreen(backgroundColor);
-	glClear(GL_COLOR_BUFFER_BIT);
+	OpenglWrapper::DisabelDepthTest();
+	OpenglWrapper::ClearScreen({1,1,1});
+	OpenglWrapper::ClearBuffer();
 
-	quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());//(unsigned int)screenTexture.get_texture());
+	//quad.DrawQuad((unsigned int)depthTexture.getTexture().get_texture());
+
+	OpenglWrapper::SetWindow(display_w, display_h);
+
+	shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
+	framebuffer.setTaget(GL_FRAMEBUFFER);
+	framebuffer.Bind();
+
+
+	//OpenglWrapper::EnableMultisample();
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+
+	renderDebug(wind);
+	renderScene(wind);
+	//std::optional<PointLight> e1 = std::nullopt;
+	//std::optional<Material> e2 = std::nullopt;
+	//m.Draw(Transform(), e1,e2);
+
+	framebuffer.setTaget(GL_READ_FRAMEBUFFER);
+	framebuffer.Bind();
+	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);//for blitting (basicly copying)
+	intermidiateFramebuffer.Bind();
+	intermidiateFramebuffer.Blit();
+
+	//shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
+
+	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+	OpenglWrapper::DisabelDepthTest();
+	OpenglWrapper::ClearScreen({1,1,1});
+	//OpenglWrapper::ClearBuffer();
+
+	quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());
 }
 
 void Renderer::renderDebug(Window* wind) 
@@ -305,6 +358,11 @@ void Renderer::renderDebug(Window* wind)
         glm::mat4  view = GameState::cam.getBasicLook();
         dbr.updateCamera(projection, view);
     }
+
+	dbr.renderDebugGrid();
+
+	//NOTE(darius) render scene here
+	renderScene(wind);
 
 	for (int i = 0; i < currScene->get_objects().size(); ++i) {
 		if (currScene->get_objects()[i]) {
@@ -319,7 +377,22 @@ void Renderer::renderDebug(Window* wind)
 		}
 	}
 	//dbr.renderPoints();
-	dbr.renderDebugGrid();
+}
+
+void Renderer::renderScene(Window* wind) 
+{
+	float currentFrame = static_cast<float>(glfwGetTime());
+	float deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+
+	//NOTE(darius) 50%+ perfomance boost, but may work weird
+	//OpenglWrapper::CullFaces();
+
+	currScene->renderScene();
+	currScene->renderParticles();
+	currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
+	currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
+	currScene->updateScene();
 }
 
 void Renderer::updateBuffers(Window* wind)
@@ -330,17 +403,17 @@ void Renderer::updateBuffers(Window* wind)
 
 size_t Renderer::getShaderRoutine()
 {
-    return sv.getProgram();
+    return getShader().getProgram();
 }
 
 LightingShaderRoutine& Renderer::getCurrShaderRoutine()
 {
-    return currShaderRoutine;
+    return Renderer::shaderLibInstance->getShaderRoutine();
 }
 
 Shader Renderer::getShader()
 {
-    return sv;
+    return Renderer::shaderLibInstance->getCurrShader();
 }
 
 Scene* Renderer::getScene()
@@ -352,3 +425,5 @@ DebugRenderer& Renderer::getDebugRenderer()
 {
     return dbr;
 }
+
+ShaderLibrary* Renderer::shaderLibInstance = nullptr;

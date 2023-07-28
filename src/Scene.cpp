@@ -3,6 +3,7 @@
 #include <Colider.h>
 #include <Model.h>
 #include <ParticleSystem.h>
+#include <Renderer.h>
 
 #include <string>
 #include <iostream>
@@ -108,6 +109,17 @@ void Scene::updateAnimators(float dt)
 Object* Scene::get_object_at(int i)
 {
 	return sceneObjects.at(i);
+}
+
+Object* Scene::getObjectByName(std::string_view name)
+{
+	for (auto* objp : sceneObjects) 
+	{
+		if (objp->get_name() == name)
+			return objp;
+	}
+
+	return nullptr;
 }
 
 std::vector<Object*>& Scene::get_objects()
@@ -298,15 +310,16 @@ void Scene::deserialize(std::string_view path)
 	}
 
 	//Recreation here after
-	Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+	/*Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
 	Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
 	vshdr.compile();
 	fshdr.compile();
 	vshdr.link(fshdr);
+	*/
 
 	for (int i = 0; i < objectTokens.size(); ++i)
 	{
-		LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+		LightingShaderRoutine shaderRoutine = { Shader(Renderer::shaderLibInstance->getCurrShader())};
 
 		auto* obj = AddObject(std::string(names[i]));
 		if (hiddenStates[i])
@@ -319,7 +332,7 @@ void Scene::deserialize(std::string_view path)
 		if (models.size() > i) 
 		{
 			obj->getModel() = (models[i]);
-			obj->getModel()->setShader(vshdr);
+			obj->getModel()->setShader(Renderer::shaderLibInstance->getCurrShader());
 			obj->getModel()->setShaderRoutine(shaderRoutine);
 			auto anim = extractSpriteAnimationFromToken(objectTokens[i]);
 			if(anim)

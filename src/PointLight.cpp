@@ -57,3 +57,4 @@ void SpotLight::setShaderLight(Shader sv)
 
 int PointLight::LightsCount = 0;
 
+glm::vec3 DirectionalLight::lightPos = glm::vec3(-2.0f, 0.0f, -1.0f);

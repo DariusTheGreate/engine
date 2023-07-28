@@ -46,7 +46,6 @@ public:
     static std::vector<Texture> textures_loaded;
 	std::vector<Mesh>    meshes;//TODO(techmo0) serialize
 
-    Shader shader;
     LightingShaderRoutine shaderRoutine;
     std::optional<SkeletalAnimationShaderRoutine> animationShaderRoutine;
 

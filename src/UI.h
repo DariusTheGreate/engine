@@ -218,7 +218,9 @@ public:
         }
 
 		ImGui::Begin("Object window", &show_object_window);
-		ImGui::Text(obj -> get_name().c_str());
+		//ImGui::Text(obj -> get_name().c_str());
+
+        ImGui::InputText("Name: ", (char*)obj->get_name().c_str(), obj->get_name().size());
 
 		if (ImGui::Button("Show Object") && obj) {
 			auto v = obj->get_pos();
@@ -247,6 +249,11 @@ public:
 
         }
 
+        if (ImGui::CollapsingHeader("DirectionalLight component")) {
+            ImGui::DragFloat("position x", &DirectionalLight::lightPos.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position y", &DirectionalLight::lightPos.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position z", &DirectionalLight::lightPos.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        }
         //auto q = glm::quat(objTr);
         //ImGui::Text("orientation quaternion %f, %f, %f, %f", q.x, q.y, q.z, q.w);
 

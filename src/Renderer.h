@@ -25,6 +25,7 @@
 #include <PointLight.h>
 #include <LightingShaderRoutine.h>
 #include <OpenglWrapper.h>
+#include <FrameBuffer.h>
 
 /*
 TODO(all):
@@ -218,85 +219,6 @@ private:
     FlatMesh flat;
 };
 
-class FrameBuffer
-{
-public:
-    FrameBuffer() 
-    {
-        OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
-    }
-
-    void AttachTexture(unsigned int W, unsigned int H, bool multisample = false)
-    {
-        Width = W;
-        Height = H;
-
-        Bind();
-
-        if(multisample)
-			texture.bind(GL_TEXTURE_2D_MULTISAMPLE);
-        else
-			texture.bind();
-
-        //glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, Width, Height, GL_TRUE);
-
-        if(multisample)
-			OpenglWrapper::ImageMultisampleTexture(GL_RGB, Width, Height, 4);
-        else {
-            OpenglWrapper::ImageTexture(GL_RGB, Width, Height, 0);
-            texture.filters();
-        }
-
-        //OpenglWrapper::UnbindTexture();
-        if(multisample)
-			OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE);
-        else
-			OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0);
-
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-            std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
-
-        Unbind();
-    }
-
-    void Bind()
-    {
-        OpenglWrapper::BindFrameBuffer(ID, target);
-    }
-
-    void Unbind() 
-    {
-        OpenglWrapper::UnbindFrameBuffer(target);
-    }
-
-    Texture& getTexture() 
-    {
-        return texture;
-    }
-
-    void setTaget(GLenum newTarget) 
-    {
-        target = newTarget;
-    }
-
-    unsigned int getID() 
-    {
-        return ID;
-    }
-
-private:
-    unsigned int ID = 0;
-
-    unsigned int Width = 0;
-    unsigned int Height = 0;
-
-    GLenum target = GL_FRAMEBUFFER;
-
-    Texture texture;
-
-    bool depthAndStencil = true;
-};
-
 class RenderBuffer 
 {
 public:
@@ -305,7 +227,7 @@ public:
     {
         glGenRenderbuffers(1, &ID);
         glBindRenderbuffer(GL_RENDERBUFFER, ID);
-        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH32F_STENCIL8, W, H);
+        glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, W, H);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, ID);
     }
@@ -356,6 +278,7 @@ public:
         */
 
         glUseProgram(qv.getProgram());
+
         glBindVertexArray(quadVAO);
 
         glActiveTexture(GL_TEXTURE0);
@@ -384,6 +307,77 @@ private:
 	};
 };
 
+class ShaderLibrary 
+{
+public:
+    enum class STAGE 
+    {
+        DEPTH,
+        EDITOR_ID,
+        ALBEDO,
+        SHADOWS
+    };
+
+public:
+
+    ShaderLibrary() : lightingVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
+        lightingFragment(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), 
+        depthVertex(GameState::engine_path + "shaders/shadowMappingDepthVertex.glsl", GL_VERTEX_SHADER),
+        depthFragment(GameState::engine_path + "shaders/shadowMappingDepthFragment.glsl", GL_FRAGMENT_SHADER),
+        shadowVertex(GameState::engine_path + "shaders/shadowMappingVertex.glsl", GL_VERTEX_SHADER),
+        shadowFragment(GameState::engine_path + "shaders/shadowMappingFragment.glsl", GL_FRAGMENT_SHADER)
+    {
+        lightingVertex.compile();
+        lightingFragment.compile();
+        lightingVertex.link(lightingFragment);
+
+        depthVertex.compile();
+        depthFragment.compile();
+        depthVertex.link(depthFragment);
+
+        shadowVertex.compile();
+        shadowFragment.compile();
+        shadowVertex.link(shadowFragment);
+
+        stage = STAGE::DEPTH;
+    }
+
+    Shader& getCurrShader() 
+    {
+        if (stage == STAGE::ALBEDO)
+            return lightingVertex;
+        else if (stage == STAGE::DEPTH)
+            return depthVertex;
+        else
+            return shadowVertex;
+    }
+
+    Shader& getDepthShader() 
+    {
+        return depthVertex;
+    }
+
+    LightingShaderRoutine& getShaderRoutine() 
+    {
+        return routine;
+    }
+
+    STAGE stage;
+
+    unsigned int depthMap = 0;
+private:
+    LightingShaderRoutine routine;
+
+    Shader lightingVertex;
+    Shader lightingFragment;
+
+    Shader depthVertex;
+    Shader depthFragment;
+
+    Shader shadowVertex;
+    Shader shadowFragment;
+};
+
 class Renderer
 {
 public:
@@ -391,9 +385,7 @@ public:
     Renderer(Scene* currScene_in, GameState* instance, Window* wind);
 
     void render(Window* wind);
-    void renderDebug(Window* wind);
-
-    void updateBuffers(Window* wind);
+	void updateBuffers(Window* wind);
 
     size_t getShaderRoutine();
 
@@ -408,26 +400,25 @@ public:
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
     FrameBuffer framebuffer;
+    FrameBuffer depthTexture;
+    FrameBuffer depthFramebuffer;
     FrameBuffer intermidiateFramebuffer;
     RenderBuffer renderBuffer;
 
+    static ShaderLibrary* shaderLibInstance;
+private:
+	void renderDebug(Window* wind);
+    void renderScene(Window* wind);
+
 private:
     DebugRenderer dbr;
-    Shader sv;
-    Shader sf;
-    
     RendererQuad quad;
 
     Scene* currScene;
 
-    LightingShaderRoutine currShaderRoutine;
-    EmptyScriptRoutine routine;
-
     //TODO(darius) make it lighting system
-    PointLight pointLight;
-    DirectionalLight directionalLight;
-    SpotLight spotLight;
-
     float lastFrame = 0;
+
+    Model m;
 };
 

@@ -1,4 +1,5 @@
 #include "Model.h"
+#include <Renderer.h>
 #include <OpenglWrapper.h>
 #include <iostream>
 
@@ -10,25 +11,25 @@
 
 
 Model::Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
-    : shader(shader_in), shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
+    : shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
 {
     loadModel();
 }
 
-Model::Model(Mesh mesh_in, Shader shader_in, LightingShaderRoutine shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
+Model::Model(Mesh mesh_in, Shader shader_in, LightingShaderRoutine shaderRoutine_in) : shaderRoutine(shaderRoutine_in)
 {
     meshes.push_back(mesh_in);
 }
 
-Model::Model(Shader shader_in, LightingShaderRoutine& shaderRoutine_in) : shader(shader_in), shaderRoutine(shaderRoutine_in)
+Model::Model(Shader shader_in, LightingShaderRoutine& shaderRoutine_in) : shaderRoutine(shaderRoutine_in)
 {
 }
 
-Model::Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, bool rotate_in) : path(path_in), rotate(rotate_in), shaderRoutine(sr), shader(shader_in)
+Model::Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, bool rotate_in) : path(path_in), rotate(rotate_in), shaderRoutine(sr)
 {
 }
 
-Model::Model(const Model& m) : meshes(m.meshes), shader(m.shader), shaderRoutine(m.shaderRoutine), path(m.path)
+Model::Model(const Model& m) : meshes(m.meshes), shaderRoutine(m.shaderRoutine), path(m.path)
 {
 
 }
@@ -40,20 +41,18 @@ Model::Model(std::string_view path_in) : path(path_in){
 void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m)
 {
     if(light){
-        light->setShaderLight(shader);
+        light->setShaderLight(Renderer::shaderLibInstance->getCurrShader());
     }
    
-    if(m){//TODO(darius) why the fuck matrial not nullopt?
-        m->setShaderMaterial(shader);
+    if(m){
+        m->setShaderMaterial(Renderer::shaderLibInstance->getCurrShader());
     }
 
-    if (animationShaderRoutine)
-        animationShaderRoutine->operator()(tr);
-    else
-        shaderRoutine(tr);
+    //NOTE(darius) its temporal cringe for greater good
+	shaderRoutine(tr);
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].Draw(shader);
+        meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
     }
 }
 
@@ -102,7 +101,6 @@ void Model::setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r)
 
 void Model::setShader(Shader sdr)
 {
-    shader = sdr;
 }   
 
 void Model::SetVertexBoneDataToDefault(Vertex& vertex)

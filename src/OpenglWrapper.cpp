@@ -259,9 +259,20 @@ void OpenglWrapper::EnableDepthTest()
     glEnable(GL_DEPTH_TEST);
 }
 
+void OpenglWrapper::DisabelDepthTest()
+{
+	glDisable(GL_DEPTH_TEST);
+}
+
+
 void OpenglWrapper::EnableMultisample()
 {
     glEnable(GL_MULTISAMPLE);
+}
+
+void OpenglWrapper::DisableMultisample()
+{
+	glClear(GL_MULTISAMPLE);
 }
 
 void OpenglWrapper::EnableSRGB()
@@ -276,7 +287,13 @@ void OpenglWrapper::ClearScreen(glm::vec3 color)
 
 void OpenglWrapper::ClearBuffer()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void OpenglWrapper::ClearDepthBuffer()
+{
+
+    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void OpenglWrapper::SwapBuffers(Window* wind)

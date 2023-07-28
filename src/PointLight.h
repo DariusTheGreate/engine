@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <string>
 
 class Shader;
@@ -56,6 +57,19 @@ public:
 
 	float intensity = 1.0f;
 	float radius = 1.0f;
+
+    static glm::vec3 lightPos;
+
+    static glm::mat4 getLightMat() 
+    {
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = 1.0f, far_plane = 7.5f;
+        lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
+        return lightSpaceMatrix;
+    }
 };
 
 class SpotLight{

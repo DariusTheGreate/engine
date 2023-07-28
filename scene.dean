@@ -1,12 +1,12 @@
 Object: {
 	Name: {
-		empty 228
+		Sprite1
 	}
 	Hidden: {
 		true
 	}
 	Transform: {
-		Position: {4.093136 -5.709790 0.000000}
+		Position: {4.093136 -5.289979 0.000000}
 		Scale: {6.638765 1.000000 1.000000}
 	}
 	Model: {
@@ -47,7 +47,7 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 229
+		Sprite2
 	}
 	Hidden: {
 		true
@@ -94,13 +94,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 230
+		hornet
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {-44.590282 2.616089 -1.500000}
+		Position: {-45.327827 2.573143 -1.500000}
 		Scale: {1.478863 1.894368 1.000000}
 	}
 	RigidBody: {5.400000 1 0}
@@ -114,19 +114,19 @@ Object: {
 			Vertices: {
 				Position: {0.500000 0.500000 0.000000}
 				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {0.337333 0.000000 0}
+				TexCoords: {0.504000 0.000000 0}
 
 				Position: {0.500000 -0.500000 0.000000}
 				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {0.337333 1.000000 0}
+				TexCoords: {0.504000 1.000000 0}
 
 				Position: {-0.500000 -0.500000 0.000000}
 				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.496000 1.000000 0}
+				TexCoords: {0.662667 1.000000 0}
 
 				Position: {-0.500000 0.500000 0.000000}
 				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.496000 0.000000 0}
+				TexCoords: {0.662667 0.000000 0}
 
 			}
 			Indices: {
@@ -163,13 +163,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 231
+		Sprite3
 	}
 	Hidden: {
 		true
 	}
 	Transform: {
-		Position: {7.354072 0.114204 0.000000}
+		Position: {9.943639 -3.215186 0.000000}
 		Scale: {6.089908 1.000000 1.000000}
 	}
 	Model: {
@@ -210,13 +210,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 232
+		Spriter
 	}
 	Hidden: {
 		true
 	}
 	Transform: {
-		Position: {0.000000 0.000000 0.000000}
+		Position: {-0.944878 -3.993918 0.000000}
 		Scale: {5.909826 1.000000 1.000000}
 	}
 	Model: {
@@ -257,13 +257,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 232
+		Enemy
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {14.157940 0.907389 0.000000}
+		Position: {14.699995 0.907389 0.000000}
 		Scale: {6.488789 5.858500 1.000000}
 	}
 	Collider: {
@@ -276,19 +276,19 @@ Object: {
 			Vertices: {
 				Position: {0.500000 0.500000 0.000000}
 				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {0.375000 0.250000 0}
+				TexCoords: {0.125000 0.000000 0}
 
 				Position: {0.500000 -0.500000 0.000000}
 				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {0.375000 0.500000 0}
+				TexCoords: {0.125000 0.250000 0}
 
 				Position: {-0.500000 -0.500000 0.000000}
 				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.500000 0.500000 0}
+				TexCoords: {0.250000 0.250000 0}
 
 				Position: {-0.500000 0.500000 0.000000}
 				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.500000 0.250000 0}
+				TexCoords: {0.250000 0.000000 0}
 
 			}
 			Indices: {
@@ -374,13 +374,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 0
+		floor
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {-15.296425 -0.136735 -9.492638}
+		Position: {-13.978230 -0.466308 -9.492638}
 		Scale: {1.000000 1.000000 1.000000}
 	}
 	Collider: {
@@ -395,7 +395,7 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 1
+		texta
 	}
 	Hidden: {
 		false
@@ -442,13 +442,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 0
+		nothin
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {0.000000 0.000000 0.000000}
+		Position: {-3.948583 -2.909418 0.000000}
 		Scale: {1.000000 1.000000 1.000000}
 	}
 	Model: {
@@ -459,13 +459,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 1
+		nothng
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {0.000000 0.000000 0.000000}
+		Position: {-3.865387 -4.821270 0.000000}
 		Scale: {1.000000 1.000000 1.000000}
 	}
 	Model: {
@@ -476,13 +476,13 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 2
+		cupol
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {-19.726210 1.307762 0.000000}
+		Position: {-19.310577 0.144065 0.000000}
 		Scale: {7.475535 13.296751 1.000000}
 	}
 	Collider: {
@@ -527,7 +527,7 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 3
+		cupol2
 	}
 	Hidden: {
 		false
@@ -578,7 +578,7 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 0
+		cupol3
 	}
 	Hidden: {
 		false
@@ -629,7 +629,7 @@ Object: {
 }
 Object: {
 	Name: {
-		empty 0
+		cup
 	}
 	Hidden: {
 		false

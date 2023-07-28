@@ -108,13 +108,19 @@ public:
 
 	static void EnableDepthTest();
 
+	static void DisabelDepthTest();
+
 	static void EnableMultisample();
+
+	static void DisableMultisample();
 
 	static void EnableSRGB();
 
 	static void ClearScreen(glm::vec3 color = {0,0,0});
 
 	static void ClearBuffer();
+
+	static void ClearDepthBuffer();
 
 	static void SwapBuffers(Window* wind);
 

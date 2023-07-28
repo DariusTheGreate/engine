@@ -75,10 +75,12 @@ float LinearizeDepth(float depth)
 
 void main()
 {
+    //works
     //float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
     //FragColor = vec4(vec3(depth), 1.0);
     //return;
 
+    //dont wokr
     //FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
     //return;
 
@@ -97,10 +99,13 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
         
-   if(lightsCount == 0)
+    if(lightsCount == 0)
         FragColor = texColor;
     else
         FragColor = texColor * vec4(result, 1.0f);
+
+    //u can transfer depth map in r channel but cant in a channel
+    //FragColor.r = depth;
 
     //gamma corecion
     //FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));

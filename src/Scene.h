@@ -133,6 +133,7 @@ public:
 	void updateSpriteAnimations(float dt);
 
 	Object* get_object_at(int i);
+	Object* getObjectByName(std::string_view name);
 
 	std::vector<Object*>& get_objects();
 
