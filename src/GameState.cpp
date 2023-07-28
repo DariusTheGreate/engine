@@ -27,5 +27,5 @@ GameState* GameState::get_instance()
 
 int GameState::editor_mode = 2;
 GameState* GameState::instance = nullptr;
-std::string GameState::engine_path = "E:/own/programming/engine/";
+std::string GameState::engine_path = "E:/Dean/fedor/engine/";
 

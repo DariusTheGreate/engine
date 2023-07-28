@@ -68,38 +68,51 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render_points = false;
-        currScene.serialize("E:/own/programming/engine/scene.dean");
+        currScene.serialize("E:/Dean/fedor/engine/scene.dean");
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render_points = true;
-        currScene.deserialize("E:/own/programming/engine/scene.dean");
+        currScene.deserialize("E:/Dean/fedor/engine/scene.dean");
     }
     if (GameState::instance->ks.get_9()) {
         debug_mode = false;
         rendol.getDebugRenderer().clearPoints();
     }
+
     if(GameState::instance->ks.get_mouse_right_button())
     {
         if (GameState::cam.cursor_hidden == false) {
             //GameState::ms.cursor_x = GameState::ms.get_x();
             //GameState::ms.cursor_y = GameState::ms.get_y();
 
-			GameState::ms.set_x(GameState::ms.prev_x);
-			GameState::ms.set_y(GameState::ms.prev_y);
+            GameState::ms.set_x(GameState::ms.prev_x);
+            GameState::ms.set_y(GameState::ms.prev_y);
 
             GameState::ms.set_firstX(GameState::ms.get_x());
             GameState::ms.set_firstY(GameState::ms.get_y());
 
-			GameState::cam.cursor_hidden = true;
-			glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            GameState::cam.cursor_hidden = true;
+            glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         }
-
+        if (GameState::editor_mode == 2) {
+            if (GameState::ms.prev_x > GameState::ms.get_x()) {
+                GameState::cam.moveCameraLeft();
+            }
+            if (GameState::ms.prev_x < GameState::ms.get_x()) {
+                GameState::cam.moveCameraRight();
+            }
+            if (GameState::ms.prev_y < GameState::ms.get_y()) {
+                GameState::cam.moveCameraDown();
+            }
+            if (GameState::ms.prev_y > GameState::ms.get_y()) {
+                GameState::cam.moveCameraUp();
+            }
+        }
         GameState::ms.prev_x = GameState::ms.get_x();
         GameState::ms.prev_y = GameState::ms.get_y();
-
-        //glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
     }
+
     if(!GameState::instance->ks.get_mouse_right_button())
     {
         if (GameState::cam.cursor_hidden == true) {
@@ -135,8 +148,8 @@ void Editor::updateCamera()
         return;
     }
     GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
-    //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
     GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
+    //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
 }
 
 void Editor::setPolygonMode(size_t type) {
