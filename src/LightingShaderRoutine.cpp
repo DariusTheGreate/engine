@@ -40,6 +40,8 @@ void LightingShaderRoutine::operator() (Transform tr){
     glm::mat4 q = tr.get_quatmat();
     glm::vec3 scale = tr.scale;
 
+    //TODO(darius) add distanced rendering here. NOTE(darius) Not that hard
+
     model = glm::translate(model, pos);
     model = glm::scale(model, scale);
     model *= q;

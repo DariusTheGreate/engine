@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 #include <Texture.h>
 
@@ -7,7 +8,9 @@ class FrameBuffer
 public:
     FrameBuffer();
 
-	void AttachTexture(unsigned int W, unsigned int H, bool multisample = false);
+	void AttachTexture(unsigned int W, unsigned int H, int numOfColorAttachments = 1);
+
+	void AttachMultisampledTexture(unsigned int W, unsigned int H);
 
 	void Bind();
 
@@ -16,6 +19,7 @@ public:
     void Blit();
 
 	Texture& getTexture();
+    Texture& getTextureAt(int i);
 
 	void setTaget(GLenum newTarget);
     GLenum getTarget();
@@ -30,7 +34,10 @@ private:
 
     GLenum target = GL_FRAMEBUFFER;
 
-    Texture texture;
+    //Texture texture;
 
-    bool depthAndStencil = true;
+    std::vector<Texture> textures;
+
+    bool depthAndStencil = false;
+    bool multisampled = false;
 };

@@ -39,7 +39,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/hornet/iddle.png}
+				Texture: {E:/own/programming/engine/textures/hornet/iddle.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -86,7 +86,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/hornet/runRight.png}
+				Texture: {E:/own/programming/engine/textures/hornet/runRight.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -138,7 +138,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/hornet/iddle.png}
+				Texture: {E:/own/programming/engine/textures/hornet/iddle.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -158,7 +158,7 @@ Object: {
 
 	}
 	Script: {
-		 Routine: {E:/Dean/fedor/engine/logicScripts/EngineLogic/x64/Debug}
+		 Routine: {E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug}
 	}
 }
 Object: {
@@ -202,7 +202,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/hornet/runLeft.png}
+				Texture: {E:/own/programming/engine/textures/hornet/runLeft.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -249,7 +249,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/hornet/jump.png}
+				Texture: {E:/own/programming/engine/textures/hornet/jump.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -300,7 +300,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/HollowSpid.png}
+				Texture: {E:/own/programming/engine/textures/HollowSpid.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -434,7 +434,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\Dean/fedor\engine\textures\HK\HK\A\B\Greenpath/nailmaster_hut_EXT_0000_1.png}
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\B\Greenpath/nailmaster_hut_EXT_0000_1.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -519,7 +519,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\Dean/fedor\engine\textures\HK\HK\A\Lifts/elev_lift.png}
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\Lifts/elev_lift.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -570,7 +570,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:/Dean/fedor/engine/textures/HK/HK/A/Lifts/elev_lift.png}
+				Texture: {E:/own/programming/engine/textures/HK/HK/A/Lifts/elev_lift.png}
 				Type: {texture_diffuse}
 			}
 		}
@@ -621,7 +621,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\Dean/fedor\engine\textures\HK\HK\A\Lifts/elev_back.png}
+				Texture: {E:\own\programming\engine\textures\HK\HK\A\Lifts/elev_back.png}
 				Type: {texture_diffuse}
 			}
 		}

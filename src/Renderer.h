@@ -223,6 +223,7 @@ class RenderBuffer
 {
 public:
     RenderBuffer() = default;
+    
     RenderBuffer(unsigned int W, unsigned int H) 
     {
         glGenRenderbuffers(1, &ID);
@@ -286,6 +287,26 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
+    void DrawQuadToBindedTexture(Shader s) 
+    {
+		glUseProgram(s.getProgram());
+
+        glBindVertexArray(quadVAO);
+
+        //glActiveTexture(GL_TEXTURE0);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
+    void bindQuadVAO() 
+    {
+        glBindVertexArray(quadVAO);
+    }
+
+    void drawArrays() 
+    {
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
+
 private:
     VAO vao;
     VBO vbo;
@@ -307,25 +328,28 @@ private:
 	};
 };
 
-class ShaderLibrary 
+class ShaderLibrary
 {
 public:
-    enum class STAGE 
+    enum class STAGE
     {
         DEPTH,
         EDITOR_ID,
         ALBEDO,
-        SHADOWS
+        SHADOWS,
+        BLUR,
     };
 
 public:
 
     ShaderLibrary() : lightingVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-        lightingFragment(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER), 
+        lightingFragment(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER),
         depthVertex(GameState::engine_path + "shaders/shadowMappingDepthVertex.glsl", GL_VERTEX_SHADER),
         depthFragment(GameState::engine_path + "shaders/shadowMappingDepthFragment.glsl", GL_FRAGMENT_SHADER),
         shadowVertex(GameState::engine_path + "shaders/shadowMappingVertex.glsl", GL_VERTEX_SHADER),
-        shadowFragment(GameState::engine_path + "shaders/shadowMappingFragment.glsl", GL_FRAGMENT_SHADER)
+        shadowFragment(GameState::engine_path + "shaders/shadowMappingFragment.glsl", GL_FRAGMENT_SHADER),
+        blurVertex(GameState::engine_path + "shaders/blurShaderVertex.glsl", GL_VERTEX_SHADER),
+        blurFragment(GameState::engine_path + "shaders/blurShaderFragment.glsl", GL_FRAGMENT_SHADER)
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -339,22 +363,43 @@ public:
         shadowFragment.compile();
         shadowVertex.link(shadowFragment);
 
+        blurVertex.compile();
+        blurFragment.compile();
+        blurVertex.link(blurFragment);
+
         stage = STAGE::DEPTH;
     }
 
-    Shader& getCurrShader() 
+    Shader& getCurrShader()
     {
         if (stage == STAGE::ALBEDO)
             return lightingVertex;
         else if (stage == STAGE::DEPTH)
             return depthVertex;
-        else
+        else if (stage == STAGE::SHADOWS)
             return shadowVertex;
+        else
+            return blurVertex;
     }
 
-    Shader& getDepthShader() 
+    Shader& getDepthShader()
     {
         return depthVertex;
+    }
+
+    Shader& getAlbedoShader()
+    {
+        return lightingVertex;
+    }
+
+    Shader& getShadowsShader()
+    {
+        return shadowVertex;
+    }
+
+    Shader& getBlurShader() 
+    {
+        return blurVertex;
     }
 
     LightingShaderRoutine& getShaderRoutine() 
@@ -376,6 +421,9 @@ private:
 
     Shader shadowVertex;
     Shader shadowFragment;
+
+    Shader blurVertex;
+    Shader blurFragment;
 };
 
 class Renderer
@@ -396,6 +444,8 @@ public:
     Scene* getScene();
 
     DebugRenderer& getDebugRenderer();
+
+    void blurStage();
     
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
@@ -403,6 +453,9 @@ public:
     FrameBuffer depthTexture;
     FrameBuffer depthFramebuffer;
     FrameBuffer intermidiateFramebuffer;
+    FrameBuffer bloomBuffer;
+    FrameBuffer pingPongBlurBufferA;
+    FrameBuffer pingPongBlurBufferB;
     RenderBuffer renderBuffer;
 
     static ShaderLibrary* shaderLibInstance;

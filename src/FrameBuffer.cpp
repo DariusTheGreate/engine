@@ -1,35 +1,58 @@
-#include <frameBuffer.h>
+#include <FrameBuffer.h>
+#include <Renderer.h>
 
 FrameBuffer::FrameBuffer()
 {
     OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
 }
 
-void FrameBuffer::AttachTexture(unsigned int W, unsigned int H, bool multisample)
+void FrameBuffer::AttachTexture(unsigned int W, unsigned int H, int numOfColorAttachments)
 {
     Width = W;
     Height = H;
 
     Bind();
 
-    if (multisample)
+    for (int i = 0; i < numOfColorAttachments; ++i)
     {
-        texture.bind(GL_TEXTURE_2D_MULTISAMPLE);
-        OpenglWrapper::ImageMultisampleTexture(GL_RGB, Width, Height, 4);
-        OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE);
+        Texture ti;
+        ti.bind();
+        ti.imageTexture(GL_RGB, Width, Height, nullptr);
+        ti.filters();
+
+		OpenglWrapper::ImageFrameBuffer((unsigned int)ti.get_texture(), GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D);
+
+        textures.push_back(ti);
     }
-    else
-    {
-        texture.bind();
-        OpenglWrapper::ImageTexture(GL_RGB, Width, Height, 0);
-        texture.filters();
-        OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0);
-    }
+
+    unsigned int attachments[2] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    glDrawBuffers(numOfColorAttachments, attachments);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 
     //Unbind();
+}
+
+void FrameBuffer::AttachMultisampledTexture(unsigned int W, unsigned int H)
+{
+    multisampled = true;
+
+	Width = W;
+    Height = H;
+
+    Bind();
+
+    Texture texture;
+    texture.bind(GL_TEXTURE_2D_MULTISAMPLE);
+    OpenglWrapper::ImageMultisampleTexture(GL_RGB, Width, Height, 4);
+    OpenglWrapper::ImageFrameBuffer((unsigned int)texture.get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE);
+
+    textures.push_back(texture);
+    
+	RenderBuffer renderBuffer = RenderBuffer(Width, Height);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 }
 
 void FrameBuffer::Bind()
@@ -49,7 +72,12 @@ void FrameBuffer::Blit()
 
 Texture& FrameBuffer::getTexture()
 {
-    return texture;
+    return textures[0];
+}
+
+Texture& FrameBuffer::getTextureAt(int i)
+{
+    return textures[i];
 }
 
 void FrameBuffer::setTaget(GLenum newTarget)

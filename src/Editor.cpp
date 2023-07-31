@@ -68,11 +68,11 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render_points = false;
-        currScene.serialize("E:/Dean/fedor/engine/scene.dean");
+        currScene.serialize(GameState::engine_path + "scene.dean");
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render_points = true;
-        currScene.deserialize("E:/Dean/fedor/engine/scene.dean");
+        currScene.deserialize(GameState::engine_path + "scene.dean");
     }
     if (GameState::instance->ks.get_9()) {
         debug_mode = false;

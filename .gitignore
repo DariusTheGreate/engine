@@ -4,5 +4,6 @@ meshes/
 textures/
 *.obj
 *.ini
+*.dean
 logicScripts/EngineLogic/
 logicScripts/EngineRunner/

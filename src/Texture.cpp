@@ -2,22 +2,38 @@
 
 Texture::Texture()
 {
-	OpenglWrapper::GenerateTextures(&texture);
+	generate();
 }
 
 Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsigned int format) : path(path_in) {
 	stbi_set_flip_vertically_on_load(true);
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-	OpenglWrapper::GenerateTextures(&texture);
-	OpenglWrapper::BindTexture(static_cast<int>(texture));
+	generate();
+	bind();
 	if (data) {
-		OpenglWrapper::ImageTexture(internalFormat, width, height, data);
+		imageTexture(internalFormat, width, height);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		//OpenglWrapper::GenerateMipmap();
 	}
 	stbi_image_free(data);
+
+	Width = width;
+	Height = height;
+}
+
+void Texture::generate()
+{
+	OpenglWrapper::GenerateTextures(&texture);
+}
+
+void Texture::imageTexture(int format, unsigned int W, unsigned int H, const void* data)
+{
+	OpenglWrapper::ImageTexture(format, W, H, (unsigned char*)data);
+
+	Width = W;
+	Height = H;
 }
 
 void Texture::activate(GLenum unit, GLenum target) {
@@ -36,7 +52,7 @@ void Texture::filters()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-size_t Texture::get_texture() {
+unsigned int Texture::get_texture() {
 	return texture;
 }
 
