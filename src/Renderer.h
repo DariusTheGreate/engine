@@ -407,6 +407,13 @@ public:
         return routine;
     }
 
+    void checkForShaderReload() 
+    {
+        if(lightingFragment.checkForSourceChanges())
+        {
+        }
+    }
+
     STAGE stage;
 
     unsigned int depthMap = 0;

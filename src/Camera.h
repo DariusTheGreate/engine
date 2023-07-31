@@ -50,6 +50,8 @@ public:
 
     glm::vec4 getRawViewPort(int w, int h);
 
+    float getFov() const;
+
 public:
     bool cursor_hidden = true;
 

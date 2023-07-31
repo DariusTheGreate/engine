@@ -286,6 +286,7 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : cur
 
 void Renderer::render(Window* wind)
 {
+	shaderLibInstance->checkForShaderReload();
 	int display_w, display_h;
 	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
 
@@ -318,11 +319,11 @@ void Renderer::render(Window* wind)
 	//NOTE(darius) currently ALBEDO broken for some reason
 	shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
 
-	//framebuffer.setTaget(GL_FRAMEBUFFER);
-	//framebuffer.Bind();
+	framebuffer.setTaget(GL_FRAMEBUFFER);
+	framebuffer.Bind();
 //NOTE(darius) can change to bloombuffer
-	bloomBuffer.setTaget(GL_FRAMEBUFFER);
-	bloomBuffer.Bind();
+	//bloomBuffer.setTaget(GL_FRAMEBUFFER);
+	//bloomBuffer.Bind();
 
 	//OpenglWrapper::EnableMultisample();
 	OpenglWrapper::ClearScreen(backgroundColor);
@@ -337,11 +338,11 @@ void Renderer::render(Window* wind)
 	//std::optional<Material> e2 = std::nullopt;
 	//m.Draw(Transform(), e1,e2);
 
-	//framebuffer.setTaget(GL_READ_FRAMEBUFFER);
-	//framebuffer.Bind();
+	framebuffer.setTaget(GL_READ_FRAMEBUFFER);
+	framebuffer.Bind();
 
-	bloomBuffer.setTaget(GL_READ_FRAMEBUFFER);
-	bloomBuffer.Bind();
+	//bloomBuffer.setTaget(GL_READ_FRAMEBUFFER);
+	//bloomBuffer.Bind();
 
 	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);//for blitting (basicly copying)
 	intermidiateFramebuffer.Bind();
@@ -356,10 +357,10 @@ void Renderer::render(Window* wind)
 
 
 
-	shaderLibInstance->stage = ShaderLibrary::STAGE::BLUR;
-	blurStage();
+	//shaderLibInstance->stage = ShaderLibrary::STAGE::BLUR;
+	//blurStage();
 
-	//quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());
+	quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());
 
 	//NOTE(darius) currently works, with SHADOWS shader
 	//quad.DrawQuad((unsigned int)bloomBuffer.getTextureAt(1).get_texture());

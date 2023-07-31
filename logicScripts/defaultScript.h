@@ -43,12 +43,12 @@ public:
 		*dance.getBorder() = 0.3f;
 		dance.initPoints();
 
-		initMesh = &scene->get_object_at(0)->getModel()->meshes[0];
-		runMesh = &scene->get_object_at(1)->getModel()->meshes[0];
-		runLeftMesh = &scene->get_object_at(3)->getModel()->meshes[0];
-		danceMesh = &scene->get_object_at(4)->getModel()->meshes[0];
+		initMesh = &scene->getObjectByName("Sprite1")->getModel()->meshes[0];//&scene->get_object_at(0)->getModel()->meshes[0];
+		runMesh = &scene->getObjectByName("Sprite2")->getModel()->meshes[0];//&scene->get_object_at(1)->getModel()->meshes[0];
+		runLeftMesh = &scene->getObjectByName("Sprite3")->getModel()->meshes[0];//&scene->get_object_at(3)->getModel()->meshes[0];
+		danceMesh = &scene->getObjectByName("Spriter")->getModel()->meshes[0];//&scene->get_object_at(4)->getModel()->meshes[0];
 
-		obj = scene->get_object_at(2);
+		obj = scene->getObjectByName("hornet");
 		obj->unhide();
 
 		obj->setSpriteAnimation(init);

@@ -1,7 +1,7 @@
 #include "Shader.h"
 
 
-Shader::Shader(const std::string& filepath, ShaderType type) {
+Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filepath_in) {
 	//TODO(darius) make it filesystem
 	std::ifstream shaderFile;
 	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -24,6 +24,11 @@ Shader::Shader(const std::string& filepath, ShaderType type) {
 	shader = OpenglWrapper::CreateShader(type);
 	auto ptr = source.c_str();
 	OpenglWrapper::SetShaderSource(shader, ptr);
+}
+
+void Shader::reload()
+{
+
 }
 
 void Shader::compile() const {
@@ -130,6 +135,32 @@ unsigned int Shader::getShader() const {
 ShaderProgram Shader::getProgram() const
 {
 	return ID;
+}
+
+bool Shader::checkForSourceChanges()
+{
+	std::ifstream shaderFile;
+	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	std::string source2;
+	try
+	{
+		shaderFile.open(filepath);
+		std::stringstream vShaderStream;
+
+		vShaderStream << shaderFile.rdbuf();
+
+		shaderFile.close();
+
+		source2 = vShaderStream.str();
+		if (source.compare(source2)) 
+		{
+			std::cout << "NOTIFICATION::SHADER::FILE_WAS_CHANED_RELOADING_NEEDED: " << filepath << std::endl;
+		}
+	}
+	catch (std::ifstream::failure e)
+	{
+		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ_AT_RELOADING: " << filepath << std::endl;
+	}
 }
 
 void Shader::use()

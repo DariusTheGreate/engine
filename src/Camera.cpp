@@ -154,3 +154,8 @@ glm::vec4 Camera::getRawViewPort(int w, int h)
     return viewport;
 }
 
+float Camera::getFov() const
+{
+    return fov;
+}
+

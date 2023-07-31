@@ -1,4 +1,4 @@
-#version 410 core
+#version 420 core
 
 out vec4 FragColor;
 //layout (location = 0) out vec4 FragColor;
@@ -93,6 +93,8 @@ void main()
     if(texColor.a < 0.1)
         discard;
 
+    FragColor = texColor;
+    return;
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     

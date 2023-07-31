@@ -19,6 +19,8 @@ public:
 
 	Shader(const std::string& filepath, ShaderType type);
 	
+	void reload();
+
 	void compile() const;
 
 	ShaderProgram link(const Shader& other);
@@ -51,12 +53,15 @@ public:
 
 	ShaderProgram getProgram() const;
 
+	bool checkForSourceChanges();
+
 	void use();
 
 	~Shader();
 
 private:
 	std::string source;
+	std::string filepath;
 	ShaderProgram ID = 0;
 	int shader = 0;
 };	
