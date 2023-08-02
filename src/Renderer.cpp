@@ -460,30 +460,48 @@ void Renderer::blurStage()
 	bool horizontal = true, first_iteration = true;
 	int amount = 10;
 
-	pingPongBlurBufferA.Blit(bloomBuffer, pingPongBlurBufferA);
+	//NOTE(darius) set HDR main
+	{
+		pingPongBlurBufferA.Bind();
+
+		quad.DrawQuad(bloomBuffer.getTextureAt(0).get_texture());
+
+		pingPongBlurBufferA.Unbind();
+	}
+
+	//NOTE(darius) set HDR bright
+	{
+		pingPongBlurBufferB.Bind();
+
+		quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
+
+		pingPongBlurBufferB.Unbind();
+	}
 
 	Shader shaderBlur = shaderLibInstance->getBlurShader();
 	OpenglWrapper::UseProgram(shaderBlur.getProgram());
 
-	//NOTE(darius) kinda works
-	//bloomBuffer.SetImage(1);
-
 	//TODO(darius) pingpong it here
+	pingPongBlurBufferB.Bind();
 	for (int i = 0; i < amount; ++i) {
-		pingPongBlurBufferA.Bind();
 		quad.bindQuadVAO();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(
-			GL_TEXTURE_2D, bloomBuffer.getTextureAt(1).get_texture()
+			GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
 		);
 
 		shaderBlur.setInt("horizontal", i%2);
 
 		quad.drawArrays();
 	}
+	pingPongBlurBufferB.Unbind();
 
-	bloomBuffer.Blit(pingPongBlurBufferA, bloomBuffer);
+	//quad.DrawQuad(pingPongBlurBufferB, 0);
+	//return;
+
+	//bloomBuffer.SetImage(1);
+	//bloomBuffer.Blit(pingPongBlurBufferA, bloomBuffer);
 
 	Shader shad = shaderLibInstance->getTextureCombinerShader();
 	OpenglWrapper::UseProgram(shad.getProgram());
@@ -492,12 +510,12 @@ void Renderer::blurStage()
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(
-		GL_TEXTURE_2D, bloomBuffer.getTextureAt(0).get_texture()
+		GL_TEXTURE_2D, pingPongBlurBufferA.getTextureAt(0).get_texture()
 	);
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(
-		GL_TEXTURE_2D, bloomBuffer.getTextureAt(1).get_texture()
+		GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
 	);
 
 	quad.drawArrays();

@@ -11,14 +11,16 @@ void main()
 {             
 
     //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
+    
+    //FragColor.rgb = texture(scene, TexCoords).rgb; 
     //return;
 
     float exposure = 1.0f;
 
     //NOTE(darius) works
-    vec3 color = texture(bloomBlur, TexCoords).rgb;
-    FragColor.rgb = color; 
-    return;
+    //vec3 color = texture(bloomBlur, TexCoords).rgb;
+    //FragColor.rgb = color; 
+    //return;
 
     const float gamma = 1.0;
     vec3 hdrColor = texture(scene, TexCoords).rgb;      
