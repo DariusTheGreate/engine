@@ -42,7 +42,7 @@ void Shader::compile() const {
 	if (!success)
 	{
 		OpenglWrapper::GetShaderLog(shader, infoLog);
-		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::cout << "ERROR::SHADER::COMPILATION_FAILED! SHADER_FILNAME: " << filepath << "\nINFO_LOG: " << infoLog << std::endl;
 	}
 }
 
@@ -155,12 +155,14 @@ bool Shader::checkForSourceChanges()
 		if (source.compare(source2)) 
 		{
 			std::cout << "NOTIFICATION::SHADER::FILE_WAS_CHANED_RELOADING_NEEDED: " << filepath << std::endl;
+			return true;
 		}
 	}
 	catch (std::ifstream::failure e)
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ_AT_RELOADING: " << filepath << std::endl;
 	}
+	return false;
 }
 
 void Shader::use()

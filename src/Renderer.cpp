@@ -272,6 +272,8 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : cur
 	//NOTE(darius) make it two buffers, not two color attachments
 	pingPongBlurBufferA.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 	pingPongBlurBufferB.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
+	
+	bufferCombination.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 
 	depthFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
 
@@ -305,25 +307,24 @@ void Renderer::render(Window* wind)
 	depthTexture.Blit();
 	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
 
-	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	OpenglWrapper::DisabelDepthTest();
-	OpenglWrapper::ClearScreen({1,1,1});
-	OpenglWrapper::ClearBuffer();
+	//OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+	//OpenglWrapper::DisabelDepthTest();
+	//OpenglWrapper::ClearScreen({1,1,1});
+	//OpenglWrapper::ClearBuffer();
 
 	//NOTE(darius) currently works
-	//quad.DrawQuad((unsigned int)depthTexture.getTexture().get_texture());
+	//quad.DrawQuad(depthTexture);
 	//return
 
 	OpenglWrapper::SetWindow(display_w, display_h);
 
-	//NOTE(darius) currently ALBEDO broken for some reason
-	shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
+	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
 
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	framebuffer.Bind();
-//NOTE(darius) can change to bloombuffer
-	//bloomBuffer.setTaget(GL_FRAMEBUFFER);
-	//bloomBuffer.Bind();
+
+	bloomBuffer.setTaget(GL_FRAMEBUFFER);
+	bloomBuffer.Bind();
 
 	//OpenglWrapper::EnableMultisample();
 	OpenglWrapper::ClearScreen(backgroundColor);
@@ -331,39 +332,24 @@ void Renderer::render(Window* wind)
 	OpenglWrapper::ClearDepthBuffer();
 	OpenglWrapper::EnableDepthTest();
 
+	//renderDebug(wind);
+	//renderScene(wind);
+	renderAll(wind);
 
-	renderDebug(wind);
-	renderScene(wind);
-	//std::optional<PointLight> e1 = std::nullopt;
-	//std::optional<Material> e2 = std::nullopt;
-	//m.Draw(Transform(), e1,e2);
-
-	framebuffer.setTaget(GL_READ_FRAMEBUFFER);
-	framebuffer.Bind();
-
-	//bloomBuffer.setTaget(GL_READ_FRAMEBUFFER);
-	//bloomBuffer.Bind();
-
-	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);//for blitting (basicly copying)
-	intermidiateFramebuffer.Bind();
-	intermidiateFramebuffer.Blit();
+	intermidiateFramebuffer.Blit(bloomBuffer, intermidiateFramebuffer);
+	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 
 	//shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
 
-	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	OpenglWrapper::DisabelDepthTest();
-	OpenglWrapper::ClearScreen({1,1,1});
-	//OpenglWrapper::ClearBuffer();
+	//OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+	//OpenglWrapper::DisabelDepthTest();
+	//OpenglWrapper::ClearScreen({1,1,1});
 
+	//NOTE(darius) uses bloomBuffer
+	blurStage();
 
-
-	//shaderLibInstance->stage = ShaderLibrary::STAGE::BLUR;
-	//blurStage();
-
-	quad.DrawQuad((unsigned int)intermidiateFramebuffer.getTexture().get_texture());
-
-	//NOTE(darius) currently works, with SHADOWS shader
-	//quad.DrawQuad((unsigned int)bloomBuffer.getTextureAt(1).get_texture());
+	//quad.DrawQuad(intermidiateFramebuffer);
+	//quad.DrawQuad(bloomBuffer, 1);
 }
 
 void Renderer::renderDebug(Window* wind) 
@@ -376,7 +362,31 @@ void Renderer::renderDebug(Window* wind)
 
 	dbr.renderDebugGrid();
 
-	//NOTE(darius) render scene here
+	for (int i = 0; i < currScene->get_objects().size(); ++i) {
+		if (currScene->get_objects()[i]) {
+			dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
+				currScene->get_object_at(i)->getRigidBody());
+			dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight());
+			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
+				dbr.renderDebugLightSource(obj->getPointLight());
+				});
+
+			//dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
+		}
+	}
+	//dbr.renderPoints();
+}
+
+void Renderer::renderAll(Window* wind)
+{
+	if (GameState::cam.cursor_hidden) {
+		glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
+		glm::mat4  view = GameState::cam.getBasicLook();
+		dbr.updateCamera(projection, view);
+	}
+
+	dbr.renderDebugGrid();
+
 	renderScene(wind);
 
 	for (int i = 0; i < currScene->get_objects().size(); ++i) {
@@ -448,74 +458,51 @@ void Renderer::blurStage()
 	//return;
 
 	bool horizontal = true, first_iteration = true;
-	int amount = 1;
+	int amount = 10;
 
-	FrameBuffer buff = bloomBuffer;
-	FrameBuffer buff2 = pingPongBlurBufferA;
+	pingPongBlurBufferA.Blit(bloomBuffer, pingPongBlurBufferA);
 
-	buff.Bind();
-	//NOTE(darius) blur works here
+	Shader shaderBlur = shaderLibInstance->getBlurShader();
+	OpenglWrapper::UseProgram(shaderBlur.getProgram());
+
+	//NOTE(darius) kinda works
+	//bloomBuffer.SetImage(1);
+
 	//TODO(darius) pingpong it here
 	for (int i = 0; i < amount; ++i) {
-		if (i % 2 == 0) {
-			buff = bloomBuffer;
-			buff2 = pingPongBlurBufferA;
-		}
-		else {
-			buff2 = bloomBuffer;
-			buff = pingPongBlurBufferA;
-		}
-
-		Shader shaderBlur = shaderLibInstance->getBlurShader();
-		OpenglWrapper::UseProgram(shaderBlur.getProgram());
-
+		pingPongBlurBufferA.Bind();
 		quad.bindQuadVAO();
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(
-			GL_TEXTURE_2D, buff.getTextureAt(0).get_texture()
+			GL_TEXTURE_2D, bloomBuffer.getTextureAt(1).get_texture()
 		);
 
 		shaderBlur.setInt("horizontal", i%2);
 
 		quad.drawArrays();
-
-		buff.setTaget(GL_READ_BUFFER);
-		buff.Bind();
-		buff2.setTaget(GL_DRAW_FRAMEBUFFER);
-		buff2.Bind();
-		buff2.Blit();
 	}
 
-	quad.DrawQuad(pingPongBlurBufferA.getTextureAt(0).get_texture());
+	bloomBuffer.Blit(pingPongBlurBufferA, bloomBuffer);
 
-	/*for (unsigned int i = 0; i < amount; i++)
-	{
-		if (horizontal)
-			buff = pingPongBlurBufferA;
-		else
-			buff = pingPongBlurBufferB;
+	Shader shad = shaderLibInstance->getTextureCombinerShader();
+	OpenglWrapper::UseProgram(shad.getProgram());
 
-		buff.Bind();
+	quad.bindQuadVAO();
 
-		quad.bindQuadVAO();
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(
+		GL_TEXTURE_2D, bloomBuffer.getTextureAt(0).get_texture()
+	);
 
-        glActiveTexture(GL_TEXTURE0);
-		glBindTexture(
-			GL_TEXTURE_2D, first_iteration ? bloomBuffer.getTextureAt(1).get_texture() : buff.getTextureAt(0).get_texture()
-		);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(
+		GL_TEXTURE_2D, bloomBuffer.getTextureAt(1).get_texture()
+	);
 
-		shaderBlur.setInt("horizontal", horizontal);
+	quad.drawArrays();
 
-		quad.drawArrays();
-
-		quad.DrawQuad(buff.getTextureAt(0).get_texture());
-
-		horizontal = !horizontal;
-		if (first_iteration)
-			first_iteration = false;
-	}
-	*/
+	//quad.DrawQuad(bloomBuffer, 0);
 
 	//quad.DrawQuad(pingPongBlurBufferB.getTextureAt(0).get_texture());
 }

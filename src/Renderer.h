@@ -287,6 +287,16 @@ public:
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
+    void DrawQuad(FrameBuffer& buff) 
+    {
+        DrawQuad((unsigned int)buff.getTexture().get_texture());
+    }
+
+    void DrawQuad(FrameBuffer& buff, unsigned int textureNumber) 
+    {
+        DrawQuad(buff.getTextureAt(textureNumber).get_texture());
+    }
+
     void DrawQuadToBindedTexture(Shader s) 
     {
 		glUseProgram(s.getProgram());
@@ -349,7 +359,9 @@ public:
         shadowVertex(GameState::engine_path + "shaders/shadowMappingVertex.glsl", GL_VERTEX_SHADER),
         shadowFragment(GameState::engine_path + "shaders/shadowMappingFragment.glsl", GL_FRAGMENT_SHADER),
         blurVertex(GameState::engine_path + "shaders/blurShaderVertex.glsl", GL_VERTEX_SHADER),
-        blurFragment(GameState::engine_path + "shaders/blurShaderFragment.glsl", GL_FRAGMENT_SHADER)
+        blurFragment(GameState::engine_path + "shaders/blurShaderFragment.glsl", GL_FRAGMENT_SHADER),
+        textureCombinerVertex(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER),
+        textureCombinerFragment(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER)
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -366,6 +378,10 @@ public:
         blurVertex.compile();
         blurFragment.compile();
         blurVertex.link(blurFragment);
+
+        textureCombinerVertex.compile();
+        textureCombinerFragment.compile();
+        textureCombinerVertex.link(textureCombinerFragment);
 
         stage = STAGE::DEPTH;
     }
@@ -397,9 +413,14 @@ public:
         return shadowVertex;
     }
 
-    Shader& getBlurShader() 
+    Shader& getBlurShader()
     {
         return blurVertex;
+    }
+
+    Shader& getTextureCombinerShader()
+    {
+        return textureCombinerVertex;
     }
 
     LightingShaderRoutine& getShaderRoutine() 
@@ -411,6 +432,26 @@ public:
     {
         if(lightingFragment.checkForSourceChanges())
         {
+            lightingVertex = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+            lightingFragment = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+
+            lightingVertex.compile();
+            lightingFragment.compile();
+            lightingVertex.link(lightingFragment);
+            
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
+        }
+
+        if(textureCombinerFragment.checkForSourceChanges())
+        {
+            textureCombinerVertex = Shader(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER);
+            textureCombinerFragment = Shader(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER);
+
+            textureCombinerVertex.compile();
+            textureCombinerFragment.compile();
+            textureCombinerVertex.link(textureCombinerFragment);
+            
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN Texture Combiner SHADER: " << std::endl;
         }
     }
 
@@ -431,6 +472,9 @@ private:
 
     Shader blurVertex;
     Shader blurFragment;
+
+    Shader textureCombinerVertex;
+    Shader textureCombinerFragment;
 };
 
 class Renderer
@@ -464,11 +508,13 @@ public:
     FrameBuffer pingPongBlurBufferA;
     FrameBuffer pingPongBlurBufferB;
     RenderBuffer renderBuffer;
+	FrameBuffer bufferCombination;
 
     static ShaderLibrary* shaderLibInstance;
 private:
 	void renderDebug(Window* wind);
     void renderScene(Window* wind);
+    void renderAll(Window* wind);
 
 private:
     DebugRenderer dbr;

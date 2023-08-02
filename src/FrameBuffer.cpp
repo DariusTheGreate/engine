@@ -12,6 +12,7 @@ void FrameBuffer::AttachTexture(unsigned int W, unsigned int H, int numOfColorAt
     Height = H;
 
     Bind();
+    setTaget(GL_FRAMEBUFFER);
 
     for (int i = 0; i < numOfColorAttachments; ++i)
     {
@@ -68,6 +69,32 @@ void FrameBuffer::Unbind()
 void FrameBuffer::Blit()
 {
 	glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ClearBlit();
+}
+
+void FrameBuffer::Blit(FrameBuffer& buff1, FrameBuffer& buff2)
+{
+    buff1.setTaget(GL_READ_FRAMEBUFFER);
+    buff1.Bind();
+
+    buff2.setTaget(GL_DRAW_FRAMEBUFFER);
+    buff2.Bind();
+
+    buff2.Blit();
+}
+
+void FrameBuffer::ClearBlit()
+{
+	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+	OpenglWrapper::DisabelDepthTest();
+	OpenglWrapper::ClearScreen({1,1,1});
+}
+
+void FrameBuffer::SetImage(int i)
+{
+    if (i > textures.size() - 1)
+        return;
+    OpenglWrapper::ImageFrameBuffer((unsigned int)textures[i].get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 }
 
 Texture& FrameBuffer::getTexture()

@@ -4,7 +4,6 @@ layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
 
 
-
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -36,15 +35,23 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {           
+
     //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
     //return;
     vec4 texColor = texture(diffuseTexture, fs_in.TexCoords);
     if(texColor.a < 0.1)
         discard;
 
+    //Works
     //FragColor = texture(shadowMap, fs_in.TexCoords);
+    //return
 
     vec3 color = texture(diffuseTexture, fs_in.TexCoords).rgb;
+
+    //Works
+    //FragColor.rgb = color;
+    //return;
+
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(1.0f);
     // ambient

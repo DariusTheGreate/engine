@@ -18,6 +18,12 @@ public:
 
     void Blit();
 
+    void Blit(FrameBuffer& buff1, FrameBuffer& buff2);
+
+    void ClearBlit();
+
+    void SetImage(int i);
+
 	Texture& getTexture();
     Texture& getTextureAt(int i);
 

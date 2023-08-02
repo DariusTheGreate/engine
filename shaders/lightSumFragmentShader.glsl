@@ -1,12 +1,18 @@
-#version 420 core
+#version 410 core
 
-out vec4 FragColor;
-//layout (location = 0) out vec4 FragColor;
-//layout (location = 1) out vec4 BrightColor;
+//out vec4 FragColor;
 
-layout (location = 0) in vec2 TexCoords;
-layout (location = 1) in vec3 Normal;
-layout (location = 2) in vec3 FragPos;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
+
+//NOTE(darius) for some weird reason this shit sometimes needs location specifyed, but sometimes brokes beacuse of it. I commented layouts for now, cause it only works this way.
+//layout (location = 0) in vec2 TexCoords;
+//layout (location = 1) in vec3 Normal;
+//layout (location = 2) in vec3 FragPos;
+
+in vec2 TexCoords;
+in vec3 Normal;
+in vec3 FragPos;
 
 struct Material {
     float shininess;
@@ -77,13 +83,15 @@ float LinearizeDepth(float depth)
 
 void main()
 {
+    
+    //Works when i dont specify layout
+    //vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+    //FragColor.rgb = color;
+    //return;
+
     //works
     //float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
     //FragColor = vec4(vec3(depth), 1.0);
-    //return;
-
-    //dont wokr
-    //FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
     //return;
 
     //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
@@ -93,8 +101,6 @@ void main()
     if(texColor.a < 0.1)
         discard;
 
-    FragColor = texColor;
-    return;
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(viewPos - FragPos);
     
@@ -107,6 +113,13 @@ void main()
         FragColor = texColor;
     else
         FragColor = texColor * vec4(result, 1.0f);
+
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if(brightness > 1.0)
+        BrightColor = vec4(FragColor.rgb, 1.0);
+    else
+        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+
 
     //u can transfer depth map in r channel but cant in a channel
     //FragColor.r = depth;
