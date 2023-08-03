@@ -5,6 +5,7 @@
 class OpenglWrapper // : GraphicsWrapper
 {
 public:
+	//TODO(darius) fix this
     
     static void GenerateBuffers(size_t* ptr, int n = 1);
 

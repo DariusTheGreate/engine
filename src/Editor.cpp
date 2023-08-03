@@ -1,6 +1,6 @@
 #include <Editor.h>
 
-Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind)
+Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
 {
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     GameState::instance = &state;
@@ -137,7 +137,7 @@ void Editor::updateInput() {
     //std::cout << GameState::ms.get_x() << " " << GameState::ms.get_y()<< "\n";
     if(GameState::instance->ks.get_mouse_left_button())
     {
-        selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
+        //selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
         selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
     }
 }

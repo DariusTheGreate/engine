@@ -1,8 +1,9 @@
 #include <ObjectSelector.h>
+#include <FrameBuffer.h>
 
 ObjectSelector::ObjectSelector(int W, int H)
 {
-    OpenglWrapper::GenerateFrameBuffers(&pick_fbo);
+    /*OpenglWrapper::GenerateFrameBuffers(&pick_fbo);
     OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo));
     OpenglWrapper::GenerateTextures(&pick_texture);
     OpenglWrapper::BindTexture(static_cast<int>(pick_texture));
@@ -10,18 +11,29 @@ ObjectSelector::ObjectSelector(int W, int H)
     OpenglWrapper::ImageFrameBuffer(static_cast<int>(pick_texture));
     OpenglWrapper::UnbindTexture();
     OpenglWrapper::UnbindFrameBuffer();
+    */
+    buff.Generate();
+    buff.AttachTexture(W,H);
 }
 
 void ObjectSelector::ReadPixel(int x, int y)
 {
     //std::cout << x << "|" << y << "\n";
-    OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo));
+    //OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo), GL_READ_BUFFER);
+    //buff.setTaget(GL_READ_FRAMEBUFFER);
+
+    buff.setTaget(GL_READ_FRAMEBUFFER);
+    buff.Bind();
+
     OpenglWrapper::ReadBuffer();
-    int pixel[4] = { 0, 0, 0, 0 };
+    unsigned char pixel[4] = { 0, 0, 0, 0 };
     OpenglWrapper::ReadPixels(x, y, &pixel);
+
+    buff.Unbind();
+    std::cout << (int)pixel[0] << " " << (int)pixel[1] << " " << (int)pixel[2] << " " << (int)pixel[3] << "\n";
     OpenglWrapper::ReadZeroBuffer();
-    //std::cout << pixel[0] << " " << pixel[1] << "\n";
-    OpenglWrapper::UnbindFrameBuffer();
+
+    //buff.setTaget(GL_FRAMEBUFFER);
     //GameState::msg("Pixel data: " + std::to_string(pixel[0]) + "|" + std::to_string(pixel[1]) + "|" + std::to_string(pixel[2]) + "|" + std::to_string(pixel[3]) + "\n");
 }
 
@@ -95,3 +107,8 @@ void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY,
         }
     }
 }
+
+size_t ObjectSelector::pick_fbo = 0;
+unsigned int ObjectSelector::pick_texture= 0;
+
+FrameBuffer ObjectSelector::buff = true;

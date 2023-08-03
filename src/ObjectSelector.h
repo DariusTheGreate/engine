@@ -12,6 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
 
+class Object;
+
 class ObjectSelector
 {
 public:
@@ -27,8 +29,12 @@ public:
 
     void ProbeSceneObjects(Scene* scene, float mouseX, float mouseY, Window* w, Renderer* renderer);
 
+    static size_t pick_fbo;
+
+    static unsigned int pick_texture;
+
+    static FrameBuffer buff;
+
 private:
-    size_t pick_fbo = 0;
-    unsigned int pick_texture = 0;
 };
 

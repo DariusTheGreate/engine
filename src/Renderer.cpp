@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <Colider.h>
+#include <ObjectSelector.h>
 
 #include <optional>
 
@@ -307,11 +308,6 @@ void Renderer::render(Window* wind)
 	depthTexture.Blit();
 	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
 
-	//OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	//OpenglWrapper::DisabelDepthTest();
-	//OpenglWrapper::ClearScreen({1,1,1});
-	//OpenglWrapper::ClearBuffer();
-
 	//NOTE(darius) currently works
 	//quad.DrawQuad(depthTexture);
 	//return
@@ -323,8 +319,8 @@ void Renderer::render(Window* wind)
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	framebuffer.Bind();
 
-	bloomBuffer.setTaget(GL_FRAMEBUFFER);
-	bloomBuffer.Bind();
+	//bloomBuffer.setTaget(GL_FRAMEBUFFER);
+	//bloomBuffer.Bind();
 
 	//OpenglWrapper::EnableMultisample();
 	OpenglWrapper::ClearScreen(backgroundColor);
@@ -336,20 +332,109 @@ void Renderer::render(Window* wind)
 	//renderScene(wind);
 	renderAll(wind);
 
-	intermidiateFramebuffer.Blit(bloomBuffer, intermidiateFramebuffer);
-	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+	//intermidiateFramebuffer.Blit(bloomBuffer, intermidiateFramebuffer);
+	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 
-	//shaderLibInstance->stage = ShaderLibrary::STAGE::SHADOWS;
-
-	//OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	//OpenglWrapper::DisabelDepthTest();
-	//OpenglWrapper::ClearScreen({1,1,1});
+	shaderLibInstance->stage = ShaderLibrary::STAGE::BLUR;
+	bloomBuffer.Blit(intermidiateFramebuffer, bloomBuffer);
 
 	//NOTE(darius) uses bloomBuffer
-	blurStage();
+	//blurStage();
 
+	shaderLibInstance->stage = ShaderLibrary::STAGE::EDITOR_ID;
+	EditorIDsStage(wind);
+
+	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 	//quad.DrawQuad(intermidiateFramebuffer);
+
 	//quad.DrawQuad(bloomBuffer, 1);
+}
+
+void Renderer::EditorIDsStage(Window* wind) 
+{
+	//OpenglWrapper::BindFrameBuffer(ObjectSelector::pick_fbo);
+
+	FrameBuffer& workerBuff = ObjectSelector::buff;
+
+	workerBuff.setTaget(GL_FRAMEBUFFER);
+	workerBuff.Bind();
+
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	renderScene(wind);
+	workerBuff.Unbind();
+
+	intermidiateFramebuffer.Blit(workerBuff, intermidiateFramebuffer);
+
+	quad.DrawQuad(intermidiateFramebuffer);
+}
+
+void Renderer::blurStage()
+{
+	//NOTE(daris) currently works
+	//quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
+	//return;
+
+	bool horizontal = true, first_iteration = true;
+	int amount = 10;
+
+	//NOTE(darius) set HDR main
+	{
+		BinderPointer bptr(pingPongBlurBufferA);
+		quad.DrawQuad(bloomBuffer.getTextureAt(0).get_texture());
+	}
+
+	//NOTE(darius) set HDR bright
+	{
+		BinderPointer bptr(&pingPongBlurBufferB);
+		quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
+	}
+
+	Shader shaderBlur = shaderLibInstance->getBlurShader();
+	OpenglWrapper::UseProgram(shaderBlur.getProgram());
+
+	//TODO(darius) pingpong it here
+	pingPongBlurBufferB.Bind();
+	for (int i = 0; i < amount; ++i) {
+		quad.bindQuadVAO();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(
+			GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
+		);
+
+		shaderBlur.setInt("horizontal", i % 2);
+
+		quad.drawArrays();
+	}
+
+	pingPongBlurBufferB.Unbind();
+
+	framebuffer.setTaget(GL_FRAMEBUFFER);
+	framebuffer.Bind();
+
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	Shader shad = shaderLibInstance->getTextureCombinerShader();
+	OpenglWrapper::UseProgram(shad.getProgram());
+
+	quad.bindQuadVAO();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(
+		GL_TEXTURE_2D, pingPongBlurBufferA.getTextureAt(0).get_texture()
+	);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(
+		GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
+	);
+
+	quad.drawArrays();
 }
 
 void Renderer::renderDebug(Window* wind) 
@@ -451,78 +536,5 @@ DebugRenderer& Renderer::getDebugRenderer()
     return dbr;
 }
 
-void Renderer::blurStage()
-{
-	//NOTE(daris) currently works
-	//quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
-	//return;
-
-	bool horizontal = true, first_iteration = true;
-	int amount = 10;
-
-	//NOTE(darius) set HDR main
-	{
-		pingPongBlurBufferA.Bind();
-
-		quad.DrawQuad(bloomBuffer.getTextureAt(0).get_texture());
-
-		pingPongBlurBufferA.Unbind();
-	}
-
-	//NOTE(darius) set HDR bright
-	{
-		pingPongBlurBufferB.Bind();
-
-		quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
-
-		pingPongBlurBufferB.Unbind();
-	}
-
-	Shader shaderBlur = shaderLibInstance->getBlurShader();
-	OpenglWrapper::UseProgram(shaderBlur.getProgram());
-
-	//TODO(darius) pingpong it here
-	pingPongBlurBufferB.Bind();
-	for (int i = 0; i < amount; ++i) {
-		quad.bindQuadVAO();
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(
-			GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
-		);
-
-		shaderBlur.setInt("horizontal", i%2);
-
-		quad.drawArrays();
-	}
-	pingPongBlurBufferB.Unbind();
-
-	//quad.DrawQuad(pingPongBlurBufferB, 0);
-	//return;
-
-	//bloomBuffer.SetImage(1);
-	//bloomBuffer.Blit(pingPongBlurBufferA, bloomBuffer);
-
-	Shader shad = shaderLibInstance->getTextureCombinerShader();
-	OpenglWrapper::UseProgram(shad.getProgram());
-
-	quad.bindQuadVAO();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(
-		GL_TEXTURE_2D, pingPongBlurBufferA.getTextureAt(0).get_texture()
-	);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(
-		GL_TEXTURE_2D, pingPongBlurBufferB.getTextureAt(0).get_texture()
-	);
-
-	quad.drawArrays();
-
-	//quad.DrawQuad(bloomBuffer, 0);
-
-	//quad.DrawQuad(pingPongBlurBufferB.getTextureAt(0).get_texture());
-}
 
 ShaderLibrary* Renderer::shaderLibInstance = nullptr;

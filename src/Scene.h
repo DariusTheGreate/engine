@@ -139,6 +139,8 @@ public:
 
 	void start_scripts();
 
+	void updateObjectsIDs();
+
 	//TODO(darius) make it factory or something
 	FlatMesh* createFlatMesh();
 	void deleteFlatMesh(FlatMesh* mesh);

@@ -123,7 +123,7 @@ void Object::updateAnimator(float dt)
 void Object::renderObject() 
 {
     if(!object_hidden && model){
-        model.value().Draw(Transform(getTransform()), getPointLight(), getMaterial());
+        model.value().Draw(this, getPointLight(), getMaterial());
     }
 
     //DANGER! -> traverseObjects([](Object* op) {op->renderObject(); });
@@ -409,6 +409,16 @@ void Object::setAnimator(Animation* anim)
 std::optional<Animator>& Object::getAnimator()
 {
     return animator;
+}
+
+void Object::setID(int id)
+{
+    ID = id;
+}
+
+int Object::getID()
+{
+    return ID;
 }
 
 void Object::addSpriteAnimation(SpriteAnimation&& anim)

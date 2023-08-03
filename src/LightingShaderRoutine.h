@@ -7,6 +7,8 @@
 #include <GameState.h>
 #include <Transform.h>
 
+class Object;
+
 class LightingShaderRoutine
 {
 public:
@@ -15,7 +17,7 @@ public:
 
 	LightingShaderRoutine(Shader&& sv_in) : sv(sv_in) {}
 
-	void operator() (Transform tr);
+	void operator() (Object* obj);
 private:
 	Shader sv;
 	std::optional<DirectionalLight> directionalLight;

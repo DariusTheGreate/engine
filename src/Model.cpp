@@ -38,7 +38,7 @@ Model::Model(std::string_view path_in) : path(path_in){
     loadModel();
 }
 
-void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m)
+void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Material>& m)
 {
     if(light){
         light->setShaderLight(Renderer::shaderLibInstance->getCurrShader());
@@ -49,7 +49,7 @@ void Model::Draw(Transform tr, std::optional<PointLight>& light, std::optional<M
     }
 
     //NOTE(darius) its temporal cringe for greater good
-	shaderRoutine(tr);
+	shaderRoutine(obj);
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());

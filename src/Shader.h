@@ -21,6 +21,8 @@ public:
 	
 	void reload();
 
+	void load();
+
 	void compile() const;
 
 	ShaderProgram link(const Shader& other);

@@ -126,8 +126,8 @@ public:
         }
         */
 
-        shaderRoutine->operator()(Transform({0,0,0}, particle_size));
-		particle->Draw(*shader, amount);
+        //shaderRoutine->operator()(Transform({0,0,0}, particle_size));
+		//particle->Draw(*shader, amount);
     }
 
 	void updateUniform3DDistribution(float timeValue)

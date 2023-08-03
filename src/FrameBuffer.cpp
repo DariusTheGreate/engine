@@ -1,9 +1,10 @@
 #include <FrameBuffer.h>
 #include <Renderer.h>
 
-FrameBuffer::FrameBuffer()
+FrameBuffer::FrameBuffer(bool is_static_initialized)
 {
-    OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
+    if (!is_static_initialized)
+        Generate();
 }
 
 void FrameBuffer::AttachTexture(unsigned int W, unsigned int H, int numOfColorAttachments)
@@ -56,6 +57,11 @@ void FrameBuffer::AttachMultisampledTexture(unsigned int W, unsigned int H)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
 }
 
+void FrameBuffer::Generate()
+{
+		OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
+}
+
 void FrameBuffer::Bind()
 {
     OpenglWrapper::BindFrameBuffer(ID, target);
@@ -105,6 +111,11 @@ Texture& FrameBuffer::getTexture()
 Texture& FrameBuffer::getTextureAt(int i)
 {
     return textures[i];
+}
+
+std::vector<Texture>& FrameBuffer::getTextures()
+{
+    return textures;
 }
 
 void FrameBuffer::setTaget(GLenum newTarget)

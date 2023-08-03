@@ -4,13 +4,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-void LightingShaderRoutine::operator() (Transform tr){
+void LightingShaderRoutine::operator() (Object* obj){
     //glUseProgram(sv.getProgram());
     sv = Renderer::shaderLibInstance->getCurrShader();
     glUseProgram(sv.getProgram());
+
 	sv.setVec3("viewPos", GameState::cam.getCameraPos());
     sv.setInt("lightsCount", PointLight::LightsCount);
     sv.setFloat("gammaFactor", 1); 
+
+    //std::cout << "ID: " << obj->getID() << "\n";
+    int id = obj->getID() * 25500;
+    float r = ((id) & 0x000000FF) >> 0;
+    float b = ((id) & 0x0000FF00) >> 8;
+    float g = (id & 0x00FF0000) >> 16;
+
+    sv.setVec4("PickingColor", glm::vec4{r/255,g/255,b/255,0});
 
     /*glm::vec3 lightPos = glm::vec3(-2.0f, 0.0f, -1.0f);
     glm::mat4 lightProjection, lightView;
@@ -36,10 +45,9 @@ void LightingShaderRoutine::operator() (Transform tr){
     //    pointLight->setShaderLight(sv);
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 pos = tr.position;
-    glm::mat4 q = tr.get_quatmat();
-    glm::vec3 scale = tr.scale;
-
+    glm::vec3 pos = obj->getTransform().position;
+    glm::mat4 q = obj->getTransform().get_quatmat();
+    glm::vec3 scale = obj->getTransform().scale;
 
 
     //TODO(darius) add distanced rendering here. NOTE(darius) Not that hard
@@ -49,7 +57,6 @@ void LightingShaderRoutine::operator() (Transform tr){
         scale *= 0.5;//2 * GameState::cam.getFov()/dist;
         pos = GameState::cam.getCameraPos() + ((GameState::cam.getCameraPos() - pos));
     }
-
 
 
     model = glm::translate(model, pos);

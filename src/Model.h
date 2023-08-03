@@ -32,6 +32,7 @@
 unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate);
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate);
 
+class Object;
 
 struct BoneInfo
 {
@@ -75,7 +76,7 @@ public:
     Model(std::string_view path_in);
 
     //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
-    void Draw(Transform tr, std::optional<PointLight>& light, std::optional<Material>& m);
+    void Draw(Object* obj, std::optional<PointLight>& light, std::optional<Material>& m);
 
     std::vector<Mesh> loadModel();
 

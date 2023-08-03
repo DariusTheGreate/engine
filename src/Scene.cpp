@@ -141,6 +141,15 @@ void Scene::start_scripts()
 	}
 }
 
+void Scene::updateObjectsIDs()
+{
+	int id = 1;
+	for (Object* p : sceneObjects) 
+	{
+		p->setID(id++);
+	}
+}
+
 FlatMesh* Scene::createFlatMesh()
 {
 	return new FlatMesh();//TODO(darius) new bad
@@ -164,6 +173,7 @@ void Scene::deleteRoutine(EmptyScriptRoutine* r)
 void Scene::update_objects() {
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?
+	updateObjectsIDs();
 
 	for (int i = 0; i < sceneObjects.size(); ++i) {
 		if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index

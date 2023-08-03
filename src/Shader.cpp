@@ -2,9 +2,23 @@
 
 
 Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filepath_in) {
+	shader = OpenglWrapper::CreateShader(type);
+	reload();
+}
+
+void Shader::reload()
+{
+	load();
+	auto ptr = source.c_str();
+	OpenglWrapper::SetShaderSource(shader, ptr);
+}
+
+void Shader::load()
+{
 	//TODO(darius) make it filesystem
 	std::ifstream shaderFile;
 	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+	
 	try
 	{
 		shaderFile.open(filepath);
@@ -20,15 +34,6 @@ Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filep
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << filepath << std::endl;
 	}
-
-	shader = OpenglWrapper::CreateShader(type);
-	auto ptr = source.c_str();
-	OpenglWrapper::SetShaderSource(shader, ptr);
-}
-
-void Shader::reload()
-{
-
 }
 
 void Shader::compile() const {

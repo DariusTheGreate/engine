@@ -289,7 +289,8 @@ public:
 
     void DrawQuad(FrameBuffer& buff) 
     {
-        DrawQuad((unsigned int)buff.getTexture().get_texture());
+        if(buff.getTextures().size() > 0)
+			DrawQuad((unsigned int)buff.getTexture().get_texture());
     }
 
     void DrawQuad(FrameBuffer& buff, unsigned int textureNumber) 
@@ -361,7 +362,9 @@ public:
         blurVertex(GameState::engine_path + "shaders/blurShaderVertex.glsl", GL_VERTEX_SHADER),
         blurFragment(GameState::engine_path + "shaders/blurShaderFragment.glsl", GL_FRAGMENT_SHADER),
         textureCombinerVertex(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER),
-        textureCombinerFragment(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER)
+        textureCombinerFragment(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER),
+        editorIdVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
+        editorIdFragment(GameState::engine_path + "shaders/editorIDFragment.glsl", GL_FRAGMENT_SHADER)
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -383,6 +386,10 @@ public:
         textureCombinerFragment.compile();
         textureCombinerVertex.link(textureCombinerFragment);
 
+        editorIdVertex.compile();
+        editorIdFragment.compile();
+        editorIdVertex.link(editorIdFragment);
+
         stage = STAGE::DEPTH;
     }
 
@@ -394,8 +401,10 @@ public:
             return depthVertex;
         else if (stage == STAGE::SHADOWS)
             return shadowVertex;
-        else
+        else if (stage == STAGE::BLUR)
             return blurVertex;
+        else
+            return editorIdVertex;
     }
 
     Shader& getDepthShader()
@@ -423,6 +432,11 @@ public:
         return textureCombinerVertex;
     }
 
+	Shader& getEditorIdShader()
+    {
+        return editorIdVertex;
+    }
+
     LightingShaderRoutine& getShaderRoutine() 
     {
         return routine;
@@ -430,10 +444,10 @@ public:
 
     void checkForShaderReload() 
     {
-        if(lightingFragment.checkForSourceChanges())
+        if(lightingFragment.checkForSourceChanges() || lightingVertex.checkForSourceChanges())
         {
-            lightingVertex = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-            lightingFragment = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
+            lightingVertex.reload();
+            lightingFragment.reload();
 
             lightingVertex.compile();
             lightingFragment.compile();
@@ -442,16 +456,52 @@ public:
 			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
         }
 
-        if(textureCombinerFragment.checkForSourceChanges())
+        if(textureCombinerFragment.checkForSourceChanges() || textureCombinerVertex.checkForSourceChanges())
         {
-            textureCombinerVertex = Shader(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER);
-            textureCombinerFragment = Shader(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER);
+            textureCombinerVertex.reload();
+            textureCombinerFragment.reload();
 
             textureCombinerVertex.compile();
             textureCombinerFragment.compile();
             textureCombinerVertex.link(textureCombinerFragment);
             
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN Texture Combiner SHADER: " << std::endl;
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
+        }
+
+        if(depthFragment.checkForSourceChanges() || depthVertex.checkForSourceChanges())
+        {
+            depthFragment.reload();
+            depthVertex.reload();
+
+            depthVertex.compile();
+            depthFragment.compile();
+            depthVertex.link(depthFragment);
+
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
+        }
+
+        if (shadowFragment.checkForSourceChanges() || shadowVertex.checkForSourceChanges()) 
+        {
+            shadowVertex.reload();
+            shadowFragment.reload();
+
+            shadowVertex.compile();
+            shadowFragment.compile();
+            shadowVertex.link(shadowFragment);
+
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
+        }
+
+        if(blurFragment.checkForSourceChanges() || blurVertex.checkForSourceChanges())
+        {
+            blurVertex.reload();
+            blurFragment.reload();
+
+            shadowVertex.compile();
+            shadowFragment.compile();
+            shadowVertex.link(shadowFragment);
+
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
         }
     }
 
@@ -475,6 +525,9 @@ private:
 
     Shader textureCombinerVertex;
     Shader textureCombinerFragment;
+
+    Shader editorIdVertex;
+    Shader editorIdFragment;
 };
 
 class Renderer
@@ -497,6 +550,8 @@ public:
     DebugRenderer& getDebugRenderer();
 
     void blurStage();
+
+    void EditorIDsStage(Window*);
     
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 

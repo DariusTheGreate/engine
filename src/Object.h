@@ -130,6 +130,9 @@ public:
 
 	std::optional<Animator>& getAnimator();
 
+	void setID(int id);
+	int getID();
+
     void addSpriteAnimation(SpriteAnimation&& anim);
 	SpriteAnimation excnahgeSpriteAnimation(SpriteAnimation&& anim);
 	void setSpriteAnimation(SpriteAnimation& anim);
@@ -161,5 +164,7 @@ private:
 	Object* parent = nullptr;
 
 	bool object_hidden = false;
+
+	int ID = 0;
 };
 

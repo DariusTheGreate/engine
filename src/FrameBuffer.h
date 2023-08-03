@@ -6,11 +6,13 @@
 class FrameBuffer
 {
 public:
-    FrameBuffer();
+    FrameBuffer(bool is_static_initialized = false);
 
 	void AttachTexture(unsigned int W, unsigned int H, int numOfColorAttachments = 1);
 
 	void AttachMultisampledTexture(unsigned int W, unsigned int H);
+
+    void Generate();
 
 	void Bind();
 
@@ -26,6 +28,7 @@ public:
 
 	Texture& getTexture();
     Texture& getTextureAt(int i);
+    std::vector<Texture>& getTextures();
 
 	void setTaget(GLenum newTarget);
     GLenum getTarget();
@@ -46,4 +49,25 @@ private:
 
     bool depthAndStencil = false;
     bool multisampled = false;
+};
+
+struct BinderPointer 
+{
+    BinderPointer(FrameBuffer* buff_in) : buff(buff_in)
+    {
+        buff->Bind();
+    }
+
+    //NOTE(darius) dangle?
+	BinderPointer(FrameBuffer& buff_in) : buff(&buff_in)
+    {
+        buff->Bind();
+    }
+
+    ~BinderPointer() 
+    {
+        buff->Unbind();
+    }
+
+    FrameBuffer* buff;
 };

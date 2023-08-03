@@ -28,5 +28,7 @@ struct Transform
 	glm::quat q = glm::quat{ 0.0,0.0,0.0,1.0 };
 	glm::vec3 position = {0,0,0};
 	glm::vec3 scale = { 1,1,1 };
+
+	int objectID = 0;
 };
 
