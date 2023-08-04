@@ -188,7 +188,6 @@ void DebugRenderer::clearPoints()
 	pointsToRender.shrink_to_fit();
 }
 
-
 Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : currScene(currScene_in) {
 	//v.compile();
 	//sf.compile();
@@ -339,13 +338,13 @@ void Renderer::render(Window* wind)
 	bloomBuffer.Blit(intermidiateFramebuffer, bloomBuffer);
 
 	//NOTE(darius) uses bloomBuffer
-	//blurStage();
+	bloomStage();
 
 	shaderLibInstance->stage = ShaderLibrary::STAGE::EDITOR_ID;
 	EditorIDsStage(wind);
 
-	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
-	//quad.DrawQuad(intermidiateFramebuffer);
+	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+	quad.DrawQuad(intermidiateFramebuffer);
 
 	//quad.DrawQuad(bloomBuffer, 1);
 }
@@ -369,10 +368,20 @@ void Renderer::EditorIDsStage(Window* wind)
 
 	intermidiateFramebuffer.Blit(workerBuff, intermidiateFramebuffer);
 
-	quad.DrawQuad(intermidiateFramebuffer);
+	//NOTE(darius) for debug 
+	//quad.DrawQuad(intermidiateFramebuffer);
 }
 
-void Renderer::blurStage()
+void Renderer::bokeStage()
+{
+	float far_plane = 5;
+	float close_plane = 0;
+
+	//NOTE(darius) 1) Draw objects that are in focus in separate buffer and then blit on blured?
+	//			   2) Blur each objcet using its depth buffer value?
+}
+
+void Renderer::bloomStage()
 {
 	//NOTE(daris) currently works
 	//quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
@@ -538,3 +547,4 @@ DebugRenderer& Renderer::getDebugRenderer()
 
 
 ShaderLibrary* Renderer::shaderLibInstance = nullptr;
+

@@ -13,8 +13,8 @@ Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsign
 	bind();
 	if (data) {
 		imageTexture(internalFormat, width, height);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
+		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
 		//OpenglWrapper::GenerateMipmap();
 	}
 	stbi_image_free(data);
@@ -48,8 +48,8 @@ void Texture::bind(GLenum target)
 
 void Texture::filters()
 {
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 unsigned int Texture::get_texture() {

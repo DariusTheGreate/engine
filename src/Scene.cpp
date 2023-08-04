@@ -122,6 +122,22 @@ Object* Scene::getObjectByName(std::string_view name)
 	return nullptr;
 }
 
+Object* Scene::getObjectByID(int ID)
+{
+	std::cout << "ID SEARCH STARTED\n";
+	for (auto* i : sceneObjects) 
+	{
+		std::cout << i->getID() << "|";
+		if (ID == i->getID())
+		{
+			std::cout << "ID SEARCH ENDED\n";
+			return i;
+		}
+	}
+	std::cout << "ID SEARCH ENDED\n";
+	return nullptr;
+}
+
 std::vector<Object*>& Scene::get_objects()
 {
 	return sceneObjects;
@@ -295,6 +311,7 @@ void Scene::deserialize(std::string_view path)
 
 	std::vector<std::string> names;
 	std::vector<bool> hiddenStates;
+
 	for (std::string_view tkn : objectTokens) 
 	{
 		names.push_back(extractNameFromToken(tkn));
@@ -302,18 +319,21 @@ void Scene::deserialize(std::string_view path)
 	}
 
 	std::vector<Transform>  transs;
+
 	for (std::string_view tkn : objectTokens) 
 	{
 		transs.push_back(extractTransformFromToken(tkn));
 	}
 
 	std::vector<Model> models;
+	
 	for (std::string_view tkn : objectTokens) 
 	{
 		models.push_back(extractModelFromToken(tkn));
 	}
 
 	std::vector<std::string> scripts;
+
 	for (std::string_view tkn : objectTokens) 
 	{
 		scripts.push_back(extractScriptFromToken(tkn));
@@ -344,15 +364,24 @@ void Scene::deserialize(std::string_view path)
 			obj->getModel() = (models[i]);
 			obj->getModel()->setShader(Renderer::shaderLibInstance->getCurrShader());
 			obj->getModel()->setShaderRoutine(shaderRoutine);
+
 			auto anim = extractSpriteAnimationFromToken(objectTokens[i]);
 			if(anim)
 				obj->addSpriteAnimation(std::move(*anim));
+
 			auto col = extractColliderFromToken(objectTokens[i]);
 			if (col)
 				obj->addCollider(col->get_size(), col -> get_shift());
+			
 			auto body = extractRigidBodyFromToken(objectTokens[i]);
 			if (body)
 				obj->addRigidBody(body->mass);
+
+			auto pointLight = extractPointLightFromToken(objectTokens[i]);
+			if (pointLight) {
+				glm::vec3 pos = pointLight->position;
+				obj->addPointLight(std::move(*pointLight), pos);
+			}
 		}
 
 		if(scripts[i] != "None")
@@ -438,6 +467,8 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 
 		while (i < tkn.size())
 		{
+			//DANGER(darius)NOTE(darius)TODO(darius) this will look for "Position" until the end of token, 
+			//so it will loop on other Position variables of other objects
 			size_t pPos = tkn.find("Position", i);
 			if (pPos == std::string::npos)
 				break;
@@ -601,6 +632,28 @@ std::string Scene::extractScriptFromToken(std::string_view tkn)
 	return res;
 }
 
+std::optional<PointLight> Scene::extractPointLightFromToken(std::string_view tkn)
+{
+	size_t lightStart = tkn.find("PointLight:");
+
+	if (lightStart == std::string::npos)
+		return std::nullopt;
+
+	size_t brcktStart = tkn.find("Pos: {", lightStart);
+	size_t brcktEnd = tkn.find("}", lightStart);
+	glm::vec3 position  = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+	brcktStart = tkn.find("{", brcktEnd);
+	brcktEnd = tkn.find("}", brcktStart);
+	glm::vec3 color = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+	PointLight res;
+	res.position = position;
+	res.color = color;
+
+	return res;
+}
+
 //TODO(darius) optimise, test and refactor this shit, or switch to simdjson
 //NOTE(darius) weird float magic when load from file result in wrong precision
 glm::vec3 Scene::extractVectorFromToken(std::string_view tkn)
@@ -678,5 +731,4 @@ bool Scene::extractBoolFromToken(std::string_view tkn)
 		return true;
 	return false;
 }
-
 

@@ -52,3 +52,4 @@ void FlatMesh::DrawRaw(Shader& shader, glm::vec3 pos = { 0,0,0 }, glm::vec3 scal
     OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
     OpenglWrapper::UnbindVAO();
 }
+

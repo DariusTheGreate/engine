@@ -549,9 +549,11 @@ public:
 
     DebugRenderer& getDebugRenderer();
 
-    void blurStage();
+    void bloomStage();
 
     void EditorIDsStage(Window*);
+
+    void bokeStage();
     
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 

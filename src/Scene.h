@@ -117,6 +117,7 @@ public:
 	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures);
 
 	Object* AddEmpty(int i);
+
 	Object* AddObject(const std::string& name);
 
 	Object* createSubobject(Object* obj, int i);
@@ -130,10 +131,14 @@ public:
 	void renderParticles();
 
 	void updateAnimators(float dt);
+
 	void updateSpriteAnimations(float dt);
 
 	Object* get_object_at(int i);
+
 	Object* getObjectByName(std::string_view name);
+
+	Object* getObjectByID(int ID);
 
 	std::vector<Object*>& get_objects();
 
@@ -143,27 +148,43 @@ public:
 
 	//TODO(darius) make it factory or something
 	FlatMesh* createFlatMesh();
+
 	void deleteFlatMesh(FlatMesh* mesh);
 
 	EmptyScriptRoutine* createRoutine(std::string path);
+
 	void deleteRoutine(EmptyScriptRoutine*);
 
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will return later to it anyway
 	void serialize(std::string_view path);
+
 	void deserialize(std::string_view path);
 
 	std::string extractNameFromToken(std::string_view);
+
 	bool extractHiddenStateFromToken(std::string_view tkn);
+
 	Transform extractTransformFromToken(std::string_view);
+
 	Model extractModelFromToken(std::string_view);
+
 	Model extractMeshesFromToken(std::string_view);
+
 	std::optional<Colider> extractColliderFromToken(std::string_view);
+
 	std::optional<RigidBody> extractRigidBodyFromToken(std::string_view);
+
 	std::optional<SpriteAnimation> extractSpriteAnimationFromToken(std::string_view);
+
 	std::string extractScriptFromToken(std::string_view);
 
+	std::optional<PointLight> extractPointLightFromToken(std::string_view);
+
+	//TODO(darius) make it own module or somtng
 	glm::vec3 extractVectorFromToken(std::string_view);
+
 	glm::vec4 extractVector4FromToken(std::string_view);
+
 	bool extractBoolFromToken(std::string_view);
 
 private:

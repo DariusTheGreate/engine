@@ -14,12 +14,17 @@ void LightingShaderRoutine::operator() (Object* obj){
     sv.setFloat("gammaFactor", 1); 
 
     //std::cout << "ID: " << obj->getID() << "\n";
-    int id = obj->getID() * 25500;
-    float r = ((id) & 0x000000FF) >> 0;
-    float b = ((id) & 0x0000FF00) >> 8;
-    float g = (id & 0x00FF0000) >> 16;
+    /*int id = obj->getID() * 25500;
+    double r = ((id) & 0x000000FF) >> 0;
+    double b = ((id) & 0x0000FF00) >> 8;
+    double g = (id & 0x00FF0000) >> 16;
 
-    sv.setVec4("PickingColor", glm::vec4{r/255,g/255,b/255,0});
+    sv.setVec4("PickingColor", glm::vec4{float(r/255),float(g/255),float(b/255),0});
+    */
+
+    double id = obj->getID();
+
+    sv.setVec4("PickingColor", glm::vec4{id/255,id/255,id/255,0});
 
     /*glm::vec3 lightPos = glm::vec3(-2.0f, 0.0f, -1.0f);
     glm::mat4 lightProjection, lightView;
@@ -73,3 +78,4 @@ void LightingShaderRoutine::operator() (Object* obj){
     }
     */
 }
+

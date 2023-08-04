@@ -44,7 +44,7 @@ void OpenglWrapper::ReadZeroBuffer()
 
 void OpenglWrapper::ReadPixels(int x, int y, void* pixel)
 {
-    glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel);
+    glReadPixels(x, y, 1, 1, GL_RGBA, GL_FLOAT, pixel);
 }
 
 void OpenglWrapper::GenerateArrays(void* ptr, int n)

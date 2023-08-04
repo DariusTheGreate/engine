@@ -565,6 +565,14 @@ void Object::serialize(std::ofstream& file)
         file << "\t}\n";
     }
 
+    if(pointLight)
+    {
+        file << "\tPointLight: {\n";
+        file << "\t\t Pos: {" << std::to_string(pointLight->position.x) << " " << std::to_string(pointLight->position.y) << " " << std::to_string(pointLight->position.z) << "}\n";
+        file << "\t\t Color: {" <<std::to_string(pointLight->color.x) << " " << std::to_string(pointLight->color.y) << " " << std::to_string(pointLight->color.z) << "}\n";
+        file << "\t}\n";
+    }
+
     file << "}\n";
 }
 

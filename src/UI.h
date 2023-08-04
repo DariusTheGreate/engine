@@ -136,7 +136,8 @@ public:
 								bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
 								if (ImGui::IsItemClicked()) {
 									show_object_window = true;
-                                    item_clicked = op;
+                                    if(item_clicked == nullptr)
+										item_clicked = op;
                                     if(item_clicked->getRigidBody()){
                                         objTr = item_clicked->getRigidBody()->tr.get_quatmat();
                                     }
@@ -167,7 +168,9 @@ public:
 						bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
                         if (ImGui::IsItemClicked()) {
                             show_object_window = true;
-                            item_clicked = objects[i];
+
+							if(item_clicked == nullptr)
+								item_clicked = objects[i];
                             if(item_clicked->getRigidBody())
                                 objTr = item_clicked->getRigidBody()->tr.get_quatmat();
                             auto pos = item_clicked->getTransform().position; 
@@ -704,6 +707,38 @@ public:
         ImGui::End();
     }
 
+    Object* getItemClicked() 
+    {
+        return item_clicked;
+    }
+
+    void setItemClicked(Object* obj) 
+    {
+        item_clicked = obj;
+
+		objTr = item_clicked->getTransform().get_quatmat();
+
+        auto pos = item_clicked->getTransform().position;
+        auto scale = item_clicked->getTransform().scale;
+
+        objTr[3][0] = pos.x;
+        objTr[3][1] = pos.y;
+        objTr[3][2] = pos.z;
+
+        objRot = item_clicked->getTransform().get_quatmat();
+        objRot[3][0] = pos.x;
+        objRot[3][1] = pos.y;
+        objRot[3][2] = pos.z;
+
+        objScl[0][0] = scale.x;
+        objScl[1][1] = scale.y;
+        objScl[2][2] = scale.z;
+
+        objScl[3][0] = pos.x;
+        objScl[3][1] = pos.y;
+        objScl[3][2] = pos.z;
+    }
+
 private:
     bool show_scene_window = false;
     bool show_object_window = false;
@@ -718,6 +753,8 @@ private:
     ImGuiIO* io = nullptr;
 
 	Object* item_clicked = nullptr;
+	Object* item_picked = nullptr;
+
     glm::mat4 objTr = { 1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
                         0.f, 0.f, 1.f, 0.f,
@@ -739,3 +776,4 @@ private:
 
     GameState* state= nullptr;
 };
+

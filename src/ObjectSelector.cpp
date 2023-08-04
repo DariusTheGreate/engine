@@ -16,7 +16,7 @@ ObjectSelector::ObjectSelector(int W, int H)
     buff.AttachTexture(W,H);
 }
 
-void ObjectSelector::ReadPixel(int x, int y)
+int ObjectSelector::ReadPixel(int x, int y)
 {
     //std::cout << x << "|" << y << "\n";
     //OpenglWrapper::BindFrameBuffer(static_cast<int>(pick_fbo), GL_READ_BUFFER);
@@ -26,15 +26,34 @@ void ObjectSelector::ReadPixel(int x, int y)
     buff.Bind();
 
     OpenglWrapper::ReadBuffer();
-    unsigned char pixel[4] = { 0, 0, 0, 0 };
+    float pixel[4] = { 0, 0, 0, 0 };
     OpenglWrapper::ReadPixels(x, y, &pixel);
 
     buff.Unbind();
-    std::cout << (int)pixel[0] << " " << (int)pixel[1] << " " << (int)pixel[2] << " " << (int)pixel[3] << "\n";
+
+    pixel[0] *= 255;
+    pixel[1] *= 255;
+    pixel[2] *= 255;
+    pixel[3] *= 255;
+
+    /*int pickedID =
+        pixel[0] +
+        pixel[1] * 256 +
+        pixel[2] * 256 * 256;
+    
+    pickedID /= 25500;
+    */
+    
+    int pickedID = pixel[0];
+
+    //std::cout << pixel[0] << " " << pixel[1] << " " << pixel[2] << " " << pixel[3] << "\n";
+    std::cout << pickedID << "\n";
     OpenglWrapper::ReadZeroBuffer();
 
     //buff.setTaget(GL_FRAMEBUFFER);
     //GameState::msg("Pixel data: " + std::to_string(pixel[0]) + "|" + std::to_string(pixel[1]) + "|" + std::to_string(pixel[2]) + "|" + std::to_string(pixel[3]) + "\n");
+
+    return pickedID;
 }
 
 glm::vec3 ObjectSelector::GetRayFromMouse(float mouseX, float mouseY, Window* w)

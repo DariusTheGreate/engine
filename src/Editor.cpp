@@ -138,7 +138,11 @@ void Editor::updateInput() {
     if(GameState::instance->ks.get_mouse_left_button())
     {
         //selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
-        selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
+        int picked = selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
+        Object* pickedObj = currScene.getObjectByID(picked);
+        if (pickedObj != nullptr) {
+            ui.setItemClicked(pickedObj);
+        }
     }
 }
 

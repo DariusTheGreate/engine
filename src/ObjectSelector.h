@@ -21,7 +21,7 @@ public:
 
     ObjectSelector(int W, int H);
     
-    void ReadPixel(int x, int y);
+    int ReadPixel(int x, int y);
 
     glm::vec3 GetRayFromMouse(float mouseX, float mouseY, Window* w);
 
