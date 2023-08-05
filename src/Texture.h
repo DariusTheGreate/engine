@@ -22,6 +22,8 @@ public:
 
 	void bind(GLenum target = GL_TEXTURE_2D);
 
+	void unbind(GLenum target = GL_TEXTURE_2D);
+
 	void filters();
 	
 	unsigned int get_texture();

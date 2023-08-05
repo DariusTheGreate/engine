@@ -24,6 +24,11 @@ void KeyboardState::set_e(bool state) {
 	e_pressed.store(state);
 }
 
+void KeyboardState::set_c(bool state)
+{
+	c_pressed.store(state);
+}
+
 void KeyboardState::set_mouse_right_button(bool state)
 {
 	mouse_right_button_pressed.store(state);
@@ -76,6 +81,11 @@ bool KeyboardState::get_d() {
 
 bool KeyboardState::get_e() {
 	return e_pressed.load();
+}
+
+bool KeyboardState::get_c()
+{
+	return c_pressed.load();
 }
 
 bool KeyboardState::get_q() {

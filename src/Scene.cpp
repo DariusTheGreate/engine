@@ -39,6 +39,9 @@ Object* Scene::AddEmpty(int i)
 	Object* pt;
 	pt = mem_man.construct("empty " + std::to_string(i));
 	sceneObjects.push_back(pt);
+
+	emptyIndex = i;
+
 	return pt;
 }
 Object* Scene::AddObject(const std::string& name) 
@@ -141,6 +144,11 @@ Object* Scene::getObjectByID(int ID)
 std::vector<Object*>& Scene::get_objects()
 {
 	return sceneObjects;
+}
+
+int Scene::getEmptyIndex()
+{
+	return emptyIndex;
 }
 
 void Scene::init_memory()

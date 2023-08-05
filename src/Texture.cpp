@@ -46,6 +46,12 @@ void Texture::bind(GLenum target)
 	OpenglWrapper::BindTexture(static_cast<int>(texture), target);
 }
 
+void Texture::unbind(GLenum target)
+{
+	//glBindTexture(target, 0);
+	OpenglWrapper::UnbindTexture();
+}
+
 void Texture::filters()
 {
 	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

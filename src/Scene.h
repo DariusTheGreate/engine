@@ -142,6 +142,8 @@ public:
 
 	std::vector<Object*>& get_objects();
 
+	int getEmptyIndex();
+
 	void start_scripts();
 
 	void updateObjectsIDs();
@@ -198,5 +200,6 @@ private:
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
 	SceneMemoryManager<> mem_man;
+	int emptyIndex = 0;
 };
 

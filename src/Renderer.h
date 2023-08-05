@@ -348,7 +348,8 @@ public:
         EDITOR_ID,
         ALBEDO,
         SHADOWS,
-        BLUR,
+        BOKE,
+        BLOOM,
     };
 
 public:
@@ -364,7 +365,9 @@ public:
         textureCombinerVertex(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER),
         textureCombinerFragment(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER),
         editorIdVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-        editorIdFragment(GameState::engine_path + "shaders/editorIDFragment.glsl", GL_FRAGMENT_SHADER)
+        editorIdFragment(GameState::engine_path + "shaders/editorIDFragment.glsl", GL_FRAGMENT_SHADER),
+        bokeVertex(GameState::engine_path + "shaders/bokeVertex.glsl", GL_VERTEX_SHADER),
+        bokeFragment(GameState::engine_path + "shaders/bokeFragment.glsl", GL_FRAGMENT_SHADER)
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -390,6 +393,10 @@ public:
         editorIdFragment.compile();
         editorIdVertex.link(editorIdFragment);
 
+        bokeVertex.compile();
+        bokeFragment.compile();
+        bokeVertex.link(bokeFragment);
+
         stage = STAGE::DEPTH;
     }
 
@@ -401,7 +408,7 @@ public:
             return depthVertex;
         else if (stage == STAGE::SHADOWS)
             return shadowVertex;
-        else if (stage == STAGE::BLUR)
+        else if (stage == STAGE::BLOOM)
             return blurVertex;
         else
             return editorIdVertex;
@@ -437,6 +444,11 @@ public:
         return editorIdVertex;
     }
 
+	Shader& getBokeShader()
+    {
+        return bokeVertex;
+    }
+
     LightingShaderRoutine& getShaderRoutine() 
     {
         return routine;
@@ -444,6 +456,7 @@ public:
 
     void checkForShaderReload() 
     {
+        //TODO(darius) refactor copypast
         if(lightingFragment.checkForSourceChanges() || lightingVertex.checkForSourceChanges())
         {
             lightingVertex.reload();
@@ -503,6 +516,30 @@ public:
 
 			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
         }
+
+        if(editorIdFragment.checkForSourceChanges() || editorIdVertex.checkForSourceChanges())
+        {
+			editorIdVertex.reload();
+            editorIdFragment.reload();
+
+            editorIdVertex.compile();
+            editorIdFragment.compile();
+            editorIdVertex.link(editorIdFragment);
+
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
+        }
+
+        if(bokeFragment.checkForSourceChanges() || bokeVertex.checkForSourceChanges())
+        {
+			bokeVertex.reload();
+            bokeFragment.reload();
+
+            bokeVertex.compile();
+            bokeFragment.compile();
+            bokeVertex.link(bokeFragment);
+
+			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
+        }
     }
 
     STAGE stage;
@@ -528,15 +565,20 @@ private:
 
     Shader editorIdVertex;
     Shader editorIdFragment;
+
+    Shader bokeVertex;
+    Shader bokeFragment;
 };
 
 class Renderer
 {
 public:
     Renderer() = default;
+
     Renderer(Scene* currScene_in, GameState* instance, Window* wind);
 
     void render(Window* wind);
+
 	void updateBuffers(Window* wind);
 
     size_t getShaderRoutine();
@@ -551,12 +593,19 @@ public:
 
     void bloomStage();
 
-    void EditorIDsStage(Window*);
+    void EditorIDsStage();
 
     void bokeStage();
+
+    void depthStage();
+
+    void albedoStage();
     
+public:
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
+    //TODO(darius) to much buffers. Refactor it
+    //DANGER(darius) looks like its hard to process
     FrameBuffer framebuffer;
     FrameBuffer depthTexture;
     FrameBuffer depthFramebuffer;
@@ -566,16 +615,20 @@ public:
     FrameBuffer pingPongBlurBufferB;
     RenderBuffer renderBuffer;
 	FrameBuffer bufferCombination;
+    FrameBuffer bokeBuffer;
 
     static ShaderLibrary* shaderLibInstance;
+
 private:
 	void renderDebug(Window* wind);
-    void renderScene(Window* wind);
+    void renderScene();
     void renderAll(Window* wind);
 
 private:
     DebugRenderer dbr;
     RendererQuad quad;
+    
+    Window* wind = nullptr;
 
     Scene* currScene;
 

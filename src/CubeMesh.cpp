@@ -2,14 +2,16 @@
 
 CubeMesh::CubeMesh()
 {
-    this->vertices.resize(verticesRaw.size()/3);
+    this->vertices.resize(verticesRaw.size()/6);
     std::cout << "vert size is " << this->vertices.size() << "\n";
     
     //TODO(darius) UB and stuff
-    for(int i = 0; i < verticesRaw.size(); i += 3)
+    for (int i = 0; i < verticesRaw.size(); i += 6)
     {
-        vertices[i / 3] = {};
-        vertices[i / 3].Position = glm::vec3(verticesRaw[i], verticesRaw[i+1], verticesRaw[i+2]);
+        vertices[i / 6] = {};
+        vertices[i / 6].Position = glm::vec3(verticesRaw[i], verticesRaw[i + 1], verticesRaw[i + 2]);
+        vertices[i / 6].Normal = glm::vec3(verticesRaw[i + 3], verticesRaw[i + 4], verticesRaw[i + 5]);
+        //vertices[i / 7].TexCoords = glm::vec2(verticesRaw[i + 5], verticesRaw[i + 6]);
     }
 
     this->indices = indicesRaw;

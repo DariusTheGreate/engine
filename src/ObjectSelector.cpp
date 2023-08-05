@@ -44,7 +44,7 @@ int ObjectSelector::ReadPixel(int x, int y)
     pickedID /= 25500;
     */
     
-    int pickedID = pixel[0];
+    float pickedID = pixel[0];
 
     //std::cout << pixel[0] << " " << pixel[1] << " " << pixel[2] << " " << pixel[3] << "\n";
     std::cout << pickedID << "\n";

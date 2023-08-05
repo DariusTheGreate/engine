@@ -188,10 +188,12 @@ void DebugRenderer::clearPoints()
 	pointsToRender.shrink_to_fit();
 }
 
-Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : currScene(currScene_in) {
+Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : currScene(currScene_in), wind(wind_in) {
 	//v.compile();
 	//sf.compile();
 	//sv.link(sf);
+
+	//NOTE(darius) this leak doesnt matter
 	shaderLibInstance = new ShaderLibrary();
 
 	//depthv.compile();
@@ -272,6 +274,8 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : cur
 	//NOTE(darius) make it two buffers, not two color attachments
 	pingPongBlurBufferA.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 	pingPongBlurBufferB.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
+
+	bokeBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 	
 	bufferCombination.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 
@@ -288,70 +292,37 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind) : cur
 
 void Renderer::render(Window* wind)
 {
-	shaderLibInstance->checkForShaderReload();
 	int display_w, display_h;
 	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
-
-	shaderLibInstance->stage = ShaderLibrary::STAGE::DEPTH;
-	depthFramebuffer.Bind();
-	OpenglWrapper::EnableDepthTest();
-	OpenglWrapper::EnableMultisample();
-	OpenglWrapper::ClearScreen({ 1,0,0.5 });
-	OpenglWrapper::ClearBuffer();
 	OpenglWrapper::SetWindow(display_w, display_h);
 
-	renderScene(wind);
+	shaderLibInstance->checkForShaderReload();
 
-	depthTexture.setTaget(GL_DRAW_FRAMEBUFFER);
-	depthTexture.Bind();
-	depthTexture.Blit();
-	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
+	depthStage();
 
-	//NOTE(darius) currently works
+	// NOTE(darius) to draw ONLY result of last stage
+	// draw it into quad and return from renderer 
 	//quad.DrawQuad(depthTexture);
 	//return
 
-	OpenglWrapper::SetWindow(display_w, display_h);
+	albedoStage();
 
-	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
-
-	framebuffer.setTaget(GL_FRAMEBUFFER);
-	framebuffer.Bind();
-
-	//bloomBuffer.setTaget(GL_FRAMEBUFFER);
-	//bloomBuffer.Bind();
-
-	//OpenglWrapper::EnableMultisample();
-	OpenglWrapper::ClearScreen(backgroundColor);
-	OpenglWrapper::ClearBuffer();
-	OpenglWrapper::ClearDepthBuffer();
-	OpenglWrapper::EnableDepthTest();
-
-	//renderDebug(wind);
-	//renderScene(wind);
-	renderAll(wind);
-
-	//intermidiateFramebuffer.Blit(bloomBuffer, intermidiateFramebuffer);
-	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
-
-	shaderLibInstance->stage = ShaderLibrary::STAGE::BLUR;
-	bloomBuffer.Blit(intermidiateFramebuffer, bloomBuffer);
-
-	//NOTE(darius) uses bloomBuffer
 	bloomStage();
 
-	shaderLibInstance->stage = ShaderLibrary::STAGE::EDITOR_ID;
-	EditorIDsStage(wind);
+	EditorIDsStage();
 
 	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
-	quad.DrawQuad(intermidiateFramebuffer);
 
-	//quad.DrawQuad(bloomBuffer, 1);
+	bokeStage();
+
+	quad.DrawQuad(intermidiateFramebuffer);
 }
 
-void Renderer::EditorIDsStage(Window* wind) 
+void Renderer::EditorIDsStage() 
 {
 	//OpenglWrapper::BindFrameBuffer(ObjectSelector::pick_fbo);
+
+	shaderLibInstance->stage = ShaderLibrary::STAGE::EDITOR_ID;
 
 	FrameBuffer& workerBuff = ObjectSelector::buff;
 
@@ -363,7 +334,7 @@ void Renderer::EditorIDsStage(Window* wind)
 	OpenglWrapper::ClearDepthBuffer();
 	OpenglWrapper::EnableDepthTest();
 
-	renderScene(wind);
+	renderScene();
 	workerBuff.Unbind();
 
 	intermidiateFramebuffer.Blit(workerBuff, intermidiateFramebuffer);
@@ -374,15 +345,80 @@ void Renderer::EditorIDsStage(Window* wind)
 
 void Renderer::bokeStage()
 {
+	//NOTE(darius) dont work yet
 	float far_plane = 5;
 	float close_plane = 0;
 
 	//NOTE(darius) 1) Draw objects that are in focus in separate buffer and then blit on blured?
 	//			   2) Blur each objcet using its depth buffer value?
+
+	Shader boke = shaderLibInstance->getBokeShader();
+	OpenglWrapper::UseProgram(boke.getProgram());
+
+	bokeBuffer.Bind();
+
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	quad.bindQuadVAO();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(
+		GL_TEXTURE_2D, intermidiateFramebuffer.getTextureAt(0).get_texture()
+	);
+
+	quad.drawArrays();
+	
+	bokeBuffer.Unbind();
+
+	//intermidiateFramebuffer.Blit(bokeBuffer, intermidiateFramebuffer);
+
+	quad.DrawQuad(bokeBuffer);
+}
+
+void Renderer::depthStage()
+{
+	shaderLibInstance->stage = ShaderLibrary::STAGE::DEPTH;
+	depthFramebuffer.Bind();
+
+	OpenglWrapper::EnableDepthTest();
+	OpenglWrapper::EnableMultisample();
+	OpenglWrapper::ClearScreen({ 1,0,0.5 });
+	OpenglWrapper::ClearBuffer();
+
+
+	renderScene();
+
+	depthTexture.setTaget(GL_DRAW_FRAMEBUFFER);
+	depthTexture.Bind();
+	depthTexture.Blit();
+	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
+}
+
+void Renderer::albedoStage()
+{
+	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
+	framebuffer.setTaget(GL_FRAMEBUFFER);
+	framebuffer.Bind();
+
+	OpenglWrapper::EnableMultisample();
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	renderAll(wind);
+
+	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 }
 
 void Renderer::bloomStage()
 {
+	shaderLibInstance->stage = ShaderLibrary::STAGE::BLOOM;
+	bloomBuffer.Blit(intermidiateFramebuffer, bloomBuffer);
+	
 	//NOTE(daris) currently works
 	//quad.DrawQuad(bloomBuffer.getTextureAt(1).get_texture());
 	//return;
@@ -481,7 +517,7 @@ void Renderer::renderAll(Window* wind)
 
 	dbr.renderDebugGrid();
 
-	renderScene(wind);
+	renderScene();
 
 	for (int i = 0; i < currScene->get_objects().size(); ++i) {
 		if (currScene->get_objects()[i]) {
@@ -498,7 +534,7 @@ void Renderer::renderAll(Window* wind)
 	//dbr.renderPoints();
 }
 
-void Renderer::renderScene(Window* wind) 
+void Renderer::renderScene() 
 {
 	float currentFrame = static_cast<float>(glfwGetTime());
 	float deltaTime = currentFrame - lastFrame;

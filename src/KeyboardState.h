@@ -17,6 +17,8 @@ public:
 	
 	void set_e(bool state);
 
+	void set_c(bool state);
+
 	void set_mouse_right_button(bool state);
 
 	void set_mouse_left_button(bool state);
@@ -43,6 +45,8 @@ public:
 
 	bool get_e();
 
+	bool get_c();
+
 	bool get_q();
 
 	bool get_0();
@@ -68,6 +72,7 @@ private:
 	std::atomic_bool d_pressed;
 	std::atomic_bool q_pressed;
 	std::atomic_bool e_pressed;
+	std::atomic_bool c_pressed;
 
 	std::atomic_bool pressed_0;
 	std::atomic_bool pressed_1;
