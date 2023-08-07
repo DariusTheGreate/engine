@@ -265,10 +265,13 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 	//danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
 	*/
 
-
-	OpenglWrapper::EnableDepthTest();
+	//OpenglWrapper::EnableDepthTest();
+	state.EnableDepthTesting();
 
 	framebuffer.AttachMultisampledTexture(wind->getWidth(), wind->getHeight());
+	framebuffer.Unbind();
+
+	deferredLightingBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 3);
 
 	bloomBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 2);
 	//NOTE(darius) make it two buffers, not two color attachments
@@ -283,11 +286,13 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 
 	depthTexture.AttachTexture(wind->getWidth(), wind->getHeight());
 
+
 	//u draw inside of this one
 	intermidiateFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
 	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);
 
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+
 }
 
 void Renderer::render(Window* wind)
@@ -298,24 +303,44 @@ void Renderer::render(Window* wind)
 
 	shaderLibInstance->checkForShaderReload();
 
-	depthStage();
+	//depthStage();
 
 	// NOTE(darius) to draw ONLY result of last stage
 	// draw it into quad and return from renderer 
 	//quad.DrawQuad(depthTexture);
 	//return
 
-	albedoStage();
+	//albedoStage();
+	deferredStage();
 
-	bloomStage();
+	//bloomStage();
 
-	EditorIDsStage();
+	//EditorIDsStage();
 
-	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 
-	bokeStage();
+	//bokeStage();
 
 	quad.DrawQuad(intermidiateFramebuffer);
+}
+
+void Renderer::deferredStage()
+{
+	shaderLibInstance->stage = ShaderLibrary::STAGE::DEFERRED;
+
+	deferredLightingBuffer.setTaget(GL_FRAMEBUFFER);
+	deferredLightingBuffer.Bind();
+
+	OpenglWrapper::ClearScreen(backgroundColor);
+	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	renderAll(wind);
+
+	deferredLightingBuffer.Unbind();
+
+	intermidiateFramebuffer.Blit(deferredLightingBuffer, intermidiateFramebuffer);
 }
 
 void Renderer::EditorIDsStage() 
@@ -341,41 +366,6 @@ void Renderer::EditorIDsStage()
 
 	//NOTE(darius) for debug 
 	//quad.DrawQuad(intermidiateFramebuffer);
-}
-
-void Renderer::bokeStage()
-{
-	//NOTE(darius) dont work yet
-	float far_plane = 5;
-	float close_plane = 0;
-
-	//NOTE(darius) 1) Draw objects that are in focus in separate buffer and then blit on blured?
-	//			   2) Blur each objcet using its depth buffer value?
-
-	Shader boke = shaderLibInstance->getBokeShader();
-	OpenglWrapper::UseProgram(boke.getProgram());
-
-	bokeBuffer.Bind();
-
-	OpenglWrapper::ClearScreen(backgroundColor);
-	OpenglWrapper::ClearBuffer();
-	OpenglWrapper::ClearDepthBuffer();
-	OpenglWrapper::EnableDepthTest();
-
-	quad.bindQuadVAO();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(
-		GL_TEXTURE_2D, intermidiateFramebuffer.getTextureAt(0).get_texture()
-	);
-
-	quad.drawArrays();
-	
-	bokeBuffer.Unbind();
-
-	//intermidiateFramebuffer.Blit(bokeBuffer, intermidiateFramebuffer);
-
-	quad.DrawQuad(bokeBuffer);
 }
 
 void Renderer::depthStage()
@@ -412,6 +402,54 @@ void Renderer::albedoStage()
 	renderAll(wind);
 
 	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+}
+
+void Renderer::bokeStage()
+{
+	shaderLibInstance->stage = ShaderLibrary::STAGE::BOKE;
+	//NOTE(darius) dont work yet
+	float far_plane = 5;
+	float close_plane = 0;
+
+	//NOTE(darius) 1) Draw objects that are in focus in separate buffer and then blit on blured?
+	//			   2) Blur each objcet using its depth buffer value?
+
+	//bokeBuffer.setTaget(GL_FRAMEBUFFER);
+	//bokeBuffer.Bind();
+
+	{
+		BinderPointer bptr(pingPongBlurBufferA);
+		quad.DrawQuad(framebuffer.getTextureAt(0).get_texture());
+	}
+
+	Shader boke = shaderLibInstance->getBokeShader();
+	OpenglWrapper::UseProgram(boke.getProgram());
+
+
+	pingPongBlurBufferA.Bind();
+
+	quad.bindQuadVAO();
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(
+		GL_TEXTURE_2D, intermidiateFramebuffer.getTextureAt(0).get_texture()
+	);
+
+	quad.drawArrays();
+
+	pingPongBlurBufferA.Unbind();
+
+	bokeBuffer.setTaget(GL_FRAMEBUFFER);
+	bokeBuffer.Bind();
+
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
+
+	//bokeBuffer.Unbind();
+
+	bokeBuffer.Blit(pingPongBlurBufferA, bokeBuffer);
+
+	quad.DrawQuad(bokeBuffer);
 }
 
 void Renderer::bloomStage()

@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "GameState.h"
 #include "Shader.h"
+#include <ShaderLibrary.h>
 #include "InputManager.h"
 #include "VBO.h"
 #include "VAO.h"
@@ -26,6 +27,8 @@
 #include <LightingShaderRoutine.h>
 #include <OpenglWrapper.h>
 #include <FrameBuffer.h>
+#include <RenderQuad.h>
+#include <GraphicsStateCache.h>
 
 /*
 TODO(all):
@@ -237,339 +240,6 @@ private:
     unsigned int ID = 0;
 };
 
-class RendererQuad 
-{
-public:
-    RendererQuad() : qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), 
-        qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
-    {
-		qv.compile();
-		qf.compile();
-		qv.link(qf);
-
-        /*vao.init();
-        vbo.init();
-        vao.bind();
-        vbo.bind(vertices.size() * sizeof(float), &vertices[0]);
-        vbo.vboEnableVertexAttribArray(0);
-        vbo.setVAO(0,2,GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-
-        vbo.vboEnableVertexAttribArray(1);
-        vbo.setVAO(1,2,GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 + sizeof(float)));*/
-
-        glGenVertexArrays(1, &quadVAO);
-        glGenBuffers(1, &quadVBO);
-        glBindVertexArray(quadVAO);
-        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
-    }
-
-    void DrawQuad(unsigned int screenTexture)
-    {
-        /*glUseProgram(qv.getProgram());
-        vao.bind();
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, screenTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        */
-
-        glUseProgram(qv.getProgram());
-
-        glBindVertexArray(quadVAO);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, screenTexture);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    void DrawQuad(FrameBuffer& buff) 
-    {
-        if(buff.getTextures().size() > 0)
-			DrawQuad((unsigned int)buff.getTexture().get_texture());
-    }
-
-    void DrawQuad(FrameBuffer& buff, unsigned int textureNumber) 
-    {
-        DrawQuad(buff.getTextureAt(textureNumber).get_texture());
-    }
-
-    void DrawQuadToBindedTexture(Shader s) 
-    {
-		glUseProgram(s.getProgram());
-
-        glBindVertexArray(quadVAO);
-
-        //glActiveTexture(GL_TEXTURE0);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-    void bindQuadVAO() 
-    {
-        glBindVertexArray(quadVAO);
-    }
-
-    void drawArrays() 
-    {
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
-private:
-    VAO vao;
-    VBO vbo;
-    unsigned int quadVAO;
-    unsigned int quadVBO;
-
-    Shader qv;
-    Shader qf;
-
-    std::vector<float> vertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
-    // positions   // texCoords
-    -1.0f,  1.0f,  0.0f, 1.0f,
-    -1.0f, -1.0f,  0.0f, 0.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
-
-    -1.0f,  1.0f,  0.0f, 1.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
-     1.0f,  1.0f,  1.0f, 1.0f
-	};
-};
-
-class ShaderLibrary
-{
-public:
-    enum class STAGE
-    {
-        DEPTH,
-        EDITOR_ID,
-        ALBEDO,
-        SHADOWS,
-        BOKE,
-        BLOOM,
-    };
-
-public:
-
-    ShaderLibrary() : lightingVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-        lightingFragment(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER),
-        depthVertex(GameState::engine_path + "shaders/shadowMappingDepthVertex.glsl", GL_VERTEX_SHADER),
-        depthFragment(GameState::engine_path + "shaders/shadowMappingDepthFragment.glsl", GL_FRAGMENT_SHADER),
-        shadowVertex(GameState::engine_path + "shaders/shadowMappingVertex.glsl", GL_VERTEX_SHADER),
-        shadowFragment(GameState::engine_path + "shaders/shadowMappingFragment.glsl", GL_FRAGMENT_SHADER),
-        blurVertex(GameState::engine_path + "shaders/blurShaderVertex.glsl", GL_VERTEX_SHADER),
-        blurFragment(GameState::engine_path + "shaders/blurShaderFragment.glsl", GL_FRAGMENT_SHADER),
-        textureCombinerVertex(GameState::engine_path + "shaders/textureCombinerVertex.glsl", GL_VERTEX_SHADER),
-        textureCombinerFragment(GameState::engine_path + "shaders/textureCombinerFragment.glsl", GL_FRAGMENT_SHADER),
-        editorIdVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
-        editorIdFragment(GameState::engine_path + "shaders/editorIDFragment.glsl", GL_FRAGMENT_SHADER),
-        bokeVertex(GameState::engine_path + "shaders/bokeVertex.glsl", GL_VERTEX_SHADER),
-        bokeFragment(GameState::engine_path + "shaders/bokeFragment.glsl", GL_FRAGMENT_SHADER)
-    {
-        lightingVertex.compile();
-        lightingFragment.compile();
-        lightingVertex.link(lightingFragment);
-
-        depthVertex.compile();
-        depthFragment.compile();
-        depthVertex.link(depthFragment);
-
-        shadowVertex.compile();
-        shadowFragment.compile();
-        shadowVertex.link(shadowFragment);
-
-        blurVertex.compile();
-        blurFragment.compile();
-        blurVertex.link(blurFragment);
-
-        textureCombinerVertex.compile();
-        textureCombinerFragment.compile();
-        textureCombinerVertex.link(textureCombinerFragment);
-
-        editorIdVertex.compile();
-        editorIdFragment.compile();
-        editorIdVertex.link(editorIdFragment);
-
-        bokeVertex.compile();
-        bokeFragment.compile();
-        bokeVertex.link(bokeFragment);
-
-        stage = STAGE::DEPTH;
-    }
-
-    Shader& getCurrShader()
-    {
-        if (stage == STAGE::ALBEDO)
-            return lightingVertex;
-        else if (stage == STAGE::DEPTH)
-            return depthVertex;
-        else if (stage == STAGE::SHADOWS)
-            return shadowVertex;
-        else if (stage == STAGE::BLOOM)
-            return blurVertex;
-        else
-            return editorIdVertex;
-    }
-
-    Shader& getDepthShader()
-    {
-        return depthVertex;
-    }
-
-    Shader& getAlbedoShader()
-    {
-        return lightingVertex;
-    }
-
-    Shader& getShadowsShader()
-    {
-        return shadowVertex;
-    }
-
-    Shader& getBlurShader()
-    {
-        return blurVertex;
-    }
-
-    Shader& getTextureCombinerShader()
-    {
-        return textureCombinerVertex;
-    }
-
-	Shader& getEditorIdShader()
-    {
-        return editorIdVertex;
-    }
-
-	Shader& getBokeShader()
-    {
-        return bokeVertex;
-    }
-
-    LightingShaderRoutine& getShaderRoutine() 
-    {
-        return routine;
-    }
-
-    void checkForShaderReload() 
-    {
-        //TODO(darius) refactor copypast
-        if(lightingFragment.checkForSourceChanges() || lightingVertex.checkForSourceChanges())
-        {
-            lightingVertex.reload();
-            lightingFragment.reload();
-
-            lightingVertex.compile();
-            lightingFragment.compile();
-            lightingVertex.link(lightingFragment);
-            
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
-        }
-
-        if(textureCombinerFragment.checkForSourceChanges() || textureCombinerVertex.checkForSourceChanges())
-        {
-            textureCombinerVertex.reload();
-            textureCombinerFragment.reload();
-
-            textureCombinerVertex.compile();
-            textureCombinerFragment.compile();
-            textureCombinerVertex.link(textureCombinerFragment);
-            
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
-        }
-
-        if(depthFragment.checkForSourceChanges() || depthVertex.checkForSourceChanges())
-        {
-            depthFragment.reload();
-            depthVertex.reload();
-
-            depthVertex.compile();
-            depthFragment.compile();
-            depthVertex.link(depthFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
-        }
-
-        if (shadowFragment.checkForSourceChanges() || shadowVertex.checkForSourceChanges()) 
-        {
-            shadowVertex.reload();
-            shadowFragment.reload();
-
-            shadowVertex.compile();
-            shadowFragment.compile();
-            shadowVertex.link(shadowFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
-        }
-
-        if(blurFragment.checkForSourceChanges() || blurVertex.checkForSourceChanges())
-        {
-            blurVertex.reload();
-            blurFragment.reload();
-
-            shadowVertex.compile();
-            shadowFragment.compile();
-            shadowVertex.link(shadowFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
-        }
-
-        if(editorIdFragment.checkForSourceChanges() || editorIdVertex.checkForSourceChanges())
-        {
-			editorIdVertex.reload();
-            editorIdFragment.reload();
-
-            editorIdVertex.compile();
-            editorIdFragment.compile();
-            editorIdVertex.link(editorIdFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
-        }
-
-        if(bokeFragment.checkForSourceChanges() || bokeVertex.checkForSourceChanges())
-        {
-			bokeVertex.reload();
-            bokeFragment.reload();
-
-            bokeVertex.compile();
-            bokeFragment.compile();
-            bokeVertex.link(bokeFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
-        }
-    }
-
-    STAGE stage;
-
-    unsigned int depthMap = 0;
-private:
-    LightingShaderRoutine routine;
-
-    Shader lightingVertex;
-    Shader lightingFragment;
-
-    Shader depthVertex;
-    Shader depthFragment;
-
-    Shader shadowVertex;
-    Shader shadowFragment;
-
-    Shader blurVertex;
-    Shader blurFragment;
-
-    Shader textureCombinerVertex;
-    Shader textureCombinerFragment;
-
-    Shader editorIdVertex;
-    Shader editorIdFragment;
-
-    Shader bokeVertex;
-    Shader bokeFragment;
-};
-
 class Renderer
 {
 public:
@@ -601,6 +271,8 @@ public:
 
     void albedoStage();
     
+    void deferredStage();
+
 public:
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
@@ -616,8 +288,11 @@ public:
     RenderBuffer renderBuffer;
 	FrameBuffer bufferCombination;
     FrameBuffer bokeBuffer;
+    FrameBuffer deferredLightingBuffer;
 
     static ShaderLibrary* shaderLibInstance;
+
+    GraphicsStateCache state;
 
 private:
 	void renderDebug(Window* wind);

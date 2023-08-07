@@ -307,3 +307,8 @@ void OpenglWrapper::CullFaces()
     glEnable(GL_CULL_FACE);
 }
 
+char* OpenglWrapper::GetString(GLenum value)
+{
+    return (char*)glGetString(value);
+}
+

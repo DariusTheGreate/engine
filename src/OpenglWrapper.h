@@ -127,6 +127,8 @@ public:
 
 	static void CullFaces();
 
+	static char* GetString(GLenum value);
+
 private:
 	//TODO(darius) add info struct for displaying amount of draw calls and stuff
 };

@@ -2,6 +2,7 @@
 
 #include <UI.h>
 #include <ObjectSelector.h>
+#include <SystemInfo.h>
 
 class Editor
 {
@@ -27,6 +28,7 @@ public:
     
 private:
     GameState state;
+    SystemInfo info;
     UI ui;
     Scene currScene;
     Window* window;

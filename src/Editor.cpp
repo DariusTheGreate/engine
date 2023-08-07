@@ -7,6 +7,8 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     GameState::editor_mode = 3;
     lastTime = glfwGetTime();
     currScene.start_scripts();
+
+    SystemInfo::setInfo(&info);
 }
 
 void Editor::update()

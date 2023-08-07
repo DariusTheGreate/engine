@@ -6,6 +6,7 @@
 #include <LightingShaderRoutine.h>
 #include <SkeletalAnimationShaderRoutine.h>
 #include <Animator.h>
+#include <SystemInfo.h>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -703,6 +704,14 @@ public:
         ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.5f, 0, FLT_MAX, "%.3f", 1);
         
         ImGui::ColorEdit3("Background Color", (float*)&hui.backgroundColor);
+
+        if (SystemInfo::getInfo()) {
+            ImGui::Text("CPU INFO: ");
+            ImGui::Text(SystemInfo::getInfo()->getCPU().data());
+
+            ImGui::Text("GPU INFO: ");
+            ImGui::Text(SystemInfo::getInfo()->getGPU().data());
+        }
 
         ImGui::End();
     }
