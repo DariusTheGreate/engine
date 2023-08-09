@@ -11,6 +11,8 @@
 #include <ParticleSystem.h>
 #include <Script.h>
 #include <Animation.h>
+#include <Camera.h>
+
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -157,6 +159,10 @@ public:
 
 	void deleteRoutine(EmptyScriptRoutine*);
 
+	Camera* createCamera();
+
+	void deleteCamera(Camera* cam);
+
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will return later to it anyway
 	void serialize(std::string_view path);
 
@@ -189,6 +195,10 @@ public:
 
 	bool extractBoolFromToken(std::string_view);
 
+	void addCameraToScene(Camera* cam);
+
+	std::vector<Camera*>& getSceneCameras();
+
 private:
 
 	void init_memory();
@@ -199,6 +209,12 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
+
+	//TODO(darius) make it use memory manager
+	std::vector<Camera*> sceneCameras;
+
+	int idCamera = -1;//-1 means default camera;
+
 	SceneMemoryManager<> mem_man;
 	int emptyIndex = 0;
 };

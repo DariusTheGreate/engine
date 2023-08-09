@@ -40,8 +40,8 @@ private:
 
 	GLenum target = GL_TEXTURE_2D;
 	GLenum format = GL_RGBA;
-	GLenum minFilter = GL_LINEAR;//GL_LINEAR_MIPMAP_LINEAR;
-	GLenum magFilter = GL_LINEAR;
+	GLenum minFilter = GL_NEAREST;//GL_LINEAR_MIPMAP_LINEAR;
+	GLenum magFilter = GL_NEAREST;
 
 	unsigned int Width = 0;
 	unsigned int Height = 0;

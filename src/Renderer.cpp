@@ -292,7 +292,6 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);
 
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-
 }
 
 void Renderer::render(Window* wind)
@@ -310,14 +309,14 @@ void Renderer::render(Window* wind)
 	//quad.DrawQuad(depthTexture);
 	//return
 
-	//albedoStage();
-	deferredStage();
+	albedoStage();
+	//deferredStage();
 
 	//bloomStage();
 
-	//EditorIDsStage();
+	EditorIDsStage();
 
-	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 
 	//bokeStage();
 
@@ -362,9 +361,8 @@ void Renderer::EditorIDsStage()
 	renderScene();
 	workerBuff.Unbind();
 
-	intermidiateFramebuffer.Blit(workerBuff, intermidiateFramebuffer);
-
 	//NOTE(darius) for debug 
+	//intermidiateFramebuffer.Blit(workerBuff, intermidiateFramebuffer);
 	//quad.DrawQuad(intermidiateFramebuffer);
 }
 

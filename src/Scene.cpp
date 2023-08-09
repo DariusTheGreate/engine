@@ -194,6 +194,17 @@ void Scene::deleteRoutine(EmptyScriptRoutine* r)
 	delete r;
 }
 
+
+Camera* Scene::createCamera()
+{
+	return new Camera();
+}
+
+void Scene::deleteCamera(Camera* cam)
+{
+	delete cam;
+}
+
 void Scene::update_objects() {
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?
@@ -610,7 +621,18 @@ std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::strin
 	size_t i = tkn.find("Point:", animStart);
 
 	if (i == std::string::npos)
-		return std::nullopt;
+	{
+		size_t animationPathStart = tkn.find("AnimationPath: {", animStart);
+		if(animationPathStart == std::string::npos)
+			return std::nullopt;
+
+		size_t pathStart = tkn.find("{", animationPathStart);
+		size_t pathEnd = tkn.find("}", pathStart);
+		
+		SpriteAnimation res = SpriteAnimation(std::string(tkn.substr(pathStart+1, pathEnd - pathStart-1)));
+
+		return res;
+	}
 
 	std::vector<glm::vec4> points;
 	while (i < tkn.size()) 
@@ -740,3 +762,12 @@ bool Scene::extractBoolFromToken(std::string_view tkn)
 	return false;
 }
 
+void Scene::addCameraToScene(Camera* cam)
+{
+	sceneCameras.push_back(cam);	
+}
+
+std::vector<Camera*>& Scene::getSceneCameras()
+{
+	return sceneCameras;
+}

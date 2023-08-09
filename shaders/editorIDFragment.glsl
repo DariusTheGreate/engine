@@ -10,5 +10,6 @@ uniform vec4 PickingColor;
 
 void main(){
     FragColor = PickingColor;
+    //FragColor = vec4(1.0f,1.0f,0.0f,0.0f);//PickingColor;
 }
 

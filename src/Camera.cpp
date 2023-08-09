@@ -103,6 +103,11 @@ glm::vec3 Camera::getCameraPos() const {
     return cameraPos;
 }
 
+glm::vec3& Camera::getCameraPosRef()
+{
+    return cameraPos;
+}
+
 float Camera::getLastX()
 {
     return lastX;
@@ -117,7 +122,6 @@ float* Camera::getCameraSpeed()
 {
     return &cameraSpeed;
 }
-
 
 void Camera::setUnexpectedUpdate(bool in) {
     unexpectedUpdate = in;

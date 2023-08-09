@@ -15,6 +15,7 @@ public:
         BOKE,
         BLOOM,
         DEFERRED,
+        DEFERRED_LIGHT,
     };
 
 public:

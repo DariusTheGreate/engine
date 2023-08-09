@@ -105,6 +105,8 @@ public:
 
 	void addCollider(glm::vec3 size = {0,0,0}, glm::vec3 shift = { 0,0,0 });
 
+	void addModel();
+
 	void addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine);
 
 	void addModel(Shader sv, LightingShaderRoutine routine);
@@ -147,15 +149,15 @@ private:
 	// NOTE(darius) dont forget optional cant contain reference or heap object
 	// use indexing?
 	// make it vector pointer to all components of specific type, for each component type?
-	std::optional<Model> model;//TODO(techmo0) serilize!
-	std::optional<RigidBody> rbody;//TODO(techmo0) serialize!
-	std::optional<Colider> colider;//TODO(techmo0) serilize!
+	std::optional<Model> model;
+	std::optional<RigidBody> rbody;
+	std::optional<Colider> colider;
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
 	std::optional<Material> material = std::nullopt;
 	std::optional<ParticleSystem> particles;
 	std::optional<Animator> animator;
-    std::optional<SpriteAnimation> spriteAnimation;//TODO(techmo0)
+    std::optional<SpriteAnimation> spriteAnimation;
 
 	Transform tr;
 	std::string name;

@@ -5,7 +5,11 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     GameState::instance = &state;
     GameState::editor_mode = 3;
+
+    editorCamera = GameState::cam;
+
     lastTime = glfwGetTime();
+
     currScene.start_scripts();
 
     SystemInfo::setInfo(&info);

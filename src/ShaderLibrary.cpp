@@ -70,8 +70,12 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
             return blurVertex;
         else if (stage == STAGE::DEFERRED)
             return gBufferVertex;
-        else
+        else if (stage == STAGE::DEFERRED_LIGHT)
             return deferredLightPasVertex;
+        else if (stage == STAGE::EDITOR_ID)
+            return editorIdVertex;
+        else
+            return lightingVertex;
     }
 
     Shader& ShaderLibrary::getDepthShader()

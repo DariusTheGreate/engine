@@ -28,6 +28,7 @@ public:
     
 private:
     GameState state;
+    Camera editorCamera;
     SystemInfo info;
     UI ui;
     Scene currScene;

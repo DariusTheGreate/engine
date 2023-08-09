@@ -23,7 +23,8 @@ public:
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
 		}
-        return;
+
+		instance->debug_msg.append("Start Script..");
         
         auto* obj = args.obj;
 		auto* scene = args.scene;
@@ -32,7 +33,7 @@ public:
 
 		//scene->AddEmpty(555);
 
-		run = SpriteAnimation(1,8,100);
+		/*run = SpriteAnimation(1, 8, 100);
 		*run.getBorder() = 0.5;
 		run.initPoints();
 		init = SpriteAnimation(1,6,100);
@@ -42,22 +43,44 @@ public:
 		*dance.getLength() = 14;
 		*dance.getBorder() = 0.3f;
 		dance.initPoints();
+		*/
 
-		initMesh = &scene->getObjectByName("Sprite1")->getModel()->meshes[0];//&scene->get_object_at(0)->getModel()->meshes[0];
-		runMesh = &scene->getObjectByName("Sprite2")->getModel()->meshes[0];//&scene->get_object_at(1)->getModel()->meshes[0];
-		runLeftMesh = &scene->getObjectByName("Sprite3")->getModel()->meshes[0];//&scene->get_object_at(3)->getModel()->meshes[0];
-		danceMesh = &scene->getObjectByName("Spriter")->getModel()->meshes[0];//&scene->get_object_at(4)->getModel()->meshes[0];
+		if (scene->getObjectByName("UpAnim")) {
+			WalkUpMesh = &scene->getObjectByName("UpAnim")->getModel()->meshes[0];
+			WalkUp = *scene->getObjectByName("UpAnim")->getSpriteAnimation();
+		}
 
-		obj = scene->getObjectByName("hornet");
+		if (scene->getObjectByName("DownAn")) {
+			WalkDownMesh = &scene->getObjectByName("DownAn")->getModel()->meshes[0];
+			WalkDown = *scene->getObjectByName("DownAn")->getSpriteAnimation();
+		}
+
+		if (scene->getObjectByName("SideAn")) {
+			WalkSideMesh = &scene->getObjectByName("SideAn")->getModel()->meshes[0];
+			WalkSide = *scene->getObjectByName("SideAn")->getSpriteAnimation();
+		}
+
+		if (scene->getObjectByName("IdleAn")) {
+			IdleMesh = &scene->getObjectByName("IdleAn")->getModel()->meshes[0];
+			Idle = *scene->getObjectByName("IdleAn")->getSpriteAnimation();
+		}
+
+		obj = scene->getObjectByName("Play");
+
+		if (!obj) {
+			instance->debug_msg.append("no obj");
+			return;
+		}
+		
 		obj->unhide();
 
-		obj->setSpriteAnimation(init);
+		obj->setSpriteAnimation(Idle);
 		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
 		//runMesh = scene->createFlatMesh();//nor that
 	}
 
 	void update(ScriptArgument& args) override {
-        return;
+		//return;
         auto* obj = args.obj;
 		auto* scene = args.scene;
 		if (!instance || !obj) {
@@ -69,79 +92,57 @@ public:
 
 		if (instance->ks.get_d()) 
 		{
-			//obj->getModel().value().meshes[0] = runMesh;
-
-			if (p.currAnim != 1) {
-				obj->getModel()->meshes[0] = *runLeftMesh;
-				obj->setSpriteAnimation(run);
+			//if (p.currAnim != 1) {
+				obj->getModel()->meshes[0] = *WalkSideMesh;
+				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 1;
-			}
+			//}
 			obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 		}
 		if (instance->ks.get_a()) 
 		{
-			//obj->getModel().value().meshes[0] = runMesh;
-			//obj->setSpriteAnimation(run);
-
-			if (p.currAnim != 2) {
-				obj->getModel()->meshes[0] = *runMesh;
-				obj->setSpriteAnimation(run);
+			//if (p.currAnim != 2) {
+				obj->getModel()->meshes[0] = *WalkSideMesh;
+				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
-			}
+			//}
 			obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
 			//obj->getTransform().rotateBy(180, {0,0,1});
 		}
         if (instance->ks.get_q()) 
 		{
-			std::cout << "clicked\n";
-            instance->debug_msg.append("clicked q");
-			if (true) {
-
-				/*std::cout << "anim checked\n";
-				if (obj) {
-					std::cout << "obj checked\n";
-					if (!obj->getModel()) {
-						std::cout << "model checked\n";
-						if (obj->getModel()->meshes.size() > 0) {
-							std::cout << "model meshes checked\n";
-
-						}
-					}
-				}
-                */
-
-                obj->getModel()->meshes[0] = *danceMesh;
-				obj->setSpriteAnimation(dance);
-				obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
-				p.currAnim = 3;
-			}
+            //instance->debug_msg.append("clicked q");
+			obj->getModel()->meshes[0] = *WalkUpMesh;
+			obj->setSpriteAnimation(WalkUp);
+			obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
+			p.currAnim = 3;
 		}
         if(instance->ks.get_w())
         {
-            if (p.currAnim != 1) {
-                obj->getModel()->meshes[0] = *runLeftMesh;
-                obj->setSpriteAnimation(run);
+            //if (p.currAnim != 1) {
+                obj->getModel()->meshes[0] = *WalkUpMesh;
+                obj->setSpriteAnimation(WalkSide);
                 p.currAnim = 1;
-            }
+            //}
             obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
 
         }
         if(instance->ks.get_s())
         {
-            if (p.currAnim != 1) {
-                obj->getModel()->meshes[0] = *runLeftMesh;
-                obj->setSpriteAnimation(run);
+            //if (p.currAnim != 1) {
+                obj->getModel()->meshes[0] = *WalkDownMesh;
+                obj->setSpriteAnimation(WalkSide);
                 p.currAnim = 1;
-            }
+            //}
             obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
 
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
-            if (p.currAnim != 0) {
-                obj->getModel()->meshes[0] = *initMesh;
-                obj->setSpriteAnimation(init);
+            //if (p.currAnim != 0) {
+                obj->getModel()->meshes[0] = *IdleMesh;
+                obj->setSpriteAnimation(Idle);
                 p.currAnim = 0;
-            }
+            //}
         }
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
@@ -155,17 +156,18 @@ public:
 	GameState* instance = nullptr;
 
 	Player p;
-	SpriteAnimation run;
-	SpriteAnimation init;
-	SpriteAnimation dance;
+	SpriteAnimation WalkUp;
+	SpriteAnimation WalkDown;
+	SpriteAnimation WalkSide;
+	SpriteAnimation Idle;
 	 
 	//DANGER(darius) NOTE(darius) you cant create opengl entities, cause u have no opengl initialized here, TODO(darius) make some factory inside engine
 	//FlatMesh runMesh;
 	//Mesh initMesh;
 
-	Mesh* runMesh = nullptr;
-	Mesh* runLeftMesh = nullptr;
-	Mesh* initMesh = nullptr;
-	Mesh* danceMesh = nullptr;
+	Mesh* WalkUpMesh = nullptr;
+	Mesh* WalkDownMesh = nullptr;
+	Mesh* WalkSideMesh = nullptr;
+	Mesh* IdleMesh = nullptr;
 };
 

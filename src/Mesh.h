@@ -43,13 +43,18 @@ public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
     void Draw(Shader& shader);
+
     void Draw(Shader& shader, size_t);
 
     void setDrawMode(DrawMode mode_in);
 
     std::vector<Vertex> getVertices();
+
     std::vector<unsigned int> getIndices();
+
     std::vector<Texture> getTextures();
+
+    std::vector<Texture>& getTexturesRef();
 
     VAO getVao();
 protected:

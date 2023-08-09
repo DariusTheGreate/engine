@@ -7,16 +7,22 @@ Texture::Texture()
 
 Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsigned int format) : path(path_in) {
 	stbi_set_flip_vertically_on_load(true);
+
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+
 	generate();
+
 	bind();
+
 	if (data) {
 		imageTexture(internalFormat, width, height);
-		glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
-		glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
-		//OpenglWrapper::GenerateMipmap();
+
+		filters();
+
+		OpenglWrapper::GenerateMipmap();
 	}
+
 	stbi_image_free(data);
 
 	Width = width;
@@ -54,8 +60,8 @@ void Texture::unbind(GLenum target)
 
 void Texture::filters()
 {
-	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, minFilter);
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, magFilter);
 }
 
 unsigned int Texture::get_texture() {

@@ -53,6 +53,7 @@ public:
         sceneWindow(scn, r);
         showConsoleWindow();
         showEditorSettingsWindow(r);
+        sceneCamerasWindow(scn);
         AssetBrowserWindow();
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -137,8 +138,9 @@ public:
 								bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
 								if (ImGui::IsItemClicked()) {
 									show_object_window = true;
-                                    if(item_clicked == nullptr)
-										item_clicked = op;
+                                    //if(item_clicked == nullptr)
+									item_clicked = op;
+
                                     if(item_clicked->getRigidBody()){
                                         objTr = item_clicked->getRigidBody()->tr.get_quatmat();
                                     }
@@ -170,10 +172,12 @@ public:
                         if (ImGui::IsItemClicked()) {
                             show_object_window = true;
 
-							if(item_clicked == nullptr)
-								item_clicked = objects[i];
+							//if(item_clicked == nullptr)
+							item_clicked = objects[i];
+
                             if(item_clicked->getRigidBody())
                                 objTr = item_clicked->getRigidBody()->tr.get_quatmat();
+
                             auto pos = item_clicked->getTransform().position; 
                             auto scale = item_clicked->getTransform().scale; 
 
@@ -586,6 +590,22 @@ public:
                     item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
                     item_clicked->addSpriteAnimation(SpriteAnimation(4,8,500));
                 }
+
+				if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation From Folder")){
+                    path.shrink_to_fit();
+
+                    FlatMesh flat;
+
+                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
+                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
+                    vshdr.compile();
+                    fshdr.compile();
+                    vshdr.link(fshdr);
+                    LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+
+                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
+                    item_clicked->addSpriteAnimation(SpriteAnimation(path));
+                }
             }
 
             if(ImGui::Button("Empty")){
@@ -610,6 +630,12 @@ public:
                 item_clicked->addScript(hui.getScene(), routine);
             }
         }
+
+        if(ImGui::Button("Camera")){
+            hui.getScene()->addCameraToScene(hui.getScene()->createCamera());
+
+        }
+
 
         /*if(item_cicked->getModel() && ImGui::Button("Animation")){
             Animation* danceAnimation = new Animation("../../../meshes/animations/bot/bot.dae", &item_cicked->getModel().value());
@@ -711,6 +737,36 @@ public:
 
             ImGui::Text("GPU INFO: ");
             ImGui::Text(SystemInfo::getInfo()->getGPU().data());
+        }
+
+        ImGui::End();
+    }
+
+    void sceneCamerasWindow(Scene& scene)
+    {
+        ImGui::Begin("Scene Cameras");
+
+        if(ImGui::CollapsingHeader("EditorCamera")){
+            auto& vec = GameState::cam.getCameraPosRef();
+            ImGui::DragFloat("position X", &vec.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position Y", &vec.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position Z", &vec.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        }
+
+        int c = 0;
+
+        for(auto* i : scene.getSceneCameras())
+        {
+            if(ImGui::CollapsingHeader(std::to_string(c++).c_str())){
+                auto& vec = i->getCameraPosRef();
+                ImGui::DragFloat("position X", &vec.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("position Y", &vec.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("position Z", &vec.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+                if (ImGui::Button("Set As Main Camera")){
+                    GameState::cam = *i; 
+                }
+            }
         }
 
         ImGui::End();

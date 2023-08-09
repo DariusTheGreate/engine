@@ -33,10 +33,11 @@ public:
     
     glm::vec3 getCameraPos() const;
 
+    glm::vec3& getCameraPosRef();
+
     float getLastX();
 
     float getLastY();
-
 
     float* getCameraSpeed();
 

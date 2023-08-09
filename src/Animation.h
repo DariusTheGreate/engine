@@ -11,6 +11,7 @@
 
 #include <chrono>
 #include <thread>
+#include <filesystem>
 
 struct AssimpNodeData
 {
@@ -19,6 +20,10 @@ struct AssimpNodeData
 	int childrenCount;
 	std::vector<AssimpNodeData> children;
 };
+
+//IMPORTANT(darius) Animation system needs some ierarchy. 
+//					Now theres nothing in common between ANimation and SpriteAnimation. 
+//					Which is, i think, actually, good. But we need to work on this. 
 
 //TODO(darius) check this tutorial out https://ogldev.org/www/tutorial38/tutorial38.html
 // ALSO MAKE UR OWN FKN ANIMATION FORMAT AND CONVERTORS, CAUSE THIS FCKN FBX DAE HUE FILES ARE SO FKIN BS THERE IS FKN SIMDJSON THAT FAST AS FUCK SO USE IT INSTEAD
@@ -73,6 +78,31 @@ public:
         initPoints();
     }
 
+	SpriteAnimation(std::string animationFolderPathStr) : pathToFolder(animationFolderPathStr)
+	{
+		animationUseMultipleTextures = true;//!
+
+		namespace fs = std::filesystem;
+
+		using directory_iterator = fs::directory_iterator;
+		using f_path = fs::path;
+
+
+		//NOTE(darius) important to .c_str()
+		f_path animationFolderPath{ animationFolderPathStr.c_str()};
+
+		for (const auto& dirEntry : directory_iterator(animationFolderPath)) {
+			if (f_path{ dirEntry }.extension() == ".png") {
+				std::cout << dirEntry.path().string() << std::endl;
+				FlatMesh m;
+				m.setTexture((dirEntry.path().string()));
+				spritesList.push_back(m);
+			}
+		}
+
+		length = static_cast<float>(spritesList.size());
+	}
+
     void initPoints()
     {
         points.clear();
@@ -92,10 +122,11 @@ public:
 
 	void update(float currentTime) 
 	{
+		//TODO(darius) refactor this
 		if ((currentTime - lastTime)*1000 < delayMs || !play)
 			return;
 
-		if (sprite) {
+		if (sprite && !animationUseMultipleTextures) {
 			if (points.size() > frameNum && frameNum < length) {
 				int id = static_cast<int>(frameNum);
 				sprite->setTextureCoords(points[id].x, points[id].y, points[id].z, points[id].w);
@@ -104,7 +135,24 @@ public:
 			frameNum++;
 			if (frameNum > points.size()-1 || frameNum > length)
 				frameNum = start;
+		}
+		
+		if (animationUseMultipleTextures) 
+		{
+			if(spritesList.size() > frameNum && frameNum < length)
+			{
+				int id = static_cast<int>(frameNum);
+				//sprite = &spritesList[id];//NOTE(darius) invalidation?
 
+				if (sprite->getTexturesRef().size() == 0)
+					sprite->getTexturesRef().resize(1);
+
+				sprite->getTexturesRef()[0] = spritesList[id].getTexturesRef()[0];
+			}
+
+			frameNum++;
+			if (frameNum > spritesList.size() - 1 || frameNum > length)
+				frameNum = start;
 		}
 
 		lastTime = currentTime;
@@ -112,7 +160,7 @@ public:
 
 	void stop() 
 	{
-		//animationThread.join();
+		play = false;
 	}
 
     float* getDelay()
@@ -155,14 +203,26 @@ public:
 		return points;
 	}
 
+	bool isAnimationUsesMultipleTextures()
+	{
+		return animationUseMultipleTextures;
+	}
+
+	std::string_view getAnimationFolderPath()
+	{
+		return pathToFolder;
+	}
+
 private:
     std::vector<glm::vec4> points;
 
 	float frameNum = 0;
 	float lastTime = 0;
 	float delayMs = 500;
+
     float rows = 0;
     float cols = 0;
+
     float length = 0;
 	float start = 0;
 	float border = 0;
@@ -172,6 +232,11 @@ private:
 	//TODO(darius) make it ID or something
     FlatMesh* sprite = nullptr;
 
-	//std::thread animationThread;
+	//NOTE(darius) this is used in case we wont spriteAnimation to use multiple separated texture files,
+	//			   and not single texture Atlas. Bad think is that even if we use texture atlas we store this vector.. 
+	//             But alternative is to do som hierarchy magic that i dont want to do now, plus i have a feeling that its faster this way.
+	std::vector<FlatMesh> spritesList;
+	bool animationUseMultipleTextures = false;
+	std::string pathToFolder;
 };
 

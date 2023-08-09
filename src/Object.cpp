@@ -331,6 +331,13 @@ void Object::addCollider(glm::vec3 size, glm::vec3 shift)
     colider.emplace(std::move(col));
 }
 
+void Object::addModel()
+{
+    if (model)
+        return;
+    model = Model();
+}
+
 void Object::addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine)
 {
     if(model)
@@ -423,6 +430,7 @@ int Object::getID()
 
 void Object::addSpriteAnimation(SpriteAnimation&& anim)
 {
+    //TODO(darius) its actually ugly.
     if(spriteAnimation)
         return;
     spriteAnimation.emplace(std::move(anim));
@@ -549,13 +557,20 @@ void Object::serialize(std::ofstream& file)
     {
         file << "\tSpriteAnimation: {\n";
 
-        for (auto& p : spriteAnimation->getPoints()) 
+        if (!spriteAnimation->isAnimationUsesMultipleTextures())
         {
-            file << "\t\t Point: {" << std::to_string(p.x) << " " << std::to_string(p.y) << " " << std::to_string(p.z) << " " << std::to_string(p.w) << "}\n";
-            file << "\n";
-        }
+            for (auto& p : spriteAnimation->getPoints())
+            {
+                file << "\t\t Point: {" << std::to_string(p.x) << " " << std::to_string(p.y) << " " << std::to_string(p.z) << " " << std::to_string(p.w) << "}\n";
+                file << "\n";
+            }
 
-        file << "\t}\n";
+            file << "\t}\n";
+        }
+        else
+        {
+			file << "\t\t AnimationPath: {" << spriteAnimation->getAnimationFolderPath() << "}\n";
+        }
     }
 
     if(script)

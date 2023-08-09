@@ -31,6 +31,11 @@ std::vector<Texture> Mesh::getTextures()
     return textures;
 }
 
+std::vector<Texture>& Mesh::getTexturesRef()
+{
+    return textures;
+}
+
 VAO Mesh::getVao()
 {
     return vao;
