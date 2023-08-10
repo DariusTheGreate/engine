@@ -764,9 +764,14 @@ public:
                 ImGui::DragFloat("position Z", &vec.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
 
                 if (ImGui::Button("Set As Main Camera")){
+                    GameState::saveActiveCameraStateIntoEditorCamera();
                     GameState::cam = *i; 
                 }
             }
+        }
+
+        if (ImGui::Button("Use Editor Camera")){
+            GameState::setEditorCameraMode();
         }
 
         ImGui::End();
@@ -841,4 +846,3 @@ private:
 
     GameState* state= nullptr;
 };
-

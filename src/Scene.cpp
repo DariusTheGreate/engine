@@ -771,3 +771,11 @@ std::vector<Camera*>& Scene::getSceneCameras()
 {
 	return sceneCameras;
 }
+
+Camera* Scene::getCameraAt(int id)
+{
+	if(sceneCameras.size() <= id)
+		return nullptr;
+
+	return sceneCameras[id];
+}

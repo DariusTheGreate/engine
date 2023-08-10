@@ -16,10 +16,17 @@ public:
 	static void set_instance(GameState* ptr);
 
 	GameState* get_instance();
+
+	static void setEditorCameraMode();
+
+	static void saveActiveCameraStateIntoEditorCamera();
 	
 public:
-	//TODO(darius) make it not static
-	static Camera cam;
+	//TODO(darius) make it not static? See why below
+	static Camera cam;// active camera
+	static Camera* editorCamera;
+	static bool editorCameraMode;
+
 	static MouseState ms;
 	KeyboardState ks;
 	static GameState* instance;

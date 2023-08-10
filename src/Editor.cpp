@@ -6,7 +6,9 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     GameState::instance = &state;
     GameState::editor_mode = 3;
 
-    editorCamera = GameState::cam;
+    //TODO(darius) make it less ugly
+    editorCamera.getCameraPosRef() = glm::vec3{0,0,4};//GameState::cam;
+    GameState::editorCamera = &editorCamera;
 
     lastTime = glfwGetTime();
 
@@ -35,29 +37,31 @@ void Editor::setEditorMode(int mode)
 }
 
 void Editor::updateInput() {
-    if (GameState::instance->ks.get_w()) {
-        if(GameState::editor_mode == 3)
-            GameState::cam.moveCameraForward();
-        else
-            GameState::cam.moveCameraUp();
-    }
-    if (GameState::instance->ks.get_a()) {
-        GameState::cam.moveCameraLeft();
-    }
-    if (GameState::instance->ks.get_s()) {
-        if(GameState::editor_mode == 3)
+    if(GameState::editorCameraMode){
+        if (GameState::instance->ks.get_w()) {
+            if(GameState::editor_mode == 3)
+                GameState::cam.moveCameraForward();
+            else
+                GameState::cam.moveCameraUp();
+        }
+        if (GameState::instance->ks.get_a()) {
+            GameState::cam.moveCameraLeft();
+        }
+        if (GameState::instance->ks.get_s()) {
+            if(GameState::editor_mode == 3)
+                GameState::cam.moveCameraBackward();
+            else
+                GameState::cam.moveCameraDown();
+        }
+        if (GameState::instance->ks.get_d()) {
+            GameState::cam.moveCameraRight();
+        }
+        if (GameState::instance->ks.get_q()) {
             GameState::cam.moveCameraBackward();
-        else
-            GameState::cam.moveCameraDown();
-    }
-    if (GameState::instance->ks.get_d()) {
-        GameState::cam.moveCameraRight();
-    }
-    if (GameState::instance->ks.get_q()) {
-        GameState::cam.moveCameraBackward();
-    }
-    if (GameState::instance->ks.get_e()) {
-        GameState::cam.moveCameraForward();
+        }
+        if (GameState::instance->ks.get_e()) {
+            GameState::cam.moveCameraForward();
+        }
     }
 	if (GameState::instance->ks.get_c()) {
         currScene.AddEmpty(currScene.getEmptyIndex());
@@ -65,6 +69,8 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_0()) {
         debug_mode = true;
 		//state.debug_msg.append("debug mode toogled\n");
+
+        GameState::editorCameraMode = true;
 		state.msg("debug mode toogled\n");
     }
     if (GameState::instance->ks.get_1()) {
@@ -87,9 +93,10 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_9()) {
         debug_mode = false;
         rendol.getDebugRenderer().clearPoints();
+        GameState::editorCameraMode = false;
     }
 
-    if(GameState::instance->ks.get_mouse_right_button())
+    if(GameState::instance->ks.get_mouse_right_button() && GameState::editorCameraMode)
     {
         if (GameState::cam.cursor_hidden == false) {
             //GameState::ms.cursor_x = GameState::ms.get_x();
@@ -161,8 +168,13 @@ void Editor::updateCamera()
     if (GameState::cam.cursor_hidden == false) {
         return;
     }
-    GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
-    GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
+
+    if(GameState::editorCameraMode)
+    {
+        GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
+        GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
+    }
+
     //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
 }
 

@@ -199,6 +199,8 @@ public:
 
 	std::vector<Camera*>& getSceneCameras();
 
+	Camera* getCameraAt(int id);
+
 private:
 
 	void init_memory();

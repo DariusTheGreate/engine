@@ -12,7 +12,7 @@
 
 struct Player 
 {
-	float speed = 0.0005f;
+	float speed = 0.01f;
 	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - dance
 };
 
@@ -75,6 +75,14 @@ public:
 		obj->unhide();
 
 		obj->setSpriteAnimation(Idle);
+
+
+		//cam = scene->getCameraAt(0);
+		//if (!cam)
+		//	instance->debug_msg.append("couldnt ge camera");
+		//else
+		//	*cam->getCameraSpeed() = 0.5f;
+
 		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
 		//runMesh = scene->createFlatMesh();//nor that
 	}
@@ -98,6 +106,8 @@ public:
 				p.currAnim = 1;
 			//}
 			obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			if (cam)
+				cam->moveCameraRight();
 		}
 		if (instance->ks.get_a()) 
 		{
@@ -108,6 +118,8 @@ public:
 			//}
 			obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
 			//obj->getTransform().rotateBy(180, {0,0,1});
+			if (cam)
+				cam->moveCameraLeft();
 		}
         if (instance->ks.get_q()) 
 		{
@@ -169,5 +181,7 @@ public:
 	Mesh* WalkDownMesh = nullptr;
 	Mesh* WalkSideMesh = nullptr;
 	Mesh* IdleMesh = nullptr;
+
+    Camera* cam = nullptr;
 };
 
