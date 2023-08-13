@@ -120,7 +120,7 @@ void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY,
 
     for (size_t i = 0; i < objects.size(); ++i)
     {
-        if (RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().position, 3, renderer)) {
+        if (RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().getPosition(), 3, renderer)) {
             std::cout << "clicked " << objects[i]->get_name() << "\n";
             //msg("clicked: " +objects[i]->get_name());
         }

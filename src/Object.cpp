@@ -13,8 +13,9 @@ Object::Object(std::string name_in, Shader model_shader, LightingShaderRoutine& 
 {
     model.emplace("", model_shader, shaderRoutine_in, false, false);
 
-    tr.position = {0,0,0};
-    tr.scale = {0,0,0};
+    tr.setPosition({0,0,0});
+    tr.setScale({1,1,1});
+
     name = name_in;
 }
 
@@ -29,8 +30,10 @@ Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::v
 
     script = Script(scn, this, routine);
 
-    tr.position = pos_in;
-    tr.scale = scale_in;
+    //tr.getPositionRef() = pos_in;
+    //tr.getPositionRef()  = scale_in;
+    tr.setPosition(pos_in);
+    tr.setScale(scale_in);
 
     rbody.emplace(RigidBody(0.1f, tr, false));
     rbody.value().create_box_inertia_tensor(10, { 1,1,1 });
@@ -170,17 +173,10 @@ glm::vec3 Object::get_pos()
 {
     //if (parent.has_value())
     //	return parent.value()->get_pos();
-    return getTransform().position;
+    return getTransform().getPosition();
 }
 
 //TODO(darius) fuck you, incapsulation
-glm::vec3& Object::get_pos_ref()
-{
-    if (parent)
-        return parent->get_pos_ref();
-
-    return getTransform().position;
-}
 
 std::optional<Colider>& Object::getColider() 
 {
@@ -229,7 +225,8 @@ void Object::moveTransform(glm::vec3 v)
     if (colider && *colider.value().get_collision_state() == true)
         return;
 
-    getTransform().position += v;
+    //getTransform().getPositionRef() += v;
+    getTransform().addToPosition(v);
 }
 
 void Object::addScript(Scene* scn, EmptyScriptRoutine* routine)
@@ -471,8 +468,18 @@ void Object::serialize(std::ofstream& file)
     //CM std::to_string() to convert digit to string
     {
         file << "\tTransform: {\n";
-        file << "\t\tPosition: {" << std::to_string(tr.position.x) << " " << std::to_string(tr.position.y) << " " << std::to_string(tr.position.z) << "}\n";
-        file << "\t\tScale: {" << std::to_string(tr.scale.x) << " " << std::to_string(tr.scale.y) << " " << std::to_string(tr.scale.z) << "}\n";
+        file << "\t\tPosition: {" << std::to_string(tr.getPosition().x) << " " << std::to_string(tr.getPosition().y) << " " << std::to_string(tr.getPosition().z) << "}\n";
+        file << "\t\tScale: {" << std::to_string(tr.getScale().x) << " " << std::to_string(tr.getScale().y) << " " << std::to_string(tr.getScale().z) << "}\n";
+
+        /*file << "\tMatrix: {";
+        auto matrixVector = tr.matrixVector();
+
+        for(int mi = 0; mi < matrixVector.size(); ++mi)
+        {
+            file << std::to_string(matrixVector[mi]) << " ";
+        }
+        */
+
         file << "\t}\n";
     }
 

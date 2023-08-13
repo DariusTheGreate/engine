@@ -6,7 +6,7 @@ Colider::Colider(glm::vec3 size_in, Transform& tr_in, int tag_in, bool active_in
 
 glm::vec3 Colider::get_position() const 
 {
-	return tr.position;
+	return tr.getPosition();
 }
 
 glm::vec3 Colider::get_size() const 
@@ -36,8 +36,8 @@ glm::vec3& Colider::get_size_ref()
 
 std::vector<glm::vec3> Colider::get_points() {
 	std::vector<glm::vec3> points;
-	glm::mat4 transformation = tr.get_quatmat();
-	glm::vec4 position = { tr.position.x, tr.position.y, tr.position.z, 0 };
+	glm::mat4 transformation = tr.matrix;
+	glm::vec4 position = { tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
 
 	points[0] = transformation * glm::vec4(size.x, size.y, size.z, 0) + position;
 	points[1] = transformation * glm::vec4(size.x, size.y, -size.z, 0) + position;
@@ -52,8 +52,8 @@ std::vector<glm::vec3> Colider::get_points() {
 }
 
 bool Colider::contains_point(const glm::vec3& point) {
-	glm::mat4 transformation = glm::inverse(tr.get_quatmat());
-	glm::vec3 v3 = (point - tr.position);
+	glm::mat4 transformation = glm::inverse(tr.matrix);
+	glm::vec3 v3 = (point - tr.getPosition());
 	glm::vec3 box_point = transformation * glm::vec4{ v3.x, v3.y, v3.z, 0 };
 	glm::vec3 new_half_lengths = size + glm::vec3(0.01, 0.01, 0.01);
 
@@ -73,7 +73,7 @@ bool Colider::contains_point(const glm::vec3& point) {
 }
 
 glm::vec3 Colider::supportOriented(glm::vec4 dir) {
-	dir = glm::inverse(tr.get_quatmat()) * dir; 
+	dir = glm::inverse(tr.matrix) * dir; 
 
 	glm::vec4 result;
 
@@ -92,7 +92,7 @@ glm::vec3 Colider::supportOriented(glm::vec4 dir) {
 	//dont forget to add radius
 
 	//return result;
-	return tr.get_quatmat() * result + glm::vec4{ tr.position.x, tr.position.y, tr.position.z, 0 };
+	return tr.matrix * result + glm::vec4{ tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
 }
 
 glm::vec3 Colider::support(glm::vec4 dir) {
@@ -248,12 +248,7 @@ glm::vec3 Colider::check_collision(const Colider& c) const
 
 glm::vec3 Colider::get_pos() const 
 {
-	return tr.position;
-}
-
-glm::vec3& Colider::get_pos_ref() 
-{
-	return tr.position;
+	return tr.getPosition();
 }
 
 int Colider::get_tag() const
@@ -310,7 +305,7 @@ glm::vec3& Colider::get_render_shift()
 
 glm::vec3 Colider::colider_position() const
 {
-	return tr.position - shift;
+	return tr.getPosition() - shift;
 }
 
 glm::vec3 Colider::get_epa()

@@ -21,9 +21,9 @@ void SkeletalAnimationShaderRoutine::operator() (Transform tr){
     }
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 pos = tr.position;
-    glm::mat4 q = tr.get_quatmat();
-    glm::vec3 scale = { tr.scale.x/100, tr.scale.y/100, tr.scale.z/100 };
+    glm::vec3 pos = tr.getPosition();
+    glm::mat4 q = tr.matrix;
+    glm::vec3 scale = { tr.getScale().x / 100, tr.getScale().y / 100, tr.getScale().z / 100};
 
     model = glm::translate(model, pos);
     model *= q;

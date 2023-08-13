@@ -1,44 +1,55 @@
 #include <Transform.h>
 
-Transform::Transform(glm::vec3 pos, glm::vec3 scl) : position(pos), scale(scl) {}
-Transform::Transform(const Transform& t) : q(t.q), position(t.position), scale(t.scale) {}
-
-glm::mat4 Transform::get_quatmat()
+Transform::Transform(glm::vec3 pos, glm::vec3 scl)
 {
-	glm::mat4 RotationMatrix = glm::toMat4(q);
-	//RotationMatrix[3] = glm::vec4{ position.x,position.y,position.z,0  };
-	return RotationMatrix;
+	setPosition(pos);
+	setScale(scl);
 }
 
-void Transform::set_from_quatmat(glm::mat4 m)
+Transform::Transform(const Transform& t) : matrix(t.matrix)
 {
-	q = m;
-	//position = m[3];
-
-	//scale.x = m[0][0];
-	//scale.y = m[1][1];
-	//scale.z = m[2][2];
 }
 
-void Transform::setPosition(glm::mat4 m)
+void Transform::setPosition(glm::vec3 pos)
 {
-	position = m[3]; 
+	//position = pos;	
+	//matrix[3] = glm::vec4(pos.x, pos.y, pos.z, 0);
+
+    glm::mat4 mvp = glm::translate(matrix, pos);
+
+    matrix = mvp;
 }
 
-void Transform::setScale(glm::mat4 m)
+glm::vec3 Transform::getPosition()
 {
-	scale.x = m[0][0];
-	scale.y = m[1][1];
-	scale.z = m[2][2];
+	//return position;
+	return glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);	
 }
 
-void Transform::set_scale(glm::vec3 scl)
+void Transform::addToPosition(glm::vec3 v)
 {
-	scale = scl;
+	matrix[3][0] += v.x;
+	matrix[3][1] += v.y;
+	matrix[3][2] += v.z;
 }
 
-std::vector<double> Transform::get_matrix()
+void Transform::setScale(glm::vec3 scl)
 {
+	//matrix[0][0] = scl.x;
+	//matrix[1][1] = scl.y;
+	//matrix[2][2] = scl.z;
+	glm::mat4 mvp = glm::scale(matrix, scl);
+	matrix = mvp;
+}
+
+glm::vec3 Transform::getScale()
+{
+	return glm::vec3(matrix[0][0], matrix[1][1], matrix[2][2]);	
+}
+
+std::vector<double> Transform::getMatrixVector()
+{
+	glm::quat q = matrix;
 	float x = q.x;
 	float y = q.y;
 	float z = q.z;
@@ -50,15 +61,17 @@ std::vector<double> Transform::get_matrix()
 		0.0, 0.0, 0.0, 1.0 };
 }
 
-//NOTE(darius) in progress
-void Transform::rotateBy(float angleDegree, glm::vec3 axis)
+std::vector<float> Transform::matrixVector()
 {
-	glm::mat4 mat = get_quatmat();
-	glm::vec3 pos = mat[3];
-	glm::rotate(mat, glm::radians(angleDegree), axis);
-	mat[3][0] = pos[0];
-	mat[3][1] = pos[1];
-	mat[3][2] = pos[2];
-	set_from_quatmat(mat);
-}
+	std::vector<float> res;	
 
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+		{
+			res.push_back(matrix[i][j]);	
+		}	
+	}
+
+	return res;
+}

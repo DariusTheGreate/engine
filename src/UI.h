@@ -142,11 +142,11 @@ public:
 									item_clicked = op;
 
                                     if(item_clicked->getRigidBody()){
-                                        objTr = item_clicked->getRigidBody()->tr.get_quatmat();
+                                        //objTr = item_clicked->getRigidBody()->tr.get_quatmat();
                                     }
-                                    auto pos = item_clicked->getTransform().position; 
-                                    auto scale = item_clicked->getTransform().scale; 
-                                    objTr[3][0] = pos.x;
+                                    //auto pos = item_clicked->getTransform().position; 
+                                    //auto scale = item_clicked->getTransform().scale; 
+                                    /*objTr[3][0] = pos.x;
                                     objTr[3][1] = pos.y;
                                     objTr[3][2] = pos.z;
 
@@ -162,7 +162,7 @@ public:
                                     objScl[3][0] = pos.x;
                                     objScl[3][1] = pos.y;
                                     objScl[3][2] = pos.z;
-
+                                    */
 								}
 								ImGui::TreePop();
 							}
@@ -175,13 +175,13 @@ public:
 							//if(item_clicked == nullptr)
 							item_clicked = objects[i];
 
-                            if(item_clicked->getRigidBody())
-                                objTr = item_clicked->getRigidBody()->tr.get_quatmat();
+                            //if(item_clicked->getRigidBody())
+                                //objTr = item_clicked->getRigidBody()->tr.get_quatmat();
 
-                            auto pos = item_clicked->getTransform().position; 
-                            auto scale = item_clicked->getTransform().scale; 
+                            //auto pos = item_clicked->getTransform().position; 
+                            //auto scale = item_clicked->getTransform().scale; 
 
-                            objTr[3][0] = pos.x;
+                            /*objTr[3][0] = pos.x;
                             objTr[3][1] = pos.y;
                             objTr[3][2] = pos.z;
 
@@ -197,8 +197,7 @@ public:
 							objScl[3][0] = pos.x;
 							objScl[3][1] = pos.y;
 							objScl[3][2] = pos.z;
-
-
+                            */
                         }
 
 						ImGui::TreePop();
@@ -245,7 +244,7 @@ public:
 
         auto tr = obj->getTransform();
         if (ImGui::CollapsingHeader("Transform component")){
-            ImGui::Text("position %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
+           /* ImGui::Text("position %f, %f, %f", objTr[3][0], objTr[3][1], objTr[3][2]);
             ImGui::DragFloat("position x", &objTr[3][0], 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("position y", &objTr[3][1], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("position z", &objTr[3][2], 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
@@ -254,7 +253,13 @@ public:
             ImGui::DragFloat("scale x", &tr.scale.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("scale y", &tr.scale.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
             ImGui::DragFloat("scale z", &tr.scale.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            */
+            
+            auto pos = item_clicked->getTransform().getPosition();
 
+            ImGui::DragFloat("position x", &pos.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position y", &pos.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+            ImGui::DragFloat("position z", &pos.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         }
 
         if (ImGui::CollapsingHeader("DirectionalLight component")) {
@@ -662,7 +667,8 @@ public:
         {
             curr_operation = ImGuizmo::OPERATION::SCALE;
         }
-        
+
+
         ImGuizmo::SetDrawlist();
         ImGuiIO& io = ImGui::GetIO();
         ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
@@ -675,22 +681,48 @@ public:
     		cameraView = (GameState::cam.getBasicLook());
         }
 
+        //float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+        //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(objTr), matrixTranslation, matrixRotation, matrixScale);
+        //ImGui::InputFloat3("Tr", matrixTranslation);
+        //ImGui::InputFloat3("Rt", matrixRotation);
+        //ImGui::InputFloat3("Sc", matrixScale);
+        //ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, glm::value_ptr(objTr));
 
-        if(curr_operation == ImGuizmo::OPERATION::TRANSLATE)
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
-        if(curr_operation == ImGuizmo::OPERATION::ROTATE)
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objRot));
-        if(curr_operation == ImGuizmo::OPERATION::SCALE)
-            ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objScl));
+        //glm::vec3 scl = glm::vec3(matrixScale[0], matrixScale[1], matrixScale[2]);
+        //glm::vec3 rotBefore = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
+        //glm::vec3 trans = glm::vec3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
+
+
+        //if(curr_operation == ImGuizmo::OPERATION::TRANSLATE)
+        //    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
+        //if(curr_operation == ImGuizmo::OPERATION::ROTATE)
+        //    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objRot));
+        //if(curr_operation == ImGuizmo::OPERATION::SCALE)
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(item_clicked->getTransform().matrix));
+
+        float matrixTranslation[3], matrixRotation[3], matrixScale[3];
+        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(objTr), matrixTranslation, matrixRotation, matrixScale);
+
+        //glm::vec3 rotAfter = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
+        glm::vec3 scl = glm::vec3(matrixScale[0], matrixScale[1], matrixScale[2]);
+        glm::vec3 rot = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
+        glm::vec3 trans = glm::vec3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
+
+        //glm::vec3 deltaRot = rotBefore - rot;
+
+        //item_clicked->getTransform().set_from_quatmat(objTr);
+        //item_clicked->getTransform().set_scale(scl);
+        //item_clicked->getTransform().setPosition(objTr);
+        //item_clicked->getTransform().set_position(trans);
 
         //TODO(darius) make it separate function to change all stuff of object
         //TODO(darius) make it Scale, Rotation, Transition
 
-        item_clicked->getTransform().setScale(objScl);
-        item_clicked->getTransform().set_from_quatmat(objRot);
-		item_clicked->getTransform().setPosition(objTr);
+        //item_clicked->getTransform().set_from_quatmat(objTr);
+		//item_clicked->getTransform().setPosition(objTr);
+        //item_clicked->getTransform().setScale(objScl);
 
-        if(item_clicked->getPointLight()){
+        /*if(item_clicked->getPointLight()){
             item_clicked->getPointLight()->position = item_clicked->getTransform().position;
             //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
         }
@@ -698,6 +730,7 @@ public:
         item_clicked->traverseObjects([&objtrref](Object* obj){
             obj->getTransform().set_from_quatmat(objtrref);
         });
+        */
 
 		float viewManipulateRight = ImGui::GetWindowPos().x + 900.0f;
 		float viewManipulateTop = ImGui::GetWindowPos().y;
@@ -764,8 +797,9 @@ public:
                 ImGui::DragFloat("position Z", &vec.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
 
                 if (ImGui::Button("Set As Main Camera")){
-                    GameState::saveActiveCameraStateIntoEditorCamera();
-                    GameState::cam = *i; 
+                    //GameState::saveActiveCameraStateIntoEditorCamera();
+                    //GameState::cam = *i; 
+                    i->setAsActiveCamera();
                 }
             }
         }
@@ -786,12 +820,12 @@ public:
     {
         item_clicked = obj;
 
-		objTr = item_clicked->getTransform().get_quatmat();
+		//objTr = item_clicked->getTransform().get_quatmat();
 
-        auto pos = item_clicked->getTransform().position;
-        auto scale = item_clicked->getTransform().scale;
+        //auto pos = item_clicked->getTransform().position;
+        //auto scale = item_clicked->getTransform().scale;
 
-        objTr[3][0] = pos.x;
+        /*objTr[3][0] = pos.x;
         objTr[3][1] = pos.y;
         objTr[3][2] = pos.z;
 
@@ -807,6 +841,7 @@ public:
         objScl[3][0] = pos.x;
         objScl[3][1] = pos.y;
         objScl[3][2] = pos.z;
+        */
     }
 
 private:

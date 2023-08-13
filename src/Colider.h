@@ -44,8 +44,6 @@ public:
 
 	glm::vec3 get_pos() const;
 
-	glm::vec3& get_pos_ref();
-
 	int get_tag() const;
 
 	float minX() const;

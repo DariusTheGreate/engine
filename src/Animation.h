@@ -87,7 +87,6 @@ public:
 		using directory_iterator = fs::directory_iterator;
 		using f_path = fs::path;
 
-
 		//NOTE(darius) important to .c_str()
 		f_path animationFolderPath{ animationFolderPathStr.c_str()};
 

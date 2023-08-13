@@ -59,7 +59,6 @@ public:
 	glm::vec3 get_pos(); 
 	
 	//TODO(darius) fuck you, incapsulation
-	glm::vec3& get_pos_ref();
 
 	std::optional<Colider>& getColider(); 
 

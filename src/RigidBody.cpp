@@ -3,7 +3,7 @@
 RigidBody::RigidBody(double mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(static_cast<float>(mass_in)), is_static(is_st)
 {
 	//startPosition = tr.position;
-	tr.q = construct_quat({ 0,0,0 }, 0);
+	//tr.matrix = construct_quat({ 0,0,0 }, 0);
 }
 
 void RigidBody::update(float dt)
@@ -15,14 +15,15 @@ void RigidBody::update(float dt)
 	acceleration *= mass;
 	velocity = velocity + dt * acceleration;
 	velocity *= 0.98;
-	tr.position = tr.position + dt * velocity;
+	//tr.position = tr.position + dt * velocity;
+	tr.addToPosition(dt * velocity);
 
 	glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
 	glm::vec3 angular_acceleration = { angular_accelerationtmp.x, angular_accelerationtmp.y, angular_accelerationtmp.z };
 	angular_velocity = angular_velocity + dt * angular_acceleration;
 	angular_velocity *= 0.98;
 
-	tr.q = construct_quat(angular_velocity, dt) * tr.q;
+	//tr.matrix = construct_quat(angular_velocity, dt) * tr.matrix;
 }
 
 void RigidBody::apply_impulse(const glm::vec3 impulse) {
@@ -49,7 +50,7 @@ void RigidBody::apply_rotational_impulse(const glm::vec3& point, const glm::vec3
 		return;
 	}
 
-	glm::vec3 torque = glm::cross((point - tr.position), impulse);
+	glm::vec3 torque = glm::cross((point - tr.getPosition()), impulse);
 	glm::vec3 angular_acceleration = glm::inverse(inertia_tensor) * glm::vec4(torque.x, torque.y, torque.z, 0);
 	angular_velocity = angular_velocity + angular_acceleration;
 }
@@ -80,23 +81,24 @@ glm::mat4 RigidBody::create_box_inertia_tensor(float mass, const glm::vec3& half
 
 void RigidBody::reset()
 {
-	tr.position = { 0,0,0 };
+	//tr.getPosition = { 0,0,0 };
+	tr.setPosition({0,0,0});
 	velocity = { 0,0,0 };
 }
 
 void RigidBody::set_pos(glm::vec3 pos)
 {
-	(tr.position) = pos;
+	tr.setPosition(pos);
 }
 
 glm::vec3 RigidBody::get_pos() const
 {
-	return tr.position;
+	return tr.getPosition();
 }
 
 glm::mat4 RigidBody::get_quatmat()
 {
-	glm::mat4 RotationMatrix = glm::toMat4(tr.q);
+	glm::mat4 RotationMatrix = tr.matrix;// glm::toMat4(tr.q);
 	return RotationMatrix;
 }
 
@@ -106,10 +108,11 @@ bool& RigidBody::get_is_static_ref()
 }
 
 //TODO(darius) stop fucking with incapsulation
-glm::quat& RigidBody::get_orientation_quaternion_ref()
+/*glm::quat& RigidBody::get_orientation_quaternion_ref()
 {
-	return tr.q;
+	return tr.matrix;
 }
+*/
 
 glm::quat RigidBody::normalize_quat(glm::quat q)
 {
@@ -157,7 +160,7 @@ void RigidBody::set_quat_from_angles()
 	glm::mat4 transform1 =
 		transformX * transformY * transformZ;
 
-	tr.q = glm::quat_cast(transform1);
+	//tr.q = glm::quat_cast(transform1);
 }
 
 float& RigidBody::get_ex() {

@@ -163,3 +163,8 @@ float Camera::getFov() const
     return fov;
 }
 
+void Camera::setAsActiveCamera()
+{
+    GameState::saveActiveCameraStateIntoEditorCamera();
+    GameState::cam = *this; 
+}

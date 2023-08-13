@@ -11,7 +11,7 @@ MouseState GameState::ms;
 int main()
 {
 	std::cout << "------\n";
-	Application* app = new Application((char*)"some app", 1600, 900);
+	Application* app = new Application((char*)"Dean", 1600, 900);
 	app->Run();
 	std::cout << "------\n";
     return 0;

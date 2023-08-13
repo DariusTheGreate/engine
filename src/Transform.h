@@ -13,22 +13,27 @@ struct Transform
 	Transform(glm::vec3 pos, glm::vec3 scl);
 	Transform(const Transform& t);
 
-	glm::mat4 get_quatmat();
+	void setPosition(glm::vec3 pos);
 
-	void set_from_quatmat(glm::mat4 m);
-	void setPosition(glm::mat4 m);
-	void setScale(glm::mat4 m);
+	glm::vec3 getPosition();
 
-	void set_scale(glm::vec3 scl);
+	void addToPosition(glm::vec3 v);
 
-	std::vector<double> get_matrix();
+	void setScale(glm::vec3 scl);
 
-	void rotateBy(float angleDegree, glm::vec3 axis);
+	glm::vec3 getScale();
 
-	glm::quat q = glm::quat{ 0.0,0.0,0.0,1.0 };
-	glm::vec3 position = {0,0,0};
-	glm::vec3 scale = { 1,1,1 };
+	std::vector<double> getMatrixVector();
+
+	std::vector<float> matrixVector();
 
 	int objectID = 0;
+
+    glm::mat4 matrix = { 1.f, 0.f, 0.f, 0.f,
+                        0.f, 1.f, 0.f, 0.f,
+                        0.f, 0.f, 1.f, 0.f,
+                        0.f, 0.f, 0.f, 1.f };	
+
+    glm::vec3 position;
 };
 

@@ -126,7 +126,8 @@ public:
             //instance->debug_msg.append("clicked q");
 			obj->getModel()->meshes[0] = *WalkUpMesh;
 			obj->setSpriteAnimation(WalkUp);
-			obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
+			if(obj->getRigidBody())
+				obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
 			p.currAnim = 3;
 		}
         if(instance->ks.get_w())

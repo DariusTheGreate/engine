@@ -16,7 +16,8 @@ Scene::Scene()
 	//start_scripts();
 }
 
-Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) {
+Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) 
+{
 	Model m = Model(path, shaderRoutine_in, sv, rotateTextures);
 	auto meshes = m.loadModel();
 
@@ -31,6 +32,7 @@ Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingSha
 	po->set_child_objects(std::move(subobjects));
 
 	po->startScript();
+
 	return po;
 }
 
@@ -44,6 +46,7 @@ Object* Scene::AddEmpty(int i)
 
 	return pt;
 }
+
 Object* Scene::AddObject(const std::string& name) 
 {
 	Object* pt;
@@ -68,7 +71,8 @@ void Scene::destroyObject(size_t id)
 	sceneObjects[id] = nullptr;
 }
 
-void Scene::updateScene() {
+void Scene::updateScene() 
+{
 	update_objects();
 }
 
@@ -92,7 +96,7 @@ void Scene::renderParticles()
 	}
 }
 
-void Scene::updateSpriteAnimations(float dt) 
+void Scene::updateSpriteAnimations(float dt)
 {
 	for (int i = 0; i < sceneObjects.size(); ++i) 
 	{
@@ -205,7 +209,8 @@ void Scene::deleteCamera(Camera* cam)
 	delete cam;
 }
 
-void Scene::update_objects() {
+void Scene::update_objects() 
+{
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?
 	updateObjectsIDs();
@@ -258,7 +263,7 @@ void Scene::update_objects() {
 				}
 				*/
 
-				sceneObjects[i]->getTransform().position += collision_state;
+				sceneObjects[i]->getTransform().addToPosition(collision_state);
 				*sceneObjects[i]->getColider()->get_collision_state() = false;
 
 				/*

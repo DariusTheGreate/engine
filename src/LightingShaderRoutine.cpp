@@ -50,23 +50,36 @@ void LightingShaderRoutine::operator() (Object* obj){
     //    pointLight->setShaderLight(sv);
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 pos = obj->getTransform().position;
-    glm::mat4 q = obj->getTransform().get_quatmat();
-    glm::vec3 scale = obj->getTransform().scale;
+    glm::vec3 pos = obj->getTransform().getPosition();
+    glm::mat4 q = obj->getTransform().matrix;
+    //glm::vec3 scale = obj->getTransform().geS;
 
 
     //TODO(darius) add distanced rendering here. NOTE(darius) Not that hard
     float dist = glm::length(GameState::cam.getCameraPos() - pos);
     if(dist > 99) 
     {
-        scale *= 0.5;//2 * GameState::cam.getFov()/dist;
+        //scale *= 0.5;//2 * GameState::cam.getFov()/dist;
         pos = GameState::cam.getCameraPos() + ((GameState::cam.getCameraPos() - pos));
     }
 
+    //model = glm::translate(model, pos);
+    //model = glm::scale(model, scale);
+    //model *= q;
 
-    model = glm::translate(model, pos);
-    model = glm::scale(model, scale);
-    model *= q;
+    //NOTE(darius) looks like bug with guiamo rotation comes form here..
+    model = glm::mat4(1.0f);
+    model *= obj->getTransform().matrix;
+    glm::vec3 posm = obj->getTransform().getPosition();
+    //glm::mat4 mvp = glm::translate(model, posm);
+
+    //model[3] = glm::vec4(posm.x, posm.y, posm.z, 0);
+    //model = glm::translate(model, obj->getTransform().getPosition());
+    //model = glm::scale(model, obj->getTransform().getScale());
+    //glm::quat qu = obj->getTransform().matrix;
+    //glm::mat4 RotationMatrix = glm::toMat4(qu);
+    //NOTE(darius) brokes if uncomment
+    //model *= RotationMatrix;
 
     sv.setMat4("model", model);
 

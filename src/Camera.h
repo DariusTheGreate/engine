@@ -53,6 +53,8 @@ public:
 
     float getFov() const;
 
+    void setAsActiveCamera();
+
 public:
     bool cursor_hidden = true;
 

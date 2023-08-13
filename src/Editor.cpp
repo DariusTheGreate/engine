@@ -64,7 +64,7 @@ void Editor::updateInput() {
         }
     }
 	if (GameState::instance->ks.get_c()) {
-        currScene.AddEmpty(currScene.getEmptyIndex());
+        //currScene.AddEmpty(currScene.getEmptyIndex());
     }
     if (GameState::instance->ks.get_0()) {
         debug_mode = true;

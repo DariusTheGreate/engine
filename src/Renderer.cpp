@@ -86,7 +86,7 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 		return;
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-	model = glm::translate(model, collider->get_transform().position + glm::vec3{collider->get_size().x/2, collider->get_size().y/2, collider->get_size().z/2} - collider->get_render_shift());
+	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
 	if(body)
 		model *= body->get_quatmat();
 	//TODO(darius) its not size, its scale
