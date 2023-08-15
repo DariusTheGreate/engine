@@ -105,7 +105,8 @@ public:
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 1;
 			//}
-			obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			obj->getTransform().setPosition({0.01,0,0});
 			if (cam)
 				cam->moveCameraRight();
 		}
@@ -116,7 +117,8 @@ public:
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
 			//}
-			obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
+			//obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
+			obj->getTransform().setPosition({-0.01,0,0});
 			//obj->getTransform().rotateBy(180, {0,0,1});
 			if (cam)
 				cam->moveCameraLeft();
@@ -137,8 +139,14 @@ public:
                 obj->setSpriteAnimation(WalkSide);
                 p.currAnim = 1;
             //}
-            obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
 
+			//std::cout << "pos " << obj->getTransform().getPosition().x << " " << obj->getTransform().getPosition().y << " " << obj->getTransform().getPosition().z;
+            //obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
+			//std::cout << "pos after " << obj->getTransform().getPosition().x << " " << obj->getTransform().getPosition().y << " " << obj->getTransform().getPosition().z;
+
+			glm::vec3 pos = obj->getTransform().getPosition();
+			//pos += glm::vec3{ 0, 0, -1 * p.speed };
+			obj->getTransform().setPosition({0,0,0.01});
         }
         if(instance->ks.get_s())
         {
@@ -147,8 +155,8 @@ public:
                 obj->setSpriteAnimation(WalkSide);
                 p.currAnim = 1;
             //}
-            obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-
+            //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
+			obj->getTransform().setPosition({0,0,0.01});
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {

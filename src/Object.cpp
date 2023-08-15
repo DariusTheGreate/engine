@@ -470,15 +470,17 @@ void Object::serialize(std::ofstream& file)
         file << "\tTransform: {\n";
         file << "\t\tPosition: {" << std::to_string(tr.getPosition().x) << " " << std::to_string(tr.getPosition().y) << " " << std::to_string(tr.getPosition().z) << "}\n";
         file << "\t\tScale: {" << std::to_string(tr.getScale().x) << " " << std::to_string(tr.getScale().y) << " " << std::to_string(tr.getScale().z) << "}\n";
+        file << "\t\tQuaternion: {" << std::to_string(tr.matrixQuaternion().x) << " " << std::to_string(tr.matrixQuaternion().y) << " " << std::to_string(tr.matrixQuaternion().z) << " " << std::to_string(tr.matrixQuaternion().w) << "}\n";
 
-        /*file << "\tMatrix: {";
+        file << "\t\tMatrix: {";
         auto matrixVector = tr.matrixVector();
 
         for(int mi = 0; mi < matrixVector.size(); ++mi)
         {
             file << std::to_string(matrixVector[mi]) << " ";
         }
-        */
+
+        file << "}\n";
 
         file << "\t}\n";
     }

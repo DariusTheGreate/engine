@@ -447,7 +447,41 @@ Transform Scene::extractTransformFromToken(std::string_view tkn)
 	size_t scaleStart = tkn.find("Scale", transStart);
 	glm::vec3 scale = extractVectorFromToken(tkn.substr(scaleStart));
 
-	return Transform(pos, scale);
+	size_t quatStart = tkn.find("Quaternion", scaleStart);
+	glm::vec4 quatValues = extractVector4FromToken(tkn.substr(quatStart));
+
+	glm::quat rot = glm::quat(quatValues.w, quatValues.x, quatValues.y, quatValues.z);
+
+	size_t matStart = tkn.find("Matrix: ", transStart);
+
+	size_t brcktStart = tkn.find("{", matStart);
+	size_t matEnd = tkn.find("}", matStart);
+
+	std::vector<float> matrix;
+
+	size_t parsePos = brcktStart;
+	size_t spacePos = parsePos;
+
+	for(int i = 0; i < 16; ++i)
+	{
+		std::string xstr(tkn.substr(spacePos + 1, matEnd - spacePos - 1));
+
+		spacePos = tkn.find(" ", spacePos+1);
+
+		std::istringstream in(xstr);
+
+		float x = 0.0f;
+		in >> x;
+
+		matrix.push_back(x);
+	}
+
+	//auto res = Transform(pos, scale, rot);
+	//res.rotate(rot);
+
+	auto res = Transform(matrix);
+
+	return res;
 }
 
 Model Scene::extractModelFromToken(std::string_view tkn)

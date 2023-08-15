@@ -11,6 +11,8 @@ struct Transform
 {
 	Transform() = default;
 	Transform(glm::vec3 pos, glm::vec3 scl);
+	Transform(glm::vec3 pos, glm::vec3 scl, glm::quat rot);
+	Transform(std::vector<float> mat_in);
 	Transform(const Transform& t);
 
 	void setPosition(glm::vec3 pos);
@@ -19,6 +21,8 @@ struct Transform
 
 	void addToPosition(glm::vec3 v);
 
+	void rotate(glm::quat q);
+
 	void setScale(glm::vec3 scl);
 
 	glm::vec3 getScale();
@@ -26,6 +30,8 @@ struct Transform
 	std::vector<double> getMatrixVector();
 
 	std::vector<float> matrixVector();
+
+	glm::quat matrixQuaternion();
 
 	int objectID = 0;
 

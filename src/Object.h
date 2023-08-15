@@ -63,6 +63,7 @@ public:
 	std::optional<Colider>& getColider(); 
 
 	void addRigidBody(float mass = 0.0);
+
 	std::optional<RigidBody>& getRigidBody();
 
 	std::optional<Model>& getModel();
@@ -93,7 +94,9 @@ public:
 	std::string& get_name(); 
 
 	void hide();
+
 	void serialize(std::ofstream& file);
+
 	void deserialize(std::ofstream& file);
 
 	void unhide();
@@ -132,6 +135,7 @@ public:
 	std::optional<Animator>& getAnimator();
 
 	void setID(int id);
+
 	int getID();
 
     void addSpriteAnimation(SpriteAnimation&& anim);

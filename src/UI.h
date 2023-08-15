@@ -677,7 +677,7 @@ public:
         ImGuizmo::BeginFrame();
 
         if(!(!GameState::cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
-            cameraProjection = GameState::cam.getPerspective(1600, 900);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
+            cameraProjection = GameState::cam.getPerspective(io.DisplaySize.x, io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
     		cameraView = (GameState::cam.getBasicLook());
         }
 

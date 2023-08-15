@@ -2,7 +2,15 @@
 
 Transform::Transform(glm::vec3 pos, glm::vec3 scl)
 {
+	//TODO(darius) figure out order of operations.
 	setPosition(pos);
+	setScale(scl);
+}
+
+Transform::Transform(glm::vec3 pos, glm::vec3 scl, glm::quat rot)
+{
+	setPosition(pos);
+	rotate(rot);
 	setScale(scl);
 }
 
@@ -10,13 +18,24 @@ Transform::Transform(const Transform& t) : matrix(t.matrix)
 {
 }
 
+Transform::Transform(std::vector<float> mat_in)
+{
+	int c = 0;//NOTE(darius) make it i * j
+
+	for(int i = 0; i < 4; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+		{
+			matrix[i][j] = mat_in[c++];
+		}
+	}
+
+}
+
+//NOTE(darius) its not set position, its translate, so it works in engineLogic as movetransform;
 void Transform::setPosition(glm::vec3 pos)
 {
-	//position = pos;	
-	//matrix[3] = glm::vec4(pos.x, pos.y, pos.z, 0);
-
     glm::mat4 mvp = glm::translate(matrix, pos);
-
     matrix = mvp;
 }
 
@@ -26,11 +45,22 @@ glm::vec3 Transform::getPosition()
 	return glm::vec3(matrix[3][0], matrix[3][1], matrix[3][2]);	
 }
 
+//TODO(darius) test it
 void Transform::addToPosition(glm::vec3 v)
 {
-	matrix[3][0] += v.x;
+	/*matrix[3][0] += v.x;
 	matrix[3][1] += v.y;
 	matrix[3][2] += v.z;
+	*/
+
+	glm::vec3 newPos = getPosition() + v;
+	setPosition(newPos);
+}
+
+void Transform::rotate(glm::quat q)
+{
+	glm::mat4 RotationMatrix = glm::toMat4(q);
+	matrix *= RotationMatrix;
 }
 
 void Transform::setScale(glm::vec3 scl)
@@ -74,4 +104,9 @@ std::vector<float> Transform::matrixVector()
 	}
 
 	return res;
+}
+
+glm::quat Transform::matrixQuaternion()
+{
+	return matrix;	
 }
