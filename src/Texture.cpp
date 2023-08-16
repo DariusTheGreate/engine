@@ -20,7 +20,7 @@ Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsign
 
 		filters();
 
-		OpenglWrapper::GenerateMipmap();
+		//OpenglWrapper::GenerateMipmap();
 	}
 
 	stbi_image_free(data);

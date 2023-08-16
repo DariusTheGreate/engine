@@ -57,6 +57,8 @@ public:
 	template<typename... Args>
 	Object* construct(Args&&... args) 
 	{
+		return new Object(std::forward<Args>(args)...);
+
 		//assert(filled_pools < mem_pools.size(), "mem_pool size < filled pools value");
 		Pool& curp = mem_pools[filled_pools];
 		//std::construct_at c++20
@@ -74,6 +76,9 @@ public:
 	//TODO(darius) test this shit like never before
 	void destroy(void* p) 
 	{
+		delete p;
+		return;
+
 		size_t addrp = (size_t)(p);
 		for (int i = 0; i < filled_pools; ++i) {
 			if (addrp > (size_t)mem_pools[i].p && addrp < ((size_t)mem_pools[i].p + mem_pools[i].busy * sizeof(T))) {
@@ -125,6 +130,8 @@ public:
 	Object* createSubobject(Object* obj, int i);
 
 	void destroyObject(size_t id);
+
+	void destroyObject(std::string_view name);
 
 	void updateScene();
 

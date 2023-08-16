@@ -152,7 +152,7 @@ void Editor::updateInput() {
         //GameState::ms.set_y(GameState::ms.prev_y);
     }
     //std::cout << GameState::ms.get_x() << " " << GameState::ms.get_y()<< "\n";
-    if(GameState::instance->ks.get_mouse_left_button())
+    if(GameState::instance->ks.get_mouse_left_button() && !leftMouseButtonIsOnHold)
     {
         //selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
         int picked = selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
@@ -160,6 +160,11 @@ void Editor::updateInput() {
         if (pickedObj != nullptr) {
             ui.setItemClicked(pickedObj);
         }
+        leftMouseButtonIsOnHold = true;
+    }
+    if(!GameState::instance->ks.get_mouse_left_button())
+    {
+        leftMouseButtonIsOnHold = false;
     }
 }
 

@@ -153,7 +153,7 @@ private:
     size_t slices = 200;
 	std::vector<glm::vec3> vertices_grid;
 	std::vector<glm::uvec4> indices_grid;
-    int grid_scale = 1;
+    int grid_scale = 2;
     int grid_mode = 3;
 
     //TODO(darius) use cubeMesh

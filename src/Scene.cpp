@@ -69,6 +69,13 @@ void Scene::destroyObject(size_t id)
 	auto* ptr = sceneObjects[id];
 	mem_man.destroy(ptr);
 	sceneObjects[id] = nullptr;
+	sceneObjects.erase(sceneObjects.begin() + id);
+}
+
+void Scene::destroyObject(std::string_view name)
+{
+	Object* pt = getObjectByName(name);	
+	destroyObject(pt->getID());
 }
 
 void Scene::updateScene() 
@@ -131,17 +138,17 @@ Object* Scene::getObjectByName(std::string_view name)
 
 Object* Scene::getObjectByID(int ID)
 {
-	std::cout << "ID SEARCH STARTED\n";
+	//std::cout << "ID SEARCH STARTED\n";
 	for (auto* i : sceneObjects) 
 	{
 		std::cout << i->getID() << "|";
 		if (ID == i->getID())
 		{
-			std::cout << "ID SEARCH ENDED\n";
+			//std::cout << "ID SEARCH ENDED\n";
 			return i;
 		}
 	}
-	std::cout << "ID SEARCH ENDED\n";
+	//std::cout << "ID SEARCH ENDED\n";
 	return nullptr;
 }
 
@@ -171,7 +178,7 @@ void Scene::start_scripts()
 
 void Scene::updateObjectsIDs()
 {
-	int id = 1;
+	int id = 0;//Note(darius) was 1
 	for (Object* p : sceneObjects) 
 	{
 		p->setID(id++);

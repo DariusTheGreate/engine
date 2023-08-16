@@ -88,7 +88,6 @@ public:
 	}
 
 	void update(ScriptArgument& args) override {
-		//return;
         auto* obj = args.obj;
 		auto* scene = args.scene;
 		if (!instance || !obj) {
@@ -156,7 +155,7 @@ public:
                 p.currAnim = 1;
             //}
             //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-			obj->getTransform().setPosition({0,0,0.01});
+			obj->getTransform().setPosition({0,0,-0.01});
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {

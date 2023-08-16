@@ -1,0 +1,8 @@
+- Object deleating
+- bug when u copy object and he teleports in infinity
+- Prefabs system
+- better ECS
+- Texture resize to apropriate
+- tiles
+- colliders
+- load any models

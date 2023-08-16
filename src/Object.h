@@ -40,6 +40,8 @@ public:
 
 	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, const Model& m, Scene* scn, EmptyScriptRoutine* routine, bool active);
 
+	Object(const Object& copy_me);
+
 	void setupScript(EmptyScriptRoutine* r);
 
 	void startScript();

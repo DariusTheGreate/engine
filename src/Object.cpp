@@ -4,6 +4,8 @@
 #include <string>
 #include <cctype>
 
+Object::Object(const Object& copy_me) = default;
+
 Object::Object(std::string name_in) : name(name_in)
 {
     material = std::nullopt;
