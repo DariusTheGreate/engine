@@ -71,6 +71,9 @@ public:
 
 	Transform& get_transform();
 
+public:
+	glm::vec4 collider_debug_color = {0, 1, 0, 0};
+
 private:
     //not cool, dangle may happen
 	Transform& tr;

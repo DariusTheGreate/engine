@@ -16,7 +16,7 @@ void RigidBody::update(float dt)
 	velocity = velocity + dt * acceleration;
 	velocity *= 0.98;
 	//tr.position = tr.position + dt * velocity;
-	tr.addToPosition(dt * velocity);
+	tr.setPosition(dt * velocity);
 
 	glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
 	glm::vec3 angular_acceleration = { angular_accelerationtmp.x, angular_accelerationtmp.y, angular_accelerationtmp.z };

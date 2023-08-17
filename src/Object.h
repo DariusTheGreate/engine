@@ -81,6 +81,7 @@ public:
 	void moveTransform(glm::vec3 v);
 	
 	void addScript(Scene* scn, EmptyScriptRoutine* routine);
+	
 	std::optional<Script>& getScript();
 	
 	void set_child_objects(std::vector<Object*>&& objects);
@@ -98,6 +99,8 @@ public:
 	void hide();
 
 	void serialize(std::ofstream& file);
+
+	void serializeAsPrefab(std::ofstream& file);
 
 	void deserialize(std::ofstream& file);
 

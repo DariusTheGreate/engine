@@ -80,9 +80,13 @@ glm::vec3 Colider::supportOriented(glm::vec4 dir) {
 	//glm::quat quatinverse = {tr.q.w, -tr.q.x, -tr.q.y, -tr.q.z}; 
 	//dir = quatinverse * dir;
 
-	result.x = (dir.x > 0) ? size.x : 0;
-	result.y = (dir.y > 0) ? size.y : 0;
-	result.z = (dir.z > 0) ? size.z : 0;
+	dir = dir * tr.matrix;
+
+	glm::vec4 sz = tr.matrix * glm::vec4(maxX(), maxY(), maxZ(), 0);
+
+	result.x = (dir.x > 0) ? sz.x : 0;
+	result.y = (dir.y > 0) ? sz.y : 0;
+	result.z = (dir.z > 0) ? sz.z : 0;
 	result.w = 0;
 	
 	/*result.x = (dir.x < 0) ? -size.x / 2 : size.x / 2;
@@ -91,8 +95,8 @@ glm::vec3 Colider::supportOriented(glm::vec4 dir) {
 	*/
 	//dont forget to add radius
 
-	//return result;
-	return tr.matrix * result + glm::vec4{ tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
+	return result;
+	//return tr.matrix * result + glm::vec4{ tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
 }
 
 glm::vec3 Colider::support(glm::vec4 dir) {
@@ -144,7 +148,7 @@ bool Colider::gjk(Colider* coll1, Colider* coll2) {
 			return false;
 		}
 
-		plex.a = (coll1->support(glm::vec4{ dir.x, dir.y, dir.z, 0 }) - coll2->support(-glm::vec4{ dir.x, dir.y, dir.z, 0 }));
+		plex.a = (coll1->support(glm::vec4{ dir.x, dir.y, dir.z, 0 }) - coll2->supportOriented(-glm::vec4{ dir.x, dir.y, dir.z, 0 }));
 
 		if (glm::dot(plex.a, dir) < 0) {
 			collision_state = false;

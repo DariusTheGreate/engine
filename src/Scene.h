@@ -173,6 +173,8 @@ public:
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will return later to it anyway
 	void serialize(std::string_view path);
 
+	void serializePrefab(Object* obj, std::string_view path);
+
 	void deserialize(std::string_view path);
 
 	std::string extractNameFromToken(std::string_view);

@@ -19,6 +19,7 @@ struct Player
 class DefaultScript : public ScriptRoutine {
 public:
 	void start(ScriptArgument& args) override {
+		return;
 		if (!instance) {
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
@@ -88,6 +89,7 @@ public:
 	}
 
 	void update(ScriptArgument& args) override {
+		return;
         auto* obj = args.obj;
 		auto* scene = args.scene;
 		if (!instance || !obj) {

@@ -185,6 +185,7 @@ public:
 
 		ImGui::Begin("Object window", &show_object_window);
 		//ImGui::Text(obj -> get_name().c_str());
+        obj->get_name().resize(max_name_length);
 
         ImGui::InputText("Name: ", (char*)obj->get_name().c_str(), obj->get_name().size());
 
@@ -417,6 +418,26 @@ public:
             scene.destroyObject(item_clicked->get_name());
             item_clicked = nullptr;
         } 
+
+        if (ImGui::Button("Make prefab") && item_clicked) {
+            std::string prefabName = item_clicked->get_name();
+
+            //NOTE(darius)TODO(darius) because we resize name name etter Ui element. We cant concat stirngs here.Fix it
+            //prefabName.substr(0, max_name_length-1);
+
+            //prefabName.shrink_to_fit();
+            int c = 0;
+            for (int i = 0; prefabName[i]; i++) {
+                c++;
+            }
+
+            prefabName.resize(c);
+ 
+            prefabName.append(".deanPrefab");
+
+            std::string sum = GameState::engine_path + prefabName;
+            scene.serializePrefab(item_clicked, sum);
+        }
 
         ImGui::End();
     }
@@ -827,4 +848,6 @@ private:
     glm::mat4 cameraView = glm::mat4(1.0f);
 
     GameState* state= nullptr;
+
+    int max_name_length = 21;
 };

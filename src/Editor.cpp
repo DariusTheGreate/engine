@@ -96,7 +96,7 @@ void Editor::updateInput() {
         GameState::editorCameraMode = false;
     }
 
-    if(GameState::instance->ks.get_mouse_right_button() && GameState::editorCameraMode)
+    if(GameState::instance->ks.get_mouse_right_button() && GameState::editorCameraMode && !leftMouseButtonIsOnHold)
     {
         if (GameState::cam.cursor_hidden == false) {
             //GameState::ms.cursor_x = GameState::ms.get_x();
@@ -112,6 +112,7 @@ void Editor::updateInput() {
             glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         }
+        
         if (GameState::editor_mode == 2) {
             if (GameState::ms.prev_x > GameState::ms.get_x()) {
                 GameState::cam.moveCameraLeft();
@@ -162,6 +163,7 @@ void Editor::updateInput() {
         }
         leftMouseButtonIsOnHold = true;
     }
+
     if(!GameState::instance->ks.get_mouse_left_button())
     {
         leftMouseButtonIsOnHold = false;

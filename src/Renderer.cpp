@@ -84,16 +84,23 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 {
 	if(!collider)
 		return;
+
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
-	if(body)
-		model *= body->get_quatmat();
+	//if(body)
+	//	model *= body->get_quatmat();
+	//model *= collider->get_transform().matrix;
+
+	//auto vv = collider->get_render_shift();
+
+	//model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
+
 	//TODO(darius) its not size, its scale
 	model = glm::scale(model, collider->get_size());
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
-	dsv.setVec4("objectColor", {0,1,0,0});
+	dsv.setVec4("objectColor", collider->collider_debug_color);
 	dsv.setMat4("model", model);
 	vao.bind();
 	glDrawArrays(GL_LINE_STRIP, 0, 36);
@@ -422,7 +429,6 @@ void Renderer::bokeStage()
 
 	Shader boke = shaderLibInstance->getBokeShader();
 	OpenglWrapper::UseProgram(boke.getProgram());
-
 
 	pingPongBlurBufferA.Bind();
 

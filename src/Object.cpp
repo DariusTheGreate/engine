@@ -461,6 +461,14 @@ std::optional<SpriteAnimation>& Object::getSpriteAnimation()
     return spriteAnimation;
 }
 
+void Object::serializeAsPrefab(std::ofstream& file)
+{
+    file << "Prefab: {\n";
+
+    serialize(file);
+
+    file << "}\n";
+}
 
 void Object::serialize(std::ofstream& file)
 {

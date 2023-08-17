@@ -29,7 +29,6 @@ Transform::Transform(std::vector<float> mat_in)
 			matrix[i][j] = mat_in[c++];
 		}
 	}
-
 }
 
 //NOTE(darius) its not set position, its translate, so it works in engineLogic as movetransform;
