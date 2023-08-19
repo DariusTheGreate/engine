@@ -23,6 +23,8 @@ struct Transform
 
 	void rotate(glm::quat q);
 
+	void rotate(float angle_in_radians, glm::vec3 axis);
+
 	void setScale(glm::vec3 scl);
 
 	glm::vec3 getScale();

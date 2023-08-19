@@ -62,6 +62,12 @@ void Transform::rotate(glm::quat q)
 	matrix *= RotationMatrix;
 }
 
+void Transform::rotate(float angle_in_radians, glm::vec3 axis)
+{
+	glm::mat4 m = glm::rotate(matrix, angle_in_radians, axis);	
+	matrix = m;
+}
+
 void Transform::setScale(glm::vec3 scl)
 {
 	//matrix[0][0] = scl.x;

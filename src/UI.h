@@ -100,6 +100,12 @@ public:
                 scene.AddEmpty(emptyCreated++);        
             }
 
+            path.resize(100);
+            ImGui::InputText("path", (char*)path.c_str(), 100);
+            if (ImGui::Button("Load Prefab")) {
+                scene.deserialize(path);  
+            }
+
             ImGuiDragDropFlags src_flags = 0;
             src_flags |= ImGuiDragDropFlags_SourceNoDisableHover;     // Keep the source displayed as hovered
             src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
@@ -179,7 +185,7 @@ public:
     void showObjectWindow(Object* obj, Renderer& r, Scene& scene)
     {
         if (!obj) {
-            std::cout << "no obj provided. exsiting showObjectWindow(obj)\n";
+            //std::cout << "no obj provided. exsiting showObjectWindow(obj)\n";
             return;
         }
 
@@ -433,7 +439,7 @@ public:
 
             prefabName.resize(c);
  
-            prefabName.append(".deanPrefab");
+            prefabName.append(".prefab");
 
             std::string sum = GameState::engine_path + prefabName;
             scene.serializePrefab(item_clicked, sum);
@@ -578,6 +584,14 @@ public:
                     item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
                 }
 
+                if(ImGui::Button("Load Normal Mesh")){
+                    path.shrink_to_fit();
+                    name.shrink_to_fit();
+                    //TODO(darius) fix this cringe
+                    FlatMesh* itemFlat = (FlatMesh*)&(item_clicked->getModel()->meshes[0]);
+                    (itemFlat)->setTextureNormal(path);
+                }
+
                 if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                     FlatMesh flat;
 
@@ -674,6 +688,14 @@ public:
             curr_operation = ImGuizmo::OPERATION::SCALE;
         }
 
+        if (ImGui::Button("Change Mode"))
+        {
+            if(guizmoMode == ImGuizmo::LOCAL)
+                guizmoMode = ImGuizmo::WORLD;
+            else
+                guizmoMode = ImGuizmo::LOCAL;
+        }
+
 
         ImGuizmo::SetDrawlist();
         ImGuiIO& io = ImGui::GetIO();
@@ -704,7 +726,7 @@ public:
         //if(curr_operation == ImGuizmo::OPERATION::ROTATE)
         //    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objRot));
         //if(curr_operation == ImGuizmo::OPERATION::SCALE)
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(item_clicked->getTransform().matrix));
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item_clicked->getTransform().matrix));
 
         //float matrixTranslation[3], matrixRotation[3], matrixScale[3];
         //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(objTr), matrixTranslation, matrixRotation, matrixScale);
@@ -843,6 +865,7 @@ private:
     Object* item_copy = nullptr;
 
     ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
+    ImGuizmo::MODE guizmoMode = ImGuizmo::WORLD;
 
     glm::mat4 cameraProjection = glm::mat4(1.0f);
     glm::mat4 cameraView = glm::mat4(1.0f);

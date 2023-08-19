@@ -1,5 +1,7 @@
 #include <Editor.h>
 
+#include <thread>
+
 Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
 {
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
@@ -15,6 +17,9 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     currScene.start_scripts();
 
     SystemInfo::setInfo(&info);
+
+    std::thread tr(&Editor::consoleInputThread, this, this);
+    tr.detach();
 }
 
 void Editor::update()
@@ -37,7 +42,7 @@ void Editor::setEditorMode(int mode)
 }
 
 void Editor::updateInput() {
-    if(GameState::editorCameraMode){
+    if(GameState::editorCameraMode && GameState::instance->ks.get_mouse_right_button()){
         if (GameState::instance->ks.get_w()) {
             if(GameState::editor_mode == 3)
                 GameState::cam.moveCameraForward();
@@ -82,11 +87,11 @@ void Editor::updateInput() {
 		state.debug_msg.append("3D\n");
         state.connect--;
     }
-    if (GameState::instance->ks.get_3()) {
+    if (GameState::instance->ks.get_s() && GameState::instance->ks.get_cntrl()) {
         rendol.getDebugRenderer().debug_render_points = false;
         currScene.serialize(GameState::engine_path + "scene.dean");
     }
-    if (GameState::instance->ks.get_4()) {
+    if (GameState::instance->ks.get_l() && GameState::instance->ks.get_cntrl() ) {
         rendol.getDebugRenderer().debug_render_points = true;
         currScene.deserialize(GameState::engine_path + "scene.dean");
     }
@@ -219,3 +224,98 @@ Renderer* Editor::getRenderer()
     return &rendol;
 }
 
+void Editor::consoleInputThread(Editor* currEditor)
+{
+    //TODO(darius) make it separated object and not call methods directly, but pass message to main thread (this is detached thread btw)
+    while(1)
+    {
+        std::string command;
+        std::cout << "Input: \n";
+        std::cin >> command;
+
+        if(command == "createObject")
+        {
+            std::string objectName;
+            std::cout << "ObjectName: \n";
+            std::cin >> objectName;
+
+            currEditor->currScene.AddObject(objectName);
+        }
+
+        if(command == "loadPrefab")
+        {
+            std::string prefabPath;
+            std::cout << "prfabPath: ";
+
+            std::cin >> prefabPath;
+            //NOTE(darius) crashes 
+            if(currEditor)
+                currEditor->currScene.deserialize(prefabPath);
+        }
+
+        if(command == "rotateUp")
+        {
+            std::string objName; 
+            std::cout << "objName: ";
+            std::cin >> objName;
+
+            Object* obj = currEditor->currScene.getObjectByName(objName);
+            float _90degree_in_radians = 1.57f;
+            obj->getTransform().rotate(_90degree_in_radians, {1,0,0});
+        }
+
+        if(command == "rotate"){
+            std::string objName; 
+            std::cout << "objName: ";
+            std::cin >> objName;
+
+            std::string axis;
+            std::cout << "axis: ";
+
+            std::cin >> axis;
+
+            glm::vec3 axisVec = {0,0,0};
+
+            if(axis == "x")
+                axisVec = {1,0,0};
+            if(axis == "y")
+                axisVec = {0,1,0};
+            if(axis == "z")
+                axisVec = {0,0,1};
+
+            std::string degree;
+            std::cout << "degree: ";
+
+            float degreeFloat = 0.0f;
+
+            std::cin >> degreeFloat; 
+
+            degreeFloat = glm::radians(degreeFloat);
+
+            Object* obj = currEditor->currScene.getObjectByName(objName);
+            obj->getTransform().rotate(degreeFloat, axisVec);
+        }
+
+        if(command == "hide")
+        {
+            std::string objName;
+            std::cout << "objName: ";
+            std::cin >> objName;
+
+            Object* obj = currEditor->currScene.getObjectByName(objName);
+            obj->hide();
+        }
+        //NOTE(darius) crashes
+        if(command == "copy")
+        {
+            std::string objName;
+            std::cout << "objName: ";
+            std::cin >> objName;
+
+            Object* obj = currEditor->currScene.getObjectByName(objName);
+            Object tmp = *obj;
+
+            currEditor->currScene.createObject(std::move(tmp));
+        }
+    }
+}

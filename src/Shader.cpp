@@ -1,6 +1,5 @@
 #include "Shader.h"
 
-
 Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filepath_in) {
 	shader = OpenglWrapper::CreateShader(type);
 	reload();
@@ -43,7 +42,9 @@ void Shader::compile() const {
 	int success;
 	const int err_len = 2048;
 	char infoLog[err_len];
+
 	OpenglWrapper::GetShaderParam(shader, GL_COMPILE_STATUS, &success);
+
 	if (!success)
 	{
 		OpenglWrapper::GetShaderLog(shader, infoLog);
@@ -56,10 +57,13 @@ ShaderProgram Shader::link(const Shader& other) {
 	OpenglWrapper::AttachShader(shaderProgram, shader);
 	OpenglWrapper::AttachShader(shaderProgram, other.shader);
 	OpenglWrapper::LinkProgram(shaderProgram);
+
 	int success;
 	const int err_len = 2048;
 	char infoLog[err_len];
+
 	OpenglWrapper::GetProgramParam(shaderProgram, GL_LINK_STATUS, &success);
+
 	if (!success) {
 		OpenglWrapper::GetProgramLog(shaderProgram, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
@@ -147,6 +151,7 @@ bool Shader::checkForSourceChanges()
 	std::ifstream shaderFile;
 	shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	std::string source2;
+
 	try
 	{
 		shaderFile.open(filepath);
@@ -157,6 +162,7 @@ bool Shader::checkForSourceChanges()
 		shaderFile.close();
 
 		source2 = vShaderStream.str();
+
 		if (source.compare(source2)) 
 		{
 			std::cout << "NOTIFICATION::SHADER::FILE_WAS_CHANED_RELOADING_NEEDED: " << filepath << std::endl;
@@ -167,6 +173,7 @@ bool Shader::checkForSourceChanges()
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ_AT_RELOADING: " << filepath << std::endl;
 	}
+
 	return false;
 }
 

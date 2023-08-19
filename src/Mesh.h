@@ -57,6 +57,7 @@ public:
     std::vector<Texture>& getTexturesRef();
 
     VAO getVao();
+
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation

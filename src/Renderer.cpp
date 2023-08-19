@@ -316,14 +316,14 @@ void Renderer::render(Window* wind)
 	//quad.DrawQuad(depthTexture);
 	//return
 
-	albedoStage();
-	//deferredStage();
-
 	//bloomStage();
 
 	EditorIDsStage();
+    
+	albedoStage();
 
-	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+	//deferredStage();
+	//intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 
 	//bokeStage();
 

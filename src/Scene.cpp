@@ -332,7 +332,6 @@ void Scene::serializePrefab(Object* obj, std::string_view path)
 //TODO(darius) check for names being different, and check if object that you created dont exist already
 void Scene::deserialize(std::string_view path)
 {
-
 	std::ifstream file(path.data());
 	if (!file.is_open())
 		return;

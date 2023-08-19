@@ -19,6 +19,10 @@ public:
 
 	void set_c(bool state);
 
+	void set_l(bool state);
+
+	void set_cntrl(bool state);
+
 	void set_mouse_right_button(bool state);
 
 	void set_mouse_left_button(bool state);
@@ -47,6 +51,8 @@ public:
 
 	bool get_c();
 
+	bool get_l();
+
 	bool get_q();
 
 	bool get_0();
@@ -61,6 +67,8 @@ public:
 
 	bool get_9();
 
+	bool get_cntrl();
+
 	bool get_mouse_right_button();
 
 	bool get_mouse_left_button();
@@ -73,6 +81,7 @@ private:
 	std::atomic_bool q_pressed;
 	std::atomic_bool e_pressed;
 	std::atomic_bool c_pressed;
+	std::atomic_bool l_pressed;
 
 	std::atomic_bool pressed_0;
 	std::atomic_bool pressed_1;
@@ -82,4 +91,6 @@ private:
 	std::atomic_bool pressed_9;
 	std::atomic_bool mouse_right_button_pressed;
 	std::atomic_bool mouse_left_button_pressed;
+
+	std::atomic_bool pressed_cntrl;
 };

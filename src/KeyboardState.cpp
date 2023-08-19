@@ -29,6 +29,11 @@ void KeyboardState::set_c(bool state)
 	c_pressed.store(state);
 }
 
+void KeyboardState::set_l(bool state)
+{
+	l_pressed.store(state);
+}
+
 void KeyboardState::set_mouse_right_button(bool state)
 {
 	mouse_right_button_pressed.store(state);
@@ -63,6 +68,14 @@ void KeyboardState::set_9(bool state) {
 	pressed_9.store(state);
 }
 
+void KeyboardState::set_cntrl(bool state){
+	pressed_cntrl = state;	
+}
+
+bool KeyboardState::get_cntrl(){
+	return pressed_cntrl;
+}
+
 bool KeyboardState::get_w() {
 	return w_pressed.load();
 }
@@ -86,6 +99,11 @@ bool KeyboardState::get_e() {
 bool KeyboardState::get_c()
 {
 	return c_pressed.load();
+}
+
+bool KeyboardState::get_l()
+{
+	return l_pressed.load();
 }
 
 bool KeyboardState::get_q() {

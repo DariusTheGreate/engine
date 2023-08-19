@@ -1,30 +1,39 @@
 --ARCHITECTURE
 	- fix transform
-	- colliders response system
-	- Prefabs system?
+	- colliders response system													
+	- Prefabs editing system in other window
 	- better ECS?
-	- tiles
-	- load any models
-	- particle system
-	- better API
-	- separate thread for text input
+	- separate thread for commands input + commands processing?
+
+	-stacktrace. debug stuff
 
 --RENDERER
+	- 2D normal mapping                                                         !
+	- load any models     														!
+    - instanced rendering                                                       !
+
+	- finish bloom                                                              !
+	- finish shadows                                                            !
+
 	- Texture resize to apropriate resolution
-	- make textures beautiful
 	- gamma correction
-	- finish bloom
-	- finish shadows
+
 	- deffered light?
+
 	- light shafts?
-	- particle system
+	- distance rendering
+	- debug grid distance rendering
 
 --UI
 	- assets browser
 	- LOGO
 
 --BUGS
-	- bug when first obect in scene teleports of copyied
+	- bug when first obect in scene teleports if copyied
 	- bug when if u click both button at a time objects teleports to inf
 	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
+
+-- Overview
+	- better renderer
+	- better editor

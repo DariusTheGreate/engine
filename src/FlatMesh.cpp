@@ -34,6 +34,13 @@ void FlatMesh::setTexture(std::string path)
     textures.push_back(texture);
 }
 
+void FlatMesh::setTextureNormal(std::string path)
+{
+    //TODO(darius) make it single texture
+    Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_normal");
+    textures.push_back(texture);
+}
+
 void FlatMesh::setTextureCoords(float x1 = 1.0, float y1 = 1.0, float x2 = 0.0, float y2 = 0.0)
 {
     //std::unique_lock<std::mutex>(draw_mutex);

@@ -43,6 +43,9 @@ void InputManager::processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         GameState::instance->ks.set_c(true);
     }
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+        GameState::instance->ks.set_l(true);
+    }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
         GameState::instance->ks.set_0(true);
     }
@@ -61,6 +64,9 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
         GameState::instance->ks.set_9(true);
     }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+        GameState::instance->ks.set_cntrl(true);
+    } 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
         GameState::instance->ks.set_w(false);
     }
@@ -82,6 +88,9 @@ void InputManager::processInput(GLFWwindow* window)
 	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
         GameState::instance->ks.set_c(false);
     }
+    if (glfwGetKey(window, GLFW_KEY_L) == GLFW_RELEASE) {
+        GameState::instance->ks.set_l(false);
+    }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
         GameState::instance->ks.set_0(false);
     }
@@ -100,6 +109,10 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_9) == GLFW_RELEASE) {
         GameState::instance->ks.set_9(false);
     }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
+        GameState::instance->ks.set_cntrl(false);
+    }
+
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
         GameState::instance->ks.set_mouse_right_button(true);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

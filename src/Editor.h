@@ -23,7 +23,10 @@ public:
 
     bool lockFPS();
 
+    void consoleInputThread(Editor* currentEditor);
+
     Window* getWindow();
+
     Renderer* getRenderer();
     
 private:
@@ -35,7 +38,6 @@ private:
     Window* window;
     Renderer rendol;
     ObjectSelector selector;
-
 
     unsigned int frame_number = 0;
     double lastTime = 0;
