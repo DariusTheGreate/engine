@@ -209,20 +209,68 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
             indices.push_back(face.mIndices[j]);
     }
 
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    std::cout << "\nHasMaterials: " << scene->HasMaterials() << "\n";
+    std::cout << "\nHasMaterials: " << scene->mNumMaterials << "\n";
+    std::cout << "\nIndex: " << mesh->mMaterialIndex << "\n";
 
-    // 1. diffuse maps
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+    //NOTE(darius) there was no fro before
+    //for (unsigned int m = 0; m < scene->mNumMaterials; ++m)
+    //{
+        /*	aiMaterial* material = scene->mMaterials[m];//Get the current material
+            aiString materialName;//The name of the material found in mesh file
+            aiReturn ret;//Code which says whether loading something has been successful of not
+
+            ret = material->Get(AI_MATKEY_NAME, materialName);//Get the material name (pass by reference)
+
+            std::cout << materialName.C_Str() << "\n";
+
+            int numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+            std::cout << "num of diff Textures " << numTextures << "\n";
+
+            aiString textureName;
+
+            if (numTextures > 0)
+            {
+                //Get the file name of the texture by passing the variable by reference again
+                //Second param is 0, which is the first diffuse texture
+                //There can be more diffuse textures but for now we are only interested in the first one
+                ret = material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), textureName);
+
+                std::cout << "diffuse text name: " << textureName.C_Str() << "\n";
+            }
+        }*/
+
+		//NOTE(darius) mMaterialIndex is material that this meshe uses. Assimp not allow for one mesh to have multiple materials. Its split it
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];//scene->mMaterials[mMaterialIndex];
+
+        // 1. diffuse maps
+        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+        // 2. specular maps
+        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        // 3. normal maps
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        // 4. height maps
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+        if (diffuseMaps.size() == 0) 
+        {
+            std::cout << "\nWARNING! ASSIMP COULDNT DISTINGHUISH MATERIALS. TRAVERSING THROUGH ALL MATERIALS\n";
+            for (unsigned int m = 0; m < scene->mNumMaterials; ++m) 
+            {
+                aiMaterial* materialRepeat = scene->mMaterials[m];
+                std::vector<Texture> diffuseMapsRepeat = loadMaterialTextures(materialRepeat, aiTextureType_DIFFUSE, "texture_diffuse");
+                if (diffuseMapsRepeat.size() > 0) {
+                    textures.insert(textures.end(), diffuseMapsRepeat.begin(), diffuseMapsRepeat.end());
+                    break;
+                }
+            }
+        }
+    //}
 
     ExtractBoneWeightForVertices(vertices,mesh,scene);
 
@@ -232,11 +280,16 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 {
     std::vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+    std::cout << "texture count of type " << typeName << " " << mat->GetTextureCount(type) << "\n";
+    //NOTE(darius) is it possible to have multiple lets say diffuse textures?
+   // for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+    if( mat->GetTextureCount(type) > 0)
     {
         aiString str;
 
-        mat->GetTexture(type, i, &str);
+        mat->GetTexture(type, 0, &str);
+        //mat->GetTexture(type, i, &str);
+
         std::cout << "textures: " << str.C_Str() << "\n";
 
         auto fnd = Model::textures_set.find(str.C_Str());

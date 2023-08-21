@@ -317,5 +317,13 @@ void Editor::consoleInputThread(Editor* currEditor)
 
             currEditor->currScene.createObject(std::move(tmp));
         }
+
+        if(command == "list")
+        {
+            for(Object* obj : currEditor->currScene.get_objects())
+            {
+                std::cout << obj->get_name() << "\n";
+            }
+        }
     }
 }

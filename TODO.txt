@@ -29,6 +29,7 @@
 	- LOGO
 
 --BUGS
+	- bug when assimp dont load first 4 letters(4 bytes) of string
 	- bug when first obect in scene teleports if copyied
 	- bug when if u click both button at a time objects teleports to inf
 	- figure out filepath bugs and name/string bugs
@@ -37,3 +38,6 @@
 -- Overview
 	- better renderer
 	- better editor
+
+--NEXT
+	- load any model

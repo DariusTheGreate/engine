@@ -520,8 +520,8 @@ void Object::serialize(std::ofstream& file)
         model->path.shrink_to_fit();
         file << "\t\tPath: {" << model->path << "}\n";
 
-        //NOTE(darius) basicly its a start for implementation of my own .obj file. But its slow asfuck and i wont get to it now. So here is boundary for object that I DO serialize -  it needs to be 1 mesh
-        if (model->meshes.size() < 2) {
+        //NOTE(darius) basicly its a start for implementation of my own .obj file. But its slow asfuck and i wont get to it now. 
+        if (false && model->meshes.size() < 2) {
             file << "\t\tMeshes: {\n";
 
             for (auto& i : model->meshes)

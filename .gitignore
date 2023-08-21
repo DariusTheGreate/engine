@@ -8,3 +8,5 @@ textures/
 logicScripts/EngineLogic/
 logicScripts/EngineRunner/
 testImages/
+TODO.txt
+*.prefab
