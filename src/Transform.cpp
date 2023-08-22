@@ -115,3 +115,9 @@ glm::quat Transform::matrixQuaternion()
 {
 	return matrix;	
 }
+
+void Transform::setMatrix(glm::mat4 matrix_in)
+{
+	matrix = matrix_in;
+}
+

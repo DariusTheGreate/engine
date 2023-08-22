@@ -253,7 +253,7 @@ void Scene::update_objects()
 
 			auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
 
-			if (collision_state_gjk) {
+			if (collision_state != glm::vec3(0,0,0)) {
 				//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
 				sceneObjects[i]->getColider()->collider_debug_color = {1,0,0,0};
 				sceneObjects[j]->getColider()->collider_debug_color = {1,0,0,0};

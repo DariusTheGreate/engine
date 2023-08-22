@@ -16,6 +16,7 @@ public:
         BLOOM,
         DEFERRED,
         DEFERRED_LIGHT,
+        PARTICLES,
     };
 
 public:
@@ -38,6 +39,8 @@ public:
 	Shader& getBokeShader();
 
 	Shader& getGBufferShader();
+
+    Shader& getParticlesShader();
 
     LightingShaderRoutine& getShaderRoutine(); 
 
@@ -76,5 +79,8 @@ private:
 
     Shader deferredLightPasVertex;
     Shader deferredLightPasFragment;
+
+    Shader particlesVertex;
+    Shader particlesFragment;
 };
 

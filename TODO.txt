@@ -1,15 +1,9 @@
 --ARCHITECTURE
-	- fix transform
 	- colliders response system													
-	- Prefabs editing system in other window
 	- better ECS?
-	- separate thread for commands input + commands processing?
-
-	-stacktrace. debug stuff
 
 --RENDERER
 	- 2D normal mapping                                                         !
-	- load any models     														!
     - instanced rendering                                                       !
 
 	- finish bloom                                                              !
@@ -24,9 +18,14 @@
 	- distance rendering
 	- debug grid distance rendering
 
+	- shaders for effects drawing on texture
+
+	- blending satge
+
 --UI
 	- assets browser
 	- LOGO
+	- Panels
 
 --BUGS
 	- bug when assimp dont load first 4 letters(4 bytes) of string
@@ -35,9 +34,10 @@
 	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
 
--- Overview
-	- better renderer
-	- better editor
-
 --NEXT
-	- load any model
+	- instanced rendering
+	- colliders response system													
+	- textures loading and transfer to shaders. normals, specular, tangents, etc
+	- finish shadows                                                            
+	- finish bloom                                                              
+	- assets browser

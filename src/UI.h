@@ -267,16 +267,6 @@ public:
 
             ImGui::Text("particles count %i", particles->positions.size());
 
-            if(ImGui::CollapsingHeader("Particles Material")){
-                ImGui::DragFloat("ambient x", &particles->particleMaterial->ambient.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-                ImGui::DragFloat("ambient y", &particles->particleMaterial->ambient.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-                ImGui::DragFloat("ambient z", &particles->particleMaterial->ambient.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-
-                ImGui::DragFloat("diffuse x", &particles->particleMaterial->diffuse.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-                ImGui::DragFloat("diffuse y", &particles->particleMaterial->diffuse.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-                ImGui::DragFloat("diffuse z", &particles->particleMaterial->diffuse.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
-            }
-
             if(ImGui::Button("Add Particle")){
                 particles->addPositions(100);             
             }
@@ -469,23 +459,11 @@ public:
             FlatMesh flat;
             flat.setTexture(GameState::engine_path + "/textures", "grass.png");
 
-            Shader particleVertex = Shader(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER);
-            Shader particleFragment = Shader(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER);
-
-            particleVertex.compile();
-            particleFragment.compile();
-            particleVertex.link(particleFragment);
-
-            LightingShaderRoutine shaderRroutine = LightingShaderRoutine(Shader(particleVertex)); //hui.getCurrShaderRoutine();
-
-            Material m;
-            m.ambient = {1,1,1};
-            m.diffuse = {1,1,1};
-            m.specular = {1,1,1};
-            m.shininess = 32;
+            LightingShaderRoutine shaderRroutine;
+            Shader currShader = Renderer::shaderLibInstance->getParticlesShader();
 
             ParticleSystem ps = ParticleSystem();
-            ps.addParticle(std::move(flat), Shader(particleVertex), LightingShaderRoutine(shaderRroutine), Material(m));
+            ps.addParticle(std::move(flat), std::move(currShader), std::move(shaderRroutine));
 
             item_clicked->addParticleSystem(std::move(ps));    
         }
@@ -517,14 +495,9 @@ public:
                 ImGui::InputText("path", (char*)path.c_str(), 100);
 
                 if(ImGui::Button("Load")){
-                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
-                    vshdr.compile();
-                    fshdr.compile();
-                    vshdr.link(fshdr);
-                    LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
-                    path.shrink_to_fit();
-                    item_clicked->addModel(path, vshdr, shaderRoutine);
+                    Shader currShader = Renderer::shaderLibInstance->getCurrShader();
+                    LightingShaderRoutine shaderRoutine;
+                    item_clicked->addModel(path, currShader, shaderRoutine);
                 }
 
                 ImGui::Unindent();
@@ -537,6 +510,7 @@ public:
                 ImGui::InputText("path", (char*)path.c_str(), 100);
 
                 if(ImGui::Button("Load")){
+                    //NOTE(DARIUS) DONT WORK YET
                     Shader animVertex = Shader(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
                     Shader animFragment = Shader(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
                     animVertex.compile();
@@ -571,17 +545,15 @@ public:
                 if(ImGui::Button("Load FlatMesh")){
                     FlatMesh flat;
 
-                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
-                    vshdr.compile();
-                    fshdr.compile();
-                    vshdr.link(fshdr);
-                    LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+                    LightingShaderRoutine shaderRoutine;
+                    Shader currShader = Renderer::shaderLibInstance->getCurrShader();
 
                     path.shrink_to_fit();
                     name.shrink_to_fit();
+
                     flat.setTexture(path, name);
-                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
+
+                    item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
                 }
 
                 if(ImGui::Button("Load Normal Mesh")){
@@ -595,18 +567,16 @@ public:
                 if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                     FlatMesh flat;
 
-                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
-                    vshdr.compile();
-                    fshdr.compile();
-                    vshdr.link(fshdr);
-                    LightingShaderRoutine shaderRoutine = {Shader(vshdr)};
+                    LightingShaderRoutine shaderRoutine;
+                    Shader currShader = Renderer::shaderLibInstance->getCurrShader();
 
                     path.shrink_to_fit();
                     name.shrink_to_fit();
 
                     flat.setTexture(path, name);
-                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
+
+                    item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
+
                     item_clicked->addSpriteAnimation(SpriteAnimation(4,8,500));
                 }
 
@@ -615,14 +585,10 @@ public:
 
                     FlatMesh flat;
 
-                    Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-                    Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);//lightSum works
-                    vshdr.compile();
-                    fshdr.compile();
-                    vshdr.link(fshdr);
-                    LightingShaderRoutine shaderRoutine = { Shader(vshdr) };
+                    LightingShaderRoutine shaderRoutine;
+                    Shader currShader = Renderer::shaderLibInstance->getCurrShader();
 
-                    item_clicked->addModel(std::move(flat), vshdr, shaderRoutine);
+                    item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
                     item_clicked->addSpriteAnimation(SpriteAnimation(path));
                 }
             }

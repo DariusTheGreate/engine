@@ -35,6 +35,9 @@ struct Transform
 
 	glm::quat matrixQuaternion();
 
+	void setMatrix(glm::mat4 matrix_in);
+
+	//NOTE(darius) it shouldnt be here (?) but its best if it here.
 	int objectID = 0;
 
     glm::mat4 matrix = { 1.f, 0.f, 0.f, 0.f,
