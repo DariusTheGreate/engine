@@ -1,5 +1,6 @@
 #include <ParticleSystem.h>
 #include <Object.h>
+#include <Renderer.h>
 
 void ParticleSystem::setEmitter(glm::vec3 emitter_in)
 {
@@ -11,69 +12,20 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
     shader = shader_in;
     shaderRoutine = shaderRoutine_in;
     particle.emplace(std::move(m));
-
+    addPositions(amount);
     //particle.emplace(m, shader_in, shaderRoutine_in);
-
-    std::vector<glm::mat4> modelMatrices;
-    modelMatrices.resize(amount);
-    srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
-    float radius = 150.0;
-    float offset = 25.0f;
-    for (int i = 0; i < amount; i++)
-    {
-        glm::mat4 model = glm::mat4(1.0f);
-        // 1. translation: displace along circle with 'radius' in range [-offset, offset]
-        /*float angle = (float)i / (float)amount * 360.0f;
-        float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float x = sin(angle) * radius + displacement;
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float y = displacement * 0.4f; // keep height of asteroid field smaller compared to width of x and z
-        displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-        float z = cos(angle) * radius + displacement;
-        model = glm::translate(model, glm::vec3(x, y, z));
-
-        // 2. scale: Scale between 0.05 and 0.25f
-        float scale = static_cast<float>((rand() % 20) / 100.0 + 0.05);
-        model = glm::scale(model, glm::vec3(scale));
-
-        // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
-        float rotAngle = static_cast<float>((rand() % 360));
-        model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
-        */
-
-        // 4. now add to list of matrices
-        modelMatrices[i] = model;
-    }
-
-    for(int i = 0; i < modelMatrices.size(); ++i)
-    {
-        particlesTransfroms.push_back(Transform(modelMatrices[i]));
-    }
-
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * amount, &positions[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
+    particle->getVao().bind();
 
-    //NOTE(darius) looks like problem is here
-    unsigned int VAO = particle->getVao().get();
-    glBindVertexArray(VAO);
-    // set attribute pointers for matrix (4 times vec4)
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
-    glEnableVertexAttribArray(5);
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
-
-    glVertexAttribDivisor(3, 1);
-    glVertexAttribDivisor(4, 1);
-    glVertexAttribDivisor(5, 1);
-    glVertexAttribDivisor(6, 1);
-
-    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer); // this attribute comes from a different vertex buffer
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.
 }
 
 void ParticleSystem::changeShader()
@@ -115,23 +67,29 @@ void ParticleSystem::renderParticles()
     auto comp = [](glm::vec3 a, glm::vec3 b){return a.z < b.z;};
     std::sort(positions.begin(), positions.end(), comp);
 
-    for(int i = 0; i < particlesTransfroms.size(); ++i)
+    /*for(int i = 0; i < particlesTransfroms.size(); ++i)
     {
         if(positions.size() > i){
             particlesTransfroms[i].setPosition(positions[i]);
         }
     }
 
-    int c = 0;
-    for (auto& m : particlesTransfroms)
+    /*int c = 0;
+    for(unsigned int i = 0; i < 100; i++)
     {
-        if(c++ > positions.size()-1)
-            break;
+        Renderer::shaderLibInstance->getCurrShader().setVec3(("offsets[" + std::to_string(i) + "]"), particlesTransfroms[i].getPosition());
+    }  
+    */
+
+    //for (auto& m : particlesTransfroms)
+    {
+        //if(c++ > positions.size()-1)
+        //    break;
         //tmpObj.getTransform().setMatrix(m);
-        glm::vec3 pos = m.getPosition();
+        glm::vec3 pos = glm::vec3(0,0,0);//particlesTransfroms[0].getPosition();
         tmpObj.getTransform() = Transform(glm::vec3(pos.x, pos.y, pos.z), particle_size);
         shaderRoutine->operator()(&tmpObj);
-        particle->Draw(*shader);
+        particle->Draw(*shader, 100);
     }
 
     /*tmpObj.getTransform() = Transform(glm::vec3{0,0,0}, particle_size);
@@ -163,6 +121,8 @@ void ParticleSystem::updateUniform3DDistribution(float timeValue)
         {
             int max = static_cast<int>(maxBound) * 100;
             int min = static_cast<int>(minBound) * 100;
+            if (max == min)
+                continue;
             float v1 = static_cast<float>((rand() % (max - min)) + min);
             float v2 = static_cast<float>((rand() % (max - min)) + min);
             float v3 = static_cast<float>((rand() % (max - min)) + min);
@@ -196,4 +156,14 @@ void ParticleSystem::update(float timeValue)
     if(pause)
         return;
     updateUniform3DDistribution(timeValue);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * amount, &positions[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    particle->getVao().bind();
+
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer); // this attribute comes from a different vertex buffer
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(3, 1); // tell OpenGL this is an instanced vertex attribute.
 }

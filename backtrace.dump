@@ -1,20 +1,20 @@
  0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:77
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
- 2# setSignalHandlers at E:\own\programming\engine\src\main.cpp:23
+ 2# setSignalHandlers at E:\own\programming\engine\src\main.cpp:22
  3# raise in ucrtbased
  4# setmbcp in ucrtbased
  5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportW in ucrtbased
- 7# CrtDbgReportW in ucrtbased
- 8# _threadid in ucrtbased
- 9# _threadid in ucrtbased
-10# abort in ucrtbased
-11# terminate in ucrtbased
-12# main$catch$1 at E:\own\programming\engine\src\main.cpp:55
-13# 0x00007FFCE47B1080 in VCRUNTIME140_1D
-14# _NLG_Return2 in VCRUNTIME140_1D
-15# RtlCaptureContext2 in ntdll
-16# main at E:\own\programming\engine\src\main.cpp:51
+ 6# VCrtDbgReportA in ucrtbased
+ 7# CrtDbgReport in ucrtbased
+ 8# std::vector<glm::vec<3,float,0>,std::allocator<glm::vec<3,float,0> > >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
+ 9# ParticleSystem::addParticle at E:\own\programming\engine\src\ParticleSystem.cpp:19
+10# UI::componentAdderWindow at E:\own\programming\engine\src\UI.h:468
+11# UI::showObjectWindow at E:\own\programming\engine\src\UI.h:384
+12# UI::sceneWindow at E:\own\programming\engine\src\UI.h:183
+13# UI::renderUI at E:\own\programming\engine\src\UI.h:54
+14# Editor::update at E:\own\programming\engine\src\Editor.cpp:37
+15# Application::Run at E:\own\programming\engine\src\Application.cpp:21
+16# main at E:\own\programming\engine\src\main.cpp:50
 17# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
 18# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
 19# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331

@@ -98,7 +98,7 @@ void Scene::renderParticles()
 		if (!sceneObjects[i]->getParticleSystem())
 			continue;
 
-		sceneObjects[i]->getParticleSystem()->updateUniform3DDistribution(static_cast<float>(glfwGetTime()));
+		sceneObjects[i]->getParticleSystem()->update(static_cast<float>(glfwGetTime()));
 		sceneObjects[i]->getParticleSystem()->renderParticles();
 	}
 }

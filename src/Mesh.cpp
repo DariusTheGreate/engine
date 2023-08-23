@@ -127,12 +127,12 @@ void Mesh::Draw(Shader& shader, size_t amount)
     vao.bind();
 
     //OpenglWrapper::DrawInstances(36, amount);
-    //glDrawElementsInstanced(
-    //    GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount
-    //);
-    glDrawArraysInstanced(
-        GL_TRIANGLES, 0, 100, amount
+    glDrawElementsInstanced(
+        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount
     );
+    //glDrawArraysInstanced(
+    //    GL_TRIANGLES, 0, 36, amount
+    //);
 
     //OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
     //OpenglWrapper::DrawArrays(36);
