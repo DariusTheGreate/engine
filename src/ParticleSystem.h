@@ -36,6 +36,7 @@ public:
     std::vector<glm::vec3> positions;
 
     //NOTE(darius) DANGER(darius) for some reason when its uncomented u have explosion at deserealization in EngineLogic.dll
+    std::vector<Transform> particlesTransfroms;
     std::vector<glm::mat4> modelMatrices;
 
 	unsigned int buffer = 0;

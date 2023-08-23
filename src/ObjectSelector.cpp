@@ -53,7 +53,7 @@ int ObjectSelector::ReadPixel(int x, int y)
     //buff.setTaget(GL_FRAMEBUFFER);
     //GameState::msg("Pixel data: " + std::to_string(pixel[0]) + "|" + std::to_string(pixel[1]) + "|" + std::to_string(pixel[2]) + "|" + std::to_string(pixel[3]) + "\n");
 
-    return pickedID;
+    return static_cast<int>(pickedID);
 }
 
 glm::vec3 ObjectSelector::GetRayFromMouse(float mouseX, float mouseY, Window* w)

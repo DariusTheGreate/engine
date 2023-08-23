@@ -457,7 +457,7 @@ public:
 
         if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture(GameState::engine_path + "/textures", "grass.png");
+            flat.setTexture(GameState::engine_path + "/textures", "smoke.png");
 
             LightingShaderRoutine shaderRroutine;
             Shader currShader = Renderer::shaderLibInstance->getParticlesShader();

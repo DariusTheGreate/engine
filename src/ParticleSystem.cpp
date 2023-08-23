@@ -14,7 +14,8 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
 
     //particle.emplace(m, shader_in, shaderRoutine_in);
 
-    /*modelMatrices.resize(amount);
+    std::vector<glm::mat4> modelMatrices;
+    modelMatrices.resize(amount);
     srand(static_cast<unsigned int>(glfwGetTime())); // initialize random seed
     float radius = 150.0;
     float offset = 25.0f;
@@ -22,7 +23,7 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
     {
         glm::mat4 model = glm::mat4(1.0f);
         // 1. translation: displace along circle with 'radius' in range [-offset, offset]
-        float angle = (float)i / (float)amount * 360.0f;
+        /*float angle = (float)i / (float)amount * 360.0f;
         float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
         float x = sin(angle) * radius + displacement;
         displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
@@ -38,9 +39,15 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
         // 3. rotation: add random rotation around a (semi)randomly picked rotation axis vector
         float rotAngle = static_cast<float>((rand() % 360));
         model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+        */
 
         // 4. now add to list of matrices
         modelMatrices[i] = model;
+    }
+
+    for(int i = 0; i < modelMatrices.size(); ++i)
+    {
+        particlesTransfroms.push_back(Transform(modelMatrices[i]));
     }
 
     glGenBuffers(1, &buffer);
@@ -67,7 +74,6 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
     glVertexAttribDivisor(6, 1);
 
     glBindVertexArray(0);
-    */
 }
 
 void ParticleSystem::changeShader()
@@ -102,17 +108,48 @@ void ParticleSystem::renderParticles()
         //particle->Draw(*shader, positions.size());
     }
     */
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   
+    Object tmpObj("tmp");
 
-    for(auto& p : positions)
+    auto comp = [](glm::vec3 a, glm::vec3 b){return a.z < b.z;};
+    std::sort(positions.begin(), positions.end(), comp);
+
+    for(int i = 0; i < particlesTransfroms.size(); ++i)
     {
-        particle->Draw(*shader, amount);
-        Object tmpObj("tmp");
-        tmpObj.getTransform() = Transform(p, particle_size);
-        shaderRoutine->operator()(&tmpObj);
+        if(positions.size() > i){
+            particlesTransfroms[i].setPosition(positions[i]);
+        }
     }
 
-    //shaderRoutine->operator()(Transform({0,0,0}, particle_size));
-	//particle->Draw(*shader, amount);
+    int c = 0;
+    for (auto& m : particlesTransfroms)
+    {
+        if(c++ > positions.size()-1)
+            break;
+        //tmpObj.getTransform().setMatrix(m);
+        glm::vec3 pos = m.getPosition();
+        tmpObj.getTransform() = Transform(glm::vec3(pos.x, pos.y, pos.z), particle_size);
+        shaderRoutine->operator()(&tmpObj);
+        particle->Draw(*shader);
+    }
+
+    /*tmpObj.getTransform() = Transform(glm::vec3{0,0,0}, particle_size);
+    shaderRoutine->operator()(&tmpObj);
+	particle->Draw(*shader);
+
+    tmpObj.getTransform() = Transform(glm::vec3{1,1,1}, particle_size);
+    shaderRoutine->operator()(&tmpObj);
+	particle->Draw(*shader);
+    */
+
+    /*tmpObj.getTransform() = particlesTransfroms[0];
+    shaderRoutine->operator()(&tmpObj);
+    particle->Draw(*shader);
+    */
+
+    glDisable(GL_BLEND);
+
 }
 
 void ParticleSystem::updateUniform3DDistribution(float timeValue)

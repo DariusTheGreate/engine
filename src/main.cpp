@@ -1,10 +1,9 @@
 #include <iostream>
-#include <UI.h>
-
 #include <signal.h>     // ::signal, ::raise
 #include <boost/stacktrace.hpp>
 
 #include "Application.h"
+#include <UI.h>
 #include "GameState.h"
 
 Camera GameState::cam;

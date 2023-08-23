@@ -234,5 +234,17 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
 
             std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
         }
+
+        if (particlesFragment.checkForSourceChanges() || particlesVertex.checkForSourceChanges())
+        {
+            particlesVertex.reload();
+            particlesFragment.reload();
+
+            particlesVertex.compile();
+            particlesFragment.compile();
+            particlesVertex.link(particlesFragment);
+
+            std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
+        }
     }
 

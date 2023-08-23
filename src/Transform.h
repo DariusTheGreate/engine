@@ -13,9 +13,12 @@ struct Transform
 	Transform(glm::vec3 pos, glm::vec3 scl);
 	Transform(glm::vec3 pos, glm::vec3 scl, glm::quat rot);
 	Transform(std::vector<float> mat_in);
+	Transform(glm::mat4 mat_in);
 	Transform(const Transform& t);
 
 	void setPosition(glm::vec3 pos);
+
+	void translatePosition(glm::vec3 pos);
 
 	glm::vec3 getPosition();
 
