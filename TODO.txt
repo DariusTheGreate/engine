@@ -22,6 +22,8 @@
 
 	- blending satge
 
+	-instanced rendering fro any mesh
+
 --UI
 	- assets browser
 	- LOGO
@@ -34,10 +36,8 @@
 	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
 
---NEXT
-	- instanced rendering
+-	- textures loading and transfer to shaders. normals, specular, tangents, etc-NEXT
 	- colliders response system													
-	- textures loading and transfer to shaders. normals, specular, tangents, etc
 	- finish shadows                                                            
 	- finish bloom                                                              
 	- assets browser

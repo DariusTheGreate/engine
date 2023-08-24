@@ -10,6 +10,17 @@
 #include <FlatMesh.h>
 
 
+struct Particle
+{
+    glm::vec3 pos = {0,0,0};
+    float alpha = 1;
+    float t = 0.0f;
+    float tmax = 5.0f;
+    float mass = 2.0f;
+    glm::vec3 force = {0,0,0};
+    glm::vec3 velocity = {0,0,0};
+};
+
 class ParticleSystem{
 public:
 	ParticleSystem() = default;
@@ -33,14 +44,17 @@ public:
 
     void update(float timeValue);
 
-    std::vector<glm::vec3> positions;
+    void setBuffers();
+
+    std::vector<glm::vec4> positions;
+    std::vector<Particle> particles;
 
     //NOTE(darius) DANGER(darius) for some reason when its uncomented u have explosion at deserealization in EngineLogic.dll
     std::vector<Transform> particlesTransfroms;
     std::vector<glm::mat4> modelMatrices;
 
 	unsigned int buffer = 0;
-	int amount = 100;
+	int amount = 10;
 
     std::optional<Mesh> particle; 
     std::optional<Shader> shader;
