@@ -34,8 +34,9 @@ Transform::Transform(std::vector<float> mat_in)
 //NOTE(darius) its not set position, its translate, so it works in engineLogic as movetransform;
 void Transform::setPosition(glm::vec3 pos)
 {
-    glm::mat4 mvp = glm::translate(matrix, pos);
-    matrix = mvp;
+	matrix[3][0] = pos.x;
+	matrix[3][1] = pos.y;
+	matrix[3][2] = pos.z;
 }
 
 glm::vec3 Transform::getPosition()

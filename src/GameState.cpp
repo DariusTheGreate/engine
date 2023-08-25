@@ -45,5 +45,5 @@ Camera* GameState::editorCamera = nullptr;
 bool GameState::editorCameraMode = true;
 GameState* GameState::instance = nullptr;
 
-std::string GameState::engine_path = "E:/own/programming/engine/";
+std::string GameState::engine_path = "E:/Dean/fedor/engine/";
 

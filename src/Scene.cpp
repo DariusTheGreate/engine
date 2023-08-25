@@ -272,7 +272,7 @@ void Scene::update_objects()
 				}
 				*/
 
-				//sceneObjects[i]->getTransform().addToPosition(collision_state);
+				sceneObjects[i]->getTransform().addToPosition(collision_state);
 				*sceneObjects[i]->getColider()->get_collision_state() = false;
 
 				/*
