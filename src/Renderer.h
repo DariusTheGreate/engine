@@ -147,7 +147,7 @@ public:
     };
 
     std::vector<PointToRender> pointsToRender;
-    bool debug_render_points = true;
+    bool debug_render = true;// Note(darius) when false - we dont draw debug info
 private:
     size_t length = 0;
     size_t slices = 200;

@@ -17,7 +17,9 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         gBufferVertex(GameState::engine_path + "shaders/GBufferVertex.glsl", GL_VERTEX_SHADER),
         gBufferFragment(GameState::engine_path + "shaders/GBufferFragment.glsl", GL_FRAGMENT_SHADER),
         deferredLightPasVertex(GameState::engine_path + "shaders/deferredLightPasVertex.glsl", GL_VERTEX_SHADER),
-        deferredLightPasFragment(GameState::engine_path + "shaders/deferredLightPasFragment.glsl", GL_FRAGMENT_SHADER)
+        deferredLightPasFragment(GameState::engine_path + "shaders/deferredLightPasFragment.glsl", GL_FRAGMENT_SHADER),
+        particlesVertex(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER),
+        particlesFragment(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER)
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -55,6 +57,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         deferredLightPasFragment.compile();
         deferredLightPasVertex.link(deferredLightPasFragment);
 
+        particlesVertex.compile();
+        particlesFragment.compile();
+        particlesVertex.link(particlesFragment);
+
         stage = STAGE::DEPTH;
     }
 
@@ -74,6 +80,8 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
             return deferredLightPasVertex;
         else if (stage == STAGE::EDITOR_ID)
             return editorIdVertex;
+        else if (stage == STAGE::PARTICLES)
+            return particlesVertex;
         else
             return lightingVertex;
     }
@@ -116,6 +124,11 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
 	Shader& ShaderLibrary::getGBufferShader()
     {
         return gBufferVertex;
+    }
+    
+    Shader& ShaderLibrary::getParticlesShader()
+    {
+        return particlesVertex;
     }
 
     LightingShaderRoutine& ShaderLibrary::getShaderRoutine() 
@@ -220,6 +233,18 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
             gBufferVertex.link(gBufferFragment);
 
             std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
+        }
+
+        if (particlesFragment.checkForSourceChanges() || particlesVertex.checkForSourceChanges())
+        {
+            particlesVertex.reload();
+            particlesFragment.reload();
+
+            particlesVertex.compile();
+            particlesFragment.compile();
+            particlesVertex.link(particlesFragment);
+
+            std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
         }
     }
 

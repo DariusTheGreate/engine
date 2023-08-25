@@ -87,6 +87,7 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
+
 	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
 	if(body)
 		model *= body->get_quatmat();
@@ -94,8 +95,9 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 	auto vv = collider->get_render_shift();
 	model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
 
+
 	//TODO(darius) its not size, its scale
-	model = glm::scale(model, collider->get_size());
+	//model = glm::scale(model, collider->get_size());
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", collider->collider_debug_color);
@@ -124,7 +126,7 @@ void DebugRenderer::renderDebugCube(glm::vec3 pos, int r)
 //TODO(darius) make it instanced. Dont upload each point individually
 void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,1,0,0))
 {
-    if(!debug_render_points)
+    if(!debug_render)
         return;
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
@@ -555,9 +557,13 @@ void Renderer::renderAll(Window* wind)
 		dbr.updateCamera(projection, view);
 	}
 
-	dbr.renderDebugGrid();
+	if(dbr.debug_render)
+		dbr.renderDebugGrid();
 
 	renderScene();
+
+	if (!dbr.debug_render)
+		return;
 
 	for (int i = 0; i < currScene->get_objects().size(); ++i) {
 		if (currScene->get_objects()[i]) {
@@ -584,6 +590,7 @@ void Renderer::renderScene()
 	//OpenglWrapper::CullFaces();
 
 	currScene->renderScene();
+	Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::PARTICLES;
 	currScene->renderParticles();
 	currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
 	currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));

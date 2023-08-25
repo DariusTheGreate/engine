@@ -28,7 +28,7 @@ public:
     Window* getWindow();
 
     Renderer* getRenderer();
-    
+
 private:
     GameState state;
     Camera editorCamera;

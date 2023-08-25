@@ -13,9 +13,12 @@ struct Transform
 	Transform(glm::vec3 pos, glm::vec3 scl);
 	Transform(glm::vec3 pos, glm::vec3 scl, glm::quat rot);
 	Transform(std::vector<float> mat_in);
+	Transform(glm::mat4 mat_in);
 	Transform(const Transform& t);
 
 	void setPosition(glm::vec3 pos);
+
+	void translatePosition(glm::vec3 pos);
 
 	glm::vec3 getPosition();
 
@@ -35,6 +38,9 @@ struct Transform
 
 	glm::quat matrixQuaternion();
 
+	void setMatrix(glm::mat4 matrix_in);
+
+	//NOTE(darius) it shouldnt be here (?) but its best if it here.
 	int objectID = 0;
 
     glm::mat4 matrix = { 1.f, 0.f, 0.f, 0.f,

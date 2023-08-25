@@ -64,7 +64,7 @@ long EmptyScriptRoutine::checkTimeOfCreation()
 {
 	 struct stat result;
 	 if (stat("E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug/EngineLogic.dll", &result) == 0)
-		 return result.st_mtime;
+		 return (long)(result.st_mtime);
 	 return 0;
 }
 

@@ -3,6 +3,7 @@
 out vec4 FragColor;
 
 layout (location = 0) in vec2 TexCoords;
+layout (location = 1) in float alpha;
 
 struct Material {
     float shininess;
@@ -74,9 +75,10 @@ void main()
     //return;
 
     vec4 texColor = texture(texture_diffuse1, TexCoords);
-    if(texColor.a < 0.1)
+    if(texColor.a < 0)
         discard;
 
     FragColor = texColor;
+    FragColor.a = texColor.a - alpha;
 }   
 
