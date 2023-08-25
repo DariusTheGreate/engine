@@ -16,14 +16,14 @@ void RigidBody::update(float dt)
 	velocity = velocity + dt * acceleration;
 	velocity *= 0.98;
 	//tr.position = tr.position + dt * velocity;
-	tr.setPosition(dt * velocity);
+	tr.setPosition(tr.getPosition() + dt * velocity);
 
 	glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
 	glm::vec3 angular_acceleration = { angular_accelerationtmp.x, angular_accelerationtmp.y, angular_accelerationtmp.z };
 	angular_velocity = angular_velocity + dt * angular_acceleration;
 	angular_velocity *= 0.98;
 
-	//tr.matrix = construct_quat(angular_velocity, dt) * tr.matrix;
+	tr.matrix = glm::toMat4(construct_quat(angular_velocity, dt)) * tr.matrix;
 }
 
 void RigidBody::apply_impulse(const glm::vec3 impulse) {

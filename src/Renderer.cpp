@@ -87,19 +87,14 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-	//model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
-	//if(body)
-	//	model *= body->get_quatmat();
-	//model = collider->get_transform().matrix;
 
-	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x/2, collider->get_size().y/2, collider->get_size().z/2} - collider->get_render_shift());
-	//TODO(darius) its not size, its scale
-	model = glm::scale(model, collider->get_size());
+	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
+	if(body)
+		model *= body->get_quatmat();
+	model *= glm::toMat4(collider->get_transform().matrixQuaternion());
+	auto vv = collider->get_render_shift();
+	model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
 
-	glm::mat4 modelRot = glm::toMat4(collider->get_transform().matrixQuaternion());
-	model *= modelRot;
-	//auto vv = collider->get_render_shift();
-	//model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
 
 	//TODO(darius) its not size, its scale
 	//model = glm::scale(model, collider->get_size());
