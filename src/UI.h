@@ -529,10 +529,21 @@ public:
                 ImGui::Unindent();
             }
                 
-            if(ImGui::Button("Cube")){
-                CubeMesh cube;
-                cube.setDrawMode(DrawMode::DRAW_AS_ARRAYS);
-                item_clicked->addModel(std::move(cube), shader, shadeRroutine);
+            if(ImGui::CollapsingHeader("Cube")){
+                ImGui::InputText("path", (char*)path.c_str(), 100);
+
+                if(ImGui::Button("Load CubeMesh")){
+                    CubeMesh cube;
+
+                    LightingShaderRoutine shaderRoutine;
+                    Shader currShader = Renderer::shaderLibInstance->getCurrShader();
+
+                    path.shrink_to_fit();
+
+                    cube.setTexture(path);
+
+                    item_clicked->addModel(std::move(cube), shader, shaderRoutine);
+                }
             }
 
             if(ImGui::CollapsingHeader("FlatMesh"))
@@ -540,7 +551,7 @@ public:
                 path.resize(100);
                 name.resize(100);
                 ImGui::InputText("path", (char*)path.c_str(), 100);
-                ImGui::InputText("name", (char*)name.c_str(), 100);
+                //ImGui::InputText("name", (char*)name.c_str(), 100);
 
                 if(ImGui::Button("Load FlatMesh")){
                     FlatMesh flat;
@@ -549,9 +560,9 @@ public:
                     Shader currShader = Renderer::shaderLibInstance->getCurrShader();
 
                     path.shrink_to_fit();
-                    name.shrink_to_fit();
+                    //name.shrink_to_fit();
 
-                    flat.setTexture(path, name);
+                    flat.setTexture(path);
 
                     item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
                 }

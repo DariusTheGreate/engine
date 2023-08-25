@@ -35,8 +35,10 @@
 	- bug when if u click both button at a time objects teleports to inf
 	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
+	- bug when if change color picking brokes
 
--	- textures loading and transfer to shaders. normals, specular, tangents, etc-NEXT
+--NEXT
+	- textures loading and transfer to shaders. normals, specular, tangents, etc
 	- colliders response system													
 	- finish shadows                                                            
 	- finish bloom                                                              

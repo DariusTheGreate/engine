@@ -56,6 +56,10 @@ public:
 
     std::vector<Texture>& getTexturesRef();
 
+    void setTexture(std::string path, std::string name);
+
+    void setTexture(std::string path);
+
     VAO getVao();
 
 protected:

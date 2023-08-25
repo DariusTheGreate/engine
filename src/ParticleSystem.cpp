@@ -96,8 +96,6 @@ void ParticleSystem::updateSpawnFromEmitter(float timeValue)
     if(pause)
         return;
 
-
-
     if (timeValue - lastTime > 0.1) {
         lastTime = timeValue;
 

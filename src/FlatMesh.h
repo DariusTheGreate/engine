@@ -11,10 +11,6 @@ class FlatMesh : public Mesh
 public:
     FlatMesh();
 
-    void setTexture(std::string path, std::string name);
-
-    void setTexture(std::string path);
-
     void setTextureNormal(std::string path);
 
     void DrawRaw(Shader& shader, glm::vec3 pos, glm::vec3 scale);

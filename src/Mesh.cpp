@@ -36,6 +36,20 @@ std::vector<Texture>& Mesh::getTexturesRef()
     return textures;
 }
 
+void Mesh::setTexture(std::string path, std::string name)
+{
+    //TODO(darius) make it single texture
+    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), path + "/" + name, "texture_diffuse");
+    textures.push_back(texture);
+}
+
+void Mesh::setTexture(std::string path)
+{
+    //TODO(darius) make it single texture
+    Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_diffuse");
+    textures.push_back(texture);
+}
+
 VAO Mesh::getVao()
 {
     return vao;
@@ -86,14 +100,17 @@ void Mesh::Draw(Shader& shader)
         }
 
     }
-    //TODO(darius) perfomance issues?
-    //if(mode == DrawMode::DRAW_AS_ARRAYS)
-	//	glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-    //else if(mode == DrawMode::DRAW_AS_INSTANCE)
-    //    glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
-    //else            
-    OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
 
+    //TODO(darius) perfomance issues?
+    if(mode == DrawMode::DRAW_AS_ARRAYS)
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    else if(mode == DrawMode::DRAW_AS_INSTANCE)
+        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
+    else            
+        OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
+
+    //NOTE(darius) to draw cubeMesh
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
     //OpenglWrapper::UnbindVAO();
 }
 
