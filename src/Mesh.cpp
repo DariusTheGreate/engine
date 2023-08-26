@@ -55,6 +55,11 @@ VAO Mesh::getVao()
     return vao;
 }
 
+DrawMode Mesh::getDrawMode()
+{
+    return mode;
+}
+
 void Mesh::Draw(Shader& shader)
 {
     //std::cout << "positions " << vertices[0].Position.x << " " << vertices[0].Position.x << vertices[0].Position.y << "\n";

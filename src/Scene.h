@@ -197,6 +197,8 @@ public:
 
 	std::optional<PointLight> extractPointLightFromToken(std::string_view);
 
+	std::optional<ParticleSystem> extractParticleSystemFromToken(std::string_view);
+
 	//TODO(darius) make it own module or somtng
 	glm::vec3 extractVectorFromToken(std::string_view);
 

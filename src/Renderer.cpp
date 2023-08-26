@@ -79,7 +79,6 @@ void DebugRenderer::setupSceneGrid()
 	length = (GLuint)indices_grid.size() * 4;
 	glLineWidth(2);
 }
-
 void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& collider, std::optional<RigidBody>& body)
 {
 	if(!collider)
@@ -87,7 +86,6 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-
 	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
 	if(body)
 		model *= body->get_quatmat();
@@ -95,9 +93,8 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 	auto vv = collider->get_render_shift();
 	model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
 
-
 	//TODO(darius) its not size, its scale
-	//model = glm::scale(model, collider->get_size());
+	model = glm::scale(model, collider->get_size());
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", collider->collider_debug_color);
@@ -366,6 +363,9 @@ void Renderer::EditorIDsStage()
 	OpenglWrapper::EnableDepthTest();
 
 	renderScene();
+
+	//TODO(darius) add UI rendering and Guizmos rendering here with id = -1 or something
+
 	workerBuff.Unbind();
 
 	//NOTE(darius) for debug 

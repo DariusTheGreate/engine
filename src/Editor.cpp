@@ -33,7 +33,10 @@ void Editor::update()
     currScene.updateScene();
 
     rendol.render(window);
-    ui.renderUI(currScene, rendol);
+
+    if(showUI)
+        ui.renderUI(currScene, rendol);
+
     rendol.updateBuffers(window);
 }
 
@@ -90,9 +93,11 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render= false;
+        showUI = false;
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render= true;
+        showUI = true;
     }
     if (GameState::instance->ks.get_s() && GameState::instance->ks.get_cntrl()) {
         currScene.serialize(GameState::engine_path + "scene.dean");

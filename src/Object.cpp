@@ -521,7 +521,7 @@ void Object::serialize(std::ofstream& file)
         file << "\t\tPath: {" << model->path << "}\n";
 
         //NOTE(darius) basicly its a start for implementation of my own .obj file. But its slow asfuck and i wont get to it now. 
-        if (false && model->meshes.size() < 2) {
+        if (model->meshes.size() < 2) {
             file << "\t\tMeshes: {\n";
 
             for (auto& i : model->meshes)
@@ -552,7 +552,7 @@ void Object::serialize(std::ofstream& file)
                 file << "\t\t\tTextures: {\n";
                 for (auto& t : textures)
                 {
-                    file << "\t\t\t\tTexture: {";// << t.get_path() << "}\n";
+                    file << "\t\t\t\tTexture: {"; //<< t.get_path() << "}\n";
                     
                     std::string tkn = t.get_path(); 
                     std::cout << tkn << "\n";
@@ -565,6 +565,8 @@ void Object::serialize(std::ofstream& file)
                 }
 
                 file << "\t\t\t}\n";
+
+                file << "\t\t\tDrawMode: {" << (unsigned int)i.getDrawMode() << "}\n";
             }
 
             file << "\t\t}\n";
@@ -607,6 +609,19 @@ void Object::serialize(std::ofstream& file)
         file << "\t}\n";
     }
 
-    file << "}\n";
+    if(particles)
+    {
+        file << "\tParticles: {\n";
+        
+        file << "\t\tMesh: {";
+
+        file << "\t\t\tPath: {" << particles->particle->getTexturesRef()[0].get_path() << "}\n";
+
+        file << "\t\t}";
+
+        file << "\t}\n";
+    }
+
+    file << "\n\t\t}\n";
 }
 

@@ -1,6 +1,8 @@
 --ARCHITECTURE
 	- colliders response system													
 	- better ECS?
+	- make Serialization separate file.
+	- make serialization own method per component?(probably not)
 
 --RENDERER
 	- 2D normal mapping                                                         !
@@ -22,7 +24,7 @@
 
 	- blending satge
 
-	-instanced rendering fro any mesh
+	- instanced rendering fro any mesh
 
 --UI
 	- assets browser
@@ -36,10 +38,15 @@
 	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
 	- bug when if change color picking brokes
+	- bug when if u pick guiamo - u pick another object
 
 --NEXT
-	- textures loading and transfer to shaders. normals, specular, tangents, etc
-	- colliders response system													
 	- finish shadows                                                            
-	- finish bloom                                                              
+	- bug when if u pick guizmo or UI - u pick another object (render them into picing mask with -1 index or something)
 	- assets browser
+
+	- textures loading and transfer to shaders. normals, specular, tangents, etc
+	- finish colliders response system													
+	- finish bloom                                                              
+
+	- instanced rendering fro any mesh

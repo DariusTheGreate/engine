@@ -431,6 +431,11 @@ void Scene::deserialize(std::string_view path)
 				glm::vec3 pos = pointLight->position;
 				obj->addPointLight(std::move(*pointLight), pos);
 			}
+
+			auto particles = extractParticleSystemFromToken(objectTokens[i]);	
+			if(particles){
+				obj->addParticleSystem(std::move(*particles));
+			}
 		}
 
 		if(scripts[i] != "None")
@@ -624,8 +629,16 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 		vshdr.link(fshdr);
 		LightingShaderRoutine shaderRoutine = { Shader(vshdr) };*/
 
+		size_t drawModeStart = tkn.find("DrawMode:");
+		size_t brckStart = tkn.find("{", drawModeStart);
+		size_t brckEnd = tkn.find("}", brckStart);
+		std::string modeStr(tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
+
+		unsigned int mode = std::stoi(modeStr);
 
 		Mesh m(vertices, indices, textures);
+		m.setDrawMode((DrawMode)mode);
+
 		res.addMesh(m);
 	}
 
@@ -746,6 +759,27 @@ std::optional<PointLight> Scene::extractPointLightFromToken(std::string_view tkn
 	res.color = color;
 
 	return res;
+}
+
+std::optional<ParticleSystem> Scene::extractParticleSystemFromToken(std::string_view tkn)
+{
+	size_t particlesStart = tkn.find("Particles:");
+	if(particlesStart == std::string::npos)
+		return std::nullopt;
+	size_t meshStart = tkn.find("Mesh:", particlesStart);
+	size_t pathStart = tkn.find("Path:", meshStart);
+
+	size_t brcktStart = tkn.find("{", pathStart);
+	size_t brcktEnd = tkn.find("}", brcktStart);
+	std::string path(tkn.substr(brcktStart + 1 , brcktEnd - brcktStart - 1));
+
+	FlatMesh m;
+	m.setTexture(path);
+
+	ParticleSystem p;
+	p.addParticle(std::move(m), std::move(Renderer::shaderLibInstance->getCurrShader()), LightingShaderRoutine());
+
+	return p;
 }
 
 //TODO(darius) optimise, test and refactor this shit, or switch to simdjson

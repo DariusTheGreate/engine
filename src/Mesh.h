@@ -46,6 +46,8 @@ public:
 
     void Draw(Shader& shader, size_t);
 
+    DrawMode getDrawMode();
+
     void setDrawMode(DrawMode mode_in);
 
     std::vector<Vertex> getVertices();
