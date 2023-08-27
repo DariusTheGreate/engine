@@ -47,3 +47,6 @@ GameState* GameState::instance = nullptr;
 
 std::string GameState::engine_path = "E:/own/programming/engine/";
 
+float GameState::gammaBrightness = 1.0f;
+
+float GameState::gammaFactor = 1.0f;

@@ -764,7 +764,11 @@ public:
     {
         ImGui::Begin("Editor Settings");
 
-        ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.5f, 0, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
+
+        ImGui::DragFloat("gamma brightness", &GameState::gammaBrightness, 0.005f, 0, 10, "%.0001f", 1);
+
+        //ImGui::DragFloat("gamma factor", &GameState::gammaFactor, 0.01f, 0, 10, "%.001f", 1);
         
         ImGui::ColorEdit3("Background Color", (float*)&hui.backgroundColor);
 
@@ -822,6 +826,8 @@ public:
 
     void setItemClicked(Object* obj) 
     {
+        if(ImGuizmo::IsOver() || ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+            return;
         item_clicked = obj;
     }
 

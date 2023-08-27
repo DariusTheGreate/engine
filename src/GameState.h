@@ -27,6 +27,9 @@ public:
 	static Camera* editorCamera;
 	static bool editorCameraMode;
 
+	static float gammaBrightness;
+	static float gammaFactor;
+
 	static MouseState ms;
 	KeyboardState ks;
 	static GameState* instance;

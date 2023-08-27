@@ -11,7 +11,8 @@ void LightingShaderRoutine::operator() (Object* obj){
 
 	sv.setVec3("viewPos", GameState::cam.getCameraPos());
     sv.setInt("lightsCount", PointLight::LightsCount);
-    sv.setFloat("gammaFactor", 1); 
+    sv.setFloat("gammaFactor", GameState::gammaFactor); 
+    sv.setFloat("gammaBrightness", GameState::gammaBrightness); 
 
     //std::cout << "ID: " << obj->getID() << "\n";
     /*int id = obj->getID() * 25500;

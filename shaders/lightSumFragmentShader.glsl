@@ -68,6 +68,8 @@ uniform sampler2D texture_height2;
 uniform sampler2D texture_height3;
 uniform sampler2D texture_height4;
 
+uniform float gammaBrightness;
+
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
@@ -112,7 +114,7 @@ void main()
     if(lightsCount == 0)
         FragColor = texColor;
     else
-        FragColor = texColor * vec4(result, 1.0f);
+        FragColor = gammaBrightness * texColor * vec4(result, 1.0f);
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
@@ -126,7 +128,7 @@ void main()
 
     //gamma corecion
     //FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
-    //FragColor.rgb = 0.1 * (texture(texture_diffuse1, TexCoords)).rgb;
+    //FragColor.rgb = gammaBrightness * (texture(texture_diffuse1, TexCoords)).rgb;
     //FragColor.a = 1.0;
 }   
 

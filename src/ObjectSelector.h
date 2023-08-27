@@ -33,6 +33,7 @@ public:
 
     static unsigned int pick_texture;
 
+    //TODO(darius) its not obvious that buffer for picking stored here.
     static FrameBuffer buff;
 
 private:

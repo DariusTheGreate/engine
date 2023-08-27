@@ -37,7 +37,7 @@ void DebugRenderer::setupSceneGrid()
 	for (int i = 0; i <= slices; ++i) {
 		for (int j = 0; j <= slices; ++j) {
 			float x = (float)j;
-            float y = 0;
+            float y = 0.0f;
             float z = (float)i;
 
 		    if(grid_mode == 2){	
@@ -46,8 +46,34 @@ void DebugRenderer::setupSceneGrid()
                 z = 0;
             }
 
-            if(grid_mode == 3)
-                vertices_grid.push_back(glm::vec3((x-slices/2) * grid_scale, (y) * grid_scale, (z-slices/2) * grid_scale));
+            if(grid_mode == 3){
+
+            	//https://devforum.roblox.com/t/how-to-spawn-things-along-the-surface-of-a-sphere/1566555/3
+            	//https://stackoverflow.com/questions/9604132/how-to-project-a-point-on-to-a-sphere
+            	/*
+            	Write the point in a coordinate system centered at the center of the sphere (x0,y0,z0):
+
+				P = (x',y',z') = (x - x0, y - y0, z - z0)
+
+				Compute the length of this vector:
+
+				|P| = sqrt(x'^2 + y'^2 + z'^2)
+
+				Scale the vector so that it has length equal to the radius of the sphere:
+
+				Q = (radius/|P|)*P
+
+				And change back to your original coordinate system to get the projection:
+
+				R = Q + (x0,y0,z0)
+            	*/
+
+            	glm::vec3 pos = glm::vec3((x-slices/2) * grid_scale, (y) * grid_scale, (z-slices/2) * grid_scale);
+
+            	//pos.y -= 0.1 * (i > j ? i : j);
+
+                vertices_grid.push_back(pos);
+            }
 
             else if(grid_mode == 2)
                 vertices_grid.push_back(glm::vec3((x-slices/2) * grid_scale, (y-slices/2) * grid_scale, (z) * grid_scale));
@@ -352,10 +378,12 @@ void Renderer::EditorIDsStage()
 
 	shaderLibInstance->stage = ShaderLibrary::STAGE::EDITOR_ID;
 
+	//TODO(darius) move creation of this buffer to Renderer::Renderer()
 	FrameBuffer& workerBuff = ObjectSelector::buff;
 
 	workerBuff.setTaget(GL_FRAMEBUFFER);
 	workerBuff.Bind();
+	
 
 	OpenglWrapper::ClearScreen(backgroundColor);
 	OpenglWrapper::ClearBuffer();
