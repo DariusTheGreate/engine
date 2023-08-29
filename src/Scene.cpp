@@ -9,7 +9,6 @@
 #include <iostream>
 #include <fstream>
 
-
 Scene::Scene()
 {
 	init_memory();
@@ -221,48 +220,48 @@ void Scene::update_objects()
 	//now its traverse of objects and update. Its much better to do it in one traverse
 	//TODO(darius) make it separated threads for collisions and rendering and update?
 	updateObjectsIDs();
+	
+if (CheckColTime.checkTime() >= 0.02) {
+	CheckColTime.clearTime();
+		for (int i = 0; i < sceneObjects.size(); ++i) {
+			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
+				continue;
 
-	for (int i = 0; i < sceneObjects.size(); ++i) {
-		if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
-			continue;
-
-		sceneObjects[i]->updateScript();
+			sceneObjects[i]->updateScript();
 
 
-		if (sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()) {
-			sceneObjects[i]->updatePos();
-			continue;
-		}
+			if (sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()) {
+				sceneObjects[i]->updatePos();
+				continue;
+			}
 
 		//COLLISIONS RESOLUTION:
 		// O(n^2) 
 		// sort by tag + traverse in O(Nlg + N)?
 		// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
+			bool is_there_collision = false;
+			for (int j = i + 1; j < sceneObjects.size(); ++j) {
+				if (
+					!sceneObjects[i]->getColider()
+					|| !sceneObjects[j]->getColider()
+					|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j]->getColider()->get_tag()
+					|| !sceneObjects[j]->getColider()->is_active()
+					)	continue;
 
-		bool is_there_collision = false;
-		for (int j = 0; j < sceneObjects.size(); ++j) {
-			if (
-				i == j
-				|| !sceneObjects[i]->getColider()
-				|| !sceneObjects[j]->getColider()
-				|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j]->getColider()->get_tag()
-				|| !sceneObjects[j]->getColider()->is_active()
-				)	continue;
+				auto collision_state_gjk = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
 
-			auto collision_state_gjk = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
+				auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
 
-			auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
-
-			if (collision_state != glm::vec3(0,0,0)) {
-				//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
-				sceneObjects[i]->getColider()->collider_debug_color = {1,0,0,0};
-				sceneObjects[j]->getColider()->collider_debug_color = {1,0,0,0};
-				////is_there_collision = true;
+				if (collision_state != glm::vec3(0, 0, 0)) {
+					//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
+					sceneObjects[i]->getColider()->collider_debug_color = { 1,0,0,0 };
+					sceneObjects[j]->getColider()->collider_debug_color = { 1,0,0,0 };
+					////is_there_collision = true;
 
 				//glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
 				//std::cout << epa.x << " " << epa.y << " " << epa.z << "\n";
 				//std::cout << collision_state.x << " " << collision_state.y << "\n";
-				
+
 				//NOTE(darius) this is a trick to check if float is Nan
 				//TODO(darius) not good
 				/*if (epa.x == epa.x && epa.y == epa.y && epa.z == epa.z)
@@ -272,25 +271,26 @@ void Scene::update_objects()
 				}
 				*/
 
-				sceneObjects[i]->getTransform().addToPosition(collision_state);
-				*sceneObjects[i]->getColider()->get_collision_state() = false;
+					sceneObjects[i]->getTransform().addToPosition(collision_state);
+					*sceneObjects[i]->getColider()->get_collision_state() = false;
 
-				/*
-				if (sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z) {
-					sceneObjects[i]->getRigidBody()->tr.position += glm::vec3{ epa.x / 4, epa.y / 4, epa.z / 4 };
+					/*
+					if (sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z) {
+						sceneObjects[i]->getRigidBody()->tr.position += glm::vec3{ epa.x / 4, epa.y / 4, epa.z / 4 };
+					}
+					*/
+
+					break;
 				}
-				*/
-
-				break;
+				else
+				{
+					sceneObjects[i]->getColider()->collider_debug_color = { 0,1,0,0 };
+					sceneObjects[j]->getColider()->collider_debug_color = { 0,1,0,0 };
+				}
 			}
-			else
-			{
-				sceneObjects[i]->getColider()->collider_debug_color = {0,1,0,0};
-				sceneObjects[j]->getColider()->collider_debug_color = {0,1,0,0};
+			if (!is_there_collision) {
+				sceneObjects[i]->updatePos();
 			}
-		}
-		if (!is_there_collision) {
-			sceneObjects[i]->updatePos();
 		}
 	}
 }
