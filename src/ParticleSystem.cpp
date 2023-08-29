@@ -53,7 +53,7 @@ void ParticleSystem::renderParticles()
     {
         Shader sv = Renderer::shaderLibInstance->getCurrShader();
         glUseProgram(sv.getProgram());
-        std::cout << particles[0].alpha << "\n";
+        //std::cout << particles[0].alpha << "\n";
         sv.setFloat("alpha", 1.0f - particles[0].alpha); 
 
         glm::vec3 pos = glm::vec3(0,0,0);//particlesTransfroms[0].getPosition();

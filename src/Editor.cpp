@@ -1,6 +1,4 @@
 #include <Editor.h>
-
-
 #include <thread>
 
 Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
@@ -72,7 +70,17 @@ void Editor::updateInput() {
             GameState::cam.moveCameraForward();
         }
     }
-	if (GameState::instance->ks.get_c()) {
+	if (GameState::instance->ks.get_c() && GameState::instance->ks.get_cntrl()) {
+        Object tmp = *ui.getItemClicked();
+        currScene.createObject(tmp);
+        //currScene.AddEmpty(currScene.getEmptyIndex());
+    }
+    if (GameState::instance->ks.get_d() && GameState::instance->ks.get_cntrl()) {
+        Object* item_clicked = ui.getItemClicked();
+        if(item_clicked){
+            currScene.destroyObject(item_clicked->get_name());
+            ui.setItemClickedForced(nullptr);
+        }
         //currScene.AddEmpty(currScene.getEmptyIndex());
     }
     if (GameState::instance->ks.get_0()) {
@@ -104,6 +112,14 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_l() && GameState::instance->ks.get_cntrl() ) {
         currScene.deserialize(GameState::engine_path + "scene.dean");
+    }
+    if(GameState::instance->ks.get_lshift() && !leftShiftIsOnHold){
+        *GameState::cam.getCameraSpeed() *= speedMultiplyFactor;
+        leftShiftIsOnHold = true;
+    }
+    if(!GameState::instance->ks.get_lshift() && leftShiftIsOnHold){
+        *GameState::cam.getCameraSpeed() /= speedMultiplyFactor;
+        leftShiftIsOnHold = false;
     }
     if (GameState::instance->ks.get_9()) {
         debug_mode = false;

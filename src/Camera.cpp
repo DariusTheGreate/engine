@@ -45,11 +45,6 @@ void Camera::setCameraLook(double xposIn, double yposIn)
     cameraFront = glm::normalize(front);
 }
 
-void Camera::setCameraPos(glm::vec3 pos_in)
-{
-    cameraPos = pos_in;
-}
-
 void Camera::setScroolState(double xoffset, double yoffset)
 {
     return;
@@ -99,8 +94,23 @@ glm::mat4 Camera::getBasicLook() const {
     return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 }
 
+glm::vec3 Camera::getCameraFront()
+{
+    return cameraFront;
+}
+
+void Camera::setCameraFront(glm::vec3 f)
+{
+    cameraFront = f;
+}
+
 glm::vec3 Camera::getCameraPos() const {
     return cameraPos;
+}
+
+void Camera::setCameraPos(glm::vec3 pos)
+{
+    cameraPos = pos;
 }
 
 glm::vec3& Camera::getCameraPosRef()
@@ -121,6 +131,16 @@ float Camera::getLastY()
 float* Camera::getCameraSpeed()
 {
     return &cameraSpeed;
+}
+
+float Camera::getCameraSpeedVal()
+{
+    return cameraSpeed;  
+}
+
+void Camera::setCameraSpeedVal(float val)
+{
+    cameraSpeed = val;
 }
 
 void Camera::setUnexpectedUpdate(bool in) {

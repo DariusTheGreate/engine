@@ -167,6 +167,11 @@ public:
         return &delayMs;
     }
 
+    void setDelay(float delay)
+    {
+    	delayMs = delay;
+    }
+
     float* getRows()
     {
         return &rows;

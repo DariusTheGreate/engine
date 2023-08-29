@@ -19,7 +19,10 @@ struct Player
 class DefaultScript : public ScriptRoutine {
 public:
 	void start(ScriptArgument& args) override {
-		return;
+		instance->debug_msg.append("Enter Script..");
+		std::cout << "Enter Scrtipt..\n";
+		//return;
+
 		if (!instance) {
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
@@ -48,22 +51,28 @@ public:
 
 		if (scene->getObjectByName("UpAnim")) {
 			WalkUpMesh = &scene->getObjectByName("UpAnim")->getModel()->meshes[0];
+
 			WalkUp = *scene->getObjectByName("UpAnim")->getSpriteAnimation();
+			instance->debug_msg.append("up loaded");
 		}
 
 		if (scene->getObjectByName("DownAn")) {
 			WalkDownMesh = &scene->getObjectByName("DownAn")->getModel()->meshes[0];
+
 			WalkDown = *scene->getObjectByName("DownAn")->getSpriteAnimation();
+			instance->debug_msg.append("down loaded");
 		}
 
 		if (scene->getObjectByName("SideAn")) {
 			WalkSideMesh = &scene->getObjectByName("SideAn")->getModel()->meshes[0];
 			WalkSide = *scene->getObjectByName("SideAn")->getSpriteAnimation();
+			instance->debug_msg.append("side loaded");
 		}
 
 		if (scene->getObjectByName("IdleAn")) {
 			IdleMesh = &scene->getObjectByName("IdleAn")->getModel()->meshes[0];
 			Idle = *scene->getObjectByName("IdleAn")->getSpriteAnimation();
+			instance->debug_msg.append("idle loaded");
 		}
 
 		obj = scene->getObjectByName("Play");
@@ -78,7 +87,7 @@ public:
 		obj->setSpriteAnimation(Idle);
 
 
-		//cam = scene->getCameraAt(0);
+		cam = scene->getCameraAt(0);
 		//if (!cam)
 		//	instance->debug_msg.append("couldnt ge camera");
 		//else
@@ -89,28 +98,15 @@ public:
 	}
 
 	void update(ScriptArgument& args) override {
-		return;
         auto* obj = args.obj;
 		auto* scene = args.scene;
 		if (!instance || !obj) {
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
 		}
-
+ 
 		//obj = scene->get_object_at(2);
 
-		if (instance->ks.get_d()) 
-		{
-			//if (p.currAnim != 1) {
-				obj->getModel()->meshes[0] = *WalkSideMesh;
-				obj->setSpriteAnimation(WalkSide);
-				p.currAnim = 1;
-			//}
-			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
-			obj->getTransform().setPosition({0.01,0,0});
-			if (cam)
-				cam->moveCameraRight();
-		}
 		if (instance->ks.get_a()) 
 		{
 			//if (p.currAnim != 2) {
@@ -118,11 +114,40 @@ public:
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
 			//}
-			//obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
-			obj->getTransform().setPosition({-0.01,0,0});
+
+			if (!rotatedToLeft) {
+				obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+				obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
+				rotatedToLeft = true;
+			}
+
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({ p.speed,0,0 });
+
+			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
+
 			//obj->getTransform().rotateBy(180, {0,0,1});
 			if (cam)
 				cam->moveCameraLeft();
+		}
+
+		if(!instance->ks.get_a() && rotatedToLeft)
+		{
+			rotatedToLeft = false;
+			obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
+		}
+
+		if (instance->ks.get_d())
+		{
+			//if (p.currAnim != 1) {
+			obj->getModel()->meshes[0] = *WalkSideMesh;
+			obj->setSpriteAnimation(WalkSide);
+			p.currAnim = 1;
+			//}
+			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			obj->getTransform().translatePosition({ p.speed, 0,0 });
+			if (cam)
+				cam->moveCameraRight();
 		}
         if (instance->ks.get_q()) 
 		{
@@ -147,7 +172,10 @@ public:
 
 			glm::vec3 pos = obj->getTransform().getPosition();
 			//pos += glm::vec3{ 0, 0, -1 * p.speed };
-			obj->getTransform().setPosition({0,0,0.01});
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({0,0,-p.speed});
+			else
+				obj->getTransform().translatePosition({0,0,p.speed});
         }
         if(instance->ks.get_s())
         {
@@ -157,7 +185,10 @@ public:
                 p.currAnim = 1;
             //}
             //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-			obj->getTransform().setPosition({0,0,-0.01});
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({0,0,p.speed});
+			else
+				obj->getTransform().translatePosition({0,0,-p.speed});
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {
@@ -166,6 +197,22 @@ public:
                 p.currAnim = 0;
             //}
         }
+
+		if (instance->ks.get_lshift()) 
+		{
+			p.speed = 0.016;
+			WalkUp.setDelay(6);
+			WalkDown.setDelay(6);
+			WalkSide.setDelay(6);
+		}
+		else
+		{
+			p.speed = 0.01;
+
+			WalkUp.setDelay(100);
+			WalkDown.setDelay(100);
+			WalkSide.setDelay(100);
+		}
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
 	}
@@ -193,5 +240,7 @@ public:
 	Mesh* IdleMesh = nullptr;
 
     Camera* cam = nullptr;
+
+	bool rotatedToLeft = false;
 };
 

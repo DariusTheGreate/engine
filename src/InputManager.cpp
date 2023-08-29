@@ -46,6 +46,9 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
         GameState::instance->ks.set_l(true);
     }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+        GameState::instance->ks.set_lshift(true);
+    }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
         GameState::instance->ks.set_0(true);
     }
@@ -90,6 +93,9 @@ void InputManager::processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_RELEASE) {
         GameState::instance->ks.set_l(false);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+        GameState::instance->ks.set_lshift(false);
     }
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
         GameState::instance->ks.set_0(false);

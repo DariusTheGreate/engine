@@ -34,6 +34,12 @@ void KeyboardState::set_l(bool state)
 	l_pressed.store(state);
 }
 
+void KeyboardState::set_lshift(bool state)
+{
+	lshift_pressed.store(state);
+}
+
+
 void KeyboardState::set_mouse_right_button(bool state)
 {
 	mouse_right_button_pressed.store(state);
@@ -104,6 +110,12 @@ bool KeyboardState::get_c()
 bool KeyboardState::get_l()
 {
 	return l_pressed.load();
+}
+
+
+bool KeyboardState::get_lshift()
+{
+	return lshift_pressed.load();
 }
 
 bool KeyboardState::get_q() {

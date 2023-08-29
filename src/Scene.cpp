@@ -81,8 +81,12 @@ void Scene::destroyObject(std::string_view name)
 void Scene::updateScene() 
 {
 	update_objects();
+	update_scripts();
 }
 
+// TODO(darius) instancing and batching(?) somewhere here
+// maybe try to first submiut all objects to some instancing agent, that will probe all objects and separate them into groups. 
+// Then u will traverse through whis groups and render each group?
 void Scene::renderScene()
 {
 	for (int i = 0; i < sceneObjects.size(); ++i) {
@@ -308,6 +312,8 @@ void Scene::serialize(std::string_view path)
 	std::ofstream file(path.data());
     if(!file.is_open())
         return;
+
+    file << "CameraPos: {" << GameState::cam.getCameraPos().x << " " << GameState::cam.getCameraPos().y << " " << GameState::cam.getCameraPos().z << "}\n";
     
 	for (auto& i : sceneObjects)
 	{
@@ -335,7 +341,8 @@ void Scene::deserialize(std::string_view path)
 	std::ifstream file(path.data());
 	if (!file.is_open())
 		return;
-	
+
+
 	std::string data;
 	std::string line;
 	//TODO(darius) optimize it
@@ -343,6 +350,15 @@ void Scene::deserialize(std::string_view path)
 	{
 		data += line;
 	}
+
+	size_t cameraPos = data.find("CameraPos: {");
+
+	size_t brcktStart = data.find("CameraPos: {", cameraPos);
+	size_t brcktEnd = data.find("}", brcktStart);
+	glm::vec3 cameraPosition  = extractVectorFromToken(data.substr(brcktStart, brcktEnd - brcktStart));	
+
+	GameState::cam.setCameraPos(cameraPosition);
+
 
 	std::vector<std::string> objectTokens;
 
@@ -695,6 +711,13 @@ std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::strin
 	if (animStart == std::string::npos)
 		return std::nullopt;
 
+	size_t delayStart = tkn.find("Delay: {", animStart);
+
+	size_t brcktStart = tkn.find("{", delayStart);
+	size_t brcktEnd = tkn.find("}", brcktStart);
+
+	float delayVal = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));
+
 	size_t i = tkn.find("Point:", animStart);
 
 	if (i == std::string::npos)
@@ -706,7 +729,9 @@ std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::strin
 		size_t pathStart = tkn.find("{", animationPathStart);
 		size_t pathEnd = tkn.find("}", pathStart);
 		
+		//TODO(darius) remove copcupast here and there (747)
 		SpriteAnimation res = SpriteAnimation(std::string(tkn.substr(pathStart+1, pathEnd - pathStart-1)));
+		*res.getDelay() = delayVal;
 
 		return res;
 	}
@@ -721,6 +746,7 @@ std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::strin
 
 	SpriteAnimation res = SpriteAnimation(points, 100);
 	*res.getLength() = static_cast<float>(points.size());
+	*res.getDelay() = delayVal;
 	return res;
 }
 
@@ -773,11 +799,25 @@ std::optional<ParticleSystem> Scene::extractParticleSystemFromToken(std::string_
 	size_t brcktEnd = tkn.find("}", brcktStart);
 	std::string path(tkn.substr(brcktStart + 1 , brcktEnd - brcktStart - 1));
 
+	size_t emitterStart = tkn.find("Emitter:", brcktEnd);
+	brcktStart = tkn.find("{", emitterStart);
+	brcktEnd = tkn.find("}", brcktStart);
+
+	glm::vec3 emitterVec = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+	size_t sizeStart = tkn.find("ParticleSize:", brcktEnd);
+	brcktStart = tkn.find("{", sizeStart);
+	brcktEnd = tkn.find("}", brcktStart);
+
+	glm::vec3 particleSize = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
 	FlatMesh m;
 	m.setTexture(path);
 
 	ParticleSystem p;
 	p.addParticle(std::move(m), std::move(Renderer::shaderLibInstance->getCurrShader()), LightingShaderRoutine());
+	p.emitter = emitterVec;
+	p.particle_size = particleSize;
 
 	return p;
 }

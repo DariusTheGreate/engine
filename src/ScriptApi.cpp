@@ -11,6 +11,8 @@ EmptyScriptRoutine::EmptyScriptRoutine(std::string_view path_in, GameState* inst
 }
 
 //NOTE(darius) kinda cool, kinda cringe. check this - https://serverfault.com/questions/503721/replacing-dll-files-while-the-application-is-running
+									//   also check this - https://www.youtube.com/watch?v=WMSBRk5WG58&ab_channel=MollyRocket
+									//   TODO(darius) generalize this for any .dll?(xinput, etc)
 void EmptyScriptRoutine::loadDll(std::string_view path)
 {
 	boost::dll::fs::path lib_path(path);
