@@ -107,6 +107,7 @@ public:
  
 		//obj = scene->get_object_at(2);
 
+
 		if (instance->ks.get_d()) 
 		{
 			//if (p.currAnim != 1) {
@@ -119,6 +120,7 @@ public:
 			if (cam)
 				cam->moveCameraRight();
 		}
+
 		if (instance->ks.get_a()) 
 		{
 			//if (p.currAnim != 2) {
@@ -126,14 +128,41 @@ public:
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
 			//}
-			//obj->moveTransform(glm::vec3{ -1 * p.speed, 0, 0 });
-			obj->getTransform().translatePosition({-0.01,0,0});
+
+
+			if (!rotatedToLeft) {
+				obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+				obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
+				rotatedToLeft = true;
+			}
+
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({ p.speed,0,0 });
 
 			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 
 			//obj->getTransform().rotateBy(180, {0,0,1});
 			if (cam)
 				cam->moveCameraLeft();
+		}
+
+		if(!instance->ks.get_a() && rotatedToLeft)
+		{
+			rotatedToLeft = false;
+			obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
+		}
+
+		if (instance->ks.get_d())
+		{
+			//if (p.currAnim != 1) {
+			obj->getModel()->meshes[0] = *WalkSideMesh;
+			obj->setSpriteAnimation(WalkSide);
+			p.currAnim = 1;
+			//}
+			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			obj->getTransform().translatePosition({ p.speed, 0,0 });
+			if (cam)
+				cam->moveCameraRight();
 		}
         if (instance->ks.get_q()) 
 		{
@@ -158,7 +187,12 @@ public:
 
 			glm::vec3 pos = obj->getTransform().getPosition();
 			//pos += glm::vec3{ 0, 0, -1 * p.speed };
-			obj->getTransform().translatePosition({0,0,0.01});
+
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({0,0,-p.speed});
+			else
+				obj->getTransform().translatePosition({0,0,p.speed});
+
         }
         if(instance->ks.get_s())
         {
@@ -168,7 +202,12 @@ public:
                 p.currAnim = 1;
             //}
             //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-			obj->getTransform().translatePosition({0,0,-0.01});
+
+			if(rotatedToLeft)
+				obj->getTransform().translatePosition({0,0,p.speed});
+			else
+				obj->getTransform().translatePosition({0,0,-p.speed});
+
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {
@@ -177,6 +216,22 @@ public:
                 p.currAnim = 0;
             //}
         }
+
+		if (instance->ks.get_lshift()) 
+		{
+			p.speed = 0.016;
+			WalkUp.setDelay(6);
+			WalkDown.setDelay(6);
+			WalkSide.setDelay(6);
+		}
+		else
+		{
+			p.speed = 0.01;
+
+			WalkUp.setDelay(100);
+			WalkDown.setDelay(100);
+			WalkSide.setDelay(100);
+		}
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
 	}
@@ -204,5 +259,7 @@ public:
 	Mesh* IdleMesh = nullptr;
 
     Camera* cam = nullptr;
+
+	bool rotatedToLeft = false;
 };
 

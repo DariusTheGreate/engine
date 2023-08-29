@@ -395,12 +395,18 @@ public:
 
     void objectManipulationWindow(Scene& scene)
     {
+        if(!item_clicked)
+            return;
         ImGui::Begin("Objects manipulation");
 
         if (ImGui::Button("Show Object") && item_clicked) {
             auto v = item_clicked->get_pos();
             v += glm::vec3{0, 0, 10};
+
+            glm::vec3 front = glm::normalize(item_clicked->get_pos() - v);
+
             GameState::cam.setCameraPos(v);
+            GameState::cam.setCameraFront(front);
             GameState::cam.setUnexpectedUpdate(true);
         }
 
@@ -624,6 +630,7 @@ public:
                 EmptyScriptRoutine* routine = new EmptyScriptRoutine(path.c_str(), GameState::instance);
                 //Script s(hui.getScene(), item_clicked, routine);
                 item_clicked->addScript(hui.getScene(), routine);
+                item_clicked->getScript()->startScript();
             }
         }
 
@@ -828,6 +835,11 @@ public:
     {
         if(ImGuizmo::IsOver() || ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
             return;
+        item_clicked = obj;
+    }
+
+    void setItemClickedForced(Object* obj) 
+    {
         item_clicked = obj;
     }
 

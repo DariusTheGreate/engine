@@ -1,12 +1,15 @@
 --ARCHITECTURE
 	- colliders response system													
 	- better ECS?
+	- seialize subobjects 
 	- make Serialization separate file.
 	- make serialization own method per component?(probably not)
+	- make serealization deserealization faster!
 
 --RENDERER
+	- distanced rendering                                                       !
 	- 2D normal mapping                                                         !
-    - instanced rendering                                                       !
+	- cacheing of flat meshes textures
 
 	- finish bloom                                                              !
 	- finish shadows                                                            !
@@ -17,14 +20,17 @@
 	- deffered light?
 
 	- light shafts?
-	- distance rendering
 	- debug grid distance rendering
 
 	- shaders for effects drawing on texture
 
 	- blending satge
 
-	- instanced rendering fro any mesh
+	- instanced rendering for any mesh
+
+	- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
+
+	- batching somehow
 
 --UI
 	- assets browser
@@ -41,12 +47,13 @@
 	- bug when if u pick guiamo - u pick another object
 
 --NEXT
+	- cacheing of flat meshes textures
+	- instanced rendering forr simmilar meshes
 	- finish shadows                                                            
-	- bug when if u pick guizmo or UI - u pick another object (render them into picing mask with -1 index or something)
 	- assets browser
 
 	- textures loading and transfer to shaders. normals, specular, tangents, etc
 	- finish colliders response system													
 	- finish bloom                                                              
 
-	- instanced rendering fro any mesh
+

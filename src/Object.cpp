@@ -578,6 +578,8 @@ void Object::serialize(std::ofstream& file)
     {
         file << "\tSpriteAnimation: {\n";
 
+        file << "\t\tDelay: {" << std::to_string((long)*spriteAnimation->getDelay()) << "}\n"; 
+
         if (!spriteAnimation->isAnimationUsesMultipleTextures())
         {
             for (auto& p : spriteAnimation->getPoints())
@@ -586,12 +588,14 @@ void Object::serialize(std::ofstream& file)
                 file << "\n";
             }
 
-            file << "\t}\n";
+
         }
         else
         {
 			file << "\t\t AnimationPath: {" << spriteAnimation->getAnimationFolderPath() << "}\n";
         }
+
+        file << "\t}\n";
     }
 
     if(script)
@@ -620,6 +624,10 @@ void Object::serialize(std::ofstream& file)
         file << "\t\t}";
 
         file << "\t}\n";
+
+        file << "\t\tEmitter: {" << std::to_string(particles->emitter.x) << " " << std::to_string(particles->emitter.y) << " " << std::to_string(particles->emitter.z) << "}\n";
+
+        file << "\t\tParticleSize: {" << std::to_string(particles->particle_size.x) << " " << std::to_string(particles->particle_size.y) << " " << std::to_string(particles->particle_size.z) << "}\n";
     }
 
     file << "\n\t\t}\n";

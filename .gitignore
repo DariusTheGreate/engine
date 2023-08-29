@@ -10,3 +10,4 @@ logicScripts/EngineRunner/
 testImages/
 TODO.txt
 *.prefab
+*.dump

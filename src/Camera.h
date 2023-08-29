@@ -30,6 +30,10 @@ public:
 
     //NOTe(darius) its actually view matrix
     glm::mat4 getBasicLook() const;
+
+    glm::vec3 getCameraFront();
+
+    void setCameraFront(glm::vec3 f);
     
     glm::vec3 getCameraPos() const;
 
@@ -40,6 +44,10 @@ public:
     float getLastY();
 
     float* getCameraSpeed();
+
+    float getCameraSpeedVal();
+
+    void setCameraSpeedVal(float val);
 
     void setUnexpectedUpdate(bool in);
 

@@ -47,7 +47,7 @@ int ObjectSelector::ReadPixel(int x, int y)
     float pickedID = pixel[0];
 
     //std::cout << pixel[0] << " " << pixel[1] << " " << pixel[2] << " " << pixel[3] << "\n";
-    std::cout << pickedID << "\n";
+    //std::cout << pickedID << "\n";
     OpenglWrapper::ReadZeroBuffer();
 
     //buff.setTaget(GL_FRAMEBUFFER);

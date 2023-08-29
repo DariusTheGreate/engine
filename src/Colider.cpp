@@ -183,10 +183,11 @@ glm::vec3 Colider::check_collision(const Colider& c) const
 
 	if ((minX() <= c.maxX()) && (c.minX() <= maxX()) && (minY() <= c.maxY()) && (c.minY() <= maxY()) && (minZ() <= c.maxZ()) && (c.minZ() <= maxZ()))
 	{
-		std::cout << minX() << " " << maxX() << "\n";
+		/*std::cout << minX() << " " << maxX() << "\n";
 		std::cout << c.minX() << " " << c.maxX() << "\n";
 		std::cout << minY() << " " << maxY() << "\n";
 		std::cout << c.minY() << " " << c.maxY() << "\n";
+		*/
 
 		if (maxX() >= c.minX())
 		{

@@ -21,6 +21,8 @@ public:
 
 	void set_l(bool state);
 
+	void set_lshift(bool state);
+
 	void set_cntrl(bool state);
 
 	void set_mouse_right_button(bool state);
@@ -53,6 +55,8 @@ public:
 
 	bool get_l();
 
+	bool get_lshift();
+
 	bool get_q();
 
 	bool get_0();
@@ -82,6 +86,7 @@ private:
 	std::atomic_bool e_pressed;
 	std::atomic_bool c_pressed;
 	std::atomic_bool l_pressed;
+	std::atomic_bool lshift_pressed;
 
 	std::atomic_bool pressed_0;
 	std::atomic_bool pressed_1;
