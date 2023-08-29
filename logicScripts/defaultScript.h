@@ -107,6 +107,20 @@ public:
  
 		//obj = scene->get_object_at(2);
 
+
+		if (instance->ks.get_d()) 
+		{
+			//if (p.currAnim != 1) {
+				obj->getModel()->meshes[0] = *WalkSideMesh;
+				obj->setSpriteAnimation(WalkSide);
+				p.currAnim = 1;
+			//}
+			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+			obj->getTransform().translatePosition({0.01,0,0});
+			if (cam)
+				cam->moveCameraRight();
+		}
+
 		if (instance->ks.get_a()) 
 		{
 			//if (p.currAnim != 2) {
@@ -114,6 +128,7 @@ public:
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
 			//}
+
 
 			if (!rotatedToLeft) {
 				obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
@@ -172,10 +187,12 @@ public:
 
 			glm::vec3 pos = obj->getTransform().getPosition();
 			//pos += glm::vec3{ 0, 0, -1 * p.speed };
+
 			if(rotatedToLeft)
 				obj->getTransform().translatePosition({0,0,-p.speed});
 			else
 				obj->getTransform().translatePosition({0,0,p.speed});
+
         }
         if(instance->ks.get_s())
         {
@@ -185,10 +202,12 @@ public:
                 p.currAnim = 1;
             //}
             //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
+
 			if(rotatedToLeft)
 				obj->getTransform().translatePosition({0,0,p.speed});
 			else
 				obj->getTransform().translatePosition({0,0,-p.speed});
+
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {

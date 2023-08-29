@@ -463,7 +463,7 @@ public:
 
         if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
             FlatMesh flat;
-            flat.setTexture(GameState::engine_path + "/textures", "birdParticle1.png");
+            flat.setTexture(GameState::engine_path + "/textures", "birdParticle1.png"); 
 
             LightingShaderRoutine shaderRroutine;
             Shader currShader = Renderer::shaderLibInstance->getParticlesShader();

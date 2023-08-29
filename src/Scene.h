@@ -12,7 +12,7 @@
 #include <Script.h>
 #include <Animation.h>
 #include <Camera.h>
-
+#include "timer.h"
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -230,5 +230,7 @@ private:
 
 	SceneMemoryManager<> mem_man;
 	int emptyIndex = 0;
+
+	Timer CheckColTime;
 };
 
