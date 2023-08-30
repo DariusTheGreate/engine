@@ -353,11 +353,13 @@ void Scene::deserialize(std::string_view path)
 
 	size_t cameraPos = data.find("CameraPos: {");
 
-	size_t brcktStart = data.find("CameraPos: {", cameraPos);
-	size_t brcktEnd = data.find("}", brcktStart);
-	glm::vec3 cameraPosition  = extractVectorFromToken(data.substr(brcktStart, brcktEnd - brcktStart));	
+	if (cameraPos != std::string::npos) {
+		size_t brcktStart = data.find("CameraPos: {", cameraPos);
+		size_t brcktEnd = data.find("}", brcktStart);
+		glm::vec3 cameraPosition = extractVectorFromToken(data.substr(brcktStart, brcktEnd - brcktStart));
 
-	GameState::cam.setCameraPos(cameraPosition);
+		GameState::cam.setCameraPos(cameraPosition);
+	}
 
 
 	std::vector<std::string> objectTokens;

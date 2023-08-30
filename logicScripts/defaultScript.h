@@ -9,6 +9,7 @@
 #include <boost/config.hpp> 
 #include <iostream>
 #include <string>
+#include <chrono>
 
 struct Player 
 {
@@ -75,8 +76,25 @@ public:
 			instance->debug_msg.append("idle loaded");
 		}
 
-		obj = scene->getObjectByName("Play");
+		if(scene->getObjectByName("PlayerLight"))
+			playerLight = &(scene->getObjectByName("PlayerLight")->getPointLight().value());
 
+		int i = 0;
+		Object* enemyObj = nullptr;
+		while (enemyObj = scene->getObjectByName("EnemyWalkingAnim" + std::to_string(i))) {
+			enemyObjects.push_back(enemyObj);
+			enemyObj = nullptr;
+			//enemyLights.reserve(1);
+
+			if(scene->getObjectByName("EnemyLight" + std::to_string(i)))
+				enemyLights.push_back(&(scene->getObjectByName("EnemyLight" + std::to_string(i))->getPointLight().value()));
+
+			i++;	
+		}
+
+		enemyWalkDirs.resize(enemyObjects.size());
+
+		obj = scene->getObjectByName("Play");
 		if (!obj) {
 			instance->debug_msg.append("no obj");
 			return;
@@ -107,28 +125,13 @@ public:
  
 		//obj = scene->get_object_at(2);
 
-
-		if (instance->ks.get_d()) 
-		{
-			//if (p.currAnim != 1) {
-				obj->getModel()->meshes[0] = *WalkSideMesh;
-				obj->setSpriteAnimation(WalkSide);
-				p.currAnim = 1;
-			//}
-			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
-			obj->getTransform().translatePosition({0.01,0,0});
-			if (cam)
-				cam->moveCameraRight();
-		}
-
 		if (instance->ks.get_a()) 
 		{
-			//if (p.currAnim != 2) {
+			if (p.currAnim != 2) {
 				obj->getModel()->meshes[0] = *WalkSideMesh;
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 2;
-			//}
-
+			}
 
 			if (!rotatedToLeft) {
 				obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
@@ -136,8 +139,9 @@ public:
 				rotatedToLeft = true;
 			}
 
-			if(rotatedToLeft)
+			if(rotatedToLeft){
 				obj->getTransform().translatePosition({ p.speed,0,0 });
+			}
 
 			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 
@@ -154,11 +158,11 @@ public:
 
 		if (instance->ks.get_d())
 		{
-			//if (p.currAnim != 1) {
-			obj->getModel()->meshes[0] = *WalkSideMesh;
-			obj->setSpriteAnimation(WalkSide);
-			p.currAnim = 1;
-			//}
+			if (p.currAnim != 1) {
+				obj->getModel()->meshes[0] = *WalkSideMesh;
+				obj->setSpriteAnimation(WalkSide);
+				p.currAnim = 1;
+			}
 			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 			obj->getTransform().translatePosition({ p.speed, 0,0 });
 			if (cam)
@@ -175,11 +179,11 @@ public:
 		}
         if(instance->ks.get_w())
         {
-            //if (p.currAnim != 1) {
+            if (p.currAnim != 1) {
                 obj->getModel()->meshes[0] = *WalkUpMesh;
-                obj->setSpriteAnimation(WalkSide);
+                obj->setSpriteAnimation(WalkUp);
                 p.currAnim = 1;
-            //}
+            }
 
 			//std::cout << "pos " << obj->getTransform().getPosition().x << " " << obj->getTransform().getPosition().y << " " << obj->getTransform().getPosition().z;
             //obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
@@ -187,27 +191,23 @@ public:
 
 			glm::vec3 pos = obj->getTransform().getPosition();
 			//pos += glm::vec3{ 0, 0, -1 * p.speed };
-
 			if(rotatedToLeft)
 				obj->getTransform().translatePosition({0,0,-p.speed});
 			else
 				obj->getTransform().translatePosition({0,0,p.speed});
-
         }
         if(instance->ks.get_s())
         {
-            //if (p.currAnim != 1) {
+            if (p.currAnim != 1) {
                 obj->getModel()->meshes[0] = *WalkDownMesh;
-                obj->setSpriteAnimation(WalkSide);
+                obj->setSpriteAnimation(WalkDown);
                 p.currAnim = 1;
-            //}
+            }
             //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-
 			if(rotatedToLeft)
 				obj->getTransform().translatePosition({0,0,p.speed});
 			else
 				obj->getTransform().translatePosition({0,0,-p.speed});
-
         }
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {
@@ -219,19 +219,58 @@ public:
 
 		if (instance->ks.get_lshift()) 
 		{
-			p.speed = 0.016;
+			p.speed = 0.03;
 			WalkUp.setDelay(6);
 			WalkDown.setDelay(6);
 			WalkSide.setDelay(6);
 		}
 		else
 		{
-			p.speed = 0.01;
+			p.speed = 0.02;
 
 			WalkUp.setDelay(100);
 			WalkDown.setDelay(100);
 			WalkSide.setDelay(100);
 		}
+
+		if(playerLight)
+			playerLight->position = obj->getTransform().getPosition();
+
+		int i = 0;
+		while(i < enemyObjects.size())
+		{
+			std::time_t currT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+			Object* enemyObj = enemyObjects[i];
+
+			if (std::difftime(currT, enemyMotionUpdateTime) > 1) {
+				for(int j = 0; j < enemyWalkDirs.size(); j++){
+					char randDir = randDirection();
+
+					if (randDir == 'u')
+						enemyWalkDirs[j] = glm::vec3{0,0, enemySpeed};
+
+					if (randDir == 'l')
+						enemyWalkDirs[j] = { -enemySpeed, 0,0 };
+
+					if (randDir == 'r')
+						enemyWalkDirs[j] = { enemySpeed,0,0 };
+
+					if (randDir == 'd')
+						enemyWalkDirs[j] = {0,0, -enemySpeed};
+				}
+
+				enemyMotionUpdateTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+			}
+
+			enemyObj->getTransform().translatePosition(enemyWalkDirs[i]);
+			
+			if(enemyLights.size() > i && enemyLights[i])
+				enemyLights[i]->position = enemyObj->getTransform().getPosition();
+
+			i++;
+		}
+
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
 	}
@@ -241,6 +280,11 @@ public:
 		instance = p;
 	}
 
+	char randDirection()
+	{
+		return "udlr"[rand() % 4];
+	};
+
 	GameState* instance = nullptr;
 
 	Player p;
@@ -248,7 +292,17 @@ public:
 	SpriteAnimation WalkDown;
 	SpriteAnimation WalkSide;
 	SpriteAnimation Idle;
-	 
+
+	SpriteAnimation EnemyWalkSide;
+
+	std::vector<Object*> enemyObjects;
+	std::vector<PointLight*> enemyLights;
+	std::vector<glm::vec3> enemyWalkDirs;
+
+	std::time_t enemyMotionUpdateTime = 0;
+
+	float enemySpeed = 0.01;
+
 	//DANGER(darius) NOTE(darius) you cant create opengl entities, cause u have no opengl initialized here, TODO(darius) make some factory inside engine
 	//FlatMesh runMesh;
 	//Mesh initMesh;
@@ -258,8 +312,13 @@ public:
 	Mesh* WalkSideMesh = nullptr;
 	Mesh* IdleMesh = nullptr;
 
+	Mesh* EnemyWalkSideMesh = nullptr;
+
+	PointLight* playerLight = nullptr;
+	PointLight* enemyLight = nullptr;
+
     Camera* cam = nullptr;
 
 	bool rotatedToLeft = false;
-};
 
+};

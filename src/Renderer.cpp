@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include <Colider.h>
 #include <ObjectSelector.h>
+#include <Timer.h>
 
 #include <optional>
 
@@ -326,6 +327,12 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 
 void Renderer::render(Window* wind)
 {
+	Renderer::drawCallsCount = 0;
+	Renderer::drawCallsInstancedCount = 0;
+
+    Timer t;
+    //t.setBoolPrint(true);
+
 	int display_w, display_h;
 	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
 	OpenglWrapper::SetWindow(display_w, display_h);
@@ -341,7 +348,8 @@ void Renderer::render(Window* wind)
 
 	//bloomStage();
 
-	EditorIDsStage();
+	if(GameState::editor_mode != 0)
+		EditorIDsStage();
     
 	albedoStage();
 
@@ -615,6 +623,7 @@ void Renderer::renderScene()
 	lastFrame = currentFrame;
 
 	//NOTE(darius) 50%+ perfomance boost, but may work weird
+	//NOTE(darius) didnt saw any perfomance boost on heavy scene. Also dont work with cubeMeshes(prblbly wrong indices)
 	//OpenglWrapper::CullFaces();
 
 	currScene->renderScene();
@@ -622,7 +631,7 @@ void Renderer::renderScene()
 	currScene->renderParticles();
 	currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
 	currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
-	currScene->updateScene();
+	//currScene->updateScene();
 }
 
 void Renderer::updateBuffers(Window* wind)
@@ -659,3 +668,5 @@ DebugRenderer& Renderer::getDebugRenderer()
 
 ShaderLibrary* Renderer::shaderLibInstance = nullptr;
 
+int Renderer::drawCallsCount = 0;
+int Renderer::drawCallsInstancedCount = 0;

@@ -1,4 +1,6 @@
 #include <Editor.h>
+#include <Timer.h>
+
 #include <thread>
 
 Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
@@ -25,6 +27,8 @@ void Editor::update()
 {
     if (!lockFPS()) { return; }
 
+    Timer t;
+    
     updateInput();
     printFPS();
     updateCamera();
@@ -32,8 +36,10 @@ void Editor::update()
 
     rendol.render(window);
 
-    if(showUI)
+    if(GameState::editor_mode != 0){
+        ui.setTime(t.checkTime());
         ui.renderUI(currScene, rendol);
+    }
 
     rendol.updateBuffers(window);
 }
@@ -46,7 +52,7 @@ void Editor::setEditorMode(int mode)
 void Editor::updateInput() {
     if(GameState::editorCameraMode && GameState::instance->ks.get_mouse_right_button()){
         if (GameState::instance->ks.get_w()) {
-            if(GameState::editor_mode == 3)
+            if(GameState::editor_mode == 3 || GameState::editor_mode == 0)
                 GameState::cam.moveCameraForward();
             else
                 GameState::cam.moveCameraUp();
@@ -55,7 +61,7 @@ void Editor::updateInput() {
             GameState::cam.moveCameraLeft();
         }
         if (GameState::instance->ks.get_s()) {
-            if(GameState::editor_mode == 3)
+            if(GameState::editor_mode == 3 || GameState::editor_mode == 0)
                 GameState::cam.moveCameraBackward();
             else
                 GameState::cam.moveCameraDown();
@@ -101,11 +107,13 @@ void Editor::updateInput() {
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render= false;
-        showUI = false;
+        //showUI = false;
+        GameState::editor_mode = 0;
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render= true;
-        showUI = true;
+        //showUI = true;
+        GameState::editor_mode = 3;
     }
     if (GameState::instance->ks.get_s() && GameState::instance->ks.get_cntrl()) {
         currScene.serialize(GameState::engine_path + "scene.dean");

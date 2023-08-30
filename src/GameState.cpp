@@ -40,12 +40,12 @@ void GameState::saveActiveCameraStateIntoEditorCamera()
 //std::string GameState::debug_msg;
 //size_t GameState::debug_len = 100;
 
-int GameState::editor_mode = 2;
+int GameState::editor_mode = 2;//0 - no UI
 Camera* GameState::editorCamera = nullptr;
 bool GameState::editorCameraMode = true;
 GameState* GameState::instance = nullptr;
 
-std::string GameState::engine_path = "E:/Dean/fedor/engine/";
+std::string GameState::engine_path = "E:/own/programming/engine/";
 
 float GameState::gammaBrightness = 1.0f;
 

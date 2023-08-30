@@ -22,7 +22,7 @@ void Camera::setCameraLook(double xposIn, double yposIn)
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    if(GameState::editor_mode == 3)
+    if(GameState::editor_mode == 3 || GameState::editor_mode == 0)
     {
         yaw += xoffset;
         pitch += yoffset;

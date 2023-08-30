@@ -18,6 +18,8 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include <cmath>
+#include <deque>
 
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
@@ -95,6 +97,8 @@ public:
 	    
         if (ImGui::Begin("Game Objects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
         {
+
+            ImGui::Text("onjects count %i", scene.get_objects().size());
 
             if (ImGui::Button("Add Object")) {
                 scene.AddEmpty(emptyCreated++);        
@@ -538,6 +542,8 @@ public:
             if(ImGui::CollapsingHeader("Cube")){
                 ImGui::InputText("path", (char*)path.c_str(), 100);
 
+                path = GameState::engine_path + "textures/checkerboard.png";
+
                 if(ImGui::Button("Load CubeMesh")){
                     CubeMesh cube;
 
@@ -787,6 +793,36 @@ public:
             ImGui::Text(SystemInfo::getInfo()->getGPU().data());
         }
 
+        ImGui::Text("Frame Tick: ");
+        ImGui::SameLine();
+        ImGui::Text(std::to_string(timeVal).c_str());
+
+        framerateHistory.push_back(timeVal);
+
+        int maxHistorySize = 10000;
+        if(framerateHistory.size() > maxHistorySize + 1)
+        {
+            framerateHistory.erase(framerateHistory.begin(), framerateHistory.begin() + maxHistorySize);
+        }
+
+        if(framerateHistory.size() > historySize){
+            ImGui::PlotLines("Frame Times", &framerateHistory[0], historySize, 0, NULL, 0, 1, ImVec2(0,100));
+        }
+
+
+        ImGui::Text("Frame Rate: ");
+        ImGui::SameLine();
+        long rate = std::round(1 / timeVal);
+        ImGui::Text(std::to_string(rate).c_str());
+
+        ImGui::Text("Draw Calls Count: ");
+        ImGui::SameLine();
+        ImGui::Text(std::to_string(Renderer::drawCallsCount).c_str());
+
+        ImGui::Text("Instanced Draw Calls Count: ");
+        ImGui::SameLine();
+        ImGui::Text(std::to_string(Renderer::drawCallsInstancedCount).c_str());
+
         ImGui::End();
     }
 
@@ -843,6 +879,11 @@ public:
         item_clicked = obj;
     }
 
+    void setTime(double time)
+    {
+        timeVal = time;
+    }
+
 private:
     bool show_scene_window = false;
     bool show_object_window = false;
@@ -868,4 +909,9 @@ private:
     GameState* state= nullptr;
 
     int max_name_length = 21;
+
+    double timeVal = 0;
+
+    std::deque<float> framerateHistory;
+    size_t historySize = 1000;
 };

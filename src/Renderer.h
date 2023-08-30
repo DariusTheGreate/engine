@@ -292,6 +292,10 @@ public:
 
     static ShaderLibrary* shaderLibInstance;
 
+    static int drawCallsCount;
+
+    static int drawCallsInstancedCount;
+
     GraphicsStateCache state;
 
 private:

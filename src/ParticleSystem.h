@@ -54,7 +54,7 @@ public:
     std::vector<glm::mat4> modelMatrices;
 
 	unsigned int buffer = 0;
-	int amount = 10;
+	int amount = 21;
 
     std::optional<Mesh> particle; 
     std::optional<Shader> shader;

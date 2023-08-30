@@ -44,7 +44,7 @@ private:
     double numOfFrames = 60;
 
     bool debug_mode = false;
-    bool showUI = true;
+    
 
     //NOTE(darius) is this cringe?
     bool leftMouseButtonIsOnHold = false;//NOTE(darius) its here in order to not select object when u already dragging some other object over it

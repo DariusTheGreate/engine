@@ -117,6 +117,8 @@ void Mesh::Draw(Shader& shader)
     //NOTE(darius) to draw cubeMesh
     //glDrawArrays(GL_TRIANGLES, 0, 36);
     //OpenglWrapper::UnbindVAO();
+
+    Renderer::drawCallsCount++;
 }
 
 void Mesh::Draw(Shader& shader, size_t amount)
@@ -160,6 +162,8 @@ void Mesh::Draw(Shader& shader, size_t amount)
     //OpenglWrapper::DrawArrays(36);
     OpenglWrapper::UnbindVAO();
     //OpenglWrapper::BindTexture(GL_TEXTURE0);
+
+    Renderer::drawCallsInstancedCount++;
 }
 
 void Mesh::setupMesh()

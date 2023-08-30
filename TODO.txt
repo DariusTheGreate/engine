@@ -7,6 +7,9 @@
 	- make serealization deserealization faster!
 
 --RENDERER
+	- batching (combine objects that dont move)
+	- occlusion culling
+	- frustum culling
 	- distanced rendering                                                       !
 	- 2D normal mapping                                                         !
 	- cacheing of flat meshes textures

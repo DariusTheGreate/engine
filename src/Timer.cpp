@@ -7,7 +7,7 @@ Timer::Timer() {
 
 Timer::~Timer() {
 	if (print) {
-		std::cout << checkTime();
+		std::cout << checkTime() << "\n";
 	}
 }
 
