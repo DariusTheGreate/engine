@@ -12,7 +12,7 @@
 ### There is a lot of functional by now:
 - [X] 3D/2D modes, some editor
 - [X] Models loading
-- [X] Some shaders for lighting
+- [X] Some shaders for lighting, bloom, blur, shadows, editor picking
 - [X] Some Rednerer Pipeline foundation
 - [X] Particle system (40000 particles on my machine)
 - [X] Sprite Animations
@@ -21,4 +21,4 @@
 - [X] Custom collider detection(GJK and stuff)
 - [X] Aility to write scripts in c++, and load scripts as a library into editor project
 - [X] Scene serialization and prefab system
-- [X] Editor (Guizmos for tranlation, rotation, scale; Scene Graph, Object component manipualtion, etc)
+- [X] Editor (Clicking and Picking, Guizmos for tranlation, rotation, scale; Scene Graph, Object component manipualtion, etc)
