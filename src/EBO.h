@@ -10,7 +10,7 @@ public:
 
 	void bind(size_t ind_len, GLvoid* indices);
 
-	~EBO();
+	void deleteEBO();
 
 private:
 	size_t ebo_id = 0;

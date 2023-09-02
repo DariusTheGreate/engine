@@ -330,7 +330,7 @@ void Renderer::render(Window* wind)
 	Renderer::drawCallsCount = 0;
 	Renderer::drawCallsInstancedCount = 0;
 
-    Timer t;
+    //Timer t;
     //t.setBoolPrint(true);
 
 	int display_w, display_h;

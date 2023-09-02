@@ -21,7 +21,17 @@ std::vector<Vertex> Mesh::getVertices()
     return vertices;
 }
 
+std::vector<Vertex>& Mesh::getVerticesRef()
+{
+    return vertices; 
+}
+
 std::vector<unsigned int> Mesh::getIndices()
+{
+    return indices;
+}
+
+std::vector<unsigned int>& Mesh::getIndicesRef()
 {
     return indices;
 }
@@ -208,3 +218,66 @@ void Mesh::setupMesh()
     OpenglWrapper::UnbindVAO();
 }
 
+void Mesh::printVertices()
+{
+    std::cout << "Verts:\n";
+    for(int i = 0; i < vertices.size(); ++i)
+    {
+        std::cout << vertices[i].Position.x << " " << vertices[i].Position.y << " " << vertices[i].Position.z << "\n"; 
+    } 
+
+    std::cout << "Inds:\n";
+    for(int i = 0; i < indices.size(); ++i)
+    {
+        std::cout << indices[i] << "\n";
+    } 
+}
+
+void Mesh::addVerticesBath(Mesh& m)
+{   
+    //NOTE(darius) for some reason it doesnt change runtime state fo mesh. But it changes its vectors, so  if u serialize it - it will work..
+    vertices.insert(vertices.end(), m.getVerticesRef().begin(), m.getVerticesRef().end()); 
+
+    vertices[4].Position.x++;
+    vertices[5].Position.x++;
+    vertices[6].Position.x++;
+    vertices[7].Position.x++;
+
+    vertices[4].Position.y++;
+    vertices[5].Position.y++;
+    vertices[6].Position.y++;
+    vertices[7].Position.y++;
+
+    auto indV = m.getIndices();
+
+    //NOTE(darius) tempo
+    int offset = 4;
+
+    for(auto& i : indV)
+    {
+        i += offset;
+    }
+
+    indices.insert(indices.end(), indV.begin(), indV.end());
+
+    /*initialized = false;
+
+    auto vertsCopy = this->vertices;
+    auto indsCopy = this->indices;
+    auto textsCopy = this->textures;
+
+    this->vertices.clear();
+    this->indices.clear();
+    this->textures.clear();
+
+    vao.deleteVAO();
+    vbo.deleteVBO();
+    ebo.deleteEBO();
+
+    this->vertices = vertsCopy;
+    this->indices = indsCopy;
+    this->textures = textsCopy;
+
+    setupMesh();
+    */
+}

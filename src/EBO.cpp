@@ -9,6 +9,6 @@ void EBO::bind(size_t ind_len, GLvoid* indices) {
 	OpenglWrapper::SetBufferData(ind_len, indices, GL_ELEMENT_ARRAY_BUFFER);
 }
 
-EBO::~EBO() {
-	//glDeleteBuffers(1, &ebo_id);
+void EBO::deleteEBO() {
+	glDeleteBuffers(1, (GLuint*)&ebo_id);
 }

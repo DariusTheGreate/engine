@@ -160,6 +160,12 @@ public:
 	//TODO(darius) make it factory or something
 	FlatMesh* createFlatMesh();
 
+	template<typename... Args>
+	Mesh* createMesh(Args&&... args)
+	{
+		return new Mesh(std::forward<Args>(args)...);	
+	}
+
 	void deleteFlatMesh(FlatMesh* mesh);
 
 	EmptyScriptRoutine* createRoutine(std::string path);

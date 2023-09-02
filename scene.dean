@@ -1,4 +1,4 @@
-CameraPos: {-46.6841 32.5747 28.2057}
+CameraPos: {-41.4436 23.4791 22.4011}
 Object: {
 	Name: {
 		bigBox
@@ -4678,7 +4678,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_idle\a5d52854-523c-4588-9b8f-a77d6deb2928.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_idle\e9022a39-691d-44ed-8e1e-9fb45664c6c6.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -4698,10 +4698,14 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-37.747139 13.822462 5.085941}
+		Position: {-40.580887 13.945412 0.809909}
 		Scale: {0.891312 -1.239566 -0.999715}
 		Quaternion: {1.016193 0.000000 0.000000 -0.013152}
-		Matrix: {0.891312 0.000000 0.000000 0.000000 0.000000 -1.239566 -0.029593 0.000000 0.000000 0.023867 -0.999715 0.000000 -37.747139 13.822462 5.085941 1.000000 }
+		Matrix: {0.891312 0.000000 0.000000 0.000000 0.000000 -1.239566 -0.029593 0.000000 0.000000 0.023867 -0.999715 0.000000 -40.580887 13.945412 0.809909 1.000000 }
+	}
+	Collider: {
+		Size: {0.600000 0.500000 0.550000}
+		Shift: {0.000000 0.000000 0.000000}
 	}
 	Model: {
 		Path: {}
@@ -4733,7 +4737,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_down\165f28a4-6dd7-4afc-834d-fece681914ff.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_idle\06a41456-290f-4073-8e22-06dfe947454b.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -4741,7 +4745,7 @@ Object: {
 	}
 	SpriteAnimation: {
 		Delay: {100}
-		 AnimationPath: {E:\own\programming\engine\textures\sprites\spr_player_walk_down                                     }
+		 AnimationPath: {E:\own\programming\engine\textures\sprites\spr_player_idle side                                     }
 	}
 	Script: {
 		 Routine: {E:/own/programming/engine/logicScripts/EngineLogic/x64/Debug}
@@ -4791,7 +4795,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_side\97589005-c63c-4a69-aa40-0011c6b63313.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_side\7bc8555d-0e17-4aeb-89ad-1871a2ae29d0.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -4842,7 +4846,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-37.747139 13.822462 5.085941}
+		 Pos: {-40.580887 13.945412 0.809909}
 		 Color: {1.000000 0.764706 0.000000}
 	}
 
@@ -10882,10 +10886,14 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-32.406540 14.068027 6.202600}
+		Position: {-39.474865 14.059690 -2.189394}
 		Scale: {1.058240 -1.393570 -1.000000}
 		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -32.406540 14.068027 6.202600 1.000000 }
+		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -39.474865 14.059690 -2.189394 1.000000 }
+	}
+	Collider: {
+		Size: {0.500000 0.600000 0.550000}
+		Shift: {0.000000 0.000000 0.000000}
 	}
 	Model: {
 		Path: {}
@@ -10948,7 +10956,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-32.406540 14.068027 6.202600}
+		 Pos: {-39.474865 14.059690 -2.189394}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -10972,7 +10980,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-34.148121 14.132607 2.336748}
+		 Pos: {-29.936497 14.131071 0.546750}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -10985,10 +10993,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-34.148121 14.132607 2.336748}
+		Position: {-29.936497 14.131071 0.546750}
 		Scale: {1.058240 -1.393570 -1.000000}
 		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -34.148121 14.132607 2.336748 1.000000 }
+		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -29.936497 14.131071 0.546750 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -11040,10 +11048,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-50.421986 14.145391 6.569912}
+		Position: {-56.517200 14.142327 2.999854}
 		Scale: {1.058240 -1.393570 -1.000000}
 		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -50.421986 14.145391 6.569912 1.000000 }
+		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -56.517200 14.142327 2.999854 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -11106,7 +11114,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-50.421986 14.145391 6.569912}
+		 Pos: {-56.517200 14.142327 2.999854}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -11130,7 +11138,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-39.504803 15.631257 11.330558}
+		 Pos: {-38.412182 14.146211 2.025669}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -11143,10 +11151,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-39.184666 14.142503 -2.294328}
+		Position: {-38.412182 14.146211 2.025669}
 		Scale: {1.058240 -1.393570 -1.000000}
 		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -39.184666 14.142503 -2.294328 1.000000 }
+		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -38.412182 14.146211 2.025669 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -11178,7 +11186,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\ddece0b5-3bdb-49d7-a04d-74fe38d239b6.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\a1740adf-d67d-4127-aefe-26bd9301b9d1.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}

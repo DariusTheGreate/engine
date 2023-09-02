@@ -27,6 +27,6 @@ void VBO::vboEnableVertexAttribArray(unsigned int id) {
 	OpenglWrapper::EnableAttribute(id);
 }
 
-VBO::~VBO() {
-	//glDeleteBuffers(1, &vbo_id);
+void VBO::deleteVBO() {
+	glDeleteBuffers(1, (GLuint*)&vbo_id);
 }

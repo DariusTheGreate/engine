@@ -11,9 +11,9 @@ public:
 
 	void bind();
 
-	int get();
+	void deleteVAO();
 
-	~VAO();
+	int get();
 
 private:
 	int vao_id = 0;

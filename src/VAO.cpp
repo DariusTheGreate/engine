@@ -8,11 +8,12 @@ void VAO::bind() {
 	OpenglWrapper::BindArray(vao_id);
 }
 
+void VAO::deleteVAO() {
+	glDeleteVertexArrays(1, (GLuint*)&vao_id);
+}
+
 int VAO::get()
 {
 	return vao_id;
 }
 
-VAO::~VAO() {
-	//glDeleteVertexArrays(1, &vao_id);
-}

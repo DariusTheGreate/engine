@@ -268,6 +268,14 @@ public:
 			if(enemyLights.size() > i && enemyLights[i])
 				enemyLights[i]->position = enemyObj->getTransform().getPosition();
 
+			if(obj && obj->getColider() && enemyObjects[i]->getColider())
+			{
+				if(obj->getColider()->check_collision(*enemyObjects[i]->getColider()) != glm::vec3(0,0,0))
+				{
+					instance->debug_msg.append("run into enemy");
+				}
+			}
+
 			i++;
 		}
 

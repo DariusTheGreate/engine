@@ -11,6 +11,8 @@ public:
 
 	void bind(size_t arr_len, GLvoid* v);
 
+	void deleteVBO();
+
 	void bind_at(int i);
 
 	void bind_only();
@@ -18,8 +20,6 @@ public:
 	void setVAO(int index, int size, GLenum type, GLboolean normalized, int stride, const void* ptr);
 	
 	void vboEnableVertexAttribArray(unsigned int id);
-
-	~VBO();
 
 private:
 	size_t vbo_id = 0;

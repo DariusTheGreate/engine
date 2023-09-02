@@ -225,7 +225,7 @@ void Scene::update_objects()
 	//TODO(darius) make it separated threads for collisions and rendering and update?
 	updateObjectsIDs();
 	
-if (CheckColTime.checkTime() >= 0.02) {
+if (false && CheckColTime.checkTime() >= 0.02) {
 	CheckColTime.clearTime();
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index

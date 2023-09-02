@@ -5,6 +5,7 @@
 	- make Serialization separate file.
 	- make serialization own method per component?(probably not)
 	- make serealization deserealization faster!
+	- delete all float comparasions.
 
 --RENDERER
 	- batching (combine objects that dont move)

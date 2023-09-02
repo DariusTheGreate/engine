@@ -28,6 +28,7 @@ void Editor::update()
     if (!lockFPS()) { return; }
 
     Timer t;
+    t.setBoolPrint(false);
     
     updateInput();
     printFPS();
@@ -361,6 +362,57 @@ void Editor::consoleInputThread(Editor* currEditor)
                     std::cout << obj->get_name() << "\n";
                 }
             }
+
+            if(command == "printMesh")
+            {
+                std::string objName;
+                std::cout << "objName: ";
+                std::cin >> objName;
+
+                Object* obj = currEditor->currScene.getObjectByName(objName);
+
+                if(obj && obj->getModel()){
+                    obj->getModel()->meshes[0].printVertices();
+                }
+                else{
+                    std::cout << "smthng wrong\n";
+                }
+            }
+
+            if(command == "batchMesh")
+            {
+                std::string objName;
+                std::cout << "objName: ";
+                std::cin >> objName;
+
+                std::string objName2;
+                std::cout << "objName2: ";
+                std::cin >> objName2;
+
+                Object* obj = currEditor->currScene.getObjectByName(objName);
+                Object* obj2 = currEditor->currScene.getObjectByName(objName2);
+
+                if(obj && obj2 && obj->getModel() && obj->getModel()){
+                    obj->getModel()->meshes[0].addVerticesBath(obj2->getModel()->meshes[0]);
+
+                    Mesh* mOrigin = &obj->getModel()->meshes[0];
+
+                    auto inds = mOrigin->getIndices(); 
+                    auto verts = mOrigin->getVertices(); 
+                    auto texts = mOrigin->getTextures(); 
+
+                    auto* mBatched = currEditor->currScene.createMesh(std::move(verts), std::move(inds), std::move(texts));
+
+                    Model m;
+                    m.addMesh(*mBatched);
+
+                    auto* objBatched = currEditor->currScene.AddObject("batched");
+
+                    objBatched->addModel();
+                    objBatched->getModel()->addMesh(*mBatched);
+                }
+            }
+
         }
     }
     catch (...) 

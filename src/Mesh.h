@@ -52,7 +52,11 @@ public:
 
     std::vector<Vertex> getVertices();
 
+    std::vector<Vertex>& getVerticesRef();
+
     std::vector<unsigned int> getIndices();
+
+    std::vector<unsigned int>& getIndicesRef();
 
     std::vector<Texture> getTextures();
 
@@ -61,6 +65,10 @@ public:
     void setTexture(std::string path, std::string name);
 
     void setTexture(std::string path);
+
+    void printVertices();
+
+    void addVerticesBath(Mesh& m);
 
     VAO getVao();
 
@@ -72,12 +80,10 @@ protected:
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
 
-
     VAO vao;
     VBO vbo;
     EBO ebo;
     bool initialized = false;
-
 
     DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
     
