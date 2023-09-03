@@ -355,7 +355,7 @@ std::optional<RigidBody> rbody;
     auto& model = obj->getModel();
     if (model && ImGui::Button("batch model"))
     {
-        model->meshes[0].addVerticesBath(model->meshes[0]);
+        model->meshes[0].addVerticesBath(model->meshes[0], obj->getTransform().getPosition());
 
         Mesh& batchRef = model->meshes[0];
 

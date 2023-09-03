@@ -233,25 +233,34 @@ void Mesh::printVertices()
     } 
 }
 
-void Mesh::addVerticesBath(Mesh& m)
+void Mesh::addVerticesBath(Mesh& m, glm::vec3 shift)
 {   
     //NOTE(darius) for some reason it doesnt change runtime state fo mesh. But it changes its vectors, so  if u serialize it - it will work..
-    vertices.insert(vertices.end(), m.getVerticesRef().begin(), m.getVerticesRef().end()); 
+    //NOTE(darius) for some reason it drops in perfomance whhen vertices.size() greateer than 92 (100 - 4 - 4)
+    //NOTE(darius) even with that problem we draw 159 batched objects with batch size of 16 (159 * 16 = 2544 flat meshes) with slight fps drop in editor mode (ergo twice of that in game mode)
+    // AND YOU CAN STILL LOAD SCENE THAT WAS BEFORE AND YOU CAN CREATE LIKE !% PARTICLES SYSTEMS
 
-    vertices[4].Position.x++;
-    vertices[5].Position.x++;
-    vertices[6].Position.x++;
-    vertices[7].Position.x++;
+    auto verts = m.getVertices();
 
-    vertices[4].Position.y++;
-    vertices[5].Position.y++;
-    vertices[6].Position.y++;
-    vertices[7].Position.y++;
+    for(int i = 0; i < verts.size(); ++i){
+        verts[i].Position += shift;
+    }
+
+    int offset = vertices.size();
+    vertices.insert(vertices.end(), verts.begin(), verts.begin() + 4);//NOTE(darius) bug! exponential grow
+
+    //size_t vSize = vertices.size();
+
+    //vertices[vSize - 4].Position += shift;
+    //vertices[vSize - 3].Position += shift;
+    //vertices[vSize - 2].Position += shift;
+    //vertices[vSize - 1].Position += shift;
 
     auto indV = m.getIndices();
 
     //NOTE(darius) tempo
-    int offset = 4;
+
+    std::cout << "offset" << offset << "\n";
 
     for(auto& i : indV)
     {
@@ -259,6 +268,7 @@ void Mesh::addVerticesBath(Mesh& m)
     }
 
     indices.insert(indices.end(), indV.begin(), indV.end());
+    //mode = DrawMode::DRAW_AS_ARRAYS;
 
     /*initialized = false;
 

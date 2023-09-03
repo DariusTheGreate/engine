@@ -393,7 +393,7 @@ void Editor::consoleInputThread(Editor* currEditor)
                 Object* obj2 = currEditor->currScene.getObjectByName(objName2);
 
                 if(obj && obj2 && obj->getModel() && obj->getModel()){
-                    obj->getModel()->meshes[0].addVerticesBath(obj2->getModel()->meshes[0]);
+                    /*obj->getModel()->meshes[0].addVerticesBath(obj2->getModel()->meshes[0]);
 
                     Mesh* mOrigin = &obj->getModel()->meshes[0];
 
@@ -410,6 +410,7 @@ void Editor::consoleInputThread(Editor* currEditor)
 
                     objBatched->addModel();
                     objBatched->getModel()->addMesh(*mBatched);
+                    */
                 }
             }
 

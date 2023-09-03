@@ -68,7 +68,7 @@ public:
 
     void printVertices();
 
-    void addVerticesBath(Mesh& m);
+    void addVerticesBath(Mesh& m, glm::vec3 shift);
 
     VAO getVao();
 
