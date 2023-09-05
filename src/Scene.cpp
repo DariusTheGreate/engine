@@ -299,6 +299,65 @@ if (false && CheckColTime.checkTime() >= 0.02) {
 	}
 }
 
+
+void Scene::batchProbeSimilarObjects()
+{
+	//NOTE(darius) doesnt work yet, also cringe code
+
+	/*Object* objI = sceneObjects[0];
+	Object* objJ = sceneObjects[1];
+
+	objI->getModel()->meshes[0].addVerticesBath(objJ->getModel()->meshes[0], objJ->getTransform());
+
+	Mesh& batchRef = objI->getModel()->meshes[0];
+
+    Mesh batchCopy(batchRef.getVertices(), batchRef.getIndices(), batchRef.getTextures());
+
+    objI->getModel()->meshes.clear();
+
+    objI->getModel()->addMesh(batchCopy);
+
+	return;
+	*/
+
+	std::vector<Object*> objectsToRemove;
+
+	for(auto& objI : sceneObjects)
+	{
+		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || std::find(objectsToRemove.begin() , objectsToRemove.end(), objI) != objectsToRemove.end())
+			continue;
+
+		//glm::vec3 originalPosition = objI->getTransform().getPosition();
+		glm::vec3 originalScale = objI->getTransform().getScale();
+		//objI->getTransform() = Transform();
+		//objI->getTransform().setPosition(originalPosition);
+		auto meshI = objI->getModel()->meshes[0];
+
+		for(auto& objJ : sceneObjects)
+		{
+			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1)
+				continue;
+
+			auto meshJ = objJ->getModel()->meshes[0];
+
+			if(meshI.getTexturesRef()[0].get_path() == meshJ.getTexturesRef()[0].get_path())
+			{
+				//NOTE(darius) i think its kinda works now, look into better uproach?
+				glm::vec3 shift = (objJ->getTransform().getPosition());
+				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x, shift.y/originalScale.y, shift.z/originalScale.z);
+
+				meshI.addVerticesBath(meshJ, shiftScaled);
+
+			    Mesh batchCopy(meshI.getVertices(), meshI.getIndices(), meshI.getTextures());
+			    objI->getModel()->meshes.clear();
+			    objI->getModel()->addMesh(batchCopy);
+
+				objectsToRemove.push_back(objJ);
+			}
+		}
+	}
+}
+
 void Scene::update_scripts()
 {
 	for (auto& i : sceneObjects)

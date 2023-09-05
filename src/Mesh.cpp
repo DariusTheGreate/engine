@@ -2,6 +2,9 @@
 #include <OpenglWrapper.h>
 #include <Renderer.h>
 
+#include <ranges>
+#include <algorithm>
+
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
@@ -236,58 +239,24 @@ void Mesh::printVertices()
 void Mesh::addVerticesBath(Mesh& m, glm::vec3 shift)
 {   
     //NOTE(darius) for some reason it doesnt change runtime state fo mesh. But it changes its vectors, so  if u serialize it - it will work..
-    //NOTE(darius) for some reason it drops in perfomance whhen vertices.size() greateer than 92 (100 - 4 - 4)
-    //NOTE(darius) even with that problem we draw 159 batched objects with batch size of 16 (159 * 16 = 2544 flat meshes) with slight fps drop in editor mode (ergo twice of that in game mode)
-    // AND YOU CAN STILL LOAD SCENE THAT WAS BEFORE AND YOU CAN CREATE LIKE !% PARTICLES SYSTEMS
+    //NOTE(darius) if u create new mesh from this mesh vectors u can go ril fast
 
-    auto verts = m.getVertices();
-
-    for(int i = 0; i < verts.size(); ++i){
-        verts[i].Position += shift;
-    }
+    auto verts = m.getVertices() | std::ranges::views::take(4);
+    std::ranges::for_each(verts, [shift](auto& v){v.Position += shift; });
 
     int offset = vertices.size();
-    vertices.insert(vertices.end(), verts.begin(), verts.begin() + 4);//NOTE(darius) bug! exponential grow
-
-    //size_t vSize = vertices.size();
-
-    //vertices[vSize - 4].Position += shift;
-    //vertices[vSize - 3].Position += shift;
-    //vertices[vSize - 2].Position += shift;
-    //vertices[vSize - 1].Position += shift;
+    vertices.insert(vertices.end(), verts.begin(), verts.end());
 
     auto indV = m.getIndices();
 
-    //NOTE(darius) tempo
-
     std::cout << "offset" << offset << "\n";
+    std::cout << "indices size " << indV.size() << "\n";
 
     for(auto& i : indV)
     {
         i += offset;
     }
 
-    indices.insert(indices.end(), indV.begin(), indV.end());
-    //mode = DrawMode::DRAW_AS_ARRAYS;
-
-    /*initialized = false;
-
-    auto vertsCopy = this->vertices;
-    auto indsCopy = this->indices;
-    auto textsCopy = this->textures;
-
-    this->vertices.clear();
-    this->indices.clear();
-    this->textures.clear();
-
-    vao.deleteVAO();
-    vbo.deleteVBO();
-    ebo.deleteEBO();
-
-    this->vertices = vertsCopy;
-    this->indices = indsCopy;
-    this->textures = textsCopy;
-
-    setupMesh();
-    */
+    indices.insert(indices.end(), indV.begin(), indV.begin() + 6);
+    mode = DrawMode::DRAW_AS_ARRAYS;
 }

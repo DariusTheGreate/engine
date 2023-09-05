@@ -2,28 +2,20 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# setSignalHandlers at E:\own\programming\engine\src\main.cpp:22
  3# raise in ucrtbased
- 4# setSignalHandlers at E:\own\programming\engine\src\main.cpp:24
- 5# seh_filter_exe in ucrtbased
- 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
- 7# _C_specific_handler in VCRUNTIME140D
- 8# _chkstk in ntdll
- 9# RtlRaiseException in ntdll
-10# KiUserExceptionDispatcher in ntdll
-11# 0x00007FFC208FFC10 in nvoglv64
-12# OpenglWrapper::DrawElements at E:\own\programming\engine\src\OpenglWrapper.cpp:230
-13# Mesh::Draw at E:\own\programming\engine\src\Mesh.cpp:131
-14# Model::Draw at E:\own\programming\engine\src\Model.cpp:56
-15# Object::renderObject at E:\own\programming\engine\src\Object.cpp:136
-16# Scene::renderScene at E:\own\programming\engine\src\Scene.cpp:95
-17# Renderer::renderScene at E:\own\programming\engine\src\Renderer.cpp:630
-18# Renderer::EditorIDsStage at E:\own\programming\engine\src\Renderer.cpp:405
-19# Renderer::render at E:\own\programming\engine\src\Renderer.cpp:354
-20# Editor::update at E:\own\programming\engine\src\Editor.cpp:40
-21# Application::Run at E:\own\programming\engine\src\Application.cpp:21
-22# main at E:\own\programming\engine\src\main.cpp:50
-23# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-24# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-25# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-26# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-27# BaseThreadInitThunk in KERNEL32
-28# RtlUserThreadStart in ntdll
+ 4# setmbcp in ucrtbased
+ 5# CrtSetReportHookW2 in ucrtbased
+ 6# VCrtDbgReportA in ucrtbased
+ 7# CrtDbgReport in ucrtbased
+ 8# std::vector<Object *,std::allocator<Object *> >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
+ 9# Scene::batchProbeSimilarObjects at E:\own\programming\engine\src\Scene.cpp:308
+10# UI::sceneWindow at E:\own\programming\engine\src\UI.cpp:79
+11# UI::renderUI at E:\own\programming\engine\src\UI.cpp:30
+12# Editor::update at E:\own\programming\engine\src\Editor.cpp:45
+13# Application::Run at E:\own\programming\engine\src\Application.cpp:21
+14# main at E:\own\programming\engine\src\main.cpp:50
+15# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+16# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+17# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+18# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+19# BaseThreadInitThunk in KERNEL32
+20# RtlUserThreadStart in ntdll

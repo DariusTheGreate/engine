@@ -38,7 +38,7 @@ void LightingShaderRoutine::operator() (Object* obj){
 
     sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
 
-    glm::mat4 projection = GameState::cam.getPerspective(1600, 900);
+    glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
     glm::mat4 view = (GameState::cam.getBasicLook());
 
     sv.setVec3("lightPos", DirectionalLight::lightPos);

@@ -72,6 +72,10 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
     if (ImGui::Begin("Game Objects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
     {
 
+        if (ImGui::Button("batch objects")) {
+            scene.batchProbeSimilarObjects();
+        }
+
         ImGui::Text("onjects count %i", scene.get_objects().size());
 
         if (ImGui::Button("Add Object")) {

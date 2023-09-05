@@ -218,6 +218,8 @@ public:
 
 	Camera* getCameraAt(int id);
 
+	void batchProbeSimilarObjects();
+
 private:
 
 	void init_memory();
