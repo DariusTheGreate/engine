@@ -25,7 +25,7 @@ struct Material
     {
     }
 
-    void setShaderMaterial(Shader sv)
+    void setShaderMaterial(const Shader& sv)
     {
         //TODO(darius) currently in shader there is samplers for diffuse and specular. 
         /*sv.setVec3("material.diffuse", diffuse.x, diffuse.y, diffuse.z);

@@ -41,11 +41,11 @@ public:
 	//TODO(darius) stop fucking with incapsulation
 	glm::quat& get_orientation_quaternion_ref();
 
-	glm::quat normalize_quat(glm::quat q);
+	glm::quat normalize_quat(const glm::quat& q);
 
 	glm::quat construct_quat(const glm::vec3& v, float theta);
 
-	glm::quat multiply_quats(const glm::quat u, const glm::quat v);
+	glm::quat multiply_quats(const glm::quat& u, const glm::quat& v);
 
 	void set_quat_from_angles();
 

@@ -1,6 +1,6 @@
 #include "Colider.h"
 
-Colider::Colider(glm::vec3 size_in, Transform& tr_in, int tag_in, bool active_in) : size(size_in), tr(tr_in), tag(tag_in), active(active_in)
+Colider::Colider(const glm::vec3& size_in, Transform& tr_in, int tag_in, bool active_in) : size(size_in), tr(tr_in), tag(tag_in), active(active_in)
 {
 }
 
@@ -14,7 +14,7 @@ glm::vec3 Colider::get_size() const
 	return size;
 }
 
-void Colider::set_size(glm::vec3 v)
+void Colider::set_size(const glm::vec3& v)
 {
 	size = v;
 }
@@ -24,7 +24,7 @@ glm::vec3 Colider::get_shift() const
 	return shift;
 }
 
-void Colider::set_shift(glm::vec3 v)
+void Colider::set_shift(const glm::vec3& v)
 {
 	shift = v;
 }
@@ -36,6 +36,7 @@ glm::vec3& Colider::get_size_ref()
 
 std::vector<glm::vec3> Colider::get_points() {
 	std::vector<glm::vec3> points;
+	points.resize(8);
 	glm::mat4 transformation = tr.matrix;
 	glm::vec4 position = { tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
 
@@ -72,21 +73,21 @@ bool Colider::contains_point(const glm::vec3& point) {
 	return true;
 }
 
-glm::vec3 Colider::supportOriented(glm::vec4 dir) {
-	dir = glm::inverse(tr.matrix) * dir; 
+glm::vec3 Colider::supportOriented(const glm::vec4& dir) {
+	glm::vec4 dirTr = glm::inverse(tr.matrix) * dir; 
 
 	glm::vec4 result;
 
 	//glm::quat quatinverse = {tr.q.w, -tr.q.x, -tr.q.y, -tr.q.z}; 
 	//dir = quatinverse * dir;
 
-	dir = dir * tr.matrix;
+	dirTr = dir * tr.matrix;
 
 	glm::vec4 sz = tr.matrix * glm::vec4(maxX(), maxY(), maxZ(), 0);
 
-	result.x = (dir.x > 0) ? sz.x : 0;
-	result.y = (dir.y > 0) ? sz.y : 0;
-	result.z = (dir.z > 0) ? sz.z : 0;
+	result.x = (dirTr.x > 0) ? sz.x : 0;
+	result.y = (dirTr.y > 0) ? sz.y : 0;
+	result.z = (dirTr.z > 0) ? sz.z : 0;
 	result.w = 0;
 	
 	/*result.x = (dir.x < 0) ? -size.x / 2 : size.x / 2;
@@ -99,7 +100,7 @@ glm::vec3 Colider::supportOriented(glm::vec4 dir) {
 	//return tr.matrix * result + glm::vec4{ tr.getPosition().x, tr.getPosition().y, tr.getPosition().z, 0};
 }
 
-glm::vec3 Colider::support(glm::vec4 dir) {
+glm::vec3 Colider::support(const glm::vec4& dir) {
 	glm::vec4 result;
 	result.x = (dir.x > 0) ? maxX() : minX();
 	result.y = (dir.y > 0) ? maxY() : minY();
@@ -109,7 +110,7 @@ glm::vec3 Colider::support(glm::vec4 dir) {
 	return result;
 }
 
-glm::vec3 dotSupport(glm::vec3 dir, std::vector<glm::vec3> vertices)
+glm::vec3 dotSupport(const glm::vec3& dir, std::vector<glm::vec3> vertices)
 {
 	//auto vertices = get_points();
 	auto largestDot = glm::dot(vertices[0], dir);

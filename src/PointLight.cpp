@@ -10,7 +10,7 @@ void PointLight::addLight()
     lightNumber = PointLight::LightsCount++;
 }
 
-void PointLight::setShaderLight(Shader sv)
+void PointLight::setShaderLight(const Shader& sv)
 {
     diffuse = color * glm::vec3(diffuseFactor);
     ambient = diffuse * glm::vec3(ambientFactor);
@@ -30,7 +30,7 @@ DirectionalLight::DirectionalLight(glm::vec3 direction_in, glm::vec3 color_in, f
     ambient = diffuse * glm::vec3(0.2f);
 }
 
-void DirectionalLight::setShaderLight(Shader sv)
+void DirectionalLight::setShaderLight(const Shader& sv)
 {
     sv.setVec3("dirLight.direction", direction);
     sv.setVec3("dirLight.ambient", ambient);
@@ -43,7 +43,7 @@ SpotLight::SpotLight(glm::vec3 position_in, glm::vec3 direction_in, glm::vec3 co
     ambient = diffuse * glm::vec3(0.2f);
 }
 
-void SpotLight::setShaderLight(Shader sv)
+void SpotLight::setShaderLight(const Shader& sv)
 {
     sv.setVec3("light.position", position);
     sv.setVec3("light.ambient", ambient);

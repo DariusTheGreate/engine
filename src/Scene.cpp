@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <ranges>
 
 Scene::Scene()
 {
@@ -17,7 +18,7 @@ Scene::Scene()
 
 Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) 
 {
-	Model m = Model(path, shaderRoutine_in, sv, rotateTextures);
+	Model m = Model(std::move(path), shaderRoutine_in, sv, rotateTextures);
 	auto meshes = m.loadModel();
 
 	std::vector<Object*> subobjects;
@@ -200,7 +201,7 @@ void Scene::deleteFlatMesh(FlatMesh* mesh)
 
 EmptyScriptRoutine* Scene::createRoutine(std::string path)
 {
-	return new EmptyScriptRoutine(path, GameState::instance);
+	return new EmptyScriptRoutine(std::move(path), GameState::instance);
 }
 
 void Scene::deleteRoutine(EmptyScriptRoutine* r)
@@ -225,7 +226,7 @@ void Scene::update_objects()
 	//TODO(darius) make it separated threads for collisions and rendering and update?
 	updateObjectsIDs();
 	
-if (false && CheckColTime.checkTime() >= 0.02) {
+	if (false && CheckColTime.checkTime() >= 0.02) {
 	CheckColTime.clearTime();
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
@@ -320,12 +321,16 @@ void Scene::batchProbeSimilarObjects()
 	return;
 	*/
 
-	std::vector<Object*> objectsToRemove;
+
 
 	for(auto& objI : sceneObjects)
 	{
-		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || std::find(objectsToRemove.begin() , objectsToRemove.end(), objI) != objectsToRemove.end())
+		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || objI->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS 
+			|| std::find(currentlyBatchedObjects.begin() , currentlyBatchedObjects.end(), objI) != currentlyBatchedObjects.end())
 			continue;
+
+		std::vector<Object*> objectsToRemove;
+		std::cout << "Batching object " << objI->get_name() << "...\n";
 
 		//glm::vec3 originalPosition = objI->getTransform().getPosition();
 		glm::vec3 originalScale = objI->getTransform().getScale();
@@ -335,7 +340,7 @@ void Scene::batchProbeSimilarObjects()
 
 		for(auto& objJ : sceneObjects)
 		{
-			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1)
+			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ)
 				continue;
 
 			auto meshJ = objJ->getModel()->meshes[0];
@@ -343,7 +348,7 @@ void Scene::batchProbeSimilarObjects()
 			if(meshI.getTexturesRef()[0].get_path() == meshJ.getTexturesRef()[0].get_path())
 			{
 				//NOTE(darius) i think its kinda works now, look into better uproach?
-				glm::vec3 shift = (objJ->getTransform().getPosition());
+				glm::vec3 shift = (objJ->getTransform().getPosition() - objI->getTransform().getPosition());
 				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x, shift.y/originalScale.y, shift.z/originalScale.z);
 
 				meshI.addVerticesBath(meshJ, shiftScaled);
@@ -355,6 +360,13 @@ void Scene::batchProbeSimilarObjects()
 				objectsToRemove.push_back(objJ);
 			}
 		}
+
+		currentlyBatchedObjects.insert(currentlyBatchedObjects.begin(), objectsToRemove.begin(), objectsToRemove.end());
+
+		auto& batchedRef = currentlyBatchedObjects;
+
+		const auto [firstIter, lastIter] = std::ranges::remove_if(sceneObjects, [&batchedRef](auto& item) { return std::find(batchedRef.begin(), batchedRef.end(), item) == batchedRef.end(); } );
+		sceneObjects.erase(lastIter, sceneObjects.end());
 	}
 }
 
@@ -414,7 +426,7 @@ void Scene::deserialize(std::string_view path)
 
 	if (cameraPos != std::string::npos) {
 		size_t brcktStart = data.find("CameraPos: {", cameraPos);
-		size_t brcktEnd = data.find("}", brcktStart);
+		size_t brcktEnd = data.find('}', brcktStart);
 		glm::vec3 cameraPosition = extractVectorFromToken(data.substr(brcktStart, brcktEnd - brcktStart));
 
 		GameState::cam.setCameraPos(cameraPosition);
@@ -431,7 +443,7 @@ void Scene::deserialize(std::string_view path)
 			size_t oPos1 = data.find("Object", i);
 			size_t oPos2 = data.find("Object", oPos1+1);
 			i = oPos2;
-			objectTokens.push_back(data.substr(oPos1, oPos2-oPos1));
+			objectTokens.emplace_back(data.substr(oPos1, oPos2-oPos1));
 		}
 	}
 
@@ -440,29 +452,29 @@ void Scene::deserialize(std::string_view path)
 
 	for (std::string_view tkn : objectTokens) 
 	{
-		names.push_back(extractNameFromToken(tkn));
-		hiddenStates.push_back(extractHiddenStateFromToken(tkn));
+		names.emplace_back(extractNameFromToken(tkn));
+		hiddenStates.emplace_back(extractHiddenStateFromToken(tkn));
 	}
 
 	std::vector<Transform>  transs;
 
 	for (std::string_view tkn : objectTokens) 
 	{
-		transs.push_back(extractTransformFromToken(tkn));
+		transs.emplace_back(extractTransformFromToken(tkn));
 	}
 
 	std::vector<Model> models;
 	
 	for (std::string_view tkn : objectTokens) 
 	{
-		models.push_back(extractModelFromToken(tkn));
+		models.emplace_back(extractModelFromToken(tkn));
 	}
 
 	std::vector<std::string> scripts;
 
 	for (std::string_view tkn : objectTokens) 
 	{
-		scripts.push_back(extractScriptFromToken(tkn));
+		scripts.emplace_back(extractScriptFromToken(tkn));
 	}
 
 	//Recreation here after
@@ -627,7 +639,7 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 		std::vector<glm::vec3> normals;
 		std::vector<glm::vec2> texcoords;
 
-
+		//TODO(darius) why i???
 		size_t i = verticesStart;
 
 		while (i < tkn.size())
@@ -693,7 +705,7 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 
 			std::string path(tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
 
-			textures.push_back(Texture(TextureFromFile(path.c_str(), false, false), path, "texture_diffuse"));
+			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, false), path, "texture_diffuse"));
 
 			break;
 		}
@@ -896,19 +908,19 @@ glm::vec3 Scene::extractVectorFromToken(std::string_view tkn)
 	float z = 0;
 
 	size_t xStart = 0;
-	size_t xEnd = line.find(" ");
+	size_t xEnd = line.find(' ');
 	std::string xstr(line.substr(xStart + 1, xEnd));
 	std::istringstream in(xstr);
 	in >> x;
 
 	size_t yStart = xEnd;
-	size_t yEnd = line.find(" ", xEnd + 1);
+	size_t yEnd = line.find(' ', xEnd + 1);
 	std::string ystr(line.substr(yStart + 1, yEnd - yStart - 1));
 	std::istringstream iny(ystr);
 	iny >> y;
 
 	size_t zStart = yEnd;
-	size_t zEnd = line.find(" ", yEnd + 1);
+	size_t zEnd = line.find(' ', yEnd + 1);
 	std::string zstr(line.substr(zStart + 1, zEnd - zStart - 1));
 	std::istringstream inz(zstr);
 	inz >> z;
@@ -918,8 +930,8 @@ glm::vec3 Scene::extractVectorFromToken(std::string_view tkn)
 
 glm::vec4 Scene::extractVector4FromToken(std::string_view tkn)
 {
-	size_t brkctStart = tkn.find("{");
-	size_t brkctEnd = tkn.find("}");
+	size_t brkctStart = tkn.find('{');
+	size_t brkctEnd = tkn.find('}');
 	std::string line(tkn.substr(brkctStart, brkctEnd - brkctStart));
 
 	float x = 0;
@@ -928,25 +940,25 @@ glm::vec4 Scene::extractVector4FromToken(std::string_view tkn)
 	float w = 0;
 
 	size_t xStart = 0;
-	size_t xEnd = line.find(" ");
+	size_t xEnd = line.find(' ');
 	std::string xstr(line.substr(xStart + 1, xEnd));
 	std::istringstream in(xstr);
 	in >> x;
 
 	size_t yStart = xEnd;
-	size_t yEnd = line.find(" ", xEnd + 1);
+	size_t yEnd = line.find(' ', xEnd + 1);
 	std::string ystr(line.substr(yStart + 1, yEnd - yStart - 1));
 	std::istringstream iny(ystr);
 	iny >> y;
 
 	size_t zStart = yEnd;
-	size_t zEnd = line.find(" ", yEnd + 1);
+	size_t zEnd = line.find(' ', yEnd + 1);
 	std::string zstr(line.substr(zStart + 1, zEnd - zStart - 1));
 	std::istringstream inz(zstr);
 	inz >> z;
 
 	size_t wStart = zEnd;
-	size_t wEnd = line.find(" ", zEnd + 1);
+	size_t wEnd = line.find(' ', zEnd + 1);
 	std::string wstr(line.substr(wStart + 1, wEnd - wStart - 1));
 	std::istringstream inw(wstr);
 	inw >> w;

@@ -60,7 +60,7 @@ public:
 		return new Object(std::forward<Args>(args)...);
 
 		//assert(filled_pools < mem_pools.size(), "mem_pool size < filled pools value");
-		Pool& curp = mem_pools[filled_pools];
+		/*Pool& curp = mem_pools[filled_pools];
 		//std::construct_at c++20
 		char* construction_ptr = curp.p + curp.busy * sizeof(T);
 		::new (construction_ptr) Object(std::forward<Args>(args)...);
@@ -71,15 +71,16 @@ public:
 		if (curp.empty == 0)
 			filled_pools++;
 		return (T*)construction_ptr;
+		*/
 	}
 	
 	//TODO(darius) test this shit like never before
-	void destroy(void* p) 
+	void destroy(Object* p) 
 	{
 		delete p;
 		return;
 
-		size_t addrp = (size_t)(p);
+		/*size_t addrp = (size_t)(p);
 		for (int i = 0; i < filled_pools; ++i) {
 			if (addrp > (size_t)mem_pools[i].p && addrp < ((size_t)mem_pools[i].p + mem_pools[i].busy * sizeof(T))) {
 				for (int j = 0; j < mem_pools[i].busy; ++j) {
@@ -87,7 +88,7 @@ public:
 					mem_pools[i].set[j] = 0;
 				}
 			}
-		}
+		}*/
 	}
 
 private:
@@ -230,6 +231,7 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
+	std::vector<Object*> currentlyBatchedObjects;//more common way is to store indexes
 
 	//TODO(darius) make it use memory manager
 	std::vector<Camera*> sceneCameras;

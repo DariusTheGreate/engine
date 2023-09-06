@@ -18,9 +18,11 @@ FlatMesh::FlatMesh()
     this->textures = {};
 
     this -> setupMesh();
+
+    type = MeshType::FLAT;
 } 
 
-void FlatMesh::setTextureNormal(std::string path)
+void FlatMesh::setTextureNormal(const std::string& path)
 {
     //TODO(darius) make it single texture
     Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_normal");
@@ -40,7 +42,7 @@ void FlatMesh::setTextureCoords(float x1 = 1.0, float y1 = 1.0, float x2 = 0.0, 
 
 void FlatMesh::DrawRaw(Shader& shader, glm::vec3 pos = { 0,0,0 }, glm::vec3 scale = {1,1,1})
 {
-    std::unique_lock<std::mutex>(draw_mutex);
+    //std::unique_lock<std::mutex>(draw_mutex);
     glm::mat4 model = glm::mat4(1.0f);
 
     model = glm::translate(model, pos);

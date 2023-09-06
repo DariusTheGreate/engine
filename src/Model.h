@@ -61,7 +61,7 @@ public:
     int m_BoneCounter = 0;
 
 public:
-    Model() {}
+    Model() = default;
 
     Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false); 
 
@@ -85,7 +85,7 @@ public:
     LightingShaderRoutine& getShaderRoutine();
     void setShaderRoutine(const LightingShaderRoutine& routine);
 
-    void setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r);
+    void setAnimationShaderRoutine(const SkeletalAnimationShaderRoutine& r);
 
     void setShader(Shader sdr);
 
@@ -103,7 +103,7 @@ private:
 
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);
 
-    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+    std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
     void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
   

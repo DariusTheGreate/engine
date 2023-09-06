@@ -42,6 +42,8 @@ public:
 
 	Object(const Object& copy_me);
 
+	Object& operator =(const Object& obj) = delete;
+
 	void setupScript(EmptyScriptRoutine* r);
 
 	void startScript();

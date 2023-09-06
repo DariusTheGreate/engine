@@ -10,11 +10,15 @@
 struct Transform
 {
 	Transform() = default;
+
 	Transform(glm::vec3 pos, glm::vec3 scl);
 	Transform(glm::vec3 pos, glm::vec3 scl, glm::quat rot);
 	Transform(std::vector<float> mat_in);
 	Transform(glm::mat4 mat_in);
+
 	Transform(const Transform& t);
+
+	//Transform& operator =(Transform swap);
 
 	void setPosition(glm::vec3 pos);
 
@@ -24,7 +28,7 @@ struct Transform
 
 	void addToPosition(glm::vec3 v);
 
-	void rotate(glm::quat q);
+	void rotate(const glm::quat& q);
 
 	void rotate(float angle_in_radians, glm::vec3 axis);
 

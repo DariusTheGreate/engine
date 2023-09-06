@@ -18,6 +18,13 @@ Transform::Transform(const Transform& t) : matrix(t.matrix)
 {
 }
 
+/*Transform& Transform::operator=(Transform swaper)
+{
+	std::swap(*this, swaper);
+	return *this;
+}
+*/
+
 Transform::Transform(std::vector<float> mat_in)
 {
 	int c = 0;//NOTE(darius) make it i * j
@@ -66,7 +73,7 @@ void Transform::addToPosition(glm::vec3 v)
 	setPosition(newPos);
 }
 
-void Transform::rotate(glm::quat q)
+void Transform::rotate(const glm::quat& q)
 {
 	glm::mat4 RotationMatrix = glm::toMat4(q);
 	matrix *= RotationMatrix;

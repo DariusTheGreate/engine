@@ -20,7 +20,7 @@ void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShade
 
     for(auto i : positions)
     {
-        particles.push_back(Particle{i, 1, 5.0f}); 
+        particles.emplace_back(Particle{i, 1, 5.0f}); 
     }
 }
 

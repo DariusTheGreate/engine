@@ -20,8 +20,8 @@ private:
 	std::string cpuName;
 	std::string gpuName;
 
-	int mainMemory;
-	int videoMemory;
+	int mainMemory = 0;
+	int videoMemory = 0;
 
 	static SystemInfo* value;
 };

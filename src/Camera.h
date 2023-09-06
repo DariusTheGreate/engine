@@ -10,7 +10,7 @@ public:
 
     void setCameraLook(double xposIn, double yposIn);
 
-    void setCameraPos(glm::vec3 pos_in);
+    void setCameraPos(const glm::vec3& pos_in);
 
     void setScroolState(double xoffset, double yoffset);
 
@@ -33,7 +33,7 @@ public:
 
     glm::vec3 getCameraFront();
 
-    void setCameraFront(glm::vec3 f);
+    void setCameraFront(const glm::vec3& f);
     
     glm::vec3 getCameraPos() const;
 

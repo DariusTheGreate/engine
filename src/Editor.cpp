@@ -261,6 +261,8 @@ Renderer* Editor::getRenderer()
 
 void Editor::consoleInputThread(Editor* currEditor)
 {
+    if (!currEditor)
+        return;
     //TODO(darius) make it separated object and not call methods directly, but pass message to main thread (this is detached thread btw)
     //DANGER(darius) NO SYNCHRONIZATION. CAN HAPPPEN ANYTHING 
     try {
@@ -286,8 +288,7 @@ void Editor::consoleInputThread(Editor* currEditor)
 
                 std::cin >> prefabPath;
                 //NOTE(darius) crashes 
-                if (currEditor)
-                    currEditor->currScene.deserialize(prefabPath);
+				currEditor->currScene.deserialize(prefabPath);
             }
 
             if (command == "rotateUp")
@@ -320,7 +321,6 @@ void Editor::consoleInputThread(Editor* currEditor)
                 if (axis == "z")
                     axisVec = { 0,0,1 };
 
-                std::string degree;
                 std::cout << "degree: ";
 
                 float degreeFloat = 0.0f;
@@ -392,7 +392,7 @@ void Editor::consoleInputThread(Editor* currEditor)
                 Object* obj = currEditor->currScene.getObjectByName(objName);
                 Object* obj2 = currEditor->currScene.getObjectByName(objName2);
 
-                if(obj && obj2 && obj->getModel() && obj->getModel()){
+                if(obj && obj2 && obj->getModel() && obj2->getModel()){
                     /*obj->getModel()->meshes[0].addVerticesBath(obj2->getModel()->meshes[0]);
 
                     Mesh* mOrigin = &obj->getModel()->meshes[0];

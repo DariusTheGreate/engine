@@ -32,9 +32,16 @@ enum class DrawMode
     DRAW_AS_INSTANCE,
 };
 
+enum class MeshType
+{
+    FLAT,
+    CUBE,
+    MESH,
+};
+
 class Mesh {
 public:
-    Mesh() noexcept {}
+    Mesh() noexcept = default;
   
     //TODO(darius) make it moveable for fuck sake!!!!
     //Mesh(cosnt Mesh& m) = delete;
@@ -62,15 +69,17 @@ public:
 
     std::vector<Texture>& getTexturesRef();
 
-    void setTexture(std::string path, std::string name);
+    void setTexture(const std::string& path, const std::string& name);
 
-    void setTexture(std::string path);
+    void setTexture(const std::string& path);
 
     void printVertices();
 
     void addVerticesBath(Mesh& m, glm::vec3 shift);
 
     VAO getVao();
+
+    MeshType getType();
 
 protected:
     //TODO(darius) memoryManage that
@@ -84,6 +93,9 @@ protected:
     VBO vbo;
     EBO ebo;
     bool initialized = false;
+
+    //NOTE(darius) probably not the best way to do it
+    MeshType type = MeshType::MESH;
 
     DrawMode mode = DrawMode::DRAW_AS_ELEMENTS;
     

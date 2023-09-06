@@ -37,6 +37,7 @@ public:
 	int get_firstX();
 	int get_firstY();
 
+	//TODO(darius) refactor this
 	int prev_x = 0;
 	int prev_y = 0;
 
@@ -51,11 +52,11 @@ public:
 
 private:
 	//don need atomics at all?..
-	std::atomic_int curr_x;
-	std::atomic_int curr_y;
-	std::atomic_int offset_x;
-	std::atomic_int offset_y;
-	std::atomic_bool left_pressed;
-	std::atomic_bool right_pressed;
+	std::atomic_int curr_x = 0;
+	std::atomic_int curr_y = 0;
+	std::atomic_int offset_x = 0;
+	std::atomic_int offset_y = 0;
+	std::atomic_bool left_pressed = false;
+	std::atomic_bool right_pressed = false;
 };
 

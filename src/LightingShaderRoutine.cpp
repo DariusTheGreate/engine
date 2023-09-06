@@ -51,8 +51,9 @@ void LightingShaderRoutine::operator() (Object* obj){
     //    pointLight->setShaderLight(sv);
 
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 pos = obj->getTransform().getPosition();
-    glm::mat4 q = obj->getTransform().matrix;
+    auto& transfromRef = obj->getTransform();
+    glm::vec3 pos = transfromRef.getPosition();
+    glm::mat4 q = transfromRef.matrix;
     //glm::vec3 scale = obj->getTransform().geS;
 
 

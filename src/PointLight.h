@@ -14,7 +14,7 @@ public:
 
     void addLight();
 
-	void setShaderLight(Shader sv);
+	void setShaderLight(const Shader& sv);
 
 	//TODO(darius) make it Tranform?
 	glm::vec3 position = {0,0,0};
@@ -46,7 +46,7 @@ public:
 	DirectionalLight() = default;
     DirectionalLight(glm::vec3 direction_in, glm::vec3 color_in, float intensity_in = 1.0f, float radius_in = 1.0f);
 
-    void setShaderLight(Shader sv);
+    void setShaderLight(const Shader& sv);
 
 	glm::vec3 direction = {-0.2f, -1.0f, -0.3f};
 	glm::vec3 color = {1,1,1};
@@ -77,7 +77,7 @@ public:
 	SpotLight() = default;
     SpotLight(glm::vec3 position_in, glm::vec3 direction_in, glm::vec3 color = glm::vec3(1, 1, 1), float radius_in = glm::cos(glm::radians(12.5f)));
 
-    void setShaderLight(Shader sv);
+    void setShaderLight(const Shader& sv);
 
 	glm::vec3 position = {0,0,0};
 	glm::vec3 direction = {0,-1,0};

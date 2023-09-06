@@ -17,15 +17,15 @@ constexpr float collisionEpsilon = 0.01f;
 class Colider
 {
 public:
-    Colider(glm::vec3 size_in, Transform& tr_in, int tag_in = 0, bool active_in = true);
+    Colider(const glm::vec3& size_in, Transform& tr_in, int tag_in = 0, bool active_in = true);
 
     glm::vec3 get_position() const;
 
     glm::vec3 get_size() const;
-	void set_size(glm::vec3 v);
+	void set_size(const glm::vec3& v);
 
 	glm::vec3 get_shift() const;
-	void set_shift(glm::vec3 v);
+	void set_shift(const glm::vec3& v);
 
     glm::vec3& get_size_ref();
 
@@ -33,9 +33,9 @@ public:
 
     bool contains_point(const glm::vec3& point);
 
-	glm::vec3 support(glm::vec4 dir);
-	glm::vec3 dotSupport(glm::vec4 dir);
-	glm::vec3 supportOriented(glm::vec4 dir);
+	glm::vec3 support(const glm::vec4& dir);
+	glm::vec3 dotSupport(const glm::vec4& dir);
+	glm::vec3 supportOriented(const glm::vec4& dir);
 
     //https://www.youtube.com/watch?v=ajv46BSqcK4&ab_channel=Reducible
 	bool gjk(Colider* coll1, Colider* coll2);

@@ -94,7 +94,7 @@ void Model::setShaderRoutine(const LightingShaderRoutine& routine)
     shaderRoutine = routine;
 }
 
-void Model::setAnimationShaderRoutine(SkeletalAnimationShaderRoutine r)
+void Model::setAnimationShaderRoutine(const SkeletalAnimationShaderRoutine& r)
 {
     animationShaderRoutine = r;
 }
@@ -142,7 +142,7 @@ void Model::processNode(aiNode* root, const aiScene* scene)
         for (unsigned int i = 0; i < curr->mNumMeshes; ++i)
         {
             aiMesh* mesh = scene->mMeshes[curr->mMeshes[i]];
-            meshes.push_back(processMesh(mesh, scene));
+            meshes.emplace_back(processMesh(mesh, scene));
         }
 
         for (unsigned int i = 0; i < curr->mNumChildren; i++)
@@ -277,7 +277,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
 {
     std::vector<Texture> textures;
     std::cout << "texture count of type " << typeName << " " << mat->GetTextureCount(type) << "\n";

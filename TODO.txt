@@ -9,6 +9,7 @@
 	- remove unnecessary includes to speedup compilation
 	- fix coordinates systems conversion
 	- Do/Undo, (use memnto pattern?)
+	- create some kind of testing (log response from engine and compare it to desired)
 
 --RENDERER
 	- batching (combine objects that dont move)

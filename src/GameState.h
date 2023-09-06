@@ -43,6 +43,6 @@ public:
 
 	//TODO(darius) make it a class
 	std::string debug_msg;
-	size_t debug_len;
+	size_t debug_len = 0;
 };
 

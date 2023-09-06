@@ -43,7 +43,7 @@ void Script::setParentObject(Object* newParent)
 
 void Script::addVectorProperty(glm::vec3* property, std::string&& name)
 {
-	vector_properties.push_back(ScriptProperty<glm::vec3>(property, std::move(name)));
+	vector_properties.emplace_back(ScriptProperty<glm::vec3>(property, std::move(name)));
 }
 
 std::vector<ScriptProperty<glm::vec3>>& Script::getVectorProperties()
@@ -53,7 +53,7 @@ std::vector<ScriptProperty<glm::vec3>>& Script::getVectorProperties()
 
 void Script::addFloatProperty(float* property, std::string&& name)
 {
-	float_properties.push_back(ScriptProperty<float>(property, std::move(name)));
+	float_properties.emplace_back(ScriptProperty<float>(property, std::move(name)));
 }
 
 std::vector<ScriptProperty<float>>& Script::getFloatProperties()

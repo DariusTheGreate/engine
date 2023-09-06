@@ -114,7 +114,7 @@ bool& RigidBody::get_is_static_ref()
 }
 */
 
-glm::quat RigidBody::normalize_quat(glm::quat q)
+glm::quat RigidBody::normalize_quat(const glm::quat& q)
 {
 	float mag = glm::sqrt(q.w * q.w + q.x * q.x + q.y * q.y + q.z * q.z);
 
@@ -138,7 +138,7 @@ glm::quat RigidBody::construct_quat(const glm::vec3& v, float theta)
 
 }
 
-glm::quat RigidBody::multiply_quats(const glm::quat u, const glm::quat v)
+glm::quat RigidBody::multiply_quats(const glm::quat& u, const glm::quat& v)
 {
 	float x = v.w * u.x + v.x * u.w - v.y * u.z + v.z * u.y;
 	float y = v.w * u.y + v.x * u.z + v.y * u.w - v.z * u.x;

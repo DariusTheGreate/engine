@@ -47,7 +47,6 @@ void Camera::setCameraLook(double xposIn, double yposIn)
 
 void Camera::setScroolState(double xoffset, double yoffset)
 {
-    return;
     if(GameState::editor_mode == 3){
         fov -= (float)yoffset;
         if (fov < 1.0f)
@@ -99,7 +98,7 @@ glm::vec3 Camera::getCameraFront()
     return cameraFront;
 }
 
-void Camera::setCameraFront(glm::vec3 f)
+void Camera::setCameraFront(const glm::vec3& f)
 {
     cameraFront = f;
 }
@@ -108,7 +107,7 @@ glm::vec3 Camera::getCameraPos() const {
     return cameraPos;
 }
 
-void Camera::setCameraPos(glm::vec3 pos)
+void Camera::setCameraPos(const glm::vec3& pos)
 {
     cameraPos = pos;
 }

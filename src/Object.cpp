@@ -6,29 +6,28 @@
 
 Object::Object(const Object& copy_me) = default;
 
-Object::Object(std::string name_in) : name(name_in)
+Object::Object(std::string name_in) : name(std::move(name_in))
 {
     material = std::nullopt;
 }
 
-Object::Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in)
+Object::Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in) 
+    : name(std::move(name_in))
 {
     model.emplace("", model_shader, shaderRoutine_in, false, false);
 
     tr.setPosition({0,0,0});
     tr.setScale({1,1,1});
-
-    name = name_in;
 }
 
 Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
                                                                                                 Scene* scn, EmptyScriptRoutine* routine,
                                                                                                 bool gammaShader, bool rotateTextures)
+    : name(std::move(name_in))
 {
     model.emplace(model_path_in, model_shader, shaderRoutine_in, gammaShader, rotateTextures);
     
-    if(model.has_value())
-        model.value().loadModel();
+	model->loadModel();
 
     script = Script(scn, this, routine);
 
@@ -38,9 +37,7 @@ Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::v
     tr.setScale(scale_in);
 
     rbody.emplace(RigidBody(0.1f, tr, false));
-    rbody.value().create_box_inertia_tensor(10, { 1,1,1 });
-
-    name = name_in;
+    rbody->create_box_inertia_tensor(10, { 1,1,1 });
 
     colider.emplace(collider_in, tr);
 }
@@ -53,7 +50,7 @@ Object::Object(Object* parentObject, Mesh& m, Shader model_shader, LightingShade
     tr = parentObject->getTransform();//TODO(darius) fix it
 
     rbody.emplace(1,tr,false);
-    rbody.value().get_is_static_ref() = true;
+    rbody->get_is_static_ref() = true;
 
     //apply_force({0.1,0.1,0.1});
 
@@ -72,7 +69,7 @@ Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm:
     tr = Transform(pos_in, scale_in);
 
     rbody.emplace(0.1, tr, false);
-    rbody.value().get_is_static_ref() = true;
+    rbody->get_is_static_ref() = true;
 
     model.emplace(m, model_shader, shaderRoutine_in);
 
@@ -88,7 +85,7 @@ Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm:
     tr = Transform(pos_in, scale_in);
 
     rbody.emplace(0.1, tr, false);
-    rbody.value().get_is_static_ref() = true;
+    rbody->get_is_static_ref() = true;
 
     model.emplace(m);//Model(m, model_shader, shaderRoutine_in);
 
@@ -106,14 +103,14 @@ void Object::startScript()
 {
     if (!script.has_value())
         return;
-    script.value().startScript();
+    script->startScript();
     //traverseChilds([](Object* op) {op->startScript(); });
 }
 
 void Object::updateScript() 
 {
     if(script.has_value())
-        script.value().updateScript();
+        script->updateScript();
     //traverseObjects([](Object* op){op->updateScript()});
 }
 
@@ -128,7 +125,7 @@ void Object::updateAnimator(float dt)
 void Object::renderObject() 
 {
     if(!object_hidden && model){
-        model.value().Draw(this, getPointLight(), getMaterial());
+        model->Draw(this, getPointLight(), getMaterial());
     }
 
     //DANGER! -> traverseObjects([](Object* op) {op->renderObject(); });
@@ -156,16 +153,16 @@ void Object::apply_force(glm::vec3 force)
     if(!rbody)
         return;
 
-    rbody.value().add_force(force);
+    rbody->add_force(force);
 }
 
 void Object::updatePos() 
 {
-    if (colider && *colider.value().get_collision_state() == true)
+    if (colider && *colider->get_collision_state() == true)
         return;
 
     if(rbody.has_value())
-        rbody.value().update(0.01f);
+        rbody->update(0.01f);
 
     //DANGER! -> traverseObjects([](Object* op) {op->updatePos(); });
     traverseChilds([](Object* op) {op->updatePos(); });
@@ -224,7 +221,7 @@ Transform& Object::getParentTransform()
 
 void Object::moveTransform(glm::vec3 v)
 {
-    if (colider && *colider.value().get_collision_state() == true)
+    if (colider && *colider->get_collision_state() == true)
         return;
 
     //getTransform().getPositionRef() += v;
@@ -480,7 +477,8 @@ void Object::serialize(std::ofstream& file)
         file << "\tTransform: {\n";
         file << "\t\tPosition: {" << std::to_string(tr.getPosition().x) << " " << std::to_string(tr.getPosition().y) << " " << std::to_string(tr.getPosition().z) << "}\n";
         file << "\t\tScale: {" << std::to_string(tr.getScale().x) << " " << std::to_string(tr.getScale().y) << " " << std::to_string(tr.getScale().z) << "}\n";
-        file << "\t\tQuaternion: {" << std::to_string(tr.matrixQuaternion().x) << " " << std::to_string(tr.matrixQuaternion().y) << " " << std::to_string(tr.matrixQuaternion().z) << " " << std::to_string(tr.matrixQuaternion().w) << "}\n";
+        auto quatVal = tr.matrixQuaternion();
+        file << "\t\tQuaternion: {" << std::to_string(quatVal.x) << " " << std::to_string(quatVal.y) << " " << std::to_string(quatVal.z) << " " << std::to_string(quatVal.w) << "}\n";
 
         file << "\t\tMatrix: {";
         auto matrixVector = tr.matrixVector();

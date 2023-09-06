@@ -5,12 +5,9 @@
 #include <ranges>
 #include <algorithm>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) 
+    : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
 {
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
-
     setupMesh();
 }
 
@@ -49,14 +46,20 @@ std::vector<Texture>& Mesh::getTexturesRef()
     return textures;
 }
 
-void Mesh::setTexture(std::string path, std::string name)
+void Mesh::setTexture(const std::string& path, const std::string& name)
 {
     //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), path + "/" + name, "texture_diffuse");
+    std::string fullPath;
+    fullPath.reserve(path.size() + name.size() + 1);
+    fullPath.append(path);
+    fullPath.append("/");
+    fullPath.append(name);
+
+    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), fullPath , "texture_diffuse");
     textures.push_back(texture);
 }
 
-void Mesh::setTexture(std::string path)
+void Mesh::setTexture(const std::string& path)
 {
     //TODO(darius) make it single texture
     Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_diffuse");
@@ -71,6 +74,11 @@ VAO Mesh::getVao()
 DrawMode Mesh::getDrawMode()
 {
     return mode;
+}
+
+MeshType Mesh::getType()
+{
+    return type;
 }
 
 void Mesh::Draw(Shader& shader)

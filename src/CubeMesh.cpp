@@ -19,6 +19,7 @@ CubeMesh::CubeMesh()
 
     this -> setupMesh();
     mode = DrawMode::DRAW_AS_ARRAYS;
+    type = MeshType::CUBE;
 }
 
 void CubeMesh::DrawRaw(Shader& shader, size_t sdrp)

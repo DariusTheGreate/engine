@@ -68,7 +68,7 @@ void FrameBuffer::AttachMultisampledTexture(unsigned int W, unsigned int H)
 
 void FrameBuffer::Generate()
 {
-		OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
+	OpenglWrapper::GenerateFrameBuffers((size_t*)(&ID));
 }
 
 void FrameBuffer::Bind()

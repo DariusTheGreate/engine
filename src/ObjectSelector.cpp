@@ -85,7 +85,7 @@ bool ObjectSelector::RaySphere(glm::vec3 ray_origin, glm::vec3 ray_direction, gl
     float dist = 100;
     return glm::intersectRaySphere(ray_origin, ray_direction, position, r, dist);
 
-    float a = glm::dot(ray_direction, ray_direction);
+    /*float a = glm::dot(ray_direction, ray_direction);
     float b = 2 * glm::dot(v, ray_direction);
     float c = glm::dot(v, v) - r * r;
 
@@ -104,6 +104,7 @@ bool ObjectSelector::RaySphere(glm::vec3 ray_origin, glm::vec3 ray_direction, gl
     }
 
     return false;
+    */
 }
 
 void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY, Window* w, Renderer* renderer)

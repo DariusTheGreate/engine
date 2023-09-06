@@ -15,7 +15,7 @@ class Shader
 {
 public:
 
-	Shader(){}
+	Shader() = default;
 
 	Shader(const std::string& filepath, ShaderType type);
 	
