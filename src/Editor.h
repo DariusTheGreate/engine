@@ -29,12 +29,14 @@ public:
 
     Renderer* getRenderer();
 
+    static void fileDropCallbackDispatch(std::string_view str);
+
 private:
     GameState state;
     Camera editorCamera;
     SystemInfo info;
     UI ui;
-    Scene currScene;
+    static Scene currScene;
     Window* window;
     Renderer rendol;
     ObjectSelector selector;

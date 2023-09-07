@@ -1,4 +1,4 @@
-CameraPos: {-45.8734 18.5731 22.2018}
+CameraPos: {-31.3224 28.6614 37.8618}
 Object: {
 	Name: {
 		boxFloor
@@ -538,31 +538,6 @@ Object: {
 		}
 Object: {
 	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {0.000000 0.000000 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {0.000000 0.000000 0.000000}
-		ParticleSize: {1.000000 1.000000 1.000000}
-
-		}
-Object: {
-	Name: {
 		DownAn
 	}
 	Hidden: {
@@ -604,7 +579,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_down\37cfe670-5626-44a2-a4b1-f29461019ef6.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_down\7ab66b6b-2f08-4442-a7c6-2c989a97dcd5.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -659,7 +634,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_up\247abbf9-6d26-4b76-a971-73d7d72c2526.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_up\b1602b0e-b23f-434a-8eac-450cc9850ac2.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -714,7 +689,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_idle\e9022a39-691d-44ed-8e1e-9fb45664c6c6.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_idle\5cf5124e-bb58-4d05-a6d1-176c2a06b468.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -734,10 +709,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-29.760073 12.234440 8.763739}
+		Position: {-22.965055 12.200830 10.173218}
 		Scale: {0.891312 -1.239566 -0.999715}
 		Quaternion: {1.016193 0.000000 0.000000 -0.013152}
-		Matrix: {0.891312 0.000000 0.000000 0.000000 0.000000 -1.239566 -0.029593 0.000000 0.000000 0.023867 -0.999715 0.000000 -29.760073 12.234440 8.763739 1.000000 }
+		Matrix: {0.891312 0.000000 0.000000 0.000000 0.000000 -1.239566 -0.029593 0.000000 0.000000 0.023867 -0.999715 0.000000 -22.965055 12.200830 10.173218 1.000000 }
 	}
 	Collider: {
 		Size: {0.600000 0.500000 0.550000}
@@ -831,7 +806,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_side\e832e5bf-9ad6-4ae2-8f20-6aeea47fe725.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_player_walk_side\4c43f8a2-bfdf-4644-9cbd-d178a4727ef6.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -862,7 +837,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-29.760073 12.234440 8.763739}
+		 Pos: {-22.965055 12.200830 10.173218}
 		 Color: {1.000000 0.764706 0.000000}
 	}
 
@@ -910,7 +885,7 @@ Object: {
 				Indice: {3}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_idle\7ec74239-5bf9-418c-a555-9735918e2322.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_idle\562d374b-35ce-4fba-a2a5-6231772c196a.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -930,10 +905,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-30.863770 11.983386 8.452928}
+		Position: {-23.086021 11.976957 0.962828}
 		Scale: {1.058240 -1.393570 -1.000000}
 		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -30.863770 11.983386 8.452928 1.000000 }
+		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -23.086021 11.976957 0.962828 1.000000 }
 	}
 	Collider: {
 		Size: {0.500000 0.600000 0.550000}
@@ -959,6 +934,54 @@ Object: {
 				Normal: {0.000000 1.000000 0.000000}
 				TexCoords: {0.000000 1.000000 0}
 
+				Position: {38.436069 -1.035675 8.044788}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {38.436069 -2.035675 8.044788}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {37.436069 -2.035675 8.044788}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {37.436069 -1.035675 8.044788}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-24.921555 -1.057950 -8.727227}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-24.921555 -2.057950 -8.727227}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-25.921555 -2.057950 -8.727227}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-25.921555 -1.057950 -8.727227}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {27.756540 -1.053869 -2.192742}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {27.756540 -2.053869 -2.192742}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {26.756540 -2.053869 -2.192742}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {26.756540 -1.053869 -2.192742}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
 			}
 			Indices: {
 				Indice: {0}
@@ -967,9 +990,27 @@ Object: {
 				Indice: {1}
 				Indice: {2}
 				Indice: {3}
+				Indice: {4}
+				Indice: {5}
+				Indice: {7}
+				Indice: {5}
+				Indice: {6}
+				Indice: {7}
+				Indice: {8}
+				Indice: {9}
+				Indice: {11}
+				Indice: {9}
+				Indice: {10}
+				Indice: {11}
+				Indice: {12}
+				Indice: {13}
+				Indice: {15}
+				Indice: {13}
+				Indice: {14}
+				Indice: {15}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\bb86bd86-c6b6-4df5-a0e4-c7e83a37f374.png}
+				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\c1eb3b8c-e53a-486c-85ea-3d9beb53de66.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
@@ -1000,7 +1041,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-30.863770 11.983386 8.452928}
+		 Pos: {-23.086021 11.976957 0.962828}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -1024,118 +1065,8 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-5.586428 14.125422 2.698062}
+		 Pos: {6.837354 14.121782 -1.541934}
 		 Color: {1.000000 0.000000 0.000000}
-	}
-
-		}
-Object: {
-	Name: {
-		EnemyWalkingAnim1
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-5.586428 14.125422 2.698062}
-		Scale: {1.058240 -1.393570 -1.000000}
-		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -5.586428 14.125422 2.698062 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-			Vertices: {
-				Position: {0.500000 0.500000 0.000000}
-				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {1.000000 1.000000 0}
-
-				Position: {0.500000 -0.500000 0.000000}
-				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {1.000000 0.000000 0}
-
-				Position: {-0.500000 -0.500000 0.000000}
-				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.000000 0.000000 0}
-
-				Position: {-0.500000 0.500000 0.000000}
-				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.000000 1.000000 0}
-
-			}
-			Indices: {
-				Indice: {0}
-				Indice: {1}
-				Indice: {3}
-				Indice: {1}
-				Indice: {2}
-				Indice: {3}
-			}
-			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\bb86bd86-c6b6-4df5-a0e4-c7e83a37f374.png}
-				Type: {texture_diffuse}
-			}
-			DrawMode: {1}
-		}
-	}
-	SpriteAnimation: {
-		Delay: {152}
-		 AnimationPath: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side                                     }
-	}
-
-		}
-Object: {
-	Name: {
-		EnemyWalkingAnim2
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-68.316101 14.157476 20.650234}
-		Scale: {1.058240 -1.393570 -1.000000}
-		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -68.316101 14.157476 20.650234 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-			Vertices: {
-				Position: {0.500000 0.500000 0.000000}
-				Normal: {0.000000 0.000000 0.000000}
-				TexCoords: {1.000000 1.000000 0}
-
-				Position: {0.500000 -0.500000 0.000000}
-				Normal: {1.000000 0.000000 0.000000}
-				TexCoords: {1.000000 0.000000 0}
-
-				Position: {-0.500000 -0.500000 0.000000}
-				Normal: {1.000000 1.000000 0.000000}
-				TexCoords: {0.000000 0.000000 0}
-
-				Position: {-0.500000 0.500000 0.000000}
-				Normal: {0.000000 1.000000 0.000000}
-				TexCoords: {0.000000 1.000000 0}
-
-			}
-			Indices: {
-				Indice: {0}
-				Indice: {1}
-				Indice: {3}
-				Indice: {1}
-				Indice: {2}
-				Indice: {3}
-			}
-			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\bb86bd86-c6b6-4df5-a0e4-c7e83a37f374.png}
-				Type: {texture_diffuse}
-			}
-			DrawMode: {1}
-		}
-	}
-	SpriteAnimation: {
-		Delay: {152}
-		 AnimationPath: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side                                     }
 	}
 
 		}
@@ -1158,7 +1089,7 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-68.316101 14.157476 20.650234}
+		 Pos: {-62.813477 14.151794 14.030083}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
@@ -1182,23 +1113,123 @@ Object: {
 		}
 	}
 	PointLight: {
-		 Pos: {-4.294835 14.149301 11.215683}
+		 Pos: {-4.474736 14.143009 3.885518}
 		 Color: {1.000000 0.000000 0.000000}
 	}
 
 		}
 Object: {
 	Name: {
-		EnemyWalkingAnim3
+		Particles
 	}
 	Hidden: {
 		false
 	}
 	Transform: {
-		Position: {-4.294835 14.149301 11.215683}
-		Scale: {1.058240 -1.393570 -1.000000}
-		Quaternion: {1.054966 0.000000 0.000000 0.000480}
-		Matrix: {1.058240 0.000000 0.000000 0.000000 0.000000 -1.393570 0.001179 0.000000 0.000000 -0.000846 -1.000000 0.000000 -4.294835 14.149301 11.215683 1.000000 }
+		Position: {-21.983465 12.241379 25.372499}
+		Scale: {1.000000 1.000000 1.000000}
+		Quaternion: {0.000000 0.000000 0.000000 1.000000}
+		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -21.983465 12.241379 25.372499 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+	Particles: {
+		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
+		}	}
+		Emitter: {-21.983465 12.241379 25.372499}
+		ParticleSize: {1.000000 1.000000 1.000000}
+
+		}
+Object: {
+	Name: {
+		Particles
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-25.120665 11.827202 16.695639}
+		Scale: {1.000000 1.000000 1.000000}
+		Quaternion: {0.000000 0.000000 0.000000 1.000000}
+		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -25.120665 11.827202 16.695639 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+	Particles: {
+		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
+		}	}
+		Emitter: {-25.120665 11.827202 16.695639}
+		ParticleSize: {1.000000 1.000000 1.000000}
+
+		}
+Object: {
+	Name: {
+		Particles
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-29.154057 14.168927 27.106749}
+		Scale: {1.000000 1.000000 1.000000}
+		Quaternion: {0.000000 0.000000 0.000000 1.000000}
+		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -29.154057 14.168927 27.106749 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+	Particles: {
+		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
+		}	}
+		Emitter: {-29.154057 14.168927 27.106749}
+		ParticleSize: {1.000000 1.000000 1.000000}
+
+		}
+Object: {
+	Name: {
+		Particles
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-11.087507 14.168927 27.535400}
+		Scale: {1.000000 1.000000 1.000000}
+		Quaternion: {0.000000 0.000000 0.000000 1.000000}
+		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -11.087507 14.168927 27.535400 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+		}
+	}
+	Particles: {
+		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
+		}	}
+		Emitter: {-11.087507 14.168927 27.535400}
+		ParticleSize: {1.000000 1.000000 1.000000}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-25.638233 16.699131 6.569201}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -25.638233 16.699131 6.569201 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -1220,6 +1251,358 @@ Object: {
 				Normal: {0.000000 1.000000 0.000000}
 				TexCoords: {0.000000 1.000000 0}
 
+				Position: {3.257705 0.500001 -0.121615}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {3.257705 -0.499999 -0.121615}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {2.257705 -0.499999 -0.121615}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {2.257705 0.500001 -0.121615}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {1.501687 0.500000 -0.242185}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {1.501687 -0.500000 -0.242185}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {0.501687 -0.500000 -0.242185}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {0.501687 0.500000 -0.242185}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {5.295707 0.500001 -0.445832}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {5.295707 -0.499999 -0.445832}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {4.295707 -0.499999 -0.445832}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {4.295707 0.500001 -0.445832}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-0.650226 0.500001 -0.044584}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-0.650226 -0.499999 -0.044584}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-1.650226 -0.499999 -0.044584}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-1.650226 0.500001 -0.044584}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-1.552309 0.500001 2.510420}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-1.552309 -0.499999 2.510420}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-2.552309 -0.499999 2.510420}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-2.552309 0.500001 2.510420}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-0.519915 0.500001 5.699175}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-0.519915 -0.499999 5.699175}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-1.519915 -0.499999 5.699175}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-1.519915 0.500001 5.699175}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {1.340600 0.500000 2.132644}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {1.340600 -0.500000 2.132644}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {0.340600 -0.500000 2.132644}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {0.340600 0.500000 2.132644}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {0.600763 0.500001 5.350570}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.600763 -0.499999 5.350570}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.399237 -0.499999 5.350570}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.399237 0.500001 5.350570}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {3.848024 0.500000 -1.321590}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {3.848024 -0.500000 -1.321590}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {2.848024 -0.500000 -1.321590}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {2.848024 0.500000 -1.321590}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {1.863610 0.500001 3.188754}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {1.863610 -0.499999 3.188754}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {0.863610 -0.499999 3.188754}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {0.863610 0.500001 3.188754}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {3.371879 0.466253 3.303398}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {3.371879 -0.533747 3.303398}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {2.371879 -0.533747 3.303398}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {2.371879 0.466253 3.303398}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {5.738079 0.500001 2.461071}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {5.738079 -0.499999 2.461071}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {4.738079 -0.499999 2.461071}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {4.738079 0.500001 2.461071}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {5.124330 0.500001 5.878549}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {5.124330 -0.499999 5.878549}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {4.124330 -0.499999 5.878549}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {4.124330 0.500001 5.878549}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {1.833828 0.500001 5.377565}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {1.833828 -0.499999 5.377565}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {0.833828 -0.499999 5.377565}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {0.833828 0.500001 5.377565}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {2.435875 0.500001 6.742134}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {2.435875 -0.499999 6.742134}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {1.435875 -0.499999 6.742134}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {1.435875 0.500001 6.742134}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-2.362958 0.505694 5.314497}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-2.362958 -0.494306 5.314497}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-3.362958 -0.494306 5.314497}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-3.362958 0.505694 5.314497}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {4.415561 0.500001 7.074393}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {4.415561 -0.499999 7.074393}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {3.415560 -0.499999 7.074393}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {3.415560 0.500001 7.074393}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-0.553353 0.499999 -2.074751}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-0.553353 -0.500001 -2.074751}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-1.553353 -0.500001 -2.074751}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-1.553353 0.499999 -2.074751}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-3.471483 0.500001 2.988868}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-3.471483 -0.499999 2.988868}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-4.471483 -0.499999 2.988868}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-4.471483 0.500001 2.988868}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-1.425795 0.500000 4.295781}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-1.425795 -0.500000 4.295781}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-2.425795 -0.500000 4.295781}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-2.425795 0.500000 4.295781}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {4.420957 0.500002 0.985322}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {4.420957 -0.499998 0.985322}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {3.420957 -0.499998 0.985322}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {3.420957 0.500002 0.985322}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+				Position: {-0.747546 0.500001 1.977308}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {-0.747546 -0.499999 1.977308}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-1.747546 -0.499999 1.977308}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-1.747546 0.500001 1.977308}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
 			}
 			Indices: {
 				Indice: {0}
@@ -1228,143 +1611,146 @@ Object: {
 				Indice: {1}
 				Indice: {2}
 				Indice: {3}
+				Indice: {4}
+				Indice: {5}
+				Indice: {7}
+				Indice: {5}
+				Indice: {6}
+				Indice: {7}
+				Indice: {8}
+				Indice: {9}
+				Indice: {11}
+				Indice: {9}
+				Indice: {10}
+				Indice: {11}
+				Indice: {12}
+				Indice: {13}
+				Indice: {15}
+				Indice: {13}
+				Indice: {14}
+				Indice: {15}
+				Indice: {16}
+				Indice: {17}
+				Indice: {19}
+				Indice: {17}
+				Indice: {18}
+				Indice: {19}
+				Indice: {20}
+				Indice: {21}
+				Indice: {23}
+				Indice: {21}
+				Indice: {22}
+				Indice: {23}
+				Indice: {24}
+				Indice: {25}
+				Indice: {27}
+				Indice: {25}
+				Indice: {26}
+				Indice: {27}
+				Indice: {28}
+				Indice: {29}
+				Indice: {31}
+				Indice: {29}
+				Indice: {30}
+				Indice: {31}
+				Indice: {32}
+				Indice: {33}
+				Indice: {35}
+				Indice: {33}
+				Indice: {34}
+				Indice: {35}
+				Indice: {36}
+				Indice: {37}
+				Indice: {39}
+				Indice: {37}
+				Indice: {38}
+				Indice: {39}
+				Indice: {40}
+				Indice: {41}
+				Indice: {43}
+				Indice: {41}
+				Indice: {42}
+				Indice: {43}
+				Indice: {44}
+				Indice: {45}
+				Indice: {47}
+				Indice: {45}
+				Indice: {46}
+				Indice: {47}
+				Indice: {48}
+				Indice: {49}
+				Indice: {51}
+				Indice: {49}
+				Indice: {50}
+				Indice: {51}
+				Indice: {52}
+				Indice: {53}
+				Indice: {55}
+				Indice: {53}
+				Indice: {54}
+				Indice: {55}
+				Indice: {56}
+				Indice: {57}
+				Indice: {59}
+				Indice: {57}
+				Indice: {58}
+				Indice: {59}
+				Indice: {60}
+				Indice: {61}
+				Indice: {63}
+				Indice: {61}
+				Indice: {62}
+				Indice: {63}
+				Indice: {64}
+				Indice: {65}
+				Indice: {67}
+				Indice: {65}
+				Indice: {66}
+				Indice: {67}
+				Indice: {68}
+				Indice: {69}
+				Indice: {71}
+				Indice: {69}
+				Indice: {70}
+				Indice: {71}
+				Indice: {72}
+				Indice: {73}
+				Indice: {75}
+				Indice: {73}
+				Indice: {74}
+				Indice: {75}
+				Indice: {76}
+				Indice: {77}
+				Indice: {79}
+				Indice: {77}
+				Indice: {78}
+				Indice: {79}
+				Indice: {80}
+				Indice: {81}
+				Indice: {83}
+				Indice: {81}
+				Indice: {82}
+				Indice: {83}
+				Indice: {84}
+				Indice: {85}
+				Indice: {87}
+				Indice: {85}
+				Indice: {86}
+				Indice: {87}
+				Indice: {88}
+				Indice: {89}
+				Indice: {91}
+				Indice: {89}
+				Indice: {90}
+				Indice: {91}
 			}
 			Textures: {
-				Texture: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side\bb86bd86-c6b6-4df5-a0e4-c7e83a37f374.png}
+				Texture: {E:\own\programming\engine\textures\tree2.png}
 				Type: {texture_diffuse}
 			}
 			DrawMode: {1}
 		}
 	}
-	SpriteAnimation: {
-		Delay: {152}
-		 AnimationPath: {E:\own\programming\engine\textures\sprites\spr_baddie_walk_side                                     }
-	}
-
-		}
-Object: {
-	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-22.454206 14.168927 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -22.454206 14.168927 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {-2.700000 7.200000 11.100000}
-		ParticleSize: {2.100000 2.100000 1.000000}
-
-		}
-Object: {
-	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-22.454206 14.168927 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -22.454206 14.168927 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {-5.000000 9.600000 14.700000}
-		ParticleSize: {2.100000 2.100000 1.000000}
-
-		}
-Object: {
-	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-22.454206 14.168927 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -22.454206 14.168927 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {-13.350000 7.850000 22.600000}
-		ParticleSize: {2.100000 2.100000 1.000000}
-
-		}
-Object: {
-	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-22.454206 14.168927 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -22.454206 14.168927 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {-18.000000 7.850000 23.900000}
-		ParticleSize: {2.100000 2.100000 1.000000}
-
-		}
-Object: {
-	Name: {
-		Particles
-	}
-	Hidden: {
-		false
-	}
-	Transform: {
-		Position: {-22.454206 14.168927 0.000000}
-		Scale: {1.000000 1.000000 1.000000}
-		Quaternion: {0.000000 0.000000 0.000000 1.000000}
-		Matrix: {1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 0.000000 -22.454206 14.168927 0.000000 1.000000 }
-	}
-	Model: {
-		Path: {}
-		Meshes: {
-		}
-	}
-	Particles: {
-		Mesh: {			Path: {E:/own/programming/engine//textures/birdParticle1.png}
-		}	}
-		Emitter: {-14.600000 7.850000 25.850000}
-		ParticleSize: {2.100000 2.100000 1.000000}
 
 		}
 Object: {
@@ -1375,10 +1761,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-22.545502 13.243591 9.836561}
-		Scale: {-2.047074 -3.517586 1.000000}
-		Quaternion: {0.000072 -0.082570 1.375196 -0.015984}
-		Matrix: {-2.047074 -0.032345 0.000000 0.000000 0.055579 -3.517586 -0.429189 0.000000 0.000395 -0.025011 1.000000 0.000000 -22.545502 13.243591 9.836561 1.000000 }
+		Position: {-28.350027 12.772748 6.447817}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -28.350027 12.772748 6.447817 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -1426,10 +1812,10 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-19.285791 13.243589 10.189117}
-		Scale: {-2.047074 -3.517586 1.000000}
-		Quaternion: {0.000072 -0.082570 1.375196 -0.015984}
-		Matrix: {-2.047074 -0.032345 0.000000 0.000000 0.055579 -3.517586 -0.429189 0.000000 0.000395 -0.025011 1.000000 0.000000 -19.285791 13.243589 10.189117 1.000000 }
+		Position: {-24.760674 12.772750 6.327472}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -24.760674 12.772750 6.327472 1.000000 }
 	}
 	Model: {
 		Path: {}
@@ -1477,10 +1863,979 @@ Object: {
 		false
 	}
 	Transform: {
-		Position: {-25.647165 13.243589 12.936646}
-		Scale: {-2.047074 -3.517586 1.000000}
-		Quaternion: {0.000072 -0.082570 1.375196 -0.015984}
-		Matrix: {-2.047074 -0.032345 0.000000 0.000000 0.055579 -3.517586 -0.429189 0.000000 0.000395 -0.025011 1.000000 0.000000 -25.647165 13.243589 12.936646 1.000000 }
+		Position: {-32.515762 12.772746 6.124205}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -32.515762 12.772746 6.124205 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-20.362101 12.772748 6.524704}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -20.362101 12.772748 6.524704 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-18.518215 12.772746 9.074939}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -18.518215 12.772746 9.074939 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-20.628460 12.772748 12.257743}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -20.628460 12.772748 12.257743 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-24.431406 12.772750 8.697868}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -24.431406 12.772750 8.697868 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-22.919159 12.772748 11.909788}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -22.919159 12.772748 11.909788 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-29.556656 12.772750 5.250082}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -29.556656 12.772750 5.250082 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-25.500454 12.772746 9.752007}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -25.500454 12.772746 9.752007 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-26.364937 12.882005 7.730603}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -26.364937 12.882005 7.730603 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-33.419983 12.772746 9.025682}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -33.419983 12.772746 9.025682 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-32.165462 12.622813 12.436782}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -32.165462 12.622813 12.436782 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-25.439579 12.772748 11.936733}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -25.439579 12.772748 11.936733 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-26.670181 12.772748 13.298755}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -26.670181 12.772748 13.298755 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-16.861225 12.754315 11.873783}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -16.861225 12.754315 11.873783 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-30.716717 12.772748 13.630394}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -30.716717 12.772748 13.630394 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-20.560112 12.772752 4.498326}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -20.560112 12.772752 4.498326 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-14.595367 12.772748 9.552494}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -14.595367 12.772748 9.552494 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-18.776814 12.772750 10.856968}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -18.776814 12.772750 10.856968 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-30.727747 12.772742 7.552688}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -30.727747 12.772742 7.552688 1.000000 }
+	}
+	Model: {
+		Path: {}
+		Meshes: {
+			Vertices: {
+				Position: {0.500000 0.500000 0.000000}
+				Normal: {0.000000 0.000000 0.000000}
+				TexCoords: {1.000000 1.000000 0}
+
+				Position: {0.500000 -0.500000 0.000000}
+				Normal: {1.000000 0.000000 0.000000}
+				TexCoords: {1.000000 0.000000 0}
+
+				Position: {-0.500000 -0.500000 0.000000}
+				Normal: {1.000000 1.000000 0.000000}
+				TexCoords: {0.000000 0.000000 0}
+
+				Position: {-0.500000 0.500000 0.000000}
+				Normal: {0.000000 1.000000 0.000000}
+				TexCoords: {0.000000 1.000000 0}
+
+			}
+			Indices: {
+				Indice: {0}
+				Indice: {1}
+				Indice: {3}
+				Indice: {1}
+				Indice: {2}
+				Indice: {3}
+			}
+			Textures: {
+				Texture: {E:\own\programming\engine\textures\tree2.png}
+				Type: {texture_diffuse}
+			}
+			DrawMode: {1}
+		}
+	}
+
+		}
+Object: {
+	Name: {
+		tree
+	}
+	Hidden: {
+		false
+	}
+	Transform: {
+		Position: {-20.163176 12.772746 8.542822}
+		Scale: {-2.044029 -3.237472 0.998134}
+		Quaternion: {0.000158 -0.005994 1.349040 -0.003946}
+		Matrix: {-2.044029 -0.008256 0.000754 0.000000 0.013040 -3.237472 -0.098341 0.000000 0.000101 0.065995 0.998134 0.000000 -20.163176 12.772746 8.542822 1.000000 }
 	}
 	Model: {
 		Path: {}

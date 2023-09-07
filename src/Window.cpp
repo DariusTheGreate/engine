@@ -29,6 +29,7 @@ Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_n
     glfwSetFramebufferSizeCallback(m_window, InputManager::framebuffer_size_callback);
     glfwSetCursorPosCallback(m_window, InputManager::mouse_callback);
     glfwSetScrollCallback(m_window, InputManager::scroll_callback);
+    glfwSetDropCallback(m_window, InputManager::drop_callback);
 
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetFramebufferSizeCallback(m_window, InputManager::framebuffer_size_standart_callback);

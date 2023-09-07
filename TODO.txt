@@ -10,6 +10,9 @@
 	- fix coordinates systems conversion
 	- Do/Undo, (use memnto pattern?)
 	- create some kind of testing (log response from engine and compare it to desired)
+	- finish file drop callback
+	- Log interface
+	- fix header dependency and speed up compilation
 
 --RENDERER
 	- batching (combine objects that dont move)
@@ -40,6 +43,8 @@
 
 	- batching somehow
 
+	- text rendering
+
 --UI
 	- assets browser
 	- LOGO
@@ -63,5 +68,3 @@
 	- textures loading and transfer to shaders. normals, specular, tangents, etc
 	- finish colliders response system													
 	- finish bloom                                                              
-
-

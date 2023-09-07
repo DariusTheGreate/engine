@@ -76,6 +76,10 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
             scene.batchProbeSimilarObjects();
         }
 
+        if (ImGui::Button("recover batched objects")) {
+            scene.recoverBatchedObjects();
+        }
+
         ImGui::Text("onjects count %i", scene.get_objects().size());
 
         if (ImGui::Button("Add Object")) {
@@ -354,6 +358,12 @@ std::optional<RigidBody> rbody;
         if(ImGui::Button("CropPoints")){
             sprite->initPoints();
         }
+    }
+
+    auto& modelV = obj->getModel();
+    if(modelV && ImGui::CollapsingHeader("ModelMesh"))
+    {
+        ImGui::Text("Draw Mode %i", modelV->meshes[0].getDrawMode()); 
     }
 
     auto& model = obj->getModel();
@@ -731,6 +741,10 @@ void UI::guizmoWindow()
 
     if(item_clicked->getPointLight()){
         item_clicked->getPointLight()->position = item_clicked->getTransform().getPosition();
+        //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+    }
+    if(item_clicked->getParticleSystem()){
+        item_clicked->getParticleSystem()->emitter = item_clicked->getTransform().getPosition();
         //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
     }
     auto& objtrref = item_clicked->getTransform().matrix;

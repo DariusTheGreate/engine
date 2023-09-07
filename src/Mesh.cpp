@@ -244,18 +244,19 @@ void Mesh::printVertices()
     } 
 }
 
-void Mesh::addVerticesBath(Mesh& m, glm::vec3 shift)
+void Mesh::addVerticesBath(Mesh& batchee, glm::vec3 shift)
 {   
     //NOTE(darius) for some reason it doesnt change runtime state fo mesh. But it changes its vectors, so  if u serialize it - it will work..
     //NOTE(darius) if u create new mesh from this mesh vectors u can go ril fast
+    //TODO(darius) it now only batches first mesh from input. Not urgent, but needed to batch all meshes of batchee
 
-    auto verts = m.getVertices() | std::ranges::views::take(4);
+    auto verts = batchee.getVertices() | std::ranges::views::take(4);
     std::ranges::for_each(verts, [shift](auto& v){v.Position += shift; });
 
     int offset = vertices.size();
     vertices.insert(vertices.end(), verts.begin(), verts.end());
 
-    auto indV = m.getIndices();
+    auto indV = batchee.getIndices();
 
     std::cout << "offset" << offset << "\n";
     std::cout << "indices size " << indV.size() << "\n";

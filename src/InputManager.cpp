@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include <Editor.h>
 
 void InputManager::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -174,3 +175,9 @@ void InputManager::scroll_callback(GLFWwindow* window, double xoffset, double yo
     GameState::ms.set_offset_y((int)(yoffset));
 }
 
+void InputManager::drop_callback(GLFWwindow* window, int count, const char** paths)
+{
+    for (size_t i = 0;  i < count; i++){
+        Editor::fileDropCallbackDispatch(paths[i]);
+    }
+}

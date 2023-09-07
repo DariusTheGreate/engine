@@ -72,7 +72,11 @@ std::vector<Mesh> Model::loadModel()
         return {};
     }
    
-    directory = path.substr(0, path.find_last_of('/'));
+    auto iter = path.find_last_of('/');
+    if(iter == std::string::npos)
+        iter = path.find_last_of('\\');
+
+    directory = path.substr(0, iter);
 
     processNode(scene->mRootNode, scene);
 

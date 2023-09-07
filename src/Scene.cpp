@@ -304,25 +304,6 @@ void Scene::update_objects()
 void Scene::batchProbeSimilarObjects()
 {
 	//NOTE(darius) doesnt work yet, also cringe code
-
-	/*Object* objI = sceneObjects[0];
-	Object* objJ = sceneObjects[1];
-
-	objI->getModel()->meshes[0].addVerticesBath(objJ->getModel()->meshes[0], objJ->getTransform());
-
-	Mesh& batchRef = objI->getModel()->meshes[0];
-
-    Mesh batchCopy(batchRef.getVertices(), batchRef.getIndices(), batchRef.getTextures());
-
-    objI->getModel()->meshes.clear();
-
-    objI->getModel()->addMesh(batchCopy);
-
-	return;
-	*/
-
-
-
 	for(auto& objI : sceneObjects)
 	{
 		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || objI->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS 
@@ -340,7 +321,7 @@ void Scene::batchProbeSimilarObjects()
 
 		for(auto& objJ : sceneObjects)
 		{
-			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ)
+			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ || objJ->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS)
 				continue;
 
 			auto meshJ = objJ->getModel()->meshes[0];
@@ -361,13 +342,31 @@ void Scene::batchProbeSimilarObjects()
 			}
 		}
 
-		currentlyBatchedObjects.insert(currentlyBatchedObjects.begin(), objectsToRemove.begin(), objectsToRemove.end());
+		currentlyBatchedObjects.insert(currentlyBatchedObjects.end(), objectsToRemove.begin(), objectsToRemove.end());
 
-		auto& batchedRef = currentlyBatchedObjects;
-
-		const auto [firstIter, lastIter] = std::ranges::remove_if(sceneObjects, [&batchedRef](auto& item) { return std::find(batchedRef.begin(), batchedRef.end(), item) == batchedRef.end(); } );
-		sceneObjects.erase(lastIter, sceneObjects.end());
+		//const auto [firstIter, lastIter] = std::ranges::remove_if(sceneObjects, [&batchedRef](auto& item) { return std::find(batchedRef.begin(), batchedRef.end(), item) == batchedRef.end(); } );
+		//sceneObjects.erase(lastIter, sceneObjects.end());
 	}
+
+	std::vector<Object*> resultObjects;
+
+	for(auto& v : sceneObjects)
+	{
+		if(std::find(currentlyBatchedObjects.begin(), currentlyBatchedObjects.end(), v) == currentlyBatchedObjects.end())
+			resultObjects.push_back(v);
+	}
+
+	sceneObjects = std::move(resultObjects);
+}
+
+void Scene::recoverBatchedObjects()
+{
+	for(auto& i : currentlyBatchedObjects)
+	{
+		sceneObjects.push_back(i);	
+	}	
+
+	currentlyBatchedObjects = {};
 }
 
 void Scene::update_scripts()
@@ -376,6 +375,31 @@ void Scene::update_scripts()
 	{
 		i->updateScript();
 	}
+}
+
+bool Scene::extractBoolFromToken(std::string_view tkn)
+{
+	if (tkn.find("true") != std::string::npos)
+		return true;
+	return false;
+}
+
+void Scene::addCameraToScene(Camera* cam)
+{
+	sceneCameras.push_back(cam);	
+}
+
+std::vector<Camera*>& Scene::getSceneCameras()
+{
+	return sceneCameras;
+}
+
+Camera* Scene::getCameraAt(int id)
+{
+	if(sceneCameras.size() <= id)
+		return nullptr;
+
+	return sceneCameras[id];
 }
 
 void Scene::serialize(std::string_view path)
@@ -966,27 +990,3 @@ glm::vec4 Scene::extractVector4FromToken(std::string_view tkn)
 	return glm::vec4(x, y, z, w);
 }
 
-bool Scene::extractBoolFromToken(std::string_view tkn)
-{
-	if (tkn.find("true") != std::string::npos)
-		return true;
-	return false;
-}
-
-void Scene::addCameraToScene(Camera* cam)
-{
-	sceneCameras.push_back(cam);	
-}
-
-std::vector<Camera*>& Scene::getSceneCameras()
-{
-	return sceneCameras;
-}
-
-Camera* Scene::getCameraAt(int id)
-{
-	if(sceneCameras.size() <= id)
-		return nullptr;
-
-	return sceneCameras[id];
-}

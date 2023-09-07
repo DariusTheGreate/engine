@@ -16,6 +16,8 @@ public:
 
 	static void framebuffer_size_standart_callback(GLFWwindow* window, int width, int height);
 
+	static void drop_callback(GLFWwindow* window, int count, const char** paths);
+
     static void processInput(GLFWwindow* window);
 
     static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);

@@ -19,8 +19,8 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     SystemInfo::setInfo(&info);
 
-    std::thread tr(&Editor::consoleInputThread, this, this);
-    tr.detach();
+    //std::thread tr(&Editor::consoleInputThread, this, this);
+    //tr.detach();
 }
 
 void Editor::update()
@@ -109,11 +109,13 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render= false;
         //showUI = false;
+        currScene.batchProbeSimilarObjects();
         GameState::editor_mode = 0;
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render= true;
         //showUI = true;
+        currScene.recoverBatchedObjects();
         GameState::editor_mode = 3;
     }
     if (GameState::instance->ks.get_s() && GameState::instance->ks.get_cntrl()) {
@@ -229,6 +231,7 @@ void Editor::setPolygonMode(size_t type) {
     glPolygonMode(GL_FRONT_AND_BACK, static_cast<unsigned int>(type));
 }
 
+//TODO(darius) switch to Timer here
 void Editor::printFPS() {
     double currentTime = glfwGetTime();
     frame_number++;
@@ -259,10 +262,51 @@ Renderer* Editor::getRenderer()
     return &rendol;
 }
 
+void Editor::fileDropCallbackDispatch(std::string_view path)
+{
+    //NOTE(darius)this part is called only if callback initialized. So theres no problem, but mb nake it better somehow 
+    //TODO(darius) make some file openeer system to get rid of copypast ehre and in UI
+
+    std::cout << path << "\n";
+
+    if(path.find(".PREFAB") != std::string_view::npos | path.find(".prefab") != std::string_view::npos)
+    {
+        currScene.deserialize(path);
+    }
+    else if(path.find(".DEAN") != std::string_view::npos || path.find(".dean") != std::string_view::npos)
+    {
+        currScene.deserialize(path);
+    }
+    else if(path.find(".png") != std::string_view::npos)
+    {
+        FlatMesh* flat = currScene.createFlatMesh();
+        flat->setTexture(std::string(path));
+
+        Object* obj = currScene.AddEmpty(666);
+
+        LightingShaderRoutine shaderRoutine;
+        Shader currShader = Renderer::shaderLibInstance->getCurrShader();
+
+        obj->addModel(std::move(*flat), currShader, shaderRoutine);
+    }
+    else if(path.find(".obj") != std::string_view::npos)
+    {
+        Shader currShader = Renderer::shaderLibInstance->getCurrShader();
+        LightingShaderRoutine shaderRoutine;
+
+        Object* obj = currScene.AddEmpty(666);
+        obj->addModel(path, currShader, shaderRoutine);
+    }
+    else {
+        std::cout << "fuk u wtf\n";
+    }
+}
+
 void Editor::consoleInputThread(Editor* currEditor)
 {
     if (!currEditor)
         return;
+    
     //TODO(darius) make it separated object and not call methods directly, but pass message to main thread (this is detached thread btw)
     //DANGER(darius) NO SYNCHRONIZATION. CAN HAPPPEN ANYTHING 
     try {
@@ -421,3 +465,5 @@ void Editor::consoleInputThread(Editor* currEditor)
         std::terminate();
     }
 }
+
+Scene Editor::currScene;

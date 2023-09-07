@@ -159,6 +159,7 @@ public:
 	void updateObjectsIDs();
 
 	//TODO(darius) make it factory or something
+	//DANGER(darius) currently theres no garbage collection on this. So leaks are possible.
 	FlatMesh* createFlatMesh();
 
 	template<typename... Args>
@@ -177,7 +178,18 @@ public:
 
 	void deleteCamera(Camera* cam);
 
-	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will return later to it anyway
+	void addCameraToScene(Camera* cam);
+
+	std::vector<Camera*>& getSceneCameras();
+
+	Camera* getCameraAt(int id);
+
+	void batchProbeSimilarObjects();
+
+	void recoverBatchedObjects();
+
+public:
+	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will have to return later to it anyway
 	void serialize(std::string_view path);
 
 	void serializePrefab(Object* obj, std::string_view path);
@@ -213,14 +225,6 @@ public:
 
 	bool extractBoolFromToken(std::string_view);
 
-	void addCameraToScene(Camera* cam);
-
-	std::vector<Camera*>& getSceneCameras();
-
-	Camera* getCameraAt(int id);
-
-	void batchProbeSimilarObjects();
-
 private:
 
 	void init_memory();
@@ -231,7 +235,7 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
-	std::vector<Object*> currentlyBatchedObjects;//more common way is to store indexes
+	std::vector<Object*> currentlyBatchedObjects;
 
 	//TODO(darius) make it use memory manager
 	std::vector<Camera*> sceneCameras;
