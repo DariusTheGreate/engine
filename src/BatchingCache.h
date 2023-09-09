@@ -1,45 +1,61 @@
 #pragma once
+
 #include <vector>
+#include <optional>
 
 class Object;
+
+//NOTE(darius) BATCHES DONT MANAGE MEMORY!! MANAGMENT OF OBJECTS IS FULLY USER RESPONSIBILITY. 
+//             MAYBE WILL WORK ON THAT, BUT CURRENTLY I LIKE IT THIS WAY IDK
+// ITS IMPORTANT TO CALL clear() after u worked with batch
 
 class Batch
 {
 public:
-	void addObject(Object* obj)
+	void addObject(Object* obj);
+
+	bool contains(Object* obj);
+
+	std::vector<Object*> takeBack();
+
+	void setOrigin(Object* obj);
+
+	Object* getOrigin();
+
+	size_t size()
 	{
-		batched.push_back(obj);
+		return batched.size();
 	}
 
-	bool contains(Object* obj)
-	{
-		return std::find(batches.begin(), batches.end(), obj) != batches.end();
-	}	
-
 private:
+	Object* origin = nullptr;
 	std::vector<Object*> batched;
 };
 
 class BatchingCache
 {
 public:
-	void addBatch(Batch&& batch)
-	{
-		batches.emplace_back(std::move(batch));
-	}
+	void addBatch(Batch&& batch);
 
-	Batch& operator[](int i)
-	{
-		return batches[i];
-	}
+	Batch& operator[](int i);
 
-	bool contains(Object* obj)
-	{
-		for(auto& b : batches)
-		{
-			b.contains(obj);
-		}
-	}
+	std::optional<Batch> operator[](Object* obj);
+
+	bool contains(Object* obj);
+
+	bool containsOrigin(Object* obj);
+
+	std::vector<Object*> takeBack();
+
+	std::vector<Object*> takeOrigins();
+
+	std::optional<Batch> takeOrigin(Object* origin);
+
+	size_t size();
+
+	void clearBatch(Object* origin);
+
+	void clear();
 
 private:
 	std::vector<Batch> batches;

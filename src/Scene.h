@@ -12,7 +12,9 @@
 #include <Script.h>
 #include <Animation.h>
 #include <Camera.h>
-#include "timer.h"
+#include <Timer.h> 
+#include <BatchingCache.h>
+#include <ThreadPool.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -132,6 +134,8 @@ public:
 
 	void destroyObject(size_t id);
 
+	void destroyObject(Object* obj);
+
 	void destroyObject(std::string_view name);
 
 	void updateScene();
@@ -188,6 +192,10 @@ public:
 
 	void recoverBatchedObjects();
 
+	bool recoverBatch(Object* origin);
+
+	BatchingCache& getBatchCache();
+
 public:
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will have to return later to it anyway
 	void serialize(std::string_view path);
@@ -235,7 +243,10 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
-	std::vector<Object*> currentlyBatchedObjects;
+	//std::vector<Object*> currentlyBatchedObjects;
+	BatchingCache batcher;
+
+	//ThreadPool workersUsed;//NOTE(darius) just messing around
 
 	//TODO(darius) make it use memory manager
 	std::vector<Camera*> sceneCameras;

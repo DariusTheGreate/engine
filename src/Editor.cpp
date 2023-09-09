@@ -19,8 +19,14 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     SystemInfo::setInfo(&info);
 
-    //std::thread tr(&Editor::consoleInputThread, this, this);
-    //tr.detach();
+    //TODO(darius) DANGER
+    std::thread tr(&Editor::consoleInputThread, this, this);
+    tr.detach();
+
+    GLFWimage images[1]; 
+    images[0].pixels = stbi_load(std::string(GameState::engine_path + "assets/logo.png").c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+    glfwSetWindowIcon(wind->getWindow(), 1, images); 
+    stbi_image_free(images[0].pixels); 
 }
 
 void Editor::update()
@@ -202,7 +208,17 @@ void Editor::updateInput() {
         Object* pickedObj = currScene.getObjectByID(picked);
         if (pickedObj != nullptr) {
             ui.setItemClicked(pickedObj);
+            /*if(currScene.recoverBatch(pickedObj))
+            {
+                rendol.EditorIDsStage();
+                picked = selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
+                pickedObj = currScene.getObjectByID(picked);
+                if(pickedObj)
+                    ui.setItemClicked(pickedObj);
+            }
+            */
         }
+
         leftMouseButtonIsOnHold = true;
     }
 
@@ -402,6 +418,16 @@ void Editor::consoleInputThread(Editor* currEditor)
             if (command == "list")
             {
                 for (Object* obj : currEditor->currScene.get_objects())
+                {
+                    std::cout << obj->get_name() << "\n";
+                }
+            }
+
+            if (command == "listBatches")
+            {
+                auto cache = currEditor->currScene.getBatchCache().takeBack();
+
+                for (Object* obj : cache)
                 {
                     std::cout << obj->get_name() << "\n";
                 }

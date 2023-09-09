@@ -5,6 +5,7 @@
 #include <ParticleSystem.h>
 #include <Renderer.h>
 
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -66,6 +67,7 @@ Object* Scene::createSubobject(Object* obj, int i)
 
 void Scene::destroyObject(size_t id)
 {
+	assert(id < sceneObjects.size());
 	auto* ptr = sceneObjects[id];
 	mem_man.destroy(ptr);
 	sceneObjects[id] = nullptr;
@@ -76,6 +78,11 @@ void Scene::destroyObject(std::string_view name)
 {
 	Object* pt = getObjectByName(name);	
 	destroyObject(pt->getID());
+}
+
+void Scene::destroyObject(Object* obj)
+{
+	destroyObject(obj->getID());
 }
 
 void Scene::updateScene() 
@@ -300,28 +307,25 @@ void Scene::update_objects()
 	}
 }
 
-
 void Scene::batchProbeSimilarObjects()
 {
-	//NOTE(darius) doesnt work yet, also cringe code
 	for(auto& objI : sceneObjects)
 	{
 		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || objI->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS 
-			|| std::find(currentlyBatchedObjects.begin() , currentlyBatchedObjects.end(), objI) != currentlyBatchedObjects.end())
+			|| batcher.contains(objI))
 			continue;
 
-		std::vector<Object*> objectsToRemove;
+		Batch combinationBatch;
+
 		std::cout << "Batching object " << objI->get_name() << "...\n";
 
-		//glm::vec3 originalPosition = objI->getTransform().getPosition();
 		glm::vec3 originalScale = objI->getTransform().getScale();
-		//objI->getTransform() = Transform();
-		//objI->getTransform().setPosition(originalPosition);
 		auto meshI = objI->getModel()->meshes[0];
 
 		for(auto& objJ : sceneObjects)
 		{
-			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ || objJ->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS)
+			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ 
+				|| objJ->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS)
 				continue;
 
 			auto meshJ = objJ->getModel()->meshes[0];
@@ -329,30 +333,32 @@ void Scene::batchProbeSimilarObjects()
 			if(meshI.getTexturesRef()[0].get_path() == meshJ.getTexturesRef()[0].get_path())
 			{
 				//NOTE(darius) i think its kinda works now, look into better uproach?
+				//NOTE(darius) float precision not cool?
 				glm::vec3 shift = (objJ->getTransform().getPosition() - objI->getTransform().getPosition());
 				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x, shift.y/originalScale.y, shift.z/originalScale.z);
 
 				meshI.addVerticesBath(meshJ, shiftScaled);
-
 			    Mesh batchCopy(meshI.getVertices(), meshI.getIndices(), meshI.getTextures());
-			    objI->getModel()->meshes.clear();
+			    objI->getModel()->meshes[0].clearMesh();
+		    	objI->getModel()->meshes.clear();
+
 			    objI->getModel()->addMesh(batchCopy);
 
-				objectsToRemove.push_back(objJ);
+				combinationBatch.addObject(objJ);
 			}
 		}
 
-		currentlyBatchedObjects.insert(currentlyBatchedObjects.end(), objectsToRemove.begin(), objectsToRemove.end());
+		if(combinationBatch.size() > 0)
+			combinationBatch.setOrigin(objI);
 
-		//const auto [firstIter, lastIter] = std::ranges::remove_if(sceneObjects, [&batchedRef](auto& item) { return std::find(batchedRef.begin(), batchedRef.end(), item) == batchedRef.end(); } );
-		//sceneObjects.erase(lastIter, sceneObjects.end());
+		batcher.addBatch(std::move(combinationBatch));
 	}
 
 	std::vector<Object*> resultObjects;
 
 	for(auto& v : sceneObjects)
 	{
-		if(std::find(currentlyBatchedObjects.begin(), currentlyBatchedObjects.end(), v) == currentlyBatchedObjects.end())
+		if(!batcher.contains(v))
 			resultObjects.push_back(v);
 	}
 
@@ -361,12 +367,57 @@ void Scene::batchProbeSimilarObjects()
 
 void Scene::recoverBatchedObjects()
 {
-	for(auto& i : currentlyBatchedObjects)
-	{
-		sceneObjects.push_back(i);	
-	}	
+	auto cache = batcher.takeBack();
 
-	currentlyBatchedObjects = {};
+	sceneObjects.insert(sceneObjects.end(), cache.begin(), cache.end());
+
+	auto origins = batcher.takeOrigins();
+
+	/*for(auto v = sceneObjects.begin(); v != sceneObjects.end(); v++)
+	{
+		if(std::find(origins.begin(), origins.end(), *v) != origins.end())
+			v = sceneObjects.erase(v);
+	}
+	*/
+
+	for(auto& i : origins)
+	{
+		//TODO(darius) cringe
+		if(i->getModel()->meshes.size() > 0)
+			i->getModel()->meshes[0].clearBatch(4,6);
+		//destroyObject(i);
+	}
+
+	batcher.clear();
+}
+
+bool Scene::recoverBatch(Object* origin)
+{
+	if(!batcher.containsOrigin(origin))
+		return true;
+
+	auto cache = batcher.takeBack();
+	sceneObjects.insert(sceneObjects.end(), cache.begin(), cache.end());
+
+	auto origins = batcher.takeOrigins();
+
+	/*for(auto v = sceneObjects.begin(); v != sceneObjects.end(); v++)
+	{
+		if(std::find(origins.begin(), origins.end(), *v) != origins.end())
+			v = sceneObjects.erase(v);
+	}
+	*/
+
+	origin->getModel()->meshes[0].clearBatch(4,6);
+
+	batcher.clear();
+
+	return false;
+}
+
+BatchingCache& Scene::getBatchCache()
+{
+	return batcher;	
 }
 
 void Scene::update_scripts()
@@ -474,11 +525,19 @@ void Scene::deserialize(std::string_view path)
 	std::vector<std::string> names;
 	std::vector<bool> hiddenStates;
 
-	for (std::string_view tkn : objectTokens) 
-	{
-		names.emplace_back(extractNameFromToken(tkn));
-		hiddenStates.emplace_back(extractHiddenStateFromToken(tkn));
-	}
+	//TODO(darius) TEMPO, test it
+    //workersUsed.Submit([](){std::cout << "ima hui\n"; });
+    //auto res_future = tp.Submit([](int a, int b){ return a - b; }, as, bs);
+    //std::cout << res_future.get();
+
+	//workersUsed.Submit([this, &objectTokens, &names, &hiddenStates](){
+		for (std::string_view tkn : objectTokens) 
+		{
+			names.emplace_back(extractNameFromToken(tkn));
+			hiddenStates.emplace_back(extractHiddenStateFromToken(tkn));
+		}
+	//}
+	//);
 
 	std::vector<Transform>  transs;
 

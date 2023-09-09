@@ -12,7 +12,14 @@
 	- create some kind of testing (log response from engine and compare it to desired)
 	- finish file drop callback
 	- Log interface
-	- fix header dependency and speed up compilation
+	- better batchingCache
+	- memory log
+	- better backtrace
+	- object ID as id in scene i s bad invariant
+	- script properties
+	- cache serialize batches?
+	- timer log
+	- batching memory consumption if we store batched objects
 
 --RENDERER
 	- batching (combine objects that dont move)

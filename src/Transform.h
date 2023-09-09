@@ -32,6 +32,8 @@ struct Transform
 
 	void rotate(float angle_in_radians, glm::vec3 axis);
 
+	void resetRotation();
+
 	void setScale(glm::vec3 scl);
 
 	glm::vec3 getScale();

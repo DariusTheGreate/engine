@@ -267,5 +267,11 @@ void Mesh::addVerticesBath(Mesh& batchee, glm::vec3 shift)
     }
 
     indices.insert(indices.end(), indV.begin(), indV.begin() + 6);
-    mode = DrawMode::DRAW_AS_ARRAYS;
+    //mode = DrawMode::DRAW_AS_ARRAYS;
+}
+
+void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
+{
+    vertices.erase(vertices.begin() + verticesNum, vertices.end()); 
+    indices.erase(indices.begin() + indicesNum, indices.end()); 
 }

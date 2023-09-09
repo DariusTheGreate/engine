@@ -81,7 +81,7 @@ public:
 	Transform& getParentTransform();
 
 	void moveTransform(glm::vec3 v);
-	
+
 	void addScript(Scene* scn, EmptyScriptRoutine* routine);
 	
 	std::optional<Script>& getScript();

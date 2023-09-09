@@ -12,7 +12,7 @@ public:
 
 	Texture(unsigned int texture_in, const std::string& path_in, const std::string& type_in) : texture(texture_in), path(path_in), type(type_in) {}
 
-	Texture(const std::string& path_in, unsigned int internalFormat, unsigned int format);
+	Texture(const std::string& path_in, unsigned int internalFormat = GL_RGBA, unsigned int format = GL_RGBA);
 
 	void generate();
 	

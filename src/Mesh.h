@@ -77,10 +77,20 @@ public:
 
     void addVerticesBath(Mesh& m, glm::vec3 shift);
 
+    //TODO(darius) bad api
+    void clearBatch(size_t verticesNum, size_t indicesNum);
+
     VAO getVao();
 
     MeshType getType();
 
+    void clearMesh() 
+    {
+        vao.deleteVAO();
+        vbo.deleteVBO();
+        ebo.deleteEBO();
+    }
+    
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation

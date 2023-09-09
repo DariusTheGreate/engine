@@ -205,6 +205,11 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
         ImGui::DragFloat("position x", &pos.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position y", &pos.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position z", &pos.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
+
+        if(ImGui::Button("reset")){
+            item_clicked->getTransform().resetRotation();
+        }
+
     }
 
     if (ImGui::CollapsingHeader("DirectionalLight component")) {
@@ -697,47 +702,8 @@ void UI::guizmoWindow()
         cameraProjection = GameState::cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
 		cameraView = (GameState::cam.getBasicLook());
     }
-
-    //float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-    //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(objTr), matrixTranslation, matrixRotation, matrixScale);
-    //ImGui::InputFloat3("Tr", matrixTranslation);
-    //ImGui::InputFloat3("Rt", matrixRotation);
-    //ImGui::InputFloat3("Sc", matrixScale);
-    //ImGuizmo::RecomposeMatrixFromComponents(matrixTranslation, matrixRotation, matrixScale, glm::value_ptr(objTr));
-
-    //glm::vec3 scl = glm::vec3(matrixScale[0], matrixScale[1], matrixScale[2]);
-    //glm::vec3 rotBefore = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
-    //glm::vec3 trans = glm::vec3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
-
-
-    //if(curr_operation == ImGuizmo::OPERATION::TRANSLATE)
-    //    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objTr));
-    //if(curr_operation == ImGuizmo::OPERATION::ROTATE)
-    //    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, ImGuizmo::LOCAL, glm::value_ptr(objRot));
-    //if(curr_operation == ImGuizmo::OPERATION::SCALE)
+    
     ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item_clicked->getTransform().matrix));
-
-    //float matrixTranslation[3], matrixRotation[3], matrixScale[3];
-    //ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(objTr), matrixTranslation, matrixRotation, matrixScale);
-
-    //glm::vec3 rotAfter = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
-    //glm::vec3 scl = glm::vec3(matrixScale[0], matrixScale[1], matrixScale[2]);
-    //glm::vec3 rot = glm::vec3(matrixRotation[0], matrixRotation[1], matrixRotation[2]);
-    //glm::vec3 trans = glm::vec3(matrixTranslation[0], matrixTranslation[1], matrixTranslation[2]);
-
-    //glm::vec3 deltaRot = rotBefore - rot;
-
-    //item_clicked->getTransform().set_from_quatmat(objTr);
-    //item_clicked->getTransform().set_scale(scl);
-    //item_clicked->getTransform().setPosition(objTr);
-    //item_clicked->getTransform().set_position(trans);
-
-    //TODO(darius) make it separate function to change all stuff of object
-    //TODO(darius) make it Scale, Rotation, Transition
-
-    //item_clicked->getTransform().set_from_quatmat(objTr);
-	//item_clicked->getTransform().setPosition(objTr);
-    //item_clicked->getTransform().setScale(objScl);
 
     if(item_clicked->getPointLight()){
         item_clicked->getPointLight()->position = item_clicked->getTransform().getPosition();

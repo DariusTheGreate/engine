@@ -85,6 +85,16 @@ void Transform::rotate(float angle_in_radians, glm::vec3 axis)
 	matrix = m;
 }
 
+void Transform::resetRotation()
+{
+	auto pos = getPosition();
+	auto scale = getScale();
+	glm::quat rot = glm::angleAxis(glm::radians(0.0f), glm::vec3(1.f, 1.f, 1.f));
+	matrix = glm::toMat4(rot); 
+	setPosition(pos);
+	setScale(scale);
+}
+
 void Transform::setScale(glm::vec3 scl)
 {
 	//matrix[0][0] = scl.x;
