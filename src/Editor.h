@@ -1,8 +1,13 @@
 #pragma once
 
+#include <Server.h>
+#include <Client.h>
+
 #include <UI.h>
 #include <ObjectSelector.h>
 #include <SystemInfo.h>
+
+#include <memory>
 
 class Editor
 {
@@ -31,6 +36,15 @@ public:
 
     static void fileDropCallbackDispatch(std::string_view str);
 
+    void createServer();
+    std::shared_ptr<Server> getServer();
+
+    void createClient();
+    std::shared_ptr<Client> getClient();
+
+public:
+    bool consoleOnly = false;
+
 private:
     GameState state;
     Camera editorCamera;
@@ -46,11 +60,14 @@ private:
     double numOfFrames = 60;
 
     bool debug_mode = false;
-    
+
 
     //NOTE(darius) is this cringe?
     bool leftMouseButtonIsOnHold = false;//NOTE(darius) its here in order to not select object when u already dragging some other object over it
     bool leftShiftIsOnHold = false;
 
     float speedMultiplyFactor = 3;
+
+    std::shared_ptr<Server> server;//NOTE(darius) tempo
+    std::shared_ptr<Client> client;//NOTE(darius) tempo
 };

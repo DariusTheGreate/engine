@@ -19,14 +19,14 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     SystemInfo::setInfo(&info);
 
-    //TODO(darius) DANGER
-    std::thread tr(&Editor::consoleInputThread, this, this);
-    tr.detach();
-
     GLFWimage images[1]; 
     images[0].pixels = stbi_load(std::string(GameState::engine_path + "assets/logo.png").c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
     glfwSetWindowIcon(wind->getWindow(), 1, images); 
     stbi_image_free(images[0].pixels); 
+
+    //TODO(darius) DANGER
+    std::thread tr(&Editor::consoleInputThread, this, this);
+    tr.detach();
 }
 
 void Editor::update()
@@ -40,6 +40,9 @@ void Editor::update()
     printFPS();
     updateCamera();
     currScene.updateScene();
+
+    if(consoleOnly)
+        return;
 
     rendol.render(window);
 
@@ -318,6 +321,30 @@ void Editor::fileDropCallbackDispatch(std::string_view path)
     }
 }
 
+void Editor::createServer()
+{
+    if(server || client) 
+        return;
+    server = std::make_shared<Server>();
+}
+
+std::shared_ptr<Server> Editor::getServer()
+{
+    return server; 
+}
+
+void Editor::createClient()
+{
+    if(client || server) 
+        return;
+    client = std::make_shared<Client>();
+}
+
+std::shared_ptr<Client> Editor::getClient()
+{
+    return client; 
+}
+
 void Editor::consoleInputThread(Editor* currEditor)
 {
     if (!currEditor)
@@ -484,6 +511,35 @@ void Editor::consoleInputThread(Editor* currEditor)
                 }
             }
 
+            if(command == "server")
+            {
+                currEditor->createServer();
+                auto server = currEditor->getServer();
+                server->listen(1024 * 10);
+            }
+
+            if(command == "client")
+            {
+                currEditor->createClient();
+                auto client = currEditor->getClient();
+
+                std::string msg;
+                std::cout << "Msg: ";
+                std::cin >> msg;
+                client->query(msg);
+
+                //client->query(currEditor->currScene.readFileToString(GameState::engine_path + "scene.dean"));
+            }
+
+            if(command == "nogui")
+            {
+                currEditor->consoleOnly = true;
+            }
+
+            if(command == "gui")
+            {
+                currEditor->consoleOnly = false;
+            }
         }
     }
     catch (...) 

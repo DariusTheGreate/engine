@@ -1,3 +1,5 @@
+#pragma once
+
 #include "BlockingQueue.h"
 #include <functional>
 #include <iostream>

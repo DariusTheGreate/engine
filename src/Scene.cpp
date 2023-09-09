@@ -481,12 +481,11 @@ void Scene::serializePrefab(Object* obj, std::string_view path)
     file.close();
 }
 
-//TODO(darius) check for names being different, and check if object that you created dont exist already
-void Scene::deserialize(std::string_view path)
+std::string Scene::readFileToString(std::string_view path)
 {
 	std::ifstream file(path.data());
 	if (!file.is_open())
-		return;
+		return {};
 
 
 	std::string data;
@@ -496,6 +495,17 @@ void Scene::deserialize(std::string_view path)
 	{
 		data += line;
 	}
+
+	file.close();
+
+	return data;
+}
+
+//TODO(darius) check for names being different, and check if object that you created dont exist already
+void Scene::deserialize(std::string_view path)
+{
+
+	std::string data = readFileToString(path);
 
 	size_t cameraPos = data.find("CameraPos: {");
 
@@ -615,8 +625,6 @@ void Scene::deserialize(std::string_view path)
 
 		//auto* obj = createObject(std::string(names[i]), transs[i].position, transs[i].scale, glm::vec3{0,0,0}, std::move(models[i]), vshdr, std::move(shaderRoutine), this, nullptr);
 	}
-
-	file.close();
 
 	start_scripts();
 }

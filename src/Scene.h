@@ -204,6 +204,8 @@ public:
 
 	void deserialize(std::string_view path);
 
+	std::string readFileToString(std::string_view path);
+
 	std::string extractNameFromToken(std::string_view);
 
 	bool extractHiddenStateFromToken(std::string_view tkn);

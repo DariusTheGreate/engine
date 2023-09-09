@@ -1,3 +1,4 @@
+#define WIN32_LEAN_AND_MEAN//NOTE(darius) to avoid conflicts with boost::asio
 #include <windows.h>
 
 #include <Application.h>
