@@ -4,17 +4,37 @@
  3# raise in ucrtbased
  4# setmbcp in ucrtbased
  5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportA in ucrtbased
- 7# CrtDbgReport in ucrtbased
- 8# std::vector<Mesh,std::allocator<Mesh> >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
- 9# Scene::batchProbeSimilarObjects at E:\own\programming\engine\src\Scene.cpp:345
-10# Editor::updateInput at E:\own\programming\engine\src\Editor.cpp:114
-11# Editor::update at E:\own\programming\engine\src\Editor.cpp:35
-12# Application::Run at E:\own\programming\engine\src\Application.cpp:21
-13# main at E:\own\programming\engine\src\main.cpp:50
-14# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-15# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-16# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-17# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-18# BaseThreadInitThunk in KERNEL32
-19# RtlUserThreadStart in ntdll
+ 6# VCrtDbgReportW in ucrtbased
+ 7# CrtDbgReportW in ucrtbased
+ 8# _threadid in ucrtbased
+ 9# _threadid in ucrtbased
+10# abort in ucrtbased
+11# terminate in ucrtbased
+12# _NLG_Return2 in VCRUNTIME140_1D
+13# _NLG_Return2 in VCRUNTIME140_1D
+14# _NLG_Return2 in VCRUNTIME140_1D
+15# _CxxFrameHandler4 in VCRUNTIME140_1D
+16# __GSHandlerCheck_EH4 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\gs\amd64\gshandlereh4.cpp:73
+17# _chkstk in ntdll
+18# RtlRaiseException in ntdll
+19# RtlRaiseException in ntdll
+20# RaiseException in KERNELBASE
+21# CxxThrowException in VCRUNTIME140D
+22# boost::throw_exception<boost::system::system_error> at E:\own\c++\libs\boost_1_82_0\boost\boost\throw_exception.hpp:172
+23# boost::asio::detail::do_throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\impl\throw_error.ipp:42
+24# boost::asio::detail::throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\throw_error.hpp:52
+25# boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::any_io_executor>::accept<boost::asio::ip::tcp,boost::asio::any_io_executor> at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\basic_socket_acceptor.hpp:1301
+26# ClientConnection::process at E:\own\programming\engine\src\Server.h:25
+27# `Server::listen'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\Server.h:94
+28# `ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:29
+29# std::invoke<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
+30# std::_Invoker_ret<void>::_Call<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:674
+31# std::_Func_impl_no_alloc<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>,void>::_Do_call at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:834
+32# std::_Func_class<void>::operator() at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:875
+33# ThreadPool::get_task at E:\own\programming\engine\src\ThreadPool.h:72
+34# `ThreadPool::initialize_workers'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:60
+35# std::invoke<`ThreadPool::initialize_workers'::`4'::<lambda_1> > at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
+36# std::thread::_Invoke<std::tuple<`ThreadPool::initialize_workers'::`4'::<lambda_1> >,0> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\thread:56
+37# register_onexit_function in ucrtbased
+38# BaseThreadInitThunk in KERNEL32
+39# RtlUserThreadStart in ntdll

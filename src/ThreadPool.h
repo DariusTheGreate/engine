@@ -22,8 +22,9 @@ public:
     }
    
     template<typename Func>
-    void Submit(Func&& f){
-        queue.Push([f](){
+    void SubmitVoid(Func&& f){
+    	//std::cout << "EVENT::THREADPOOL SUBMITION\n";
+        queue.Push([&f](){
             f(); 
         });
     }
@@ -31,6 +32,7 @@ public:
     template<typename Func, typename... Args>
 	auto Submit(Func&& f, Args&&... args){
         using return_type = typename std::invoke_result<Func(Args...)>::type;
+
         auto task_ptr = std::make_shared<std::packaged_task<return_type()>>([f, args...] () {
                     return f(args...);
                 });// not sure about that, its pointer so we not lose it
@@ -38,7 +40,9 @@ public:
         auto func_to_add = [task_ptr]() {
             (*task_ptr)();
         };
+
 		queue.Push(func_to_add);
+
         return future_of_task;
 	}
 
@@ -60,9 +64,11 @@ private:
 	void get_task(){
 		while(true){
 			auto task = queue.Take();
+
 			if(!task){ 
 				break; 
 			}
+			
 			task();// add exceptions handlers?
 		}
 	}

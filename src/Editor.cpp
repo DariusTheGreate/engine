@@ -520,13 +520,19 @@ void Editor::consoleInputThread(Editor* currEditor)
 
             if(command == "client")
             {
+                std::string port;
+                std::cout << "Port: ";
+                std::cin >> port;
                 currEditor->createClient();
                 auto client = currEditor->getClient();
+                client->serverRegistration();
 
-                std::string msg;
-                std::cout << "Msg: ";
-                std::cin >> msg;
-                client->query(msg);
+                while(1){
+                    std::string msg;
+                    std::cout << "Msg: ";
+                    std::cin >> msg;
+                    client->query(port, msg);
+                }
 
                 //client->query(currEditor->currScene.readFileToString(GameState::engine_path + "scene.dean"));
             }
