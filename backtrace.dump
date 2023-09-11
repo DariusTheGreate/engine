@@ -23,9 +23,9 @@
 22# boost::throw_exception<boost::system::system_error> at E:\own\c++\libs\boost_1_82_0\boost\boost\throw_exception.hpp:172
 23# boost::asio::detail::do_throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\impl\throw_error.ipp:42
 24# boost::asio::detail::throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\throw_error.hpp:52
-25# boost::asio::basic_socket_acceptor<boost::asio::ip::tcp,boost::asio::any_io_executor>::accept<boost::asio::ip::tcp,boost::asio::any_io_executor> at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\basic_socket_acceptor.hpp:1301
-26# ClientConnection::process at E:\own\programming\engine\src\Server.h:25
-27# `Server::listen'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\Server.h:94
+25# boost::asio::connect<boost::asio::ip::tcp,boost::asio::any_io_executor,boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp> > at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\impl\connect.hpp:116
+26# ClientConnection::process at E:\own\programming\engine\src\Server.cpp:44
+27# `Server::listen'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\Server.cpp:73
 28# `ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:29
 29# std::invoke<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
 30# std::_Invoker_ret<void>::_Call<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:674
