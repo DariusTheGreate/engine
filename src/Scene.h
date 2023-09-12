@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <bitset>
+#include <mutex>
 
 #include <Object.h>
 #include <GameState.h>
@@ -204,6 +205,8 @@ public:
 
 	void deserialize(std::string_view path);
 
+	void parseScene(std::string_view scene);
+
 	std::string readFileToString(std::string_view path);
 
 	std::string extractNameFromToken(std::string_view);
@@ -245,6 +248,7 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
+	std::mutex sceneLock;
 	//std::vector<Object*> currentlyBatchedObjects;
 	BatchingCache batcher;
 

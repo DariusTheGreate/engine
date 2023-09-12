@@ -2,39 +2,27 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# setSignalHandlers at E:\own\programming\engine\src\main.cpp:22
  3# raise in ucrtbased
- 4# setmbcp in ucrtbased
- 5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportW in ucrtbased
- 7# CrtDbgReportW in ucrtbased
- 8# _threadid in ucrtbased
- 9# _threadid in ucrtbased
-10# abort in ucrtbased
-11# terminate in ucrtbased
-12# _NLG_Return2 in VCRUNTIME140_1D
-13# _NLG_Return2 in VCRUNTIME140_1D
-14# _NLG_Return2 in VCRUNTIME140_1D
-15# _CxxFrameHandler4 in VCRUNTIME140_1D
-16# __GSHandlerCheck_EH4 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\gs\amd64\gshandlereh4.cpp:73
-17# _chkstk in ntdll
-18# RtlRaiseException in ntdll
-19# RtlRaiseException in ntdll
-20# RaiseException in KERNELBASE
-21# CxxThrowException in VCRUNTIME140D
-22# boost::throw_exception<boost::system::system_error> at E:\own\c++\libs\boost_1_82_0\boost\boost\throw_exception.hpp:172
-23# boost::asio::detail::do_throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\impl\throw_error.ipp:42
-24# boost::asio::detail::throw_error at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\detail\throw_error.hpp:52
-25# boost::asio::connect<boost::asio::ip::tcp,boost::asio::any_io_executor,boost::asio::ip::basic_resolver_results<boost::asio::ip::tcp> > at E:\own\c++\libs\boost_1_82_0\boost\boost\asio\impl\connect.hpp:116
-26# ClientConnection::process at E:\own\programming\engine\src\Server.cpp:44
-27# `Server::listen'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\Server.cpp:73
-28# `ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:29
-29# std::invoke<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
-30# std::_Invoker_ret<void>::_Call<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:674
-31# std::_Func_impl_no_alloc<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>,void>::_Do_call at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:834
-32# std::_Func_class<void>::operator() at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:875
-33# ThreadPool::get_task at E:\own\programming\engine\src\ThreadPool.h:72
-34# `ThreadPool::initialize_workers'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:60
-35# std::invoke<`ThreadPool::initialize_workers'::`4'::<lambda_1> > at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
-36# std::thread::_Invoke<std::tuple<`ThreadPool::initialize_workers'::`4'::<lambda_1> >,0> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\thread:56
-37# register_onexit_function in ucrtbased
-38# BaseThreadInitThunk in KERNEL32
-39# RtlUserThreadStart in ntdll
+ 4# setSignalHandlers at E:\own\programming\engine\src\main.cpp:24
+ 5# seh_filter_exe in ucrtbased
+ 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
+ 7# _C_specific_handler in VCRUNTIME140D
+ 8# _chkstk in ntdll
+ 9# RtlRaiseException in ntdll
+10# KiUserExceptionDispatcher in ntdll
+11# glm::vec<3,float,0>::operator-=<float> at E:\own\programming\engine\vendor\glm\glm\detail\type_vec3.inl:276
+12# Camera::moveCameraLeft at E:\own\programming\engine\src\Camera.cpp:67
+13# DefaultScript::update at E:\own\programming\engine\logicScripts\defaultScript.h:153
+14# EmptyScriptRoutine::update at E:\own\programming\engine\src\ScriptApi.cpp:58
+15# Script::updateScript at E:\own\programming\engine\src\Script.cpp:37
+16# Object::updateScript at E:\own\programming\engine\src\Object.cpp:115
+17# Scene::update_scripts at E:\own\programming\engine\src\Scene.cpp:427
+18# Scene::updateScene at E:\own\programming\engine\src\Scene.cpp:91
+19# Editor::update at E:\own\programming\engine\src\Editor.cpp:43
+20# Application::Run at E:\own\programming\engine\src\Application.cpp:22
+21# main at E:\own\programming\engine\src\main.cpp:50
+22# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+23# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+24# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+25# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+26# BaseThreadInitThunk in KERNEL32
+27# RtlUserThreadStart in ntdll

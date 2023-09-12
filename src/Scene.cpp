@@ -5,7 +5,6 @@
 #include <ParticleSystem.h>
 #include <Renderer.h>
 
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -504,8 +503,13 @@ std::string Scene::readFileToString(std::string_view path)
 //TODO(darius) check for names being different, and check if object that you created dont exist already
 void Scene::deserialize(std::string_view path)
 {
-
 	std::string data = readFileToString(path);
+	parseScene(data);
+}
+
+void Scene::parseScene(std::string_view data)
+{
+	std::unique_lock<std::mutex> lck(sceneLock);
 
 	size_t cameraPos = data.find("CameraPos: {");
 
@@ -516,7 +520,6 @@ void Scene::deserialize(std::string_view path)
 
 		GameState::cam.setCameraPos(cameraPosition);
 	}
-
 
 	std::vector<std::string> objectTokens;
 

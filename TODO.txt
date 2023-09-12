@@ -21,6 +21,11 @@
 	- timer log
 	- batching memory consumption if we store batched objects
 
+--SERVER
+	- send textures over network
+	- send animations and all the stuff
+	- send simple data
+
 --RENDERER
 	- batching (combine objects that dont move)
 	- occlusion culling

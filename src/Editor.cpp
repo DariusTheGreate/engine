@@ -40,6 +40,7 @@ void Editor::update()
     printFPS();
     updateCamera();
     currScene.updateScene();
+    processEvents();
 
     if(consoleOnly)
         return;
@@ -246,6 +247,40 @@ void Editor::updateCamera()
     //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
 }
 
+//TODO(darius) work on event system. reinterpret cast is cringe, but only other way is to use virtual functions and i dont know whats worse, probably reinrpret cast but leave it as it is for now
+void Editor::processEvents()
+{
+    while(!events.empty())
+    {
+        std::cout << "event processing\n";
+        auto* e = events.front();
+        events.pop();
+
+        if(e->getEventType() == Event::LoadScene)
+        {
+            auto str = reinterpret_cast<LoadSceneEvent*>(e)->getScene();
+            currScene.parseScene(str);
+            delete reinterpret_cast<LoadSceneEvent*>(e);
+        }
+
+        if(e->getEventType() == Event::CreateObject)
+        {
+            auto name = reinterpret_cast<CreateObjectEvent*>(e)->getName();
+            currScene.AddObject(name);
+            delete reinterpret_cast<CreateObjectEvent*>(e);
+        }
+
+        if(e->getEventType() == Event::ManipulateObject)
+        {
+            auto* func = reinterpret_cast<ManipulateObjectEvent*>(e);
+            func->operator()();
+
+            delete reinterpret_cast<ManipulateObjectEvent*>(e);
+        }
+
+    }
+}
+
 void Editor::setPolygonMode(size_t type) {
     glPolygonMode(GL_FRONT_AND_BACK, static_cast<unsigned int>(type));
 }
@@ -279,6 +314,12 @@ Window* Editor::getWindow()
 Renderer* Editor::getRenderer()
 {
     return &rendol;
+}
+
+
+Scene* Editor::getScene()
+{
+    return &Editor::currScene;
 }
 
 void Editor::fileDropCallbackDispatch(std::string_view path)
@@ -365,7 +406,9 @@ void Editor::consoleInputThread(Editor* currEditor)
                 std::cout << "ObjectName: \n";
                 std::cin >> objectName;
 
-                currEditor->currScene.AddObject(objectName);
+                currEditor->addEvent(Event::CreateObject, std::move(objectName));
+
+                //currEditor->currScene.AddObject(objectName);
             }
 
             if (command == "loadPrefab")
@@ -385,8 +428,12 @@ void Editor::consoleInputThread(Editor* currEditor)
                 std::cin >> objName;
 
                 Object* obj = currEditor->currScene.getObjectByName(objName);
-                float _90degree_in_radians = 1.57f;
-                obj->getTransform().rotate(_90degree_in_radians, { 1,0,0 });
+
+                currEditor->addManipualtionEvent(Event::ManipulateObject, obj, [](Object* obj){
+                    float _90degree_in_radians = 1.57f;
+                    obj->getTransform().rotate(_90degree_in_radians, { 1,0,0 });
+                });
+                
             }
 
             if (command == "rotate") {
@@ -531,7 +578,13 @@ void Editor::consoleInputThread(Editor* currEditor)
                     std::string msg;
                     std::cout << "Msg: ";
                     std::cin >> msg;
-                    client->query(port, msg);
+                    auto res = client->query(port, msg);
+                    //std::cout << res;
+                    if(msg == "scene@")
+                    {
+                        //currEditor->getScene()->parseScene(std::move(res)); 
+                        currEditor->addEvent(Event::LoadScene, std::move(res));
+                    }
                 }
 
                 //client->query(currEditor->currScene.readFileToString(GameState::engine_path + "scene.dean"));
