@@ -25,6 +25,8 @@ public:
 
 	std::string query(const std::string& port, const std::string& data_in); //requires IsPod<T>  
 
+	void sync(const std::string& port, NetworkSynchronizer& syncer);
+
 private:
 	BoostContext context;
 	BoostContext contextRecv;

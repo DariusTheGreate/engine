@@ -1,5 +1,4 @@
-#ifndef thread_queue_
-#define thread_queue_
+#pragma once
 
 #include <mutex>
 #include <vector>
@@ -27,21 +26,30 @@ public:
         buffer_size_condition.notify_one();
     }
 
-    T Take(){
+    T Take(bool remove = true){
         std::unique_lock<std::mutex> lock(buffer_mutex);
         while(buffer.empty()){
             buffer_size_condition.wait(lock);
         }
 
-        T result = std::move(buffer.back());
-        buffer.pop_back();
-        known_count--;
+        T result = std::move(buffer.back());//TODO(darius) i dont need move its prval already, right?
+        
+        if(remove){
+            buffer.pop_back();
+            known_count--;
+        }
+
         return result;
+    }
+
+    void TakeAt(T& spc, int i = 0)
+    {
+        std::unique_lock<std::mutex> lock(buffer_mutex);
+
+        spc = buffer[i];
     }
 
     size_t size() const {
         return known_count; 
     }
 };
-
-#endif

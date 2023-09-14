@@ -16,6 +16,7 @@
 #include <Timer.h> 
 #include <BatchingCache.h>
 #include <ThreadPool.h>
+#include <NetworkSynchronizer.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -197,6 +198,10 @@ public:
 
 	BatchingCache& getBatchCache();
 
+	void addObjectToNetSync(Object* obj);
+
+	NetworkSynchronizer& getNetworkSynchronizer();
+
 public:
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will have to return later to it anyway
 	void serialize(std::string_view path);
@@ -204,6 +209,8 @@ public:
 	void serializePrefab(Object* obj, std::string_view path);
 
 	void deserialize(std::string_view path);
+
+	void parseSynchronizationMsg(std::string msg);
 
 	void parseScene(std::string_view scene);
 
@@ -251,6 +258,9 @@ private:
 	std::mutex sceneLock;
 	//std::vector<Object*> currentlyBatchedObjects;
 	BatchingCache batcher;
+	//TODO(darius) its heavy to sync all of the object data. So although by default thats waht we do now - 
+	//			   - its important to allow to create networkSynchronizer<Transfrom>, NetSync<string>, etc. and store vetor of them
+	NetworkSynchronizer networkSync;
 
 	//ThreadPool workersUsed;//NOTE(darius) just messing around
 

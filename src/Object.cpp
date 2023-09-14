@@ -467,7 +467,7 @@ void Object::serializeAsPrefab(std::ofstream& file)
     //file << "}\n";
 }
 
-void Object::serialize(std::ofstream& file)
+void Object::serialize(std::ostream& file)
 {
     file << "Object: {\n";
     file << "\tName: {\n\t\t" << get_name().c_str() << "\n\t}\n";

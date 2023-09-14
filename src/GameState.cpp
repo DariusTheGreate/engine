@@ -50,3 +50,7 @@ std::string GameState::engine_path = "E:/own/programming/engine/";
 float GameState::gammaBrightness = 1.0f;
 
 float GameState::gammaFactor = 1.0f;
+
+Camera GameState::cam;
+MouseState GameState::ms;
+//KeyboardState GameState::ks;

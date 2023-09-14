@@ -1,10 +1,11 @@
 #include <Client.h>
 #include <Editor.h>
+#include <sstream>
 
 void Client::serverRegistration()
 {
 	boostSaveUse([this](){
-	    boost::asio::connect(socket, resolver.resolve("127.0.0.1", "25000"));
+	    connectToSocket(socket, resolver, "127.0.0.1", "25000");
 		boost::asio::ip::tcp::endpoint clientEndpoint = socket.local_endpoint();	
 		std::cout << "my port registration connect : " << clientEndpoint.port() << "\n";
 	});
@@ -18,9 +19,7 @@ std::string Client::query(const std::string& port, const std::string& data_in) /
 	boost::asio::ip::tcp::endpoint clientEndpoint = socket.local_endpoint();	
 
 	boostSaveUse([this, port, data_in](){
-	    boost::asio::connect(socket, resolver.resolve("127.0.0.1", port));//NOTE(darius) changes socket
-		//std::cout << "my port after connect : " << clientEndpoint.port() << "\n";//same
-	    //auto result = boost::asio::write(socket, boost::asio::buffer(std::move(data_in)));
+	    connectToSocket(socket, resolver, "127.0.0.1", port);
 	    sendData(socket, data_in);
 	});
 
@@ -48,4 +47,47 @@ std::string Client::query(const std::string& port, const std::string& data_in) /
     //socket.close();
 
     return {};
+}
+
+void Client::sync(const std::string& port, NetworkSynchronizer& syncer)
+{
+	boost::asio::ip::tcp::endpoint clientEndpoint = socket.local_endpoint();	
+
+	boostSaveUse([this, port, &syncer](){
+	    connectToSocket(socket, resolver, "127.0.0.1", port);
+	    std::cout << "connected\n";
+
+	    if(syncer.size()){
+		    std::stringstream ss;
+		    //TODO(darius) wrong other thread may change size or object
+		    //TODO(darius) BUG(darius) if delete object - will crash all due to cring vector objects design.
+		    std::cout << "sync sz: " << syncer.size() << "\n";
+	    	for(int i = 0; i < syncer.size(); ++i)
+	    	{
+			    Object* obj = nullptr; 
+			    syncer.TakeAt(obj, i);
+
+			    if(obj){
+				    std::cout << "serializing: " << i << "\n";
+				    obj->serialize(ss);
+			    }
+	    	}
+
+		    ss << "@";
+		    sendData(socket, ss.str());
+		    std::cout << "sended data\n";
+		}
+
+	    boost::asio::streambuf buffer;
+        boost::system::error_code error;
+        size_t bytes_transferred = 0;
+		boostSaveUse([&](){ 
+	        bytes_transferred = readSocket(socket, buffer);//boost::asio::read_until(*socket2, buffer, '@');
+	    });        	
+
+        if(bytes_transferred > 0){
+            std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+            std::cout << "response: " << s << "\n";
+        }
+	});
 }

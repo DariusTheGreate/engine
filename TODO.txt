@@ -20,6 +20,7 @@
 	- cache serialize batches?
 	- timer log
 	- batching memory consumption if we store batched objects
+	- write own hashtable, cause i hate std::hashtable) 
 
 --SERVER
 	- send textures over network

@@ -19,6 +19,7 @@ struct Player
 
 class DefaultScript : public ScriptRoutine {
 public:
+	//TODO(darius) pass script properts here
 	void start(ScriptArgument& args) override {
 		instance->debug_msg.append("Enter Script..");
 		std::cout << "Enter Scrtipt..\n";
@@ -212,7 +213,7 @@ public:
         if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
             //if (p.currAnim != 0) {
                 obj->getModel()->meshes[0] = *IdleMesh;
-                obj->setSpriteAnimation(Idle);
+                //obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
                 p.currAnim = 0;
             //}
         }

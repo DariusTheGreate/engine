@@ -100,7 +100,7 @@ public:
 
 	void hide();
 
-	void serialize(std::ofstream& file);
+	void serialize(std::ostream& file);
 
 	void serializeAsPrefab(std::ofstream& file);
 

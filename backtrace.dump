@@ -1,28 +1,19 @@
  0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:77
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
- 2# setSignalHandlers at E:\own\programming\engine\src\main.cpp:22
+ 2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# setSignalHandlers at E:\own\programming\engine\src\main.cpp:24
- 5# seh_filter_exe in ucrtbased
- 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
- 7# _C_specific_handler in VCRUNTIME140D
- 8# _chkstk in ntdll
- 9# RtlRaiseException in ntdll
-10# KiUserExceptionDispatcher in ntdll
-11# glm::vec<3,float,0>::operator-=<float> at E:\own\programming\engine\vendor\glm\glm\detail\type_vec3.inl:276
-12# Camera::moveCameraLeft at E:\own\programming\engine\src\Camera.cpp:67
-13# DefaultScript::update at E:\own\programming\engine\logicScripts\defaultScript.h:153
-14# EmptyScriptRoutine::update at E:\own\programming\engine\src\ScriptApi.cpp:58
-15# Script::updateScript at E:\own\programming\engine\src\Script.cpp:37
-16# Object::updateScript at E:\own\programming\engine\src\Object.cpp:115
-17# Scene::update_scripts at E:\own\programming\engine\src\Scene.cpp:427
-18# Scene::updateScene at E:\own\programming\engine\src\Scene.cpp:91
-19# Editor::update at E:\own\programming\engine\src\Editor.cpp:43
-20# Application::Run at E:\own\programming\engine\src\Application.cpp:22
-21# main at E:\own\programming\engine\src\main.cpp:50
-22# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-23# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-24# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-25# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-26# BaseThreadInitThunk in KERNEL32
-27# RtlUserThreadStart in ntdll
+ 4# setmbcp in ucrtbased
+ 5# CrtSetReportHookW2 in ucrtbased
+ 6# VCrtDbgReportA in ucrtbased
+ 7# CrtDbgReport in ucrtbased
+ 8# std::optional<SpriteAnimation>::operator-> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\optional:376
+ 9# Object::serialize at E:\own\programming\engine\src\Object.cpp:581
+10# `Client::sync'::`2'::<lambda_1>::operator() at E:\own\programming\engine\src\Client.cpp:74
+11# boostSaveUse<`Client::sync'::`2'::<lambda_1> > at E:\own\programming\engine\src\Server.h:19
+12# Client::sync at E:\own\programming\engine\src\Client.cpp:56
+13# Editor::consoleInputThread at E:\own\programming\engine\src\Editor.cpp:610
+14# std::invoke<void (__cdecl Editor::*)(Editor *),Editor *,Editor *> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1589
+15# std::thread::_Invoke<std::tuple<void (__cdecl Editor::*)(Editor *),Editor *,Editor *>,0,1,2> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\thread:56
+16# register_onexit_function in ucrtbased
+17# BaseThreadInitThunk in KERNEL32
+18# RtlUserThreadStart in ntdll

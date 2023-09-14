@@ -1,9 +1,20 @@
 #include <Server.h>
 #include <Editor.h>
+#include <NonBlockingQueue.h>
 
 void sendData(boost::asio::ip::tcp::socket& hueket, const std::string& data)
 {
 	boost::asio::write(hueket, boost::asio::buffer(data));
+}
+
+void connectToSocket(boost::asio::ip::tcp::socket& hueket, tcp::resolver& resolver, std::string_view ip, std::string_view port)
+{
+	boost::asio::connect(hueket, resolver.resolve(ip, port));
+}
+
+size_t readSocket(boost::asio::ip::tcp::socket& hueket, boost::asio::streambuf& buffer, char endSymbol)
+{
+	return boost::asio::read_until(hueket, buffer, endSymbol);
 }
 
 void ClientConnection::process()
@@ -16,7 +27,6 @@ void ClientConnection::process()
         boost::asio::streambuf buffer;
 		std::cout << "Waiting for client message.." << std::endl;
         boost::system::error_code error;
-        //boost::asio::read(*socket2, buffer, boost::asio::transfer_all(), error);//NOTE(darius) fkn boost blocks until u read at least n. So u needd msg to > than n eta pzdc suka
         size_t bytes_transferred = boost::asio::read_until(*socket2, buffer, '@');
 
         if (bytes_transferred > 0){ 
@@ -31,7 +41,6 @@ void ClientConnection::process()
 
 			if(s == "scene@")
 			{
-			    tcp::resolver resolver(context);
 				boost::asio::ip::tcp::endpoint clientEndpoint = socket2->remote_endpoint();	
 
 				boostSaveUse([this, socket2](){
@@ -45,9 +54,7 @@ void ClientConnection::process()
 
 			if(s == "message@")
 			{
-				tcp::resolver resolver(context);
 				boost::asio::ip::tcp::endpoint clientEndpoint = socket2->remote_endpoint();	
-				//socket_ptr clientSocket(new boost::asio::ip::tcp::socket(context));
 
 				std::string fknadres = clientEndpoint.address().to_string();//, clientEndpoint.address().to_string(), std::to_string(clientEndpoint.port())
 				std::string fknport = std::to_string(clientEndpoint.port());
@@ -55,7 +62,6 @@ void ClientConnection::process()
 				std::cout << "address socket endpoint " << fknadres << " " << fknport << "\n";
 
 				boostSaveUse([this, socket2](){
-				    //boost::asio::connect(*clientSocket, resolver.resolve(fknadres, fknport));
 					while(1){
 						std::string data;
 						std::cout << "type msg: ";
@@ -72,7 +78,36 @@ void ClientConnection::process()
     }
 }
 
-void Server::listen(size_t bufferSize)
+void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
+{
+	while(1)
+	{
+		socket_ptr socket2(new boost::asio::ip::tcp::socket(context));
+        acceptor.accept(*socket2);
+
+        boost::asio::streambuf buffer;
+		std::cout << "Waiting for client message.." << std::endl;
+        boost::system::error_code error;
+        size_t bytes_transferred = 0;
+       	boostSaveUse([&](){ 
+	        bytes_transferred = readSocket(*socket2, buffer);//boost::asio::read_until(*socket2, buffer, '@');
+	    });
+
+        if(bytes_transferred > 0)
+        {
+        	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+        	//std::cout << s << "\n"; 	
+
+        	currScene.parseSynchronizationMsg(s);
+
+        	boostSaveUse([&](){
+	        	sendData(*socket2, "i get it@\n");
+        	});
+        }
+	}
+}
+
+void Server::listen()
 {
 	while(true)
 	{
@@ -86,10 +121,10 @@ void Server::listen(size_t bufferSize)
         std::cout << "Accepted REGISTRATION from " << socket->remote_endpoint() << std::endl;
 
         size_t port = connections;
-		workers.SubmitVoid([port](){
+		workers.SubmitVoid([port, this](){
 			ClientConnection conn(25001 + port);
-			std::cout << "created conn\n";
-			conn.process();
+			//conn.process();
+			conn.sync(netSync, currScene);
         });
 
         connections++;

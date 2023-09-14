@@ -1,6 +1,7 @@
 #include <Editor.h>
 #include <Timer.h>
 
+#include <iostream>
 #include <thread>
 
 Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
@@ -19,6 +20,7 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     SystemInfo::setInfo(&info);
 
+    //TODO(darius) move it to texture or something
     GLFWimage images[1]; 
     images[0].pixels = stbi_load(std::string(GameState::engine_path + "assets/logo.png").c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
     glfwSetWindowIcon(wind->getWindow(), 1, images); 
@@ -262,22 +264,23 @@ void Editor::processEvents()
             currScene.parseScene(str);
             delete reinterpret_cast<LoadSceneEvent*>(e);
         }
-
-        if(e->getEventType() == Event::CreateObject)
+        else if(e->getEventType() == Event::CreateObject)
         {
             auto name = reinterpret_cast<CreateObjectEvent*>(e)->getName();
             currScene.AddObject(name);
             delete reinterpret_cast<CreateObjectEvent*>(e);
         }
-
-        if(e->getEventType() == Event::ManipulateObject)
+        else if(e->getEventType() == Event::ManipulateObject)
         {
             auto* func = reinterpret_cast<ManipulateObjectEvent*>(e);
             func->operator()();
 
             delete reinterpret_cast<ManipulateObjectEvent*>(e);
         }
-
+        else
+        {
+            delete reinterpret_cast<EditorEvent*>(e);
+        }
     }
 }
 
@@ -366,7 +369,7 @@ void Editor::createServer()
 {
     if(server || client) 
         return;
-    server = std::make_shared<Server>();
+    server = std::make_shared<Server>(currScene.getNetworkSynchronizer(), currScene);
 }
 
 std::shared_ptr<Server> Editor::getServer()
@@ -561,8 +564,8 @@ void Editor::consoleInputThread(Editor* currEditor)
             if(command == "server")
             {
                 currEditor->createServer();
-                auto server = currEditor->getServer();
-                server->listen(1024 * 10);
+                auto editorServer = currEditor->getServer();
+                editorServer->listen();
             }
 
             if(command == "client")
@@ -590,6 +593,23 @@ void Editor::consoleInputThread(Editor* currEditor)
                 //client->query(currEditor->currScene.readFileToString(GameState::engine_path + "scene.dean"));
             }
 
+            if(command == "clientSync")
+            {
+                std::string port;
+                std::cout << "Port: ";
+                std::cin >> port;
+                currEditor->createClient();
+                auto client = currEditor->getClient();
+                client->serverRegistration();
+
+                auto& syncer = currEditor->getScene()->getNetworkSynchronizer();
+
+                while(1)
+                {
+                    client->sync(port, syncer);
+                }
+            }
+
             if(command == "nogui")
             {
                 currEditor->consoleOnly = true;
@@ -598,6 +618,22 @@ void Editor::consoleInputThread(Editor* currEditor)
             if(command == "gui")
             {
                 currEditor->consoleOnly = false;
+            }
+
+            //TODO(darius) lagging for some reason
+            if(command == "netSync")
+            {
+                std::string name;
+                std::cout << "Name: ";
+                std::cin >> name;
+
+                Object* obj = currEditor->currScene.getObjectByName(name);
+
+                if(obj)
+                    currEditor->currScene.addObjectToNetSync(obj);
+                else{
+                    std::cout << "Couldnt find object " << name << "\n";
+                }
             }
         }
     }

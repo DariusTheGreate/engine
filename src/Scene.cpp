@@ -398,7 +398,7 @@ bool Scene::recoverBatch(Object* origin)
 	auto cache = batcher.takeBack();
 	sceneObjects.insert(sceneObjects.end(), cache.begin(), cache.end());
 
-	auto origins = batcher.takeOrigins();
+	//auto origins = batcher.takeOrigins();
 
 	/*for(auto v = sceneObjects.begin(); v != sceneObjects.end(); v++)
 	{
@@ -417,6 +417,16 @@ bool Scene::recoverBatch(Object* origin)
 BatchingCache& Scene::getBatchCache()
 {
 	return batcher;	
+}
+
+void Scene::addObjectToNetSync(Object* obj)
+{
+	networkSync.pushObject(obj);	
+}
+
+NetworkSynchronizer& Scene::getNetworkSynchronizer()
+{
+	return networkSync;
 }
 
 void Scene::update_scripts()
@@ -505,6 +515,56 @@ void Scene::deserialize(std::string_view path)
 {
 	std::string data = readFileToString(path);
 	parseScene(data);
+}
+
+void Scene::parseSynchronizationMsg(std::string data)
+{
+	//std::cout << "MSG:\n";
+	//std::cout << data;
+	std::vector<std::string> objectTokens;
+
+	{
+		size_t i = 0;
+
+		while (i < data.size()) 
+		{
+			size_t oPos1 = data.find("Object", i);
+			size_t oPos2 = data.find("Object", oPos1+1);
+			//i = data.size();
+			//if(oPos2 != std::string::npos)
+			i = oPos2;
+			objectTokens.emplace_back(data.substr(oPos1, oPos2-oPos1));
+		}
+	}
+
+	std::cout << "objTkns size: " << objectTokens.size() << "\n";
+
+	std::vector<std::string> names;
+
+	for (std::string_view tkn : objectTokens) 
+	{
+		names.emplace_back(extractNameFromToken(tkn));
+	}
+
+	std::cout << "names:\n";
+	for(auto& i : names)
+		std::cout << i << "\n";
+
+	std::vector<Transform>  transs;
+
+	for (std::string_view tkn : objectTokens) 
+	{
+		transs.emplace_back(extractTransformFromToken(tkn));
+	}
+
+	for(int i = 0; i < sceneObjects.size(); ++i)
+	{
+		for(int j = 0; j < names.size(); ++j)
+		{
+			if(sceneObjects[i]->get_name() == names[j])
+				sceneObjects[i]->getTransform() = (transs[j]);
+		}
+	}
 }
 
 void Scene::parseScene(std::string_view data)
@@ -635,9 +695,16 @@ void Scene::parseScene(std::string_view data)
 std::string Scene::extractNameFromToken(std::string_view tkn)
 {
 	size_t nameStart = tkn.find("Name");
-	size_t valueStart = nameStart + 9;
-	size_t valueEnd = tkn.find("\t", valueStart);
-	return std::string(tkn.substr(valueStart, valueEnd - valueStart));
+	size_t valueStart = tkn.find("{", nameStart);//nameStart + 9;
+	size_t valueEnd = tkn.find("}", valueStart);
+
+	auto str = std::string(tkn.substr(valueStart + 3, valueEnd - valueStart - 4));
+
+	str.erase(std::remove_if(str.begin(), str.end(),
+		[](char c) { return !(std::isalpha(c)); }),
+		str.end());
+
+	return str;
 }
 
 bool Scene::extractHiddenStateFromToken(std::string_view tkn)
