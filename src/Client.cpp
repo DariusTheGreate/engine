@@ -1,6 +1,7 @@
 #include <Client.h>
 #include <Editor.h>
 #include <sstream>
+#include <Timer.h>
 
 void Client::serverRegistration()
 {
@@ -49,11 +50,11 @@ std::string Client::query(const std::string& port, const std::string& data_in) /
     return {};
 }
 
-void Client::sync(const std::string& port, NetworkSynchronizer& syncer)
+void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* currScene)
 {
 	boost::asio::ip::tcp::endpoint clientEndpoint = socket.local_endpoint();	
 
-	boostSaveUse([this, port, &syncer](){
+	boostSaveUse([this, port, &syncer, &currScene](){
 	    connectToSocket(socket, resolver, "127.0.0.1", port);
 	    std::cout << "connected\n";
 
@@ -73,14 +74,18 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer)
 			    }
 	    	}
 
+	    	Timer timeToSend;
+
 		    ss << "@";
 		    sendData(socket, ss.str());
-		    std::cout << "sended data\n";
+		    profile.addRecord(timeToSend.checkTime());
+		    //std::cout << "sended data, time to send: " << timeToSend.checkTime(); //NOTE(darius) less than 1ms localy, check what about distanced
 		}
 
 	    boost::asio::streambuf buffer;
         boost::system::error_code error;
         size_t bytes_transferred = 0;
+
 		boostSaveUse([&](){ 
 	        bytes_transferred = readSocket(socket, buffer);//boost::asio::read_until(*socket2, buffer, '@');
 	    });        	
@@ -88,6 +93,7 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer)
         if(bytes_transferred > 0){
             std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
             std::cout << "response: " << s << "\n";
+        	currScene->parseSynchronizationMsg(s);
         }
 	});
 }

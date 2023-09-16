@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Server.h>
+#include <Profiler.h>
 
 #include <type_traits>
 #include <string>
@@ -25,7 +26,7 @@ public:
 
 	std::string query(const std::string& port, const std::string& data_in); //requires IsPod<T>  
 
-	void sync(const std::string& port, NetworkSynchronizer& syncer);
+	void sync(const std::string& port, NetworkSynchronizer& syncer, Scene* currScene);
 
 private:
 	BoostContext context;
@@ -33,4 +34,6 @@ private:
 	tcp::socket socket;
     tcp::resolver resolver;
     tcp::acceptor acceptor;
+
+    Profiler<double> profile;
 };

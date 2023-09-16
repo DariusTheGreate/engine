@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer() {
+Timer::Timer(bool printOrNot) : print(printOrNot) {
 	time = 0.0;
 	timeOfBirth = glfwGetTime();
 }

@@ -258,8 +258,8 @@ void Mesh::addVerticesBath(Mesh& batchee, glm::vec3 shift)
 
     auto indV = batchee.getIndices();
 
-    std::cout << "offset" << offset << "\n";
-    std::cout << "indices size " << indV.size() << "\n";
+    //std::cout << "offset" << offset << "\n";
+    //std::cout << "indices size " << indV.size() << "\n";
 
     for(auto& i : indV)
     {

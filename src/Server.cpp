@@ -1,6 +1,7 @@
 #include <Server.h>
 #include <Editor.h>
 #include <NonBlockingQueue.h>
+#include <Timer.h>
 
 void sendData(boost::asio::ip::tcp::socket& hueket, const std::string& data)
 {
@@ -101,7 +102,26 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
         	currScene.parseSynchronizationMsg(s);
 
         	boostSaveUse([&](){
-	        	sendData(*socket2, "i get it@\n");
+	        	std::stringstream ss;
+			    //TODO(darius) wrong other thread may change size or object
+			    //TODO(darius) BUG(darius) if delete object - will crash all due to cring vector objects design.
+			    std::cout << "sync sz: " << syncer.size() << "\n";
+		    	for(int i = 0; i < syncer.size(); ++i)
+		    	{
+				    Object* obj = nullptr; 
+				    syncer.TakeAt(obj, i);
+
+				    if(obj){
+					    std::cout << "serializing: " << i << "\n";
+					    obj->serialize(ss);
+				    }
+		    	}
+
+		    	Timer timeToSend;
+
+			    ss << "@";
+			    sendData(*socket2, ss.str());
+			    std::cout << "sended data, time to send: " << timeToSend.checkTime(); //NOTE(darius) less than 1ms localy, check what about distanced
         	});
         }
 	}

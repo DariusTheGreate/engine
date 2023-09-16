@@ -10,60 +10,51 @@
 	- fix coordinates systems conversion
 	- Do/Undo, (use memnto pattern?)
 	- create some kind of testing (log response from engine and compare it to desired)
-	- finish file drop callback
 	- Log interface
 	- better batchingCache
 	- memory log
 	- better backtrace
-	- object ID as id in scene i s bad invariant
+	- object ID as id in scene is bad invariant
 	- script properties
 	- cache serialize batches?
 	- timer log
 	- batching memory consumption if we store batched objects
 	- write own hashtable, cause i hate std::hashtable) 
+	- connect renderdoc api
+	- add namespaces
+	- << operator for types
 
 --SERVER
-	- send textures over network
-	- send animations and all the stuff
-	- send simple data
+	- increase amount of connections
 
 --RENDERER
-	- batching (combine objects that dont move)
+	- finish batching 
 	- occlusion culling
 	- frustum culling
 	- distanced rendering                                                       !
 	- 2D normal mapping                                                         !
 	- cacheing of flat meshes textures
-
 	- finish bloom                                                              !
 	- finish shadows                                                            !
-
 	- Texture resize to apropriate resolution
 	- gamma correction
-
 	- deffered light?
-
 	- light shafts?
 	- debug grid distance rendering
-
 	- shaders for effects drawing on texture
-
 	- blending satge
-
 	- instanced rendering for any mesh
-
 	- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
-
 	- batching somehow
-
 	- text rendering
-
+	- commands buffer?
 --UI
 	- assets browser
 	- LOGO
 	- Panels
 
 --BUGS
+	- fix animation script update bug
 	- bug when assimp dont load first 4 letters(4 bytes) of string
 	- bug when first obect in scene teleports if copyied
 	- bug when if u click both button at a time objects teleports to inf
@@ -71,13 +62,3 @@
 	- bug when if u type name and press ESC you get abort from imgui
 	- bug when if change color picking brokes
 	- bug when if u pick guiamo - u pick another object
-
---NEXT
-	- cacheing of flat meshes textures
-	- instanced rendering forr simmilar meshes
-	- finish shadows                                                            
-	- assets browser
-
-	- textures loading and transfer to shaders. normals, specular, tangents, etc
-	- finish colliders response system													
-	- finish bloom                                                              

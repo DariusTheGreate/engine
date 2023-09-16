@@ -310,7 +310,7 @@ void Scene::batchProbeSimilarObjects()
 {
 	for(auto& objI : sceneObjects)
 	{
-		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 || objI->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS 
+		if(!objI->getModel() || objI->getModel()->meshes.size() < 1 //|| objI->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS 
 			|| batcher.contains(objI))
 			continue;
 
@@ -323,8 +323,8 @@ void Scene::batchProbeSimilarObjects()
 
 		for(auto& objJ : sceneObjects)
 		{
-			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ 
-				|| objJ->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS)
+			if(!objJ->getModel() || objJ->getModel()->meshes.size() < 1 || objI == objJ) 
+				//|| objJ->getModel()->meshes[0].getDrawMode() != DrawMode::DRAW_AS_ELEMENTS)
 				continue;
 
 			auto meshJ = objJ->getModel()->meshes[0];
@@ -332,6 +332,7 @@ void Scene::batchProbeSimilarObjects()
 			if(meshI.getTexturesRef()[0].get_path() == meshJ.getTexturesRef()[0].get_path())
 			{
 				//NOTE(darius) i think its kinda works now, look into better uproach?
+				//TODO(darius) add rotation and scale!
 				//NOTE(darius) float precision not cool?
 				glm::vec3 shift = (objJ->getTransform().getPosition() - objI->getTransform().getPosition());
 				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x, shift.y/originalScale.y, shift.z/originalScale.z);

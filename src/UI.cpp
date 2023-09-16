@@ -766,18 +766,10 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::SameLine();
     ImGui::Text(std::to_string(timeVal).c_str());
 
-    framerateHistory.push_back(timeVal);
+    profile.addRecord(std::round(1 / timeVal));
 
-    int maxHistorySize = 10000;
-    if(framerateHistory.size() > maxHistorySize + 1)
-    {
-        framerateHistory.erase(framerateHistory.begin(), framerateHistory.begin() + maxHistorySize);
-    }
-
-    if(framerateHistory.size() > historySize){
-        ImGui::PlotLines("Frame Times", &framerateHistory[0], historySize, 0, NULL, 0, 1, ImVec2(0,100));
-    }
-
+    if(profile.size() > 0)
+        ImGui::PlotLines("Frame Times", &profile.getHistoryRef()[0], profile.getHistoryRef().size(), 0, NULL, 0, 500, ImVec2(0,100));
 
     ImGui::Text("Frame Rate: ");
     ImGui::SameLine();
@@ -791,6 +783,19 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::Text("Instanced Draw Calls Count: ");
     ImGui::SameLine();
     ImGui::Text(std::to_string(Renderer::drawCallsInstancedCount).c_str());
+
+    ImGui::End();
+}
+
+void UI::profilesWindow()
+{
+    ImGui::Begin("Profilers");
+
+    for(auto& p : profilers)
+    {
+        if(p.size() > 0)
+            ImGui::PlotLines(p.getNameRef().c_str(), &p.getHistoryRef()[0], p.getHistoryRef().size(), 0, NULL, 0, 1, ImVec2(0,100));
+    }
 
     ImGui::End();
 }

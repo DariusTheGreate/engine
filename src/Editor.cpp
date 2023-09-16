@@ -606,7 +606,7 @@ void Editor::consoleInputThread(Editor* currEditor)
 
                 while(1)
                 {
-                    client->sync(port, syncer);
+                    client->sync(port, syncer, currEditor->getScene());
                 }
             }
 

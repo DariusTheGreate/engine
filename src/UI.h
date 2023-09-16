@@ -7,6 +7,7 @@
 #include <SkeletalAnimationShaderRoutine.h>
 #include <Animator.h>
 #include <SystemInfo.h>
+#include <Profiler.h>
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -49,6 +50,8 @@ public:
     
     void showEditorSettingsWindow(Renderer& hui);
 
+    void profilesWindow();
+
     void sceneCamerasWindow(Scene& scene);
 
     Object* getItemClicked(); 
@@ -87,6 +90,9 @@ private:
 
     double timeVal = 0;
 
-    std::deque<float> framerateHistory;
-    size_t historySize = 1000;
+    //std::deque<float> framerateHistory;
+    //size_t historySize = 1000;
+
+    Profiler<float> profile;
+    std::vector<Profiler<float>> profilers; 
 };

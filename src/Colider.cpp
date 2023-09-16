@@ -1,4 +1,5 @@
 #include "Colider.h"
+#include <SIMD.h>
 
 Colider::Colider(const glm::vec3& size_in, Transform& tr_in, int tag_in, bool active_in) : size(size_in), tr(tr_in), tag(tag_in), active(active_in)
 {

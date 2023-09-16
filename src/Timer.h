@@ -4,7 +4,7 @@
 
 struct Timer {
 public:
-	Timer();
+	Timer(bool printOrNot = false);
 	~Timer();
 
 	double checkTime();
@@ -12,9 +12,9 @@ public:
 	void setBoolPrint(bool p);
 
 	void clearTime();
-	
+
 private:
 	double timeOfBirth;
 	double time;
-	bool print = 1;
+	bool print = 0;
 };
