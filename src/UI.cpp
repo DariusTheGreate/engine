@@ -75,6 +75,9 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
         if (ImGui::Button("batch objects")) {
             scene.batchProbeSimilarObjects();
         }
+        if (ImGui::Button("LOD objects")) {
+            scene.updateObjectsLODs();
+        }
 
         if (ImGui::Button("recover batched objects")) {
             scene.recoverBatchedObjects();
@@ -369,6 +372,11 @@ std::optional<RigidBody> rbody;
     if(modelV && ImGui::CollapsingHeader("ModelMesh"))
     {
         ImGui::Text("Draw Mode %i", modelV->meshes[0].getDrawMode()); 
+
+        if(ImGui::Button("AABB"))
+        {
+            modelV->meshes[0].calculateAabb(obj->getTransform());
+        }
     }
 
     auto& model = obj->getModel();
@@ -473,11 +481,8 @@ void UI::componentAdderWindow(Renderer& hui)
         FlatMesh flat;
         flat.setTexture(GameState::engine_path + "/textures", "birdParticle1.png"); 
 
-        LightingShaderRoutine shaderRroutine;
-        Shader currShader = Renderer::shaderLibInstance->getParticlesShader();
-
         ParticleSystem ps = ParticleSystem();
-        ps.addParticle(std::move(flat), std::move(currShader), std::move(shaderRroutine));
+        ps.addParticle(std::move(flat));
 
         item_clicked->addParticleSystem(std::move(ps));    
     }
@@ -500,8 +505,6 @@ void UI::componentAdderWindow(Renderer& hui)
         size_t routine = hui.getShaderRoutine();
         Shader shader = hui.getShader();
 
-        LightingShaderRoutine shadeRroutine = {Shader(shader)};
-
         if(ImGui::CollapsingHeader("ModelFile")){
             ImGui::Indent();
 
@@ -509,9 +512,7 @@ void UI::componentAdderWindow(Renderer& hui)
             ImGui::InputText("path", (char*)path.c_str(), 100);
 
             if(ImGui::Button("Load")){
-                Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-                LightingShaderRoutine shaderRoutine;
-                item_clicked->addModel(path, currShader, shaderRoutine);
+                item_clicked->addModel(path);
             }
 
             ImGui::Unindent();
@@ -535,9 +536,6 @@ void UI::componentAdderWindow(Renderer& hui)
                 item_clicked->addModel(path);
                 Animation* danceAnimation = new Animation(path, &item_clicked->getModel().value());
                 item_clicked->setAnimator(danceAnimation);
-                SkeletalAnimationShaderRoutine animationRroutine = SkeletalAnimationShaderRoutine(Shader(animVertex), &item_clicked->getAnimator().value());
-                item_clicked->getModel()->setShader(Shader(animVertex));
-                item_clicked->getModel()->setAnimationShaderRoutine(animationRroutine);
             }
 
             ImGui::Unindent();
@@ -551,14 +549,11 @@ void UI::componentAdderWindow(Renderer& hui)
             if(ImGui::Button("Load CubeMesh")){
                 CubeMesh cube;
 
-                LightingShaderRoutine shaderRoutine;
-                Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-
                 path.shrink_to_fit();
 
                 cube.setTexture(path);
 
-                item_clicked->addModel(std::move(cube), shader, shaderRoutine);
+                item_clicked->addModel(std::move(cube));
             }
         }
 
@@ -572,15 +567,12 @@ void UI::componentAdderWindow(Renderer& hui)
             if(ImGui::Button("Load FlatMesh")){
                 FlatMesh flat;
 
-                LightingShaderRoutine shaderRoutine;
-                Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-
                 path.shrink_to_fit();
                 //name.shrink_to_fit();
 
                 flat.setTexture(path);
 
-                item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
+                item_clicked->addModel(std::move(flat));
             }
 
             if(ImGui::Button("Load Normal Mesh")){
@@ -594,15 +586,12 @@ void UI::componentAdderWindow(Renderer& hui)
             if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                 FlatMesh flat;
 
-                LightingShaderRoutine shaderRoutine;
-                Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-
                 path.shrink_to_fit();
                 name.shrink_to_fit();
 
                 flat.setTexture(path, name);
 
-                item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
+                item_clicked->addModel(std::move(flat));
 
                 item_clicked->addSpriteAnimation(SpriteAnimation(4,8,500));
             }
@@ -612,16 +601,13 @@ void UI::componentAdderWindow(Renderer& hui)
 
                 FlatMesh flat;
 
-                LightingShaderRoutine shaderRoutine;
-                Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-
-                item_clicked->addModel(std::move(flat), currShader, shaderRoutine);
+                item_clicked->addModel(std::move(flat));
                 item_clicked->addSpriteAnimation(SpriteAnimation(path));
             }
         }
 
         if(ImGui::Button("Empty")){
-            item_clicked->addModel(shader, shadeRroutine);
+            item_clicked->addModel();
         }
 
         ImGui::Unindent();

@@ -1,9 +1,11 @@
 #include "Mesh.h"
 #include <OpenglWrapper.h>
 #include <Renderer.h>
+#include <Printer.h>
 
 #include <ranges>
 #include <algorithm>
+#include <glm/glm.hpp>
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) 
     : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
@@ -274,4 +276,35 @@ void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
 {
     vertices.erase(vertices.begin() + verticesNum, vertices.end()); 
     indices.erase(indices.begin() + indicesNum, indices.end()); 
+}
+
+void Mesh::calculateAabb(const Transform& tr) 
+{
+    glm::vec3 vertex = glm::vec3(tr.matrix * glm::vec4(vertices[indices[0]].Position, 1.0f));
+    glm::vec3 vmin = vertex;
+    glm::vec3 vmax = vertex;
+
+    for (size_t i = 0; i < indices.size(); ++i) {
+        vertex = glm::vec3(tr.matrix * glm::vec4(vertices[indices[i]].Position, 1.0f));
+        vmin = glm::length(vmin) < glm::length(vertex) ? vmin : vertex;
+        vmax = glm::length(vmax) > glm::length(vertex) ? vmax : vertex;
+    }
+
+    aabb.min = vmin;
+    aabb.max = vmax;
+    aabb.center = (vmin + vmax) * 0.5f;
+    aabb.size = (vmax - vmin) * 0.5f;
+}
+
+std::vector<unsigned int> Mesh::generateLOD()
+{   
+    std::vector<unsigned int> indicesGenerated; 
+
+    for(int i = 0; i < indices.size(); ++i)
+    {
+        if(i % 2 == 0)
+            indicesGenerated.push_back(indices[i]); 
+    }
+
+    return indicesGenerated;
 }

@@ -17,7 +17,6 @@
 #include <Scene.h>
 #include <CubeMesh.h>
 #include <PointLight.h>
-#include <LightingShaderRoutine.h>
 #include <ParticleSystem.h>
 #include <Animator.h>
 
@@ -27,15 +26,15 @@ public:
 	Object(std::string name_in);
 
 	//NOTE(darius) not sure about this stuff anymore. clean up constructors that we dont need and create new constructors that we need?
-	Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in);
+	Object(std::string name_in, Shader model_shader);
 
-	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
+	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in,
 																									Scene* scn, EmptyScriptRoutine* routine,
 																									bool gammaShader = false, bool rotateTextures = false);
 
-	Object(Object* parentObject, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in);
+	Object(Object* parentObject, Mesh& m);
 
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
+	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m,
 																					Scene* scn, EmptyScriptRoutine* routine, bool active = true);
 
 	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, const Model& m, Scene* scn, EmptyScriptRoutine* routine, bool active);
@@ -116,13 +115,9 @@ public:
 
 	void addModel();
 
-	void addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine);
-
-	void addModel(Shader sv, LightingShaderRoutine routine);
+	void addModel(Mesh&& m);
 
 	//TODO(darius) when loading big models add threading
-	void addModel(std::string_view path, Shader sv, LightingShaderRoutine routine, bool rotate = false);
-
 	void addModel(std::string_view path);
 	
 	void addParticleSystem(ParticleSystem&& ps);

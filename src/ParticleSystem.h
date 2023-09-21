@@ -6,7 +6,6 @@
 #include <functional>
 #include <optional>
 
-#include <LightingShaderRoutine.h>
 #include <FlatMesh.h>
 
 
@@ -27,7 +26,7 @@ public:
 
 	void setEmitter(glm::vec3 emitter_in);
 
-    void addParticle(FlatMesh&& m, Shader&& shader_in, LightingShaderRoutine&& shaderRoutine_in, glm::vec3 particleSize = {0.1, 0.1, 0.1}) noexcept;
+    void addParticle(FlatMesh&& m, glm::vec3 particleSize = {0.1, 0.1, 0.1}) noexcept;
 
     void changeShader();
 
@@ -58,7 +57,6 @@ public:
 
     std::optional<Mesh> particle; 
     std::optional<Shader> shader;
-    std::optional<LightingShaderRoutine> shaderRoutine;
 
     glm::vec3 particle_size = {1,1,1};
     glm::vec3 emitter = glm::vec3{0,0,0};

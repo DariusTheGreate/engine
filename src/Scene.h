@@ -6,7 +6,6 @@
 
 #include <Object.h>
 #include <GameState.h>
-#include <LightingShaderRoutine.h>
 #include <RigidBody.h>
 #include <Colider.h>
 #include <ParticleSystem.h>
@@ -126,7 +125,7 @@ public:
 		return pt;
 	}
 
-	Object* createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures);
+	Object* createEntity(Object* po, std::string path, bool rotateTextures);
 
 	Object* AddEmpty(int i);
 
@@ -193,6 +192,8 @@ public:
 	void batchProbeSimilarObjects();
 
 	void recoverBatchedObjects();
+
+	void updateObjectsLODs(); 
 
 	bool recoverBatch(Object* origin);
 

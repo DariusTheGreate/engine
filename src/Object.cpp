@@ -6,26 +6,26 @@
 
 Object::Object(const Object& copy_me) = default;
 
-Object::Object(std::string name_in) : name(std::move(name_in))
+/*Object::Object(std::string name_in) : name(std::move(name_in))
 {
     material = std::nullopt;
-}
+}*/
 
-Object::Object(std::string name_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in) 
+Object::Object(std::string name_in) 
     : name(std::move(name_in))
 {
-    model.emplace("", model_shader, shaderRoutine_in, false, false);
+    //model.emplace(std::string(""));
 
     tr.setPosition({0,0,0});
     tr.setScale({1,1,1});
 }
 
-Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
+Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in,
                                                                                                 Scene* scn, EmptyScriptRoutine* routine,
                                                                                                 bool gammaShader, bool rotateTextures)
     : name(std::move(name_in))
 {
-    model.emplace(model_path_in, model_shader, shaderRoutine_in, gammaShader, rotateTextures);
+    model.emplace(model_path_in);
     
 	model->loadModel();
 
@@ -42,10 +42,10 @@ Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::v
     colider.emplace(collider_in, tr);
 }
 
-Object::Object(Object* parentObject, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in)
+Object::Object(Object* parentObject, Mesh& m)
 {
     parent = parentObject;
-    model.emplace(m, model_shader, shaderRoutine_in);
+    model.emplace(m);
 
     tr = parentObject->getTransform();//TODO(darius) fix it
 
@@ -62,7 +62,7 @@ Object::Object(Object* parentObject, Mesh& m, Shader model_shader, LightingShade
     script -> setParentObject(this);
 }
 
-Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m, Shader model_shader, LightingShaderRoutine& shaderRoutine_in,
+Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m,
                                                                                 Scene* scn, EmptyScriptRoutine* routine, bool active)
 {
     name = std::move(name_in);
@@ -71,7 +71,7 @@ Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm:
     rbody.emplace(0.1, tr, false);
     rbody->get_is_static_ref() = true;
 
-    model.emplace(m, model_shader, shaderRoutine_in);
+    model.emplace(m);
 
     script = Script(scn, this, routine);
 
@@ -334,29 +334,12 @@ void Object::addModel()
     model = Model();
 }
 
-void Object::addModel(Mesh&& m, Shader sv, LightingShaderRoutine routine)
+void Object::addModel(Mesh&& m)
 {
     if(model)
         return;
     //setDefaultMaterial();
-    model.emplace(std::move(m), sv, routine);
-}
-
-void Object::addModel(Shader sv, LightingShaderRoutine routine)
-{
-    if(model)
-        return;
-    //setDefaultMaterial();
-    model.emplace(sv, routine);
-}
-
-//TODO(darius) when loading big models add threading
-void Object::addModel(std::string_view path, Shader sv, LightingShaderRoutine routine, bool rotate)
-{
-    if(model)
-        return;
-    //setDefaultMaterial();
-    model.emplace(path, sv, routine, rotate);
+    model.emplace(std::move(m));
 }
 
 void Object::addModel(std::string_view path)

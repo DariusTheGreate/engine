@@ -347,18 +347,16 @@ void Editor::fileDropCallbackDispatch(std::string_view path)
 
         Object* obj = currScene.AddEmpty(666);
 
-        LightingShaderRoutine shaderRoutine;
         Shader currShader = Renderer::shaderLibInstance->getCurrShader();
 
-        obj->addModel(std::move(*flat), currShader, shaderRoutine);
+        obj->addModel(std::move(*flat));
     }
     else if(path.find(".obj") != std::string_view::npos)
     {
         Shader currShader = Renderer::shaderLibInstance->getCurrShader();
-        LightingShaderRoutine shaderRoutine;
 
         Object* obj = currScene.AddEmpty(666);
-        obj->addModel(path, currShader, shaderRoutine);
+        obj->addModel(path);
     }
     else {
         std::cout << "fuk u wtf\n";

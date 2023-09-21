@@ -7,10 +7,8 @@ void ParticleSystem::setEmitter(glm::vec3 emitter_in)
 	emitter = emitter_in;
 }
 
-void ParticleSystem::addParticle(FlatMesh&& m, Shader&& shader_in, LightingShaderRoutine&& shaderRoutine_in, glm::vec3 particleSize) noexcept
+void ParticleSystem::addParticle(FlatMesh&& m, glm::vec3 particleSize) noexcept
 {
-    shader = shader_in;
-    shaderRoutine = shaderRoutine_in;
     particle.emplace(std::move(m));
     addPositions(amount);
     //particle.emplace(m, shader_in, shaderRoutine_in);
@@ -43,6 +41,9 @@ void ParticleSystem::addPositions(size_t n)
 //https://www.youtube.com/watch?v=Y0Ko0kvwfgA&ab_channel=Acerola
 void ParticleSystem::renderParticles()
 {
+    if (!particle)
+        return;
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   
     Object tmpObj("tmp");
@@ -58,12 +59,12 @@ void ParticleSystem::renderParticles()
 
         glm::vec3 pos = glm::vec3(0,0,0);//particlesTransfroms[0].getPosition();
         tmpObj.getTransform() = Transform(glm::vec3(pos.x, pos.y, pos.z), particle_size);
-        shaderRoutine->operator()(&tmpObj);
-        particle->Draw(*shader, positions.size());
+        Renderer::shaderLibInstance->shaderRoutine(&tmpObj);
+        //shaderRoutine->operator()(&tmpObj);
+        particle->Draw(sv, positions.size());
     }
 
     glDisable(GL_BLEND);
-
 }
 
 void ParticleSystem::updateUniform3DDistribution(float timeValue)

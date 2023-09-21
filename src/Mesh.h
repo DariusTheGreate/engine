@@ -25,6 +25,14 @@ struct Vertex {
     float m_Weights[MAX_BONE_INFLUENCE];
 };
 
+struct MeshAABB
+{
+    glm::vec3 min;
+    glm::vec3 max;
+    glm::vec3 center = {0,0,0};
+    glm::vec3 size = {0,0,0}; 
+};
+
 enum class DrawMode
 {
     DRAW_AS_ARRAYS,
@@ -38,6 +46,8 @@ enum class MeshType
     CUBE,
     MESH,
 };
+
+struct Transform;
 
 class Mesh {
 public:
@@ -90,6 +100,10 @@ public:
         vbo.deleteVBO();
         ebo.deleteEBO();
     }
+
+    void calculateAabb(const Transform&);
+
+    std::vector<unsigned int> generateLOD();
     
 protected:
     //TODO(darius) memoryManage that
@@ -103,6 +117,8 @@ protected:
     VBO vbo;
     EBO ebo;
     bool initialized = false;
+
+    MeshAABB aabb;
 
     //NOTE(darius) probably not the best way to do it
     MeshType type = MeshType::MESH;

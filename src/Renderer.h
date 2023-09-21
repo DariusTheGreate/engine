@@ -24,7 +24,6 @@
 #include <Script.h>
 #include <Color.h>
 #include <PointLight.h>
-#include <LightingShaderRoutine.h>
 #include <OpenglWrapper.h>
 #include <FrameBuffer.h>
 #include <RenderQuad.h>
@@ -252,8 +251,6 @@ public:
 	void updateBuffers(Window* wind);
 
     size_t getShaderRoutine();
-
-    LightingShaderRoutine& getCurrShaderRoutine();
 
     Shader getShader();
 

@@ -1,7 +1,10 @@
 #pragma once
 
 #include <Shader.h>
-#include <LightingShaderRoutine.h>
+#include <GraphicsStateCache.h>
+
+struct Transform;
+class Object;
 
 class ShaderLibrary
 {
@@ -42,7 +45,9 @@ public:
 
     Shader& getParticlesShader();
 
-    LightingShaderRoutine& getShaderRoutine(); 
+    void shaderRoutine(Object* obj);
+
+    void skeletalAnimationShaderRoutine(Transform tr);
 
     void checkForShaderReload(); 
 
@@ -50,8 +55,6 @@ public:
 
     unsigned int depthMap = 0;
 private:
-
-    LightingShaderRoutine routine;
 
     Shader lightingVertex;
     Shader lightingFragment;
@@ -82,5 +85,7 @@ private:
 
     Shader particlesVertex;
     Shader particlesFragment;
+
+    GraphicsStateCache cache;
 };
 

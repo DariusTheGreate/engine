@@ -14,8 +14,7 @@
 #include <Texture.h>
 #include <Transform.h>
 #include <PointLight.h>
-#include <LightingShaderRoutine.h>
-#include <SkeletalAnimationShaderRoutine.h>
+#include <Color.h>
 
 #include <string>
 #include <fstream>
@@ -45,10 +44,8 @@ class Model
 public:
     static std::unordered_set<std::string_view> textures_set;
     static std::vector<Texture> textures_loaded;
+    
 	std::vector<Mesh>    meshes;
-
-    LightingShaderRoutine shaderRoutine;
-    std::optional<SkeletalAnimationShaderRoutine> animationShaderRoutine;
 
     std::string directory;
     std::string path;
@@ -63,13 +60,11 @@ public:
 public:
     Model() = default;
 
-    Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false); 
+    Model(std::string_view path_in, Shader& shader_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false); 
 
-    Model(Mesh mesh_in, Shader shader_in, LightingShaderRoutine shaderRoutine_in); 
+    Model(Mesh mesh_in); 
 
-    Model(Shader shader_in, LightingShaderRoutine& shaderRoutine_in);
-
-    Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, bool rotate_in = false);
+    Model(std::string path_in, bool rotate_in = false);
 
     Model(const Model& m);
 
@@ -82,14 +77,8 @@ public:
 
     void addMesh(const Mesh& m);
 
-    LightingShaderRoutine& getShaderRoutine();
-    void setShaderRoutine(const LightingShaderRoutine& routine);
-
-    void setAnimationShaderRoutine(const SkeletalAnimationShaderRoutine& r);
-
-    void setShader(Shader sdr);
-
     auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+
     int& GetBoneCount() { return m_BoneCounter; } 
 
     void SetVertexBoneDataToDefault(Vertex& vertex);

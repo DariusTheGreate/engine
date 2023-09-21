@@ -234,8 +234,6 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 	//currShaderRoutine = { Shader(sv) };
 	FlatMesh flat;
 	m.addMesh(flat);
-	m.setShader(shaderLibInstance->getDepthShader());
-	m.setShaderRoutine(shaderLibInstance->getShaderRoutine());
 
 	/*FlatMesh flat;
 	FlatMesh idle;
@@ -643,11 +641,6 @@ void Renderer::updateBuffers(Window* wind)
 size_t Renderer::getShaderRoutine()
 {
     return getShader().getProgram();
-}
-
-LightingShaderRoutine& Renderer::getCurrShaderRoutine()
-{
-    return Renderer::shaderLibInstance->getShaderRoutine();
 }
 
 Shader Renderer::getShader()

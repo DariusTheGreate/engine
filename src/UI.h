@@ -3,8 +3,6 @@
 #include <GameState.h>
 #include <Renderer.h>
 #include <Mesh.h>
-#include <LightingShaderRoutine.h>
-#include <SkeletalAnimationShaderRoutine.h>
 #include <Animator.h>
 #include <SystemInfo.h>
 #include <Profiler.h>

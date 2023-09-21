@@ -16,15 +16,15 @@ Scene::Scene()
 	//start_scripts();
 }
 
-Object* Scene::createEntity(Object* po, std::string path, Shader sv, LightingShaderRoutine shaderRoutine_in, bool rotateTextures = false) 
+Object* Scene::createEntity(Object* po, std::string path, bool rotateTextures = false) 
 {
-	Model m = Model(std::move(path), shaderRoutine_in, sv, rotateTextures);
+	Model m = Model(std::move(path), rotateTextures);
 	auto meshes = m.loadModel();
 
 	std::vector<Object*> subobjects;
 	subobjects.reserve(meshes.size());
 	for (int i = 0; i < meshes.size(); ++i) {
-		Object* pt = mem_man.construct(po, meshes[i], sv, shaderRoutine_in);
+		Object* pt = mem_man.construct(po, meshes[i]);
 		std::cout << "created pt\n";
 		subobjects.push_back(pt);
 	}
@@ -365,6 +365,25 @@ void Scene::batchProbeSimilarObjects()
 	sceneObjects = std::move(resultObjects);
 }
 
+void Scene::updateObjectsLODs()
+{
+	if(sceneObjects.size() < 1)
+		return;
+
+	Object* obj = sceneObjects[0];
+	if(!obj->getModel())
+		return;
+
+	Mesh& meshI = obj->getModel()->meshes[0];
+
+	auto indices = meshI.generateLOD();
+	Mesh batchCopy(meshI.getVertices(), indices, meshI.getTextures());
+
+    obj->getModel()->meshes[0].clearMesh();
+	obj->getModel()->meshes.clear();
+    obj->getModel()->addMesh(batchCopy);
+}
+
 void Scene::recoverBatchedObjects()
 {
 	auto cache = batcher.takeBack();
@@ -644,8 +663,6 @@ void Scene::parseScene(std::string_view data)
 
 	for (int i = 0; i < objectTokens.size(); ++i)
 	{
-		LightingShaderRoutine shaderRoutine = { Shader(Renderer::shaderLibInstance->getCurrShader())};
-
 		auto* obj = AddObject(std::string(names[i]));
 		if (hiddenStates[i])
 			obj->hide();
@@ -657,8 +674,6 @@ void Scene::parseScene(std::string_view data)
 		if (models.size() > i) 
 		{
 			obj->getModel() = (models[i]);
-			obj->getModel()->setShader(Renderer::shaderLibInstance->getCurrShader());
-			obj->getModel()->setShaderRoutine(shaderRoutine);
 
 			auto anim = extractSpriteAnimationFromToken(objectTokens[i]);
 			if(anim)
@@ -1050,7 +1065,7 @@ std::optional<ParticleSystem> Scene::extractParticleSystemFromToken(std::string_
 	m.setTexture(path);
 
 	ParticleSystem p;
-	p.addParticle(std::move(m), std::move(Renderer::shaderLibInstance->getCurrShader()), LightingShaderRoutine());
+	p.addParticle(std::move(m));
 	p.emitter = emitterVec;
 	p.particle_size = particleSize;
 

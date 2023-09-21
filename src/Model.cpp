@@ -10,26 +10,22 @@
 #include <assimp/postprocess.h>
 
 
-Model::Model(std::string_view path_in, Shader& shader_in, LightingShaderRoutine& shaderRoutine_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
-    : shaderRoutine(shaderRoutine_in), gammaCorrection(gamma), rotate(rotate_in), path(path_in)
+Model::Model(std::string_view path_in, Shader& shader_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
+    : gammaCorrection(gamma), rotate(rotate_in), path(path_in)
 {
     loadModel();
 }
 
-Model::Model(Mesh mesh_in, Shader shader_in, LightingShaderRoutine shaderRoutine_in) : shaderRoutine(shaderRoutine_in)
+Model::Model(Mesh mesh_in) 
 {
     meshes.push_back(mesh_in);
 }
 
-Model::Model(Shader shader_in, LightingShaderRoutine& shaderRoutine_in) : shaderRoutine(shaderRoutine_in)
+Model::Model(std::string path_in, bool rotate_in) : path(path_in), rotate(rotate_in)
 {
 }
 
-Model::Model(std::string path_in, LightingShaderRoutine& sr, Shader shader_in, bool rotate_in) : path(path_in), rotate(rotate_in), shaderRoutine(sr)
-{
-}
-
-Model::Model(const Model& m) : meshes(m.meshes), shaderRoutine(m.shaderRoutine), path(m.path)
+Model::Model(const Model& m) : meshes(m.meshes), path(m.path)
 {
 
 }
@@ -48,8 +44,7 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
         m->setShaderMaterial(Renderer::shaderLibInstance->getCurrShader());
     }
 
-    //NOTE(darius) its temporal cringe for greater good
-	shaderRoutine(obj);
+    Renderer::shaderLibInstance->shaderRoutine(obj);
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
         meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
@@ -87,25 +82,6 @@ void Model::addMesh(const Mesh& m)
 {
     meshes.push_back(m);
 }
-
-LightingShaderRoutine& Model::getShaderRoutine()
-{
-    return shaderRoutine; 
-}
-
-void Model::setShaderRoutine(const LightingShaderRoutine& routine) 
-{
-    shaderRoutine = routine;
-}
-
-void Model::setAnimationShaderRoutine(const SkeletalAnimationShaderRoutine& r)
-{
-    animationShaderRoutine = r;
-}
-
-void Model::setShader(Shader sdr)
-{
-}   
 
 void Model::SetVertexBoneDataToDefault(Vertex& vertex)
 {
