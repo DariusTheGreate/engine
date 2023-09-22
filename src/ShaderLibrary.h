@@ -45,6 +45,8 @@ public:
 
     Shader& getParticlesShader();
 
+    void loadCurrentShader();
+    
     void shaderRoutine(Object* obj);
 
     void skeletalAnimationShaderRoutine(Transform tr);

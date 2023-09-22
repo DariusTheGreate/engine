@@ -64,7 +64,7 @@ public:
 
     Model(Mesh mesh_in); 
 
-    Model(std::string path_in, bool rotate_in = false);
+    //Model(std::string path_in, bool rotate_in = false);
 
     Model(const Model& m);
 

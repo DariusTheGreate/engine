@@ -39,11 +39,11 @@
 	- shaders for effects drawing on texture
 	- blending stage
 	- deffered light?
+	- finish shadows                                                            
 
 	- 2D normal mapping                                                         
 	- cacheing of flat meshes textures
 	- finish bloom                                                              
-	- finish shadows                                                            
 	- Texture resize to apropriate resolution
 	- gamma correction
 	- light shafts?

@@ -18,7 +18,7 @@ Scene::Scene()
 
 Object* Scene::createEntity(Object* po, std::string path, bool rotateTextures = false) 
 {
-	Model m = Model(std::move(path), rotateTextures);
+	Model m = Model(std::move(path));
 	auto meshes = m.loadModel();
 
 	std::vector<Object*> subobjects;

@@ -21,9 +21,9 @@ Model::Model(Mesh mesh_in)
     meshes.push_back(mesh_in);
 }
 
-Model::Model(std::string path_in, bool rotate_in) : path(path_in), rotate(rotate_in)
-{
-}
+//Model::Model(std::string path_in, bool rotate_in) : path(path_in), rotate(rotate_in)
+//{
+//}
 
 Model::Model(const Model& m) : meshes(m.meshes), path(m.path)
 {

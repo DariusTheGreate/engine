@@ -1,5 +1,5 @@
 #include <ShaderLibrary.h>
-
+#include <Timer.h>
 #include <Object.h>
 
 ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
@@ -66,191 +66,197 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         stage = STAGE::DEPTH;
     }
 
-    Shader& ShaderLibrary::getCurrShader()
-    {
-        if (stage == STAGE::ALBEDO)
-            return lightingVertex;
-        else if (stage == STAGE::DEPTH)
-            return depthVertex;
-        else if (stage == STAGE::SHADOWS)
-            return shadowVertex;
-        else if (stage == STAGE::BLOOM)
-            return blurVertex;
-        else if (stage == STAGE::DEFERRED)
-            return gBufferVertex;
-        else if (stage == STAGE::DEFERRED_LIGHT)
-            return deferredLightPasVertex;
-        else if (stage == STAGE::EDITOR_ID)
-            return editorIdVertex;
-        else if (stage == STAGE::PARTICLES)
-            return particlesVertex;
-        else
-            return lightingVertex;
-    }
-
-    Shader& ShaderLibrary::getDepthShader()
-    {
-        return depthVertex;
-    }
-
-    Shader& ShaderLibrary::getAlbedoShader()
-    {
+Shader& ShaderLibrary::getCurrShader()
+{
+    if (stage == STAGE::ALBEDO)
         return lightingVertex;
-    }
-
-    Shader& ShaderLibrary::getShadowsShader()
-    {
+    else if (stage == STAGE::DEPTH)
+        return depthVertex;
+    else if (stage == STAGE::SHADOWS)
         return shadowVertex;
-    }
-
-    Shader& ShaderLibrary::getBlurShader()
-    {
+    else if (stage == STAGE::BLOOM)
         return blurVertex;
-    }
-
-    Shader& ShaderLibrary::getTextureCombinerShader()
-    {
-        return textureCombinerVertex;
-    }
-
-	Shader& ShaderLibrary::getEditorIdShader()
-    {
-        return editorIdVertex;
-    }
-
-	Shader& ShaderLibrary::getBokeShader()
-    {
-        return bokeVertex;
-    }
-
-	Shader& ShaderLibrary::getGBufferShader()
-    {
+    else if (stage == STAGE::DEFERRED)
         return gBufferVertex;
-    }
-    
-    Shader& ShaderLibrary::getParticlesShader()
-    {
+    else if (stage == STAGE::DEFERRED_LIGHT)
+        return deferredLightPasVertex;
+    else if (stage == STAGE::EDITOR_ID)
+        return editorIdVertex;
+    else if (stage == STAGE::PARTICLES)
         return particlesVertex;
-    }
+    else
+        return lightingVertex;
+}
 
-    void ShaderLibrary::checkForShaderReload() 
+Shader& ShaderLibrary::getDepthShader()
+{
+    return depthVertex;
+}
+
+Shader& ShaderLibrary::getAlbedoShader()
+{
+    return lightingVertex;
+}
+
+Shader& ShaderLibrary::getShadowsShader()
+{
+    return shadowVertex;
+}
+
+Shader& ShaderLibrary::getBlurShader()
+{
+    return blurVertex;
+}
+
+Shader& ShaderLibrary::getTextureCombinerShader()
+{
+    return textureCombinerVertex;
+}
+
+Shader& ShaderLibrary::getEditorIdShader()
+{
+    return editorIdVertex;
+}
+
+Shader& ShaderLibrary::getBokeShader()
+{
+    return bokeVertex;
+}
+
+Shader& ShaderLibrary::getGBufferShader()
+{
+    return gBufferVertex;
+}
+
+Shader& ShaderLibrary::getParticlesShader()
+{
+    return particlesVertex;
+}
+
+void ShaderLibrary::checkForShaderReload() 
+{
+    //TODO(darius) refactor copypast
+    if(lightingFragment.checkForSourceChanges() || lightingVertex.checkForSourceChanges())
     {
-        //TODO(darius) refactor copypast
-        if(lightingFragment.checkForSourceChanges() || lightingVertex.checkForSourceChanges())
-        {
-            lightingVertex.reload();
-            lightingFragment.reload();
+        lightingVertex.reload();
+        lightingFragment.reload();
 
-            lightingVertex.compile();
-            lightingFragment.compile();
-            lightingVertex.link(lightingFragment);
-            
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
-        }
-
-        if(textureCombinerFragment.checkForSourceChanges() || textureCombinerVertex.checkForSourceChanges())
-        {
-            textureCombinerVertex.reload();
-            textureCombinerFragment.reload();
-
-            textureCombinerVertex.compile();
-            textureCombinerFragment.compile();
-            textureCombinerVertex.link(textureCombinerFragment);
-            
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
-        }
-
-        if(depthFragment.checkForSourceChanges() || depthVertex.checkForSourceChanges())
-        {
-            depthFragment.reload();
-            depthVertex.reload();
-
-            depthVertex.compile();
-            depthFragment.compile();
-            depthVertex.link(depthFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
-        }
-
-        if (shadowFragment.checkForSourceChanges() || shadowVertex.checkForSourceChanges()) 
-        {
-            shadowVertex.reload();
-            shadowFragment.reload();
-
-            shadowVertex.compile();
-            shadowFragment.compile();
-            shadowVertex.link(shadowFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
-        }
-
-        if(blurFragment.checkForSourceChanges() || blurVertex.checkForSourceChanges())
-        {
-            blurVertex.reload();
-            blurFragment.reload();
-
-            shadowVertex.compile();
-            shadowFragment.compile();
-            shadowVertex.link(shadowFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
-        }
-
-        if(editorIdFragment.checkForSourceChanges() || editorIdVertex.checkForSourceChanges())
-        {
-			editorIdVertex.reload();
-            editorIdFragment.reload();
-
-            editorIdVertex.compile();
-            editorIdFragment.compile();
-            editorIdVertex.link(editorIdFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
-        }
-
-        if(bokeFragment.checkForSourceChanges() || bokeVertex.checkForSourceChanges())
-        {
-			bokeVertex.reload();
-            bokeFragment.reload();
-
-            bokeVertex.compile();
-            bokeFragment.compile();
-            bokeVertex.link(bokeFragment);
-
-			std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
-        }
-
-        if (gBufferFragment.checkForSourceChanges() || gBufferVertex.checkForSourceChanges())
-        {
-            gBufferVertex.reload();
-            gBufferFragment.reload();
-
-            gBufferVertex.compile();
-            gBufferFragment.compile();
-            gBufferVertex.link(gBufferFragment);
-
-            std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
-        }
-
-        if (particlesFragment.checkForSourceChanges() || particlesVertex.checkForSourceChanges())
-        {
-            particlesVertex.reload();
-            particlesFragment.reload();
-
-            particlesVertex.compile();
-            particlesFragment.compile();
-            particlesVertex.link(particlesFragment);
-
-            std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
-        }
+        lightingVertex.compile();
+        lightingFragment.compile();
+        lightingVertex.link(lightingFragment);
+        
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
     }
+
+    if(textureCombinerFragment.checkForSourceChanges() || textureCombinerVertex.checkForSourceChanges())
+    {
+        textureCombinerVertex.reload();
+        textureCombinerFragment.reload();
+
+        textureCombinerVertex.compile();
+        textureCombinerFragment.compile();
+        textureCombinerVertex.link(textureCombinerFragment);
+        
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
+    }
+
+    if(depthFragment.checkForSourceChanges() || depthVertex.checkForSourceChanges())
+    {
+        depthFragment.reload();
+        depthVertex.reload();
+
+        depthVertex.compile();
+        depthFragment.compile();
+        depthVertex.link(depthFragment);
+
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
+    }
+
+    if (shadowFragment.checkForSourceChanges() || shadowVertex.checkForSourceChanges()) 
+    {
+        shadowVertex.reload();
+        shadowFragment.reload();
+
+        shadowVertex.compile();
+        shadowFragment.compile();
+        shadowVertex.link(shadowFragment);
+
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
+    }
+
+    if(blurFragment.checkForSourceChanges() || blurVertex.checkForSourceChanges())
+    {
+        blurVertex.reload();
+        blurFragment.reload();
+
+        shadowVertex.compile();
+        shadowFragment.compile();
+        shadowVertex.link(shadowFragment);
+
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
+    }
+
+    if(editorIdFragment.checkForSourceChanges() || editorIdVertex.checkForSourceChanges())
+    {
+		editorIdVertex.reload();
+        editorIdFragment.reload();
+
+        editorIdVertex.compile();
+        editorIdFragment.compile();
+        editorIdVertex.link(editorIdFragment);
+
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
+    }
+
+    if(bokeFragment.checkForSourceChanges() || bokeVertex.checkForSourceChanges())
+    {
+		bokeVertex.reload();
+        bokeFragment.reload();
+
+        bokeVertex.compile();
+        bokeFragment.compile();
+        bokeVertex.link(bokeFragment);
+
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
+    }
+
+    if (gBufferFragment.checkForSourceChanges() || gBufferVertex.checkForSourceChanges())
+    {
+        gBufferVertex.reload();
+        gBufferFragment.reload();
+
+        gBufferVertex.compile();
+        gBufferFragment.compile();
+        gBufferVertex.link(gBufferFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
+    }
+
+    if (particlesFragment.checkForSourceChanges() || particlesVertex.checkForSourceChanges())
+    {
+        particlesVertex.reload();
+        particlesFragment.reload();
+
+        particlesVertex.compile();
+        particlesFragment.compile();
+        particlesVertex.link(particlesFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
+    }
+}
+
+void ShaderLibrary::loadCurrentShader()
+{
+    Timer t;
+    Shader& sv = getCurrShader();
+    //cache.SwitchShader(sv.getProgram());
+    glUseProgram(sv.getProgram());
+    std::cout << t.checkTime() << "\n";
+}
 
 void ShaderLibrary::shaderRoutine(Object* obj)
 {
     Shader& sv = getCurrShader();
-    //cache.SwitchShader(sv.getProgram());
-    glUseProgram(sv.getProgram());
-
     sv.setVec3("viewPos", GameState::cam.getCameraPos());
     sv.setInt("lightsCount", PointLight::LightsCount);
     sv.setFloat("gammaFactor", GameState::gammaFactor); 

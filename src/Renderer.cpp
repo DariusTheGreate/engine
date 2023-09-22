@@ -396,6 +396,8 @@ void Renderer::EditorIDsStage()
 	OpenglWrapper::ClearDepthBuffer();
 	OpenglWrapper::EnableDepthTest();
 
+	//TODO(darius) wrap it
+	shaderLibInstance->loadCurrentShader();
 	renderScene();
 
 	//TODO(darius) add UI rendering and Guizmos rendering here with id = -1 or something
@@ -428,6 +430,7 @@ void Renderer::depthStage()
 
 void Renderer::albedoStage()
 {
+	std::cout << "start albedo\n";
 	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	framebuffer.Bind();
@@ -441,6 +444,8 @@ void Renderer::albedoStage()
 	renderAll(wind);
 
 	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
+
+	std::cout << "end albedo\n";
 }
 
 void Renderer::bokeStage()
@@ -594,6 +599,7 @@ void Renderer::renderAll(Window* wind)
 	if(dbr.debug_render)
 		dbr.renderDebugGrid();
 
+	shaderLibInstance->loadCurrentShader();
 	renderScene();
 
 	if (!dbr.debug_render)

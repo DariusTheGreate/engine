@@ -23,3 +23,8 @@ void Timer::clearTime() {
 void Timer::setBoolPrint(bool p) {
 	print = p;
 }
+
+double Timer::currentTime()
+{
+	return glfwGetTime();
+}

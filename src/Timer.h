@@ -13,6 +13,8 @@ public:
 
 	void clearTime();
 
+	double currentTime();
+
 private:
 	double timeOfBirth;
 	double time;
