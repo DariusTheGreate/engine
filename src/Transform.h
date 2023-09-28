@@ -26,6 +26,26 @@ struct Transform
 
 	glm::vec3 getPosition();
 
+	glm::vec3 getRight() const
+	{
+		return matrix[0];
+	}
+
+	glm::vec3 getUp() const
+	{
+		return matrix[1];
+	}
+
+	glm::vec3 getBackward() const
+	{
+		return matrix[2];
+	}
+
+	glm::vec3 getForward() const
+	{
+		return -matrix[2];
+	}
+
 	void addToPosition(glm::vec3 v);
 
 	void rotate(const glm::quat& q);

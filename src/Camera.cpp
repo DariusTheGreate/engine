@@ -98,6 +98,11 @@ glm::vec3 Camera::getCameraFront()
     return cameraFront;
 }
 
+glm::vec3 Camera::getCameraUp() const
+{
+    return cameraUp; 
+}
+
 void Camera::setCameraFront(const glm::vec3& f)
 {
     cameraFront = f;

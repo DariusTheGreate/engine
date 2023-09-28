@@ -7,6 +7,8 @@
 #include <VAO.h>
 #include <VBO.h>
 #include <EBO.h>
+#include <FrustumCulling.h>
+#include <Transform.h>
 
 #include <string>
 #include <vector>
@@ -31,6 +33,54 @@ struct MeshAABB
     glm::vec3 max;
     glm::vec3 center = {0,0,0};
     glm::vec3 size = {0,0,0}; 
+
+    MeshAABB() = default;
+
+    MeshAABB(const glm::vec3& min, const glm::vec3& max)
+        : center{ (max + min) * 0.5f }, size{ max.x - center.x, max.y - center.y, max.z - center.z }
+    {}
+
+    MeshAABB(const glm::vec3& inCenter, float iI, float iJ, float iK)
+        : center{ inCenter }, size{ iI, iJ, iK }
+    {}
+
+    bool isOnOrForwardPlane(const Plane& plane) 
+    {
+        float r = size.x * std::abs(plane.normal.x) + size.y * std::abs(plane.normal.y) +
+            size.z * std::abs(plane.normal.z);
+
+        return -r <= plane.getSignedDistanceToPlane(center);
+    }
+
+    bool isOnFrustum(const Frustum& camFrustum, const Transform& transform) 
+    {
+        glm::vec3 globalCenter{ transform.matrix * glm::vec4(center, 1.f) };
+
+        glm::vec3 right = transform.getRight() * size.x;
+        glm::vec3 up = transform.getUp() * size.y;
+        glm::vec3 forward = transform.getForward() * size.z;
+
+        float newIi = std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, right)) +
+            std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, up)) +
+            std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, forward));
+
+        float newIj = std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, right)) +
+            std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, up)) +
+            std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, forward));
+
+        float newIk = std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, right)) +
+            std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, up)) +
+            std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, forward));
+
+        MeshAABB globalAABB(globalCenter, newIi, newIj, newIk);
+
+        return (globalAABB.isOnOrForwardPlane(camFrustum.leftFace) &&
+            globalAABB.isOnOrForwardPlane(camFrustum.rightFace) &&
+            globalAABB.isOnOrForwardPlane(camFrustum.topFace) &&
+            globalAABB.isOnOrForwardPlane(camFrustum.bottomFace) &&
+            globalAABB.isOnOrForwardPlane(camFrustum.nearFace) &&
+            globalAABB.isOnOrForwardPlane(camFrustum.farFace));
+    };
 };
 
 enum class DrawMode
@@ -59,9 +109,7 @@ public:
     
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     
-    void Draw(Shader& shader);
-
-    void Draw(Shader& shader, size_t);
+    void Draw(Shader& shader, int instancedAmount = -1);
 
     DrawMode getDrawMode();
 
@@ -104,6 +152,14 @@ public:
     void calculateAabb(const Transform&);
 
     std::vector<unsigned int> generateLOD();
+
+    //TODO(darius) speed up by using another thread for all the culling, and by not calculation aabb and global aabb each iteration
+    bool cull(Frustum& camFrustum, Transform tr)
+    {
+        if(aabb.size == glm::vec3{0,0,0})
+            calculateAabb(tr);
+        return aabb.isOnFrustum(camFrustum, tr);
+    }
     
 protected:
     //TODO(darius) memoryManage that
@@ -129,4 +185,7 @@ protected:
     //std::mutex draw_mutex;
 
     void setupMesh();
+
+    void prepareTextures(Shader& shader);
 };
+

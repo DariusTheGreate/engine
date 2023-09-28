@@ -251,7 +251,6 @@ void ShaderLibrary::loadCurrentShader()
     Shader& sv = getCurrShader();
     //cache.SwitchShader(sv.getProgram());
     glUseProgram(sv.getProgram());
-    std::cout << t.checkTime() << "\n";
 }
 
 void ShaderLibrary::shaderRoutine(Object* obj)

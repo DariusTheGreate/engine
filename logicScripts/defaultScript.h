@@ -5,6 +5,7 @@
 #include <Object.h>
 #include <Animation.h>
 #include <KeyboardState.h>
+#include <Printer.h>
 
 #include <boost/config.hpp> 
 #include <iostream>
@@ -21,7 +22,7 @@ class DefaultScript : public ScriptRoutine {
 public:
 	//TODO(darius) pass script properts here
 	void start(ScriptArgument& args) override {
-		instance->debug_msg.append("Enter Script..");
+		instance->debug_msg.append("Enter Script..\n");
 		std::cout << "Enter Scrtipt..\n";
 		//return;
 
@@ -51,30 +52,39 @@ public:
 		dance.initPoints();
 		*/
 
+
 		if (scene->getObjectByName("UpAnim")) {
+
 			WalkUpMesh = &scene->getObjectByName("UpAnim")->getModel()->meshes[0];
 
 			WalkUp = *scene->getObjectByName("UpAnim")->getSpriteAnimation();
-			instance->debug_msg.append("up loaded");
+			instance->debug_msg.append("up loaded\n");
+			std::cout << "Up loaded..\n";
 		}
 
 		if (scene->getObjectByName("DownAn")) {
 			WalkDownMesh = &scene->getObjectByName("DownAn")->getModel()->meshes[0];
 
 			WalkDown = *scene->getObjectByName("DownAn")->getSpriteAnimation();
-			instance->debug_msg.append("down loaded");
+			instance->debug_msg.append("down loaded\n");
+
+			std::cout << "loaded..\n";
 		}
 
 		if (scene->getObjectByName("SideAn")) {
 			WalkSideMesh = &scene->getObjectByName("SideAn")->getModel()->meshes[0];
 			WalkSide = *scene->getObjectByName("SideAn")->getSpriteAnimation();
-			instance->debug_msg.append("side loaded");
+			instance->debug_msg.append("side loaded\n");
+
+			std::cout << "loaded..\n";
 		}
 
 		if (scene->getObjectByName("IdleAn")) {
 			IdleMesh = &scene->getObjectByName("IdleAn")->getModel()->meshes[0];
 			Idle = *scene->getObjectByName("IdleAn")->getSpriteAnimation();
-			instance->debug_msg.append("idle loaded");
+			instance->debug_msg.append("idle loaded\n");
+
+			std::cout << "idle loaded..\n";
 		}
 
 		if(scene->getObjectByName("PlayerLight"))
@@ -97,7 +107,7 @@ public:
 
 		obj = scene->getObjectByName("Play");
 		if (!obj) {
-			instance->debug_msg.append("no obj");
+			instance->debug_msg.append("no obj\n");
 			return;
 		}
 		
@@ -105,12 +115,12 @@ public:
 
 		obj->setSpriteAnimation(Idle);
 
-
-		cam = scene->getCameraAt(0);
-		//if (!cam)
-		//	instance->debug_msg.append("couldnt ge camera");
-		//else
-		//	*cam->getCameraSpeed() = 0.5f;
+		//cam = scene->getCameraAt(0);
+		cam = &(instance->cam);
+		if (!cam)
+			instance->debug_msg.append("couldnt ge camera\n");
+		else
+			*(cam->getCameraSpeed()) = 100000;
 
 		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
 		//runMesh = scene->createFlatMesh();//nor that
@@ -147,7 +157,7 @@ public:
 			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 
 			//obj->getTransform().rotateBy(180, {0,0,1});
-			if (cam)
+			//if (cam)
 				cam->moveCameraLeft();
 		}
 
@@ -166,7 +176,7 @@ public:
 			}
 			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 			obj->getTransform().translatePosition({ p.speed, 0,0 });
-			if (cam)
+			//if (cam)
 				cam->moveCameraRight();
 		}
         if (instance->ks.get_q()) 
@@ -273,7 +283,7 @@ public:
 			{
 				if(obj->getColider()->check_collision(*enemyObjects[i]->getColider()) != glm::vec3(0,0,0))
 				{
-					instance->debug_msg.append("run into enemy");
+					instance->debug_msg.append("ENEMY COLLISION\n");
 				}
 			}
 

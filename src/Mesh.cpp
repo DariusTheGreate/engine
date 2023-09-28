@@ -83,74 +83,35 @@ MeshType Mesh::getType()
     return type;
 }
 
-void Mesh::Draw(Shader& shader)
+void Mesh::Draw(Shader& shader, int instancedAmount)
 {
-    //std::cout << "positions " << vertices[0].Position.x << " " << vertices[0].Position.x << vertices[0].Position.y << "\n";
     //std::unique_lock<std::mutex>(draw_mutex);
+    
+    prepareTextures(shader);
+
+    //TODO(darius) perfomance issues?
+    if(mode == DrawMode::DRAW_AS_ARRAYS)
+		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+    else if(mode == DrawMode::DRAW_AS_INSTANCE)
+         glDrawElementsInstanced(
+        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instancedAmount
+    );
+    else            
+        OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
+
+    //OpenglWrapper::UnbindVAO();
+
+    Renderer::drawCallsCount++;
+}
+
+void Mesh::prepareTextures(Shader& shader)
+{
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
 
     vao.bind();
-
-    /*if (Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::SHADOWS)
-    {
-        std::cout << "suka\n";
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, static_cast<int>(textures[0].get_texture()));
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, Renderer::shaderLibInstance->depthMap);
-    }
-
-    else*/
-    {
-        for (unsigned int i = 0; i < textures.size(); i++)
-        {
-            glActiveTexture(GL_TEXTURE0 + i);
-            std::string number;
-            std::string name = textures[i].get_type();
-            if (name == "texture_diffuse"){
-                number = std::to_string(diffuseNr++);
-            }
-            else if (name == "texture_specular")
-                number = std::to_string(specularNr++);
-            else if (name == "texture_normal")
-                number = std::to_string(normalNr++);
-            else if (name == "texture_height")
-                number = std::to_string(heightNr++);
-
-            OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
-            OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
-
-            //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
-            //OpenglWrapper::ActivateTexture();
-        }
-
-    }
-
-    //TODO(darius) perfomance issues?
-    if(mode == DrawMode::DRAW_AS_ARRAYS)
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-    else if(mode == DrawMode::DRAW_AS_INSTANCE)
-        glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
-    else            
-        OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
-
-    //NOTE(darius) to draw cubeMesh
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
-    //OpenglWrapper::UnbindVAO();
-
-    Renderer::drawCallsCount++;
-}
-
-void Mesh::Draw(Shader& shader, size_t amount)
-{
-    // std::unique_lock<std::mutex>(draw_mutex);
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
 
     for (unsigned int i = 0; i < textures.size(); i++)
     {
@@ -170,23 +131,6 @@ void Mesh::Draw(Shader& shader, size_t amount)
         OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
     }
-
-    vao.bind();
-
-    //OpenglWrapper::DrawInstances(36, amount);
-    glDrawElementsInstanced(
-        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount
-    );
-    //glDrawArraysInstanced(
-    //    GL_TRIANGLES, 0, 36, amount
-    //);
-
-    //OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
-    //OpenglWrapper::DrawArrays(36);
-    OpenglWrapper::UnbindVAO();
-    //OpenglWrapper::BindTexture(GL_TEXTURE0);
-
-    Renderer::drawCallsInstancedCount++;
 }
 
 void Mesh::setupMesh()
@@ -229,6 +173,7 @@ void Mesh::setupMesh()
     OpenglWrapper::AttributePointer(6, 4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
     
     OpenglWrapper::UnbindVAO();
+    
 }
 
 void Mesh::printVertices()
@@ -280,12 +225,12 @@ void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
 
 void Mesh::calculateAabb(const Transform& tr) 
 {
-    glm::vec3 vertex = glm::vec3(tr.matrix * glm::vec4(vertices[indices[0]].Position, 1.0f));
+    glm::vec3 vertex = glm::vec3(vertices[indices[0]].Position);
     glm::vec3 vmin = vertex;
     glm::vec3 vmax = vertex;
 
     for (size_t i = 0; i < indices.size(); ++i) {
-        vertex = glm::vec3(tr.matrix * glm::vec4(vertices[indices[i]].Position, 1.0f));
+        vertex = glm::vec3(vertices[indices[i]].Position);
         vmin = glm::length(vmin) < glm::length(vertex) ? vmin : vertex;
         vmax = glm::length(vmax) > glm::length(vertex) ? vmax : vertex;
     }
@@ -294,6 +239,14 @@ void Mesh::calculateAabb(const Transform& tr)
     aabb.max = vmax;
     aabb.center = (vmin + vmax) * 0.5f;
     aabb.size = (vmax - vmin) * 0.5f;
+
+/*
+    std::cout << "AABB:\n";
+    std::cout << aabb.min << "\n";
+    std::cout << aabb.max << "\n";
+    std::cout << aabb.center << "\n";
+    std::cout << aabb.size << "\n";
+*/
 }
 
 std::vector<unsigned int> Mesh::generateLOD()

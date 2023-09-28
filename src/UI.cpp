@@ -477,14 +477,20 @@ void UI::componentAdderWindow(Renderer& hui)
         item_clicked->addPointLight();    
     }
 
-    if(item_clicked->getModel() && ImGui::Button("ParticleSystem")){
-        FlatMesh flat;
-        flat.setTexture(GameState::engine_path + "/textures", "birdParticle1.png"); 
+    if(item_clicked->getModel() && ImGui::CollapsingHeader("ParticleSystem")){
+        path.reserve(100);
+        if(ImGui::Button("pathset"))
+            path = GameState::engine_path + "textures/birdParticle1.png";
+        ImGui::InputText("path", (char*)path.c_str(), 100); 
+        
+        if(ImGui::Button("Load")){
+            FlatMesh flat;
+            flat.setTexture(path); 
+            ParticleSystem ps = ParticleSystem();
+            ps.addParticle(std::move(flat));
 
-        ParticleSystem ps = ParticleSystem();
-        ps.addParticle(std::move(flat));
-
-        item_clicked->addParticleSystem(std::move(ps));    
+            item_clicked->addParticleSystem(std::move(ps));    
+        }
     }
 
     if(item_clicked->getModel() && ImGui::Button("Material"))

@@ -23,6 +23,7 @@ struct Particle
 class ParticleSystem{
 public:
 	ParticleSystem() = default;
+    ParticleSystem(int amount) : amount(amount) {};
 
 	void setEmitter(glm::vec3 emitter_in);
 
@@ -48,7 +49,6 @@ public:
     std::vector<glm::vec4> positions;
     std::vector<Particle> particles;
 
-    //NOTE(darius) DANGER(darius) for some reason when its uncomented u have explosion at deserealization in EngineLogic.dll
     std::vector<Transform> particlesTransfroms;
     std::vector<glm::mat4> modelMatrices;
 

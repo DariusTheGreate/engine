@@ -10,10 +10,14 @@ void ParticleSystem::setEmitter(glm::vec3 emitter_in)
 void ParticleSystem::addParticle(FlatMesh&& m, glm::vec3 particleSize) noexcept
 {
     particle.emplace(std::move(m));
-    addPositions(amount);
-    //particle.emplace(m, shader_in, shaderRoutine_in);
-    glGenBuffers(1, &buffer);
+    particle->setDrawMode(DrawMode::DRAW_AS_INSTANCE);
+
+    //addPositions(amount);
+
+    for(int i = 0; i < amount; ++i)
+        addPosition(glm::vec3{i,i,i});
     
+    glGenBuffers(1, &buffer);
     setBuffers();
 
     for(auto i : positions)
@@ -36,6 +40,12 @@ void ParticleSystem::addPositions(size_t n)
 {
     for(int i = 0; i < n; ++i)
         addPosition(glm::vec3{i,i,i});
+    amount += n;
+
+    for(auto i : positions)
+    {
+        particles.emplace_back(Particle{i, 1, 5.0f}); 
+    }
 }
 
 //https://www.youtube.com/watch?v=Y0Ko0kvwfgA&ab_channel=Acerola
@@ -44,6 +54,7 @@ void ParticleSystem::renderParticles()
     if (!particle)
         return;
 
+    //TODO(darius) add blending stage
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   
     Object tmpObj("tmp");
@@ -138,8 +149,10 @@ void ParticleSystem::updateSpawnFromEmitter(float timeValue)
             //p.force *= 0.98 * p.mass;
 
 
-            positions[i++] = glm::vec4{p.pos.x, p.pos.y, p.pos.z, p.alpha};
-            positions[i - 1].z += i * 0.001f;
+            if(i < positions.size()){
+                positions[i++] = glm::vec4{p.pos.x, p.pos.y, p.pos.z, p.alpha};
+                positions[i - 1].z += i * 0.001f;
+            }
         }
 
         auto comp = [](glm::vec4 a, glm::vec4 b) {return a.z < b.z; };

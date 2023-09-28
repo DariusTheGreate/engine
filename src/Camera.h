@@ -31,6 +31,8 @@ public:
     //NOTe(darius) its actually view matrix
     glm::mat4 getBasicLook() const;
 
+    glm::vec3 getCameraUp() const;
+
     glm::vec3 getCameraFront();
 
     void setCameraFront(const glm::vec3& f);

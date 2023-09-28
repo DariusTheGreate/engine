@@ -126,6 +126,7 @@ void Scene::updateAnimators(float dt)
 	for (auto& obj : sceneObjects) {
 		if (!obj->getAnimator())
 			continue;
+
 		obj->updateAnimator(dt);
 	}
 }
@@ -139,7 +140,9 @@ Object* Scene::getObjectByName(std::string_view name)
 {
 	for (auto* objp : sceneObjects) 
 	{
-		if (objp->get_name() == name)
+		if(!objp)
+			continue;
+		if (std::string_view(objp->get_name()) == name)
 			return objp;
 	}
 
@@ -717,7 +720,7 @@ std::string Scene::extractNameFromToken(std::string_view tkn)
 	auto str = std::string(tkn.substr(valueStart + 3, valueEnd - valueStart - 4));
 
 	str.erase(std::remove_if(str.begin(), str.end(),
-		[](char c) { return !(std::isalpha(c)); }),
+		[](char c) { return !(std::isalpha(c) || std::isdigit(c)); }),
 		str.end());
 
 	return str;
@@ -1052,22 +1055,34 @@ std::optional<ParticleSystem> Scene::extractParticleSystemFromToken(std::string_
 	size_t emitterStart = tkn.find("Emitter:", brcktEnd);
 	brcktStart = tkn.find("{", emitterStart);
 	brcktEnd = tkn.find("}", brcktStart);
-
 	glm::vec3 emitterVec = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
 
 	size_t sizeStart = tkn.find("ParticleSize:", brcktEnd);
 	brcktStart = tkn.find("{", sizeStart);
 	brcktEnd = tkn.find("}", brcktStart);
-
 	glm::vec3 particleSize = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+	size_t boundStart = tkn.find("Boundaries:", brcktEnd);
+	brcktStart = tkn.find("{", boundStart);
+	brcktEnd = tkn.find("}", brcktStart);
+	glm::vec3 bounds = extractVectorFromToken(tkn.substr(brcktStart, brcktEnd - brcktStart));
+
+
+	size_t amountStart = tkn.find("ParticlesAmount:", brcktEnd);
+	brcktStart = tkn.find("{", amountStart);
+	brcktEnd = tkn.find("}", brcktStart);
+
+	int amount = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));
 
 	FlatMesh m;
 	m.setTexture(path);
 
-	ParticleSystem p;
+	ParticleSystem p(amount);
 	p.addParticle(std::move(m));
 	p.emitter = emitterVec;
 	p.particle_size = particleSize;
+	p.minBound = bounds.x;
+	p.maxBound = bounds.y;
 
 	return p;
 }

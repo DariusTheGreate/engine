@@ -20,3 +20,8 @@ std::ostream& operator<<(std::ostream& os, const glm::mat3& m);
 
 std::ostream& operator<<(std::ostream& os, const glm::mat4& m);
 
+template<typename... Args>
+void print(Args&&... args)
+{
+     (std::cout << ... << args);
+}

@@ -430,7 +430,6 @@ void Renderer::depthStage()
 
 void Renderer::albedoStage()
 {
-	std::cout << "start albedo\n";
 	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	framebuffer.Bind();
@@ -444,8 +443,6 @@ void Renderer::albedoStage()
 	renderAll(wind);
 
 	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
-
-	std::cout << "end albedo\n";
 }
 
 void Renderer::bokeStage()

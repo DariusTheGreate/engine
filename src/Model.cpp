@@ -1,4 +1,5 @@
 #include "Model.h"
+#include <Printer.h>
 #include <Renderer.h>
 #include <OpenglWrapper.h>
 #include <iostream>
@@ -44,10 +45,16 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
         m->setShaderMaterial(Renderer::shaderLibInstance->getCurrShader());
     }
 
-    Renderer::shaderLibInstance->shaderRoutine(obj);
+
+
+    Frustum camFrustum(GameState::cam, (float)1920/ (float)1080, glm::radians(GameState::cam.getFov()), 0.1f, 100.0f);
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
-        meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
+        if(meshes[i].cull(camFrustum, obj->getTransform()))//TODO(darius) speed up by using another thread for all the culling, and by not calculation aabb and global aabb each iteration
+        {
+            Renderer::shaderLibInstance->shaderRoutine(obj);//not culled
+            meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
+        }
     }
 }
 

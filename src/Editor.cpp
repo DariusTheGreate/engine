@@ -1,5 +1,6 @@
 #include <Editor.h>
 #include <Timer.h>
+#include <Printer.h>
 
 #include <iostream>
 #include <thread>
@@ -121,13 +122,13 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render= false;
         //showUI = false;
-        currScene.batchProbeSimilarObjects();
+        //currScene.batchProbeSimilarObjects();
         GameState::editor_mode = 0;
     }
     if (GameState::instance->ks.get_4()) {
         rendol.getDebugRenderer().debug_render= true;
         //showUI = true;
-        currScene.recoverBatchedObjects();
+        //currScene.recoverBatchedObjects();
         GameState::editor_mode = 3;
     }
     if (GameState::instance->ks.get_s() && GameState::instance->ks.get_cntrl()) {
@@ -632,6 +633,20 @@ void Editor::consoleInputThread(Editor* currEditor)
                 else{
                     std::cout << "Couldnt find object " << name << "\n";
                 }
+            }
+
+            if(command == "test")
+            {
+                /*print("search object by name test...\n");
+                Object* obj = currEditor->currScene.getObjectByName("UpAnim");
+                if(!obj)
+                    print("wont work\n");
+                else
+                    print("will work ", obj->get_name(), "\n");
+                    */
+
+                print("test camera move\n");
+                GameState::cam.moveCameraLeft();
             }
         }
     }

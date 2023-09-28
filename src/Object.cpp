@@ -609,6 +609,10 @@ void Object::serialize(std::ostream& file)
         file << "\t\tEmitter: {" << std::to_string(particles->emitter.x) << " " << std::to_string(particles->emitter.y) << " " << std::to_string(particles->emitter.z) << "}\n";
 
         file << "\t\tParticleSize: {" << std::to_string(particles->particle_size.x) << " " << std::to_string(particles->particle_size.y) << " " << std::to_string(particles->particle_size.z) << "}\n";
+
+        file << "\t\tBoundaries: {" << std::to_string(particles->minBound) << " " << std::to_string(particles->maxBound) << "0" << "}\n";
+
+        file << "\t\tParticlesAmount: {" << std::to_string(particles->amount) << "}\n";
     }
 
     file << "\n\t\t}\n";
