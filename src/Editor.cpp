@@ -30,6 +30,8 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     //TODO(darius) DANGER
     std::thread tr(&Editor::consoleInputThread, this, this);
     tr.detach();
+
+    Renderer::currentRendererPtr = &rendol;
 }
 
 void Editor::update()

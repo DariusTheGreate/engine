@@ -376,6 +376,8 @@ std::optional<RigidBody> rbody;
         if(ImGui::Button("AABB"))
         {
             modelV->meshes[0].calculateAabb(obj->getTransform());
+            assert(Renderer::currentRendererPtr);
+            Renderer::currentRendererPtr->getDebugRenderer().aabbToRender.push_back(modelV->meshes[0].getAABB());//(globalCenter, scl.x, scl.y, scl.z);
         }
     }
 

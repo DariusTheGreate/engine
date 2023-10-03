@@ -2,19 +2,19 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# setmbcp in ucrtbased
- 5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportA in ucrtbased
- 7# CrtDbgReport in ucrtbased
- 8# std::vector<glm::vec<4,float,0>,std::allocator<glm::vec<4,float,0> > >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
- 9# ParticleSystem::updateSpawnFromEmitter at E:\own\programming\engine\src\ParticleSystem.cpp:152
-10# ParticleSystem::update at E:\own\programming\engine\src\ParticleSystem.cpp:168
-11# Scene::renderParticles at E:\own\programming\engine\src\Scene.cpp:112
-12# Renderer::renderScene at E:\own\programming\engine\src\Renderer.cpp:633
-13# Renderer::renderAll at E:\own\programming\engine\src\Renderer.cpp:602
-14# Renderer::albedoStage at E:\own\programming\engine\src\Renderer.cpp:445
-15# Renderer::render at E:\own\programming\engine\src\Renderer.cpp:359
-16# Editor::update at E:\own\programming\engine\src\Editor.cpp:53
+ 4# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:28
+ 5# seh_filter_exe in ucrtbased
+ 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
+ 7# _C_specific_handler in VCRUNTIME140D
+ 8# _chkstk in ntdll
+ 9# RtlRaiseException in ntdll
+10# KiUserExceptionDispatcher in ntdll
+11# std::vector<MeshAABB,std::allocator<MeshAABB> >::_Emplace_one_at_back<MeshAABB> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:844
+12# std::vector<MeshAABB,std::allocator<MeshAABB> >::push_back at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:942
+13# UI::showObjectWindow at E:\own\programming\engine\src\UI.cpp:383
+14# UI::sceneWindow at E:\own\programming\engine\src\UI.cpp:172
+15# UI::renderUI at E:\own\programming\engine\src\UI.cpp:30
+16# Editor::update at E:\own\programming\engine\src\Editor.cpp:58
 17# Application::Run at E:\own\programming\engine\src\Application.cpp:22
 18# main at E:\own\programming\engine\src\main.cpp:15
 19# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79

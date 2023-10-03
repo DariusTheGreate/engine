@@ -121,7 +121,7 @@ public:
 
     void renderDebugColider(Window* wind, std::optional<Colider>& collider, std::optional<RigidBody>& body);
 
-    void renderDebugCube(glm::vec3 pos, int r);
+    void renderDebugCube(glm::vec3 pos, int x=1, int y=1, int z=1);
 
     void renderDebugPoint(glm::vec3 a, glm::vec4 color);
 
@@ -132,6 +132,8 @@ public:
     void updateCamera(glm::mat4 projection, glm::mat4 view);
 
     void renderPoints();
+
+    void renderAABB();
 
     void clearPoints();
 
@@ -146,7 +148,10 @@ public:
     };
 
     std::vector<PointToRender> pointsToRender;
+    std::vector<MeshAABB> aabbToRender;
+
     bool debug_render = true;// Note(darius) when false - we dont draw debug info
+
 private:
     size_t length = 0;
     size_t slices = 200;
@@ -288,6 +293,8 @@ public:
     FrameBuffer deferredLightingBuffer;
 
     static ShaderLibrary* shaderLibInstance;
+
+    static Renderer* currentRendererPtr;
 
     static int drawCallsCount;
 

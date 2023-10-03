@@ -131,13 +131,14 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 	glBindVertexArray(0);
 }
 
-void DebugRenderer::renderDebugCube(glm::vec3 pos, int r)
+void DebugRenderer::renderDebugCube(glm::vec3 pos, int x, int y, int z)
 {
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, pos);
 	//TODO(darius) its not size, its scale
-	model = glm::scale(model, {r,r,r});
+	print(x,y,z,"\n");
+	model = glm::scale(model, {x,y,z});
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", {0,1,0,0});
@@ -211,6 +212,12 @@ void DebugRenderer::renderPoints()
 {
 	for(auto& i : pointsToRender)
 		renderDebugPoint(i.point, i.color);
+}
+
+void DebugRenderer::renderAABB()
+{
+	for(auto& i : aabbToRender)
+		renderDebugCube(i.center, i.size.x, i.size.y, i.size.z);
 }
 
 void DebugRenderer::clearPoints()
@@ -614,7 +621,11 @@ void Renderer::renderAll(Window* wind)
 			//dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
 		}
 	}
+
+	//dbr.renderDebugCube({0,0,0}, 1,1,1);
+
 	//dbr.renderPoints();
+	dbr.renderAABB();
 }
 
 void Renderer::renderScene() 
@@ -663,6 +674,8 @@ DebugRenderer& Renderer::getDebugRenderer()
 
 
 ShaderLibrary* Renderer::shaderLibInstance = nullptr;
+Renderer* Renderer::currentRendererPtr = nullptr;
 
 int Renderer::drawCallsCount = 0;
 int Renderer::drawCallsInstancedCount = 0;
+

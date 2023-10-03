@@ -7,7 +7,6 @@
 
 class Camera {
 public:
-
     void setCameraLook(double xposIn, double yposIn);
 
     void setCameraPos(const glm::vec3& pos_in);

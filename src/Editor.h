@@ -152,13 +152,15 @@ public:
 
 public:
     bool consoleOnly = false;
-
+    
 private:
     GameState state;
     Camera editorCamera;
     SystemInfo info;
     UI ui;
+    
     static Scene currScene;
+
     Window* window;
     Renderer rendol;
     ObjectSelector selector;
