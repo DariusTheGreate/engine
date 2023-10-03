@@ -33,6 +33,8 @@ public:
 
     glm::vec3 getCameraUp() const;
 
+    glm::vec3 getCameraRight() const;
+
     glm::vec3 getCameraFront();
 
     void setCameraFront(const glm::vec3& f);
@@ -70,9 +72,10 @@ public:
 
 private:
     //TODO(darius) make it transform
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    glm::vec3 cameraRight = glm::vec3(0.0f, 0.0f, 1.0f);
 
 	bool firstMouse = true;
 	float yaw = -90.0f;

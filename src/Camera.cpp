@@ -42,7 +42,10 @@ void Camera::setCameraLook(double xposIn, double yposIn)
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
     cameraFront = glm::normalize(front);
+    cameraRight = glm::normalize(glm::cross(cameraFront, glm::vec3{0,1,0}));
+    cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
 void Camera::setScroolState(double xoffset, double yoffset)
@@ -62,11 +65,11 @@ void Camera::setScroolState(double xoffset, double yoffset)
 }
 
 void Camera::moveCameraLeft() {
-    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;//-cameraRight here
 }
 
 void Camera::moveCameraRight() {
-    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;//cameraRight here
 }
 
 void Camera::moveCameraForward() {
@@ -101,6 +104,11 @@ glm::vec3 Camera::getCameraFront()
 glm::vec3 Camera::getCameraUp() const
 {
     return cameraUp; 
+}
+
+glm::vec3 Camera::getCameraRight() const
+{
+    return cameraRight;
 }
 
 void Camera::setCameraFront(const glm::vec3& f)

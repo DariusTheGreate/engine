@@ -52,8 +52,12 @@ struct MeshAABB
         return -r <= plane.getSignedDistanceToPlane(center);
     }
 
-    bool isOnFrustum(const Frustum& camFrustum, const Transform& transform) 
+    bool isOnFrustum(Frustum& camFrustum, Transform& transform) 
     {
+        //NOTE(darius) TEMPO while scale dont work
+        if(transform.getScale() != glm::vec3{1,1,1})
+            return true;
+
         glm::vec3 globalCenter{ transform.matrix * glm::vec4(center, 1.f) };
 
         glm::vec3 right = transform.getRight() * size.x;
@@ -149,7 +153,7 @@ public:
         ebo.deleteEBO();
     }
 
-    void calculateAabb(const Transform&);
+    void calculateAabb(Transform&);
 
     std::vector<unsigned int> generateLOD();
 

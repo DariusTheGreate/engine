@@ -39,6 +39,7 @@
 	- LOD
 	- distanced rendering                                                       
 	- instanced rendering 
+	- finish skeletal animations
 	- terrain
 
 	- shaders for effects drawing on texture

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Camera.h>
+#include <Printer.h>
 
 #include <glm/glm.hpp>
 
@@ -17,6 +18,12 @@ struct Plane
 	{
 		return glm::dot(normal, point) - distance;
 	}
+
+	void printMe()
+	{
+		//std::cout << normal.x << " " << normal.y << " " << normal.z << " " << distance << "\n";
+		print(normal.x, " ",  normal.y, " ", normal.z, " ", distance, "\n");
+	}
 };
 
 class Frustum
@@ -26,20 +33,28 @@ public:
 	{
 	    const float halfVSide = zFar * tanf(fovY * .5f);
 	    const float halfHSide = halfVSide * aspect;
-	    const glm::vec3 frontMultFar = zFar * cam.getCameraFront();
+
+	    //print("\n", halfVSide, "\n", halfHSide, "\n");
+
+	    glm::vec3 frontMultFar = zFar * cam.getCameraFront();
 
 	    nearFace = { cam.getCameraPos() + zNear * cam.getCameraFront(), cam.getCameraFront()};
+	    //nearFace.printMe();
+
 	    farFace = { cam.getCameraPos() + frontMultFar, -cam.getCameraFront()};
-	    auto Right = glm::normalize(glm::cross(cam.getCameraFront(), cam.getCameraUp()));
+	    //farFace.printMe();
 
 	    rightFace = { cam.getCameraPos(),
-	                            glm::cross(frontMultFar - Right * halfHSide, cam.getCameraUp()) };
+	                            glm::cross(frontMultFar - cam.getCameraRight() * halfHSide, cam.getCameraUp()) };
+
 	    leftFace = { cam.getCameraPos(),
-	                            glm::cross(cam.getCameraUp(), frontMultFar + halfHSide) };//NOTE(darius) broken
+	                            glm::cross(cam.getCameraUp(), frontMultFar + cam.getCameraRight() * halfHSide) };
+
 	    topFace = { cam.getCameraPos(),
-                            glm::cross(Right, frontMultFar - cam.getCameraUp() * halfVSide) };
+                            glm::cross(cam.getCameraRight(), frontMultFar - cam.getCameraUp() * halfVSide) };
+
 	    bottomFace = { cam.getCameraPos(),
-                            glm::cross(frontMultFar + cam.getCameraUp() * halfVSide, Right) };
+                            glm::cross(frontMultFar + cam.getCameraUp() * halfVSide, cam.getCameraRight()) };
 	}
 
     Plane topFace;

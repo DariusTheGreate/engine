@@ -173,7 +173,7 @@ void Mesh::setupMesh()
     OpenglWrapper::AttributePointer(6, 4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
     
     OpenglWrapper::UnbindVAO();
-    
+
 }
 
 void Mesh::printVertices()
@@ -223,7 +223,8 @@ void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
     indices.erase(indices.begin() + indicesNum, indices.end()); 
 }
 
-void Mesh::calculateAabb(const Transform& tr) 
+//TODO(darius) apply scale?
+void Mesh::calculateAabb(Transform& tr) 
 {
     glm::vec3 vertex = glm::vec3(vertices[indices[0]].Position);
     glm::vec3 vmin = vertex;
@@ -235,10 +236,21 @@ void Mesh::calculateAabb(const Transform& tr)
         vmax = glm::length(vmax) > glm::length(vertex) ? vmax : vertex;
     }
 
+    /*glm::mat4 m = glm::mat4(1.0f);
+
+    m = glm::scale(m, tr.getScale());
+
+    glm::vec4 vmin4 = m * glm::vec4{vmin.x, vmin.y, vmin.z,0};
+    glm::vec4 vmax4 = m * glm::vec4{vmax.x, vmax.y, vmax.z,0};
+
+    vmin = glm::vec3{vmin4.x, vmin4.y, vmin4.z};
+    vmax = glm::vec3{vmax4.x, vmax4.y, vmax4.z};
+    */
+
     aabb.min = vmin;
     aabb.max = vmax;
     aabb.center = (vmin + vmax) * 0.5f;
-    aabb.size = (vmax - vmin) * 0.5f;
+    aabb.size = (vmax - aabb.center);
 
 /*
     std::cout << "AABB:\n";
