@@ -21,11 +21,13 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     SystemInfo::setInfo(&info);
 
-    //TODO(darius) move it to texture or something
+    ImageUtils::ImageLoaderPtr imageLoader(GameState::engine_path + "assets/logo.png");
     GLFWimage images[1]; 
-    images[0].pixels = stbi_load(std::string(GameState::engine_path + "assets/logo.png").c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+    images[0].pixels = imageLoader.data;//stbi_load(std::string(GameState::engine_path + "assets/logo.png").c_str(), &images[0].width, &images[0].height, 0, 4); //rgba channels 
+    images[0].width = imageLoader.W;
+    images[0].height = imageLoader.H;
     glfwSetWindowIcon(wind->getWindow(), 1, images); 
-    stbi_image_free(images[0].pixels); 
+    //stbi_image_free(images[0].pixels); 
 
     //TODO(darius) DANGER
     std::thread tr(&Editor::consoleInputThread, this, this);

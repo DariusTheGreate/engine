@@ -21,7 +21,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         deferredLightPasVertex(GameState::engine_path + "shaders/deferredLightPasVertex.glsl", GL_VERTEX_SHADER),
         deferredLightPasFragment(GameState::engine_path + "shaders/deferredLightPasFragment.glsl", GL_FRAGMENT_SHADER),
         particlesVertex(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER),
-        particlesFragment(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER)
+        particlesFragment(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER),
+        terrainVertex(GameState::engine_path + "shaders/terrainVertex.glsl", GL_VERTEX_SHADER),
+        terrainFragment(GameState::engine_path + "shaders/terrainFragment.glsl", GL_FRAGMENT_SHADER)
+    
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -63,6 +66,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         particlesFragment.compile();
         particlesVertex.link(particlesFragment);
 
+        terrainVertex.compile();
+        terrainFragment.compile();
+        terrainVertex.link(terrainFragment);
+
         stage = STAGE::DEPTH;
     }
 
@@ -84,6 +91,8 @@ Shader& ShaderLibrary::getCurrShader()
         return editorIdVertex;
     else if (stage == STAGE::PARTICLES)
         return particlesVertex;
+    else if (stage == STAGE::TERRAIN)
+        return terrainVertex;
     else
         return lightingVertex;
 }
@@ -131,6 +140,11 @@ Shader& ShaderLibrary::getGBufferShader()
 Shader& ShaderLibrary::getParticlesShader()
 {
     return particlesVertex;
+}
+
+Shader& ShaderLibrary::getTerrainShader()
+{
+    return terrainVertex;
 }
 
 void ShaderLibrary::checkForShaderReload() 
@@ -243,6 +257,18 @@ void ShaderLibrary::checkForShaderReload()
 
         std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
     }
+
+    if (terrainFragment.checkForSourceChanges() || terrainVertex.checkForSourceChanges())
+    {
+        terrainVertex.reload();
+        terrainFragment.reload();
+
+        terrainVertex.compile();
+        terrainFragment.compile();
+        terrainVertex.link(terrainFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TERRAIN SHADER: " << std::endl;
+    }
 }
 
 void ShaderLibrary::loadCurrentShader()
@@ -316,7 +342,6 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     //model = glm::scale(model, scale);
     //model *= q;
 
-    //NOTE(darius) looks like bug with guiamo rotation comes form here..
     model = glm::mat4(1.0f);
     model *= obj->getTransform().matrix;
     glm::vec3 posm = obj->getTransform().getPosition();

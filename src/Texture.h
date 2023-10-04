@@ -2,6 +2,51 @@
 #include <stb_image.h>
 #include <string>
 #include <OpenglWrapper.h>
+#include <Printer.h>
+
+struct ImageUtils
+{
+
+	struct ImageLoaderPtr
+	{
+		ImageLoaderPtr(std::string path)
+		{
+			data = ImageUtils::loadStbImage(path, &W, &H, &numOfChan);
+		}
+
+		~ImageLoaderPtr()
+		{
+		    ImageUtils::freeImage(data);
+		}
+
+		int H = 0;
+		int W = 0;
+		int numOfChan = 0;
+
+		unsigned char* data = nullptr;
+	};
+
+	static unsigned char* loadStbImage(std::string_view path, int* W, int* H, int* numOfChan)
+	{
+		unsigned char *data = stbi_load(std::string(path).c_str(), W, H, numOfChan, 0);
+	    if (data)
+	    {
+	        print("Loaded Texture\n");
+	    }
+	    else
+	    {
+	        print("Failed to load Texture\n");
+	        return nullptr;
+	    }
+
+	    return data;
+	}
+
+	static void freeImage(unsigned char* data)
+	{
+		stbi_image_free(data);
+	}
+};
 
 class Texture
 {

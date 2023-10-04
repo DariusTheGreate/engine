@@ -100,6 +100,11 @@ void Scene::renderScene()
 			continue;
 		sceneObjects[i]->renderObject();
 	}
+
+	for(auto& t : terrains)
+	{
+		t.draw();
+	}
 }
 
 void Scene::renderParticles()
@@ -483,6 +488,11 @@ Camera* Scene::getCameraAt(int id)
 		return nullptr;
 
 	return sceneCameras[id];
+}
+
+void Scene::addTerrain(Terrain&& trin)
+{
+	terrains.emplace_back(std::move(trin));
 }
 
 void Scene::serialize(std::string_view path)

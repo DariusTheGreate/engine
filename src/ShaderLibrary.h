@@ -20,6 +20,7 @@ public:
         DEFERRED,
         DEFERRED_LIGHT,
         PARTICLES,
+        TERRAIN,
     };
 
 public:
@@ -44,6 +45,8 @@ public:
 	Shader& getGBufferShader();
 
     Shader& getParticlesShader();
+
+    Shader& getTerrainShader();
 
     void loadCurrentShader();
     
@@ -87,6 +90,9 @@ private:
 
     Shader particlesVertex;
     Shader particlesFragment;
+
+    Shader terrainVertex;
+    Shader terrainFragment;
 
     GraphicsStateCache cache;
 };

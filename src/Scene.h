@@ -16,6 +16,7 @@
 #include <BatchingCache.h>
 #include <ThreadPool.h>
 #include <NetworkSynchronizer.h>
+#include <Terrain.h>
 
 //TODO(darius) make it packed in 64bytes cache line
 constexpr size_t CHUNK_COUNT = 10;
@@ -203,6 +204,8 @@ public:
 
 	NetworkSynchronizer& getNetworkSynchronizer();
 
+	void addTerrain(Terrain&& trin);
+
 public:
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will have to return later to it anyway
 	void serialize(std::string_view path);
@@ -256,6 +259,7 @@ private:
 
 private:
 	std::vector<Object*> sceneObjects;//more common way is to store indexes
+	std::vector<Terrain> terrains;
 	std::mutex sceneLock;
 	//std::vector<Object*> currentlyBatchedObjects;
 	BatchingCache batcher;

@@ -1,4 +1,5 @@
 #include <UI.h>
+#include <Terrain.h>
 
 UI::UI(GLFWwindow* window, GameState* st) {
     state = st;
@@ -77,6 +78,10 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
         }
         if (ImGui::Button("LOD objects")) {
             scene.updateObjectsLODs();
+        }
+        if(ImGui::Button("create Terrain")) {
+            Terrain t(GameState::engine_path + "textures/height.png");
+            scene.addTerrain(std::move(t));
         }
 
         if (ImGui::Button("recover batched objects")) {
