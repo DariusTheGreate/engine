@@ -377,7 +377,8 @@ std::optional<RigidBody> rbody;
         {
             modelV->meshes[0].calculateAabb(obj->getTransform());
             assert(Renderer::currentRendererPtr);
-            Renderer::currentRendererPtr->getDebugRenderer().aabbToRender.push_back(modelV->meshes[0].getAABB());//(globalCenter, scl.x, scl.y, scl.z);
+            auto aabb = modelV->meshes[0].getAABB();
+            Renderer::currentRendererPtr->getDebugRenderer().aabbToRender.push_back(std::move(aabb));//(globalCenter, scl.x, scl.y, scl.z);
         }
     }
 
@@ -754,6 +755,8 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 
         ImGui::Text("GPU INFO: ");
         ImGui::Text(SystemInfo::getInfo()->getGPU().data());
+        if(SystemInfo::getInfo()->isOcclusionCullingAvailable())
+            ImGui::Text("Occlusion Culling is Available\n");
     }
 
     ImGui::Text("Frame Tick: ");

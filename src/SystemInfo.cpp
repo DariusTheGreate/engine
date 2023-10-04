@@ -38,6 +38,16 @@ SystemInfo::SystemInfo()
 
 	gpuName = std::string(vendor);
 	gpuName.append(model);
+
+    GLint bitsSupported;
+	glGetQueryiv(GL_SAMPLES_PASSED, GL_QUERY_COUNTER_BITS, &bitsSupported);
+    if (bitsSupported == 0) {
+    	occlusionCullingPresentedOnThisDevice = false;
+    }
+    else
+    {
+    	occlusionCullingPresentedOnThisDevice = true;
+    }
 }
 
 std::string_view SystemInfo::getCPU()
@@ -58,6 +68,11 @@ void SystemInfo::setInfo(SystemInfo* v)
 SystemInfo* SystemInfo::getInfo()
 {
 	return value;
+}
+
+bool SystemInfo::isOcclusionCullingAvailable()
+{
+	return occlusionCullingPresentedOnThisDevice;
 }
 
 SystemInfo* SystemInfo::value = nullptr;

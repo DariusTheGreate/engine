@@ -135,13 +135,12 @@ void DebugRenderer::renderDebugCube(glm::vec3 pos, int x, int y, int z)
 {
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-	model = glm::translate(model, pos);
-	//TODO(darius) its not size, its scale
-	print(x,y,z,"\n");
+	print(pos, x, y, z, "\n");
+	model = glm::translate(model, pos + glm::vec3(-0.5 * x, -0.5 * y, 0.5 * z));
 	model = glm::scale(model, {x,y,z});
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
-	dsv.setVec4("objectColor", {0,1,0,0});
+	dsv.setVec4("objectColor", {0,0,1,0});
 	dsv.setMat4("model", model);
 	vao.bind();
 	glDrawArrays(GL_LINE_STRIP, 0, 36);
@@ -153,6 +152,7 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 {
     if(!debug_render)
         return;
+
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, a);

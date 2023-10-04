@@ -37,17 +37,18 @@ struct MeshAABB
     MeshAABB() = default;
 
     MeshAABB(const glm::vec3& min, const glm::vec3& max)
-        : center{ (max + min) * 0.5f }, size{ max.x - center.x, max.y - center.y, max.z - center.z }
+        : center{ (max + min) * 0.5f }, size{ max.x - center.x, max.y - center.y, max.z - center.z }//NOTE(darius) a u shue?
     {}
 
     MeshAABB(const glm::vec3& inCenter, float iI, float iJ, float iK)
         : center{ inCenter }, size{ iI, iJ, iK }
     {
-        std::cout << "AABB:\n";
+        /*std::cout << "AABB:\n";
         std::cout << min << "\n";
         std::cout << max << "\n";
         std::cout << center << "\n";
         std::cout << size << "\n";
+        */
     }
 
     bool isOnOrForwardPlane(const Plane& plane) 

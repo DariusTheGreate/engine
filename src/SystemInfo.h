@@ -12,6 +12,8 @@ public:
 
 	std::string_view getGPU();
 
+	bool isOcclusionCullingAvailable();
+
 	static void setInfo(SystemInfo* v);
 
 	static SystemInfo* getInfo();
@@ -19,6 +21,8 @@ public:
 private:
 	std::string cpuName;
 	std::string gpuName;
+
+	bool occlusionCullingPresentedOnThisDevice = false;
 
 	int mainMemory = 0;
 	int videoMemory = 0;

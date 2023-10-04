@@ -249,16 +249,10 @@ void Mesh::calculateAabb(Transform& tr)
 
     aabb.min = vmin;
     aabb.max = vmax;
-    aabb.center = (vmin + vmax) * 0.5f;
-    aabb.size = (vmax - aabb.center);
 
-/*
-    std::cout << "AABB:\n";
-    std::cout << aabb.min << "\n";
-    std::cout << aabb.max << "\n";
-    std::cout << aabb.center << "\n";
-    std::cout << aabb.size << "\n";
-*/
+    aabb.center = tr.matrix * glm::vec4(((vmin + vmax) * 0.5f), 1.0f);
+
+    aabb.size = {tr.getScale().x, tr.getScale().y, tr.getScale().z};//(vmax - aabb.center);
 }
 
 std::vector<unsigned int> Mesh::generateLOD()
@@ -274,38 +268,21 @@ std::vector<unsigned int> Mesh::generateLOD()
     return indicesGenerated;
 }
 
-
 bool MeshAABB::isOnFrustum(Frustum& camFrustum, Transform& transform) 
 {
     //NOTE(darius) TEMPO while scale dont work
     //if(transform.getScale() != glm::vec3{1,1,1})
     //    return true;
 
-    glm::vec3 globalCenter{ transform.matrix * glm::vec4(center, 1.f) };
+    //glm::vec3 globalCenter{ transform.matrix * glm::vec4(center, 1.f) };
+    //glm::vec3 scl = transform.getScale();
 
-    glm::vec3 right = transform.getRight() * size.x;
-    glm::vec3 up = transform.getUp() * size.y;
-    glm::vec3 forward = transform.getForward() * size.z;
+    //MeshAABB globalAABB(globalCenter, scl.x, scl.y, scl.z);
 
-    float newIi = std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, right)) +
-        std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, up)) +
-        std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, forward));
-
-    float newIj = std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, right)) +
-        std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, up)) +
-        std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, forward));
-
-    float newIk = std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, right)) +
-        std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, up)) +
-        std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, forward));
-
-    glm::vec3 scl = transform.getScale();
-    MeshAABB globalAABB(globalCenter, scl.x, scl.y, scl.z);
-
-    return (globalAABB.isOnOrForwardPlane(camFrustum.leftFace) &&
-        globalAABB.isOnOrForwardPlane(camFrustum.rightFace) &&
-        globalAABB.isOnOrForwardPlane(camFrustum.topFace) &&
-        globalAABB.isOnOrForwardPlane(camFrustum.bottomFace) &&
-        globalAABB.isOnOrForwardPlane(camFrustum.nearFace) &&
-        globalAABB.isOnOrForwardPlane(camFrustum.farFace));
+    return (isOnOrForwardPlane(camFrustum.leftFace) &&
+        isOnOrForwardPlane(camFrustum.rightFace) &&
+        isOnOrForwardPlane(camFrustum.topFace) &&
+        isOnOrForwardPlane(camFrustum.bottomFace) &&
+        isOnOrForwardPlane(camFrustum.nearFace) &&
+        isOnOrForwardPlane(camFrustum.farFace));
 };
