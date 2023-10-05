@@ -111,7 +111,6 @@ TODO(all):
         - GTA6 - https://vk.com/video-120800128_456251871?ysclid=lkfo8jp8lg311066769
 */
 
-
 class DebugRenderer 
 {
 public:

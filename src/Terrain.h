@@ -18,6 +18,7 @@ private:
 	int numStrips = 0;
 	int numTrisPerStrip = 0;
 
+    //TODO(darius) create Mesh for it 
     VAO terrainVAO;
     VBO terrainVBO;
     EBO terrainEBO;

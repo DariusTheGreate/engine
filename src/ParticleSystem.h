@@ -7,7 +7,7 @@
 #include <optional>
 
 #include <FlatMesh.h>
-
+#include <InstancedRenderer.h>
 
 struct Particle
 {
@@ -47,12 +47,12 @@ public:
     void setBuffers();
 
     std::vector<glm::vec4> positions;
+    std::vector<glm::mat4> instanceMats;
     std::vector<Particle> particles;
 
-    std::vector<Transform> particlesTransfroms;
-    std::vector<glm::mat4> modelMatrices;
-
 	unsigned int buffer = 0;
+    bool buffCreated = false;
+
 	int amount = 21;
 
     std::optional<Mesh> particle; 
@@ -67,5 +67,6 @@ public:
     float lastTime = 0;
 
     bool pause = false;
-};
 
+    InstancedRenderer particlesRenderer;
+};

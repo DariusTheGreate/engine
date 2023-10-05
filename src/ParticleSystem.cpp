@@ -16,14 +16,17 @@ void ParticleSystem::addParticle(FlatMesh&& m, glm::vec3 particleSize) noexcept
 
     for(int i = 0; i < amount; ++i)
         addPosition(glm::vec3{i,i,i});
-    
-    glGenBuffers(1, &buffer);
-    setBuffers();
 
     for(auto i : positions)
     {
         particles.emplace_back(Particle{i, 1, 5.0f}); 
+        glm::mat4 modl = glm::mat4(1.0f);
+        modl = glm::translate(modl, glm::vec3{ i.x, i.y, i.z });
+        instanceMats.push_back(modl);
     }
+
+    glGenBuffers(1, &buffer);
+    setBuffers();
 }
 
 void ParticleSystem::changeShader()
@@ -45,6 +48,7 @@ void ParticleSystem::addPositions(size_t n)
     for(auto i : positions)
     {
         particles.emplace_back(Particle{i, 1, 5.0f}); 
+        instanceMats.emplace_back(glm::mat4(1.0f));
     }
 }
 
@@ -167,17 +171,35 @@ void ParticleSystem::update(float timeValue)
 
     updateSpawnFromEmitter(timeValue);
 
-    setBuffers();
+    //setBuffers();
 }
 
 void ParticleSystem::setBuffers()
 {
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * amount, &positions[0], GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-    particle->getVao().bind();
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * amount, &instanceMats[0], GL_STATIC_DRAW);
+    //glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
-    glEnableVertexAttribArray(3);
+    particle->getVao().bind();
+ 
+    std::size_t vec4Size = sizeof(glm::vec4);
+    glEnableVertexAttribArray(3); 
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glEnableVertexAttribArray(4); 
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(1 * vec4Size));
+    glEnableVertexAttribArray(5); 
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(2 * vec4Size));
+    glEnableVertexAttribArray(6); 
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)(3 * vec4Size));
+
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+    glBindVertexArray(0);
+
+    /*glEnableVertexAttribArray(3);
     glBindBuffer(GL_ARRAY_BUFFER, buffer); // this attribute comes from a different vertex buffer
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -188,4 +210,5 @@ void ParticleSystem::setBuffers()
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(1 * sizeof(glm::vec3)));
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glVertexAttribDivisor(4, 1); // tell OpenGL this is an instanced vertex attribute.
+    */
 }

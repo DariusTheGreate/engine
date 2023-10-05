@@ -2,24 +2,31 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:28
- 5# seh_filter_exe in ucrtbased
- 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
- 7# _C_specific_handler in VCRUNTIME140D
- 8# _chkstk in ntdll
- 9# RtlRaiseException in ntdll
-10# KiUserExceptionDispatcher in ntdll
-11# std::vector<MeshAABB,std::allocator<MeshAABB> >::_Emplace_one_at_back<MeshAABB> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:844
-12# std::vector<MeshAABB,std::allocator<MeshAABB> >::push_back at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:942
-13# UI::showObjectWindow at E:\own\programming\engine\src\UI.cpp:383
-14# UI::sceneWindow at E:\own\programming\engine\src\UI.cpp:172
-15# UI::renderUI at E:\own\programming\engine\src\UI.cpp:30
-16# Editor::update at E:\own\programming\engine\src\Editor.cpp:58
-17# Application::Run at E:\own\programming\engine\src\Application.cpp:22
-18# main at E:\own\programming\engine\src\main.cpp:15
-19# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-20# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-21# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-22# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-23# BaseThreadInitThunk in KERNEL32
-24# RtlUserThreadStart in ntdll
+ 4# setmbcp in ucrtbased
+ 5# CrtSetReportHookW2 in ucrtbased
+ 6# VCrtDbgReportW in ucrtbased
+ 7# CrtDbgReportW in ucrtbased
+ 8# _threadid in ucrtbased
+ 9# _threadid in ucrtbased
+10# abort in ucrtbased
+11# terminate in ucrtbased
+12# __scrt_unhandled_exception_filter at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\utility\utility_desktop.cpp:96
+13# UnhandledExceptionFilter in KERNELBASE
+14# memset in ntdll
+15# _C_specific_handler in ntdll
+16# _chkstk in ntdll
+17# RtlRaiseException in ntdll
+18# RtlRaiseException in ntdll
+19# RaiseException in KERNELBASE
+20# CxxThrowException in VCRUNTIME140D
+21# main$catch$1 at E:\own\programming\engine\src\main.cpp:20
+22# 0x00007FFC435B1080 in VCRUNTIME140_1D
+23# _NLG_Return2 in VCRUNTIME140_1D
+24# RtlCaptureContext2 in ntdll
+25# main at E:\own\programming\engine\src\main.cpp:15
+26# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+27# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+28# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+29# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+30# BaseThreadInitThunk in KERNEL32
+31# RtlUserThreadStart in ntdll

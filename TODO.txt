@@ -35,13 +35,13 @@
 --RENDERER
 	- finish batching 
 	- finish culling
+	- finish terrain 
 	- occlusion culling
-	- frustum culling
 	- LOD
 	- distanced rendering                                                       
 	- instanced rendering 
 	- finish skeletal animations
-	- terrain
+	- terrain editor
 
 	- shaders for effects drawing on texture
 	- blending stage
@@ -66,11 +66,6 @@
 --BUGS
 	- fix animation script update bug
 	- bug when assimp dont load first 4 letters(4 bytes) of string
-	- bug when first obect in scene teleports if copyied
-	- bug with aabb rendering
 	- bug with batched forest frustum culling
 	- bug when if u click both button at a time objects teleports to inf
-	- figure out filepath bugs and name/string bugs
 	- bug when if u type name and press ESC you get abort from imgui
-	- bug when if change color picking brokes
-	- bug when if u pick guiamo - u pick another object

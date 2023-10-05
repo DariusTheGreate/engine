@@ -41,6 +41,7 @@ Terrain::Terrain(std::string heightMap)
     numStrips = (imageLoader.H-1)/rez;
     numTrisPerStrip = (imageLoader.W/rez)*2-2;
 
+    //TODO(darius) create Mesh for it 
     terrainVAO.init();
     terrainVAO.bind();
 
@@ -55,9 +56,6 @@ Terrain::Terrain(std::string heightMap)
 
 void Terrain::draw()
 {
-	//TODO(darius) make it terrain shader
-	//Shader sv = Renderer::shaderLibInstance->getTerrainShader();
-
     Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::TERRAIN;
     Shader sv = Renderer::shaderLibInstance->getCurrShader();
     glUseProgram(sv.getProgram());	
