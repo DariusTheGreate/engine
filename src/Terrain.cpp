@@ -61,7 +61,7 @@ void Terrain::draw()
     glUseProgram(sv.getProgram());	
 
     Object tmp{"terrainTmp"};
-    tmp.getTransform().setScale({0.1,0.1,0.1});
+    tmp.getTransform().setScale({0.1,0.2,0.1});
     Renderer::shaderLibInstance->shaderRoutine(&tmp);
 
 	terrainVAO.bind();

@@ -45,6 +45,11 @@ public:
 		return m_Name; 
 	}
 
+	std::vector<KeyPosition>& getPositions()
+	{
+		return m_Positions;
+	}
+
 	int GetBoneID() 
 	{ 
 		return m_ID; 
@@ -65,7 +70,7 @@ private:
 
 	glm::mat4 InterpolateScaling(float animationTime);
 
-private:
+public:
 	std::vector<KeyPosition> m_Positions;
 	std::vector<KeyRotation> m_Rotations;
 	std::vector<KeyScale> m_Scales;
@@ -77,3 +82,5 @@ private:
 	std::string m_Name;
 	int m_ID;
 };
+
+std::ostream& operator<<(std::ostream& os, Bone& a);

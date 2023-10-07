@@ -144,3 +144,18 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
 		, scaleFactor);
 	return glm::scale(glm::mat4(1.0f), finalScale);
 }
+
+std::ostream& operator<<(std::ostream& os, Bone& b)
+{
+	os << b.GetBoneName() << "\n";	
+
+	os << "Positions: (size " << b.getPositions().size() << ")\n";
+	os << "Positions: (official size " << b.m_NumPositions << ")\n";
+
+	for(auto& p : b.getPositions())
+	{
+		os << p.position << "\n";
+	}
+
+	return os;
+}

@@ -1,9 +1,10 @@
 #include <Animation.h>
+#include <StackTrace.h>
 
 Animation::Animation(const std::string& animationPath, Model* model)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+	const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
 	assert(scene && scene->mRootNode);
 	auto animation = scene->mAnimations[0];
 	m_Duration = static_cast<float>(animation->mDuration);
@@ -20,8 +21,10 @@ Bone* Animation::FindBone(const std::string& name)
 			return Bone.GetBoneName() == name;
 		}
 	);
-	if (iter == m_Bones.end()) return nullptr;
-	else return &(*iter);
+	if (iter == m_Bones.end())
+		return nullptr;
+	else 
+		return &(*iter);
 }
 
 void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
@@ -42,6 +45,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 			boneInfoMap[boneName].id = boneCount;
 			boneCount++;
 		}
+
 		m_Bones.emplace_back(Bone(channel->mNodeName.data,
 			boneInfoMap[channel->mNodeName.data].id, channel));
 	}
@@ -63,4 +67,14 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
 		ReadHierarchyData(newData, src->mChildren[i]);
 		dest.children.push_back(newData);
 	}
+}
+
+std::ostream& operator<<(std::ostream& os, Animation& a)
+{
+	for(auto& b : a.getBones())
+	{
+		os << b;
+	}	
+
+	return os;
 }

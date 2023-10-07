@@ -6,9 +6,10 @@ in float Height;
 
 void main()
 {
-    float h = (Height + 16)/32.0f;	// shift and scale the height into a grayscale value
-    if(h > 0.2)
-	    FragColor = vec4(h, h, 0, 1.0);
-    else
+    float h = (Height + 16)/32.0f;
+    if(h > 0.1)
 	    FragColor = vec4(h, h, 1, 1.0);
+   	if(h > 0.5) 
+	    FragColor = vec4(h, 0, h, 1.0);
+
 }

@@ -1,9 +1,15 @@
 #include <InstancedRenderer.h>
+#include <Renderer.h>
 
 void InstancedRenderer::init()
 {
     generateBuffer();
     setupBuffer();
+}
+
+void InstancedRenderer::setupMesh(Mesh* meshptr)
+{
+    mesh = meshptr;
 }
 
 void InstancedRenderer::generateBuffer()
@@ -16,7 +22,7 @@ void InstancedRenderer::setupBuffer()
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * instanceMats.size(), &instanceMats[0], GL_STATIC_DRAW);
 
-    mesh.getVao().bind();
+    mesh->getVao().bind();
  
     std::size_t vec4Size = sizeof(glm::vec4);
     glEnableVertexAttribArray(3); 

@@ -38,3 +38,6 @@ private:
 	float m_CurrentTime = 0;
 	float m_DeltaTime = 0;
 };
+
+std::ostream& operator<<(std::ostream& os, Animator& a);
+

@@ -23,5 +23,12 @@ std::ostream& operator<<(std::ostream& os, const glm::mat4& m);
 template<typename... Args>
 void print(Args&&... args)
 {
-     (std::cout << ... << args);
+    (std::cout << ... << args);
+}
+
+template<typename... Args>
+void println(Args&&... args)
+{
+    (std::cout << ... << args);
+    std::cout << "\n";
 }

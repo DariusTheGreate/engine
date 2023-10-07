@@ -23,7 +23,9 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         particlesVertex(GameState::engine_path + "shaders/particleVertexShader.glsl", GL_VERTEX_SHADER),
         particlesFragment(GameState::engine_path + "shaders/particleFragmentShader.glsl", GL_FRAGMENT_SHADER),
         terrainVertex(GameState::engine_path + "shaders/terrainVertex.glsl", GL_VERTEX_SHADER),
-        terrainFragment(GameState::engine_path + "shaders/terrainFragment.glsl", GL_FRAGMENT_SHADER)
+        terrainFragment(GameState::engine_path + "shaders/terrainFragment.glsl", GL_FRAGMENT_SHADER),
+        skeletalAnimationVertex(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER),
+        skeletalAnimationFragment(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER)
     
     {
         lightingVertex.compile();
@@ -70,6 +72,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         terrainFragment.compile();
         terrainVertex.link(terrainFragment);
 
+        skeletalAnimationVertex.compile();
+        skeletalAnimationFragment.compile();
+        skeletalAnimationVertex.link(skeletalAnimationFragment);
+        
         stage = STAGE::DEPTH;
     }
 
@@ -93,6 +99,8 @@ Shader& ShaderLibrary::getCurrShader()
         return particlesVertex;
     else if (stage == STAGE::TERRAIN)
         return terrainVertex;
+    else if (stage == STAGE::SKELETAL)
+        return skeletalAnimationVertex;
     else
         return lightingVertex;
 }
@@ -145,6 +153,11 @@ Shader& ShaderLibrary::getParticlesShader()
 Shader& ShaderLibrary::getTerrainShader()
 {
     return terrainVertex;
+}
+
+Shader& ShaderLibrary::getSkeletalShader()
+{
+    return skeletalAnimationVertex;
 }
 
 void ShaderLibrary::checkForShaderReload() 
@@ -269,6 +282,18 @@ void ShaderLibrary::checkForShaderReload()
 
         std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TERRAIN SHADER: " << std::endl;
     }
+
+    if (skeletalAnimationFragment.checkForSourceChanges() || skeletalAnimationVertex.checkForSourceChanges())
+    {
+        skeletalAnimationVertex.reload();
+        skeletalAnimationFragment.reload();
+
+        skeletalAnimationVertex.compile();
+        skeletalAnimationFragment.compile();
+        skeletalAnimationVertex.link(skeletalAnimationFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SKELETAL ANIMATION SHADER: " << std::endl;
+    }
 }
 
 void ShaderLibrary::loadCurrentShader()
@@ -281,7 +306,28 @@ void ShaderLibrary::loadCurrentShader()
 
 void ShaderLibrary::shaderRoutine(Object* obj)
 {
+    //TODO(darius) if{} else{} is better than uniform set
+
     Shader& sv = getCurrShader();
+
+    if(obj->getAnimator()){
+        stage = STAGE::SKELETAL;
+        auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
+
+        //auto tr = glm::mat4(1.0f);
+        /*glm::mat4 ViewRotateX = glm::rotate(
+            tr,
+            3.14f,
+            glm::vec3(-1.0f, 0.0f, 0.0f)
+        );
+        for(int i = 0; i < 99; ++i)
+            transforms[i] = ViewRotateX;
+            */
+        sv = getCurrShader();
+        for (int i = 0; i < transforms.size(); ++i)
+            sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+    } 
+
     sv.setVec3("viewPos", GameState::cam.getCameraPos());
     sv.setInt("lightsCount", PointLight::LightsCount);
     sv.setFloat("gammaFactor", GameState::gammaFactor); 

@@ -301,16 +301,19 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
+    println("Extracting Bones mNumBones: ", mesh->mNumBones);
     for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
+        println("Bone number ", boneIndex, ":", boneName);
         if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
         {
             BoneInfo newBoneInfo;
             newBoneInfo.id = m_BoneCounter;
             newBoneInfo.offset = ConvertMatrixToGLMFormat(
                 mesh->mBones[boneIndex]->mOffsetMatrix);
+            println("Bone Matrice: ", newBoneInfo.offset);
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCounter;
             m_BoneCounter++;

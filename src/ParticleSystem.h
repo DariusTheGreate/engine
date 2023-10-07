@@ -29,13 +29,10 @@ public:
 
     void addParticle(FlatMesh&& m, glm::vec3 particleSize = {0.1, 0.1, 0.1}) noexcept;
 
-    void changeShader();
-
     void addPosition(glm::vec3 pos);
 
     void addPositions(size_t n);
 
-    //https://www.youtube.com/watch?v=Y0Ko0kvwfgA&ab_channel=Acerola
     void renderParticles();
    
 	void updateUniform3DDistribution(float timeValue);
@@ -46,17 +43,13 @@ public:
 
     void setBuffers();
 
+    //TODO(darius) refactor it
     std::vector<glm::vec4> positions;
-    std::vector<glm::mat4> instanceMats;
     std::vector<Particle> particles;
-
-	unsigned int buffer = 0;
-    bool buffCreated = false;
 
 	int amount = 21;
 
     std::optional<Mesh> particle; 
-    std::optional<Shader> shader;
 
     glm::vec3 particle_size = {1,1,1};
     glm::vec3 emitter = glm::vec3{0,0,0};

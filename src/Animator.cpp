@@ -9,6 +9,7 @@ Animator::Animator(Animation* animation)
 
 	for (int i = 0; i < 100; i++)
 		m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+
 }
 
 void Animator::UpdateAnimation(float dt)
@@ -30,6 +31,10 @@ void Animator::PlayAnimation(Animation* pAnimation)
 
 void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
 {
+	if (!node) {
+		std::cout << "node is null\n";
+		return;
+	}
 	std::string nodeName = node->name;
 	glm::mat4 nodeTransform = node->transformation;
 
@@ -48,9 +53,22 @@ void Animator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 pare
 	{
 		int index = boneInfoMap[nodeName].id;
 		glm::mat4 offset = boneInfoMap[nodeName].offset;
-		m_FinalBoneMatrices[index] = globalTransformation * offset;
+		if(index < m_FinalBoneMatrices.size())
+			m_FinalBoneMatrices[index] = globalTransformation * offset;
 	}
 
 	for (int i = 0; i < node->childrenCount; i++)
 		CalculateBoneTransform(&node->children[i], globalTransformation);
+}
+
+
+std::ostream& operator<<(std::ostream& os, Animator& a)
+{
+	os << "Time: " << a.getCurrTime() << "\n";
+	for(auto& m : a.GetFinalBoneMatrices())
+	{
+		os << m << "\n";
+	}
+
+	return os;
 }

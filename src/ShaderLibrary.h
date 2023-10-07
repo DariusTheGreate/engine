@@ -21,6 +21,7 @@ public:
         DEFERRED_LIGHT,
         PARTICLES,
         TERRAIN,
+        SKELETAL,
     };
 
 public:
@@ -47,6 +48,8 @@ public:
     Shader& getParticlesShader();
 
     Shader& getTerrainShader();
+
+    Shader& getSkeletalShader();
 
     void loadCurrentShader();
     
@@ -93,6 +96,9 @@ private:
 
     Shader terrainVertex;
     Shader terrainFragment;
+
+    Shader skeletalAnimationVertex;
+    Shader skeletalAnimationFragment;
 
     GraphicsStateCache cache;
 };

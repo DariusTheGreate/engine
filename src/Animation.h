@@ -8,6 +8,7 @@
 #include <functional>
 #include <Model.h>
 #include <FlatMesh.h>
+#include <Printer.h>
 
 #include <chrono>
 #include <thread>
@@ -33,6 +34,11 @@ public:
 	Animation(const std::string& animationPath, Model* model);
 
 	Bone* FindBone(const std::string& name);
+
+	std::vector<Bone>& getBones()
+	{
+		return m_Bones;
+	}
 	
 	float GetTicksPerSecond() 
 	{ 
@@ -66,6 +72,8 @@ private:
 	AssimpNodeData m_RootNode;
 	std::map<std::string, BoneInfo> m_BoneInfoMap;
 };
+
+std::ostream& operator<<(std::ostream& os, Animation& a);
 
 class SpriteAnimation
 {

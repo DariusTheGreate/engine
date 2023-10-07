@@ -133,6 +133,8 @@ void Scene::updateAnimators(float dt)
 			continue;
 
 		obj->updateAnimator(dt);
+		//println("Animator:"); 
+        //print(obj->getAnimator().value());
 	}
 }
 

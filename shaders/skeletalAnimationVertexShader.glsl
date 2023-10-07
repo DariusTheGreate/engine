@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
@@ -37,7 +37,8 @@ void main()
         vec3 localNormal = mat3(finalBonesMatrices[boneIds[i]]) * aNormal;
     }
     
-    gl_Position =  projection * view * model * totalPosition;
+    mat4 viewModel = view * model;
+    gl_Position =  projection * viewModel * totalPosition;
     
     //gl_Position = projection * view * model * vec4(aPos, 1.0);
     

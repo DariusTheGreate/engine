@@ -1,10 +1,14 @@
 #pragma once
 #include <Mesh.h>
 
+class Object;
+
 class InstancedRenderer
 {
 public:
 	void init();
+
+	void setupMesh(Mesh* meshptr);
 
     void generateBuffer();
 
@@ -24,7 +28,6 @@ public:
 
 private:
     std::vector<glm::mat4> instanceMats;
-    Mesh mesh;
-
+    Mesh* mesh = nullptr;
     unsigned int buffer = 0;
 };

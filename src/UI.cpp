@@ -1,5 +1,6 @@
 #include <UI.h>
 #include <Terrain.h>
+#include <StackTrace.h>
 
 UI::UI(GLFWwindow* window, GameState* st) {
     state = st;
@@ -376,7 +377,14 @@ std::optional<RigidBody> rbody;
     auto& modelV = obj->getModel();
     if(modelV && ImGui::CollapsingHeader("ModelMesh"))
     {
-        ImGui::Text("Draw Mode %i", modelV->meshes[0].getDrawMode()); 
+        ImGui::Text("Draw Mode: %i", modelV->meshes[0].getDrawMode()); 
+
+        ImGui::Text("How much meshes? %i", modelV->meshes.size()); 
+
+        for(auto& m : modelV->meshes)
+        {
+            ImGui::Text("Mesh vertices size: %i", m.getVertices().size()); 
+        }
 
         if(ImGui::Button("AABB"))
         {
@@ -547,8 +555,21 @@ void UI::componentAdderWindow(Renderer& hui)
                 animVertex.link(animFragment);
                 
                 path.shrink_to_fit();
-                item_clicked->addModel(path);
-                Animation* danceAnimation = new Animation(path, &item_clicked->getModel().value());
+
+                std::string animPath = "meshes/animations/bot/Vanguard.DAE";
+
+                item_clicked->addModel(GameState::engine_path + animPath);
+
+                print("Model bones:\n");
+                auto& bones = item_clicked->getModel().value().GetBoneInfoMap();
+                for(auto& b : bones)
+                {
+                    print(b.second.offset, "\n-------------\n");
+                }
+
+                Animation* danceAnimation = new Animation(GameState::engine_path + animPath, &item_clicked->getModel().value());
+                print("Animation:\n"); 
+                std::cout << *danceAnimation;
                 item_clicked->setAnimator(danceAnimation);
             }
 
