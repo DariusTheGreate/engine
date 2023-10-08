@@ -124,6 +124,8 @@ public:
 
     void renderDebugPoint(glm::vec3 a, glm::vec4 color);
 
+    void renderDebugLine(glm::vec3 a, glm::vec3 b, glm::vec4 color = glm::vec4(0,1,0,0));
+
     void renderDebugGrid();
 
     void renderDebugLightSource(std::optional<PointLight>& p);

@@ -3,6 +3,19 @@
 
 #include <string>
 
+#include "windows.h"
+#include "psapi.h"
+
+struct MemInfo
+{
+	DWORDLONG totalVirtualMem;
+	DWORDLONG virtualMemUsed;
+	DWORDLONG  physMemUsed;
+
+	SIZE_T virtualMemUsedByMe;
+	SIZE_T physMemUsedByMe ;
+};
+
 class SystemInfo 
 {
 public:
@@ -17,6 +30,8 @@ public:
 	static void setInfo(SystemInfo* v);
 
 	static SystemInfo* getInfo();
+
+	MemInfo getMemoryInfo();
 
 private:
 	std::string cpuName;

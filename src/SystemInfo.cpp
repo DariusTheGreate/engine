@@ -75,4 +75,25 @@ bool SystemInfo::isOcclusionCullingAvailable()
 	return occlusionCullingPresentedOnThisDevice;
 }
 
+MemInfo SystemInfo::getMemoryInfo()
+{
+	MemInfo memoryInformation;
+
+	MEMORYSTATUSEX memInfo;
+	memInfo.dwLength = sizeof(MEMORYSTATUSEX);
+	GlobalMemoryStatusEx(&memInfo);
+
+	memoryInformation.totalVirtualMem = memInfo.ullTotalPageFile;
+	memoryInformation.virtualMemUsed = memInfo.ullTotalPageFile - memInfo.ullAvailPageFile;
+	memoryInformation.physMemUsed = memInfo.ullTotalPhys - memInfo.ullAvailPhys;	
+
+	PROCESS_MEMORY_COUNTERS_EX pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+
+	memoryInformation.virtualMemUsedByMe = pmc.PrivateUsage;
+	memoryInformation.physMemUsedByMe  = pmc.WorkingSetSize;
+
+	return memoryInformation;
+}
+
 SystemInfo* SystemInfo::value = nullptr;

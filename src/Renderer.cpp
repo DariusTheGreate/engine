@@ -135,7 +135,7 @@ void DebugRenderer::renderDebugCube(glm::vec3 pos, int x, int y, int z)
 {
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-	print(pos, x, y, z, "\n");
+	//print(pos, x, y, z, "\n");
 	model = glm::translate(model, pos + glm::vec3(-0.5 * x, -0.5 * y, 0.5 * z));
 	model = glm::scale(model, {x,y,z});
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
@@ -167,6 +167,29 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 	//vao.bind();
 	//glDrawArrays(GL_LINE_STRIP, 0, 36);
 	//glBindVertexArray(0);
+}
+
+void DebugRenderer::renderDebugLine(glm::vec3 a, glm::vec3 b, glm::vec4 color)
+{
+	glUseProgram(dsv.getProgram());
+	auto model = glm::mat4(1.0f);
+	
+	float x = b.x - a.x;
+	float y = b.y - a.y;
+	float z = b.z - a.z;
+
+	model = glm::translate(model, a);
+	model = glm::scale(model, {x,y,z});
+
+	model = glm::rotate(model, x, glm::vec3(1,0,0));	
+	model = glm::rotate(model, y, glm::vec3(0,1,0));	
+	model = glm::rotate(model, z, glm::vec3(0,0,1));	
+
+	dsv.setVec4("objectColor", {0,0,1,0});
+	dsv.setMat4("model", model);
+	vao.bind();
+	glDrawArrays(GL_LINE_STRIP, 0, 2);
+	glBindVertexArray(0); 
 }
 
 void DebugRenderer::renderDebugGrid()
@@ -585,8 +608,6 @@ void Renderer::renderDebug(Window* wind)
 			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
 				dbr.renderDebugLightSource(obj->getPointLight());
 				});
-
-			//dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
 		}
 	}
 	//dbr.renderPoints();
@@ -600,7 +621,7 @@ void Renderer::renderAll(Window* wind)
 		dbr.updateCamera(projection, view);
 	}
 
-	if(dbr.debug_render)
+	 if(dbr.debug_render)
 		dbr.renderDebugGrid();
 
 	shaderLibInstance->loadCurrentShader();
@@ -617,10 +638,10 @@ void Renderer::renderAll(Window* wind)
 			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
 				dbr.renderDebugLightSource(obj->getPointLight());
 				});
-
-			//dbr.renderDebugLine(currScene->get_objects()[i]->getTransform().position, {1,1,1});
 		}
 	}
+
+	dbr.renderDebugLine({0,0,0}, {1,1,1});
 
 	//dbr.renderDebugCube({0,0,0}, 1,1,1);
 

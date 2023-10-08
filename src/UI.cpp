@@ -547,29 +547,24 @@ void UI::componentAdderWindow(Renderer& hui)
             ImGui::InputText("path", (char*)path.c_str(), 100);
 
             if(ImGui::Button("Load")){
-                //NOTE(DARIUS) DONT WORK YET
-                Shader animVertex = Shader(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER);
-                Shader animFragment = Shader(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER);
-                animVertex.compile();
-                animFragment.compile();
-                animVertex.link(animFragment);
-                
                 path.shrink_to_fit();
-
-                std::string animPath = "meshes/animations/bot/Vanguard.DAE";
+                std::string animPath = "meshes/animations/run.DAE";
 
                 item_clicked->addModel(GameState::engine_path + animPath);
 
-                print("Model bones:\n");
+                /*print("Model bones:\n");
                 auto& bones = item_clicked->getModel().value().GetBoneInfoMap();
                 for(auto& b : bones)
                 {
                     print(b.second.offset, "\n-------------\n");
-                }
+                }*/
 
                 Animation* danceAnimation = new Animation(GameState::engine_path + animPath, &item_clicked->getModel().value());
-                print("Animation:\n"); 
+                
+                /*print("Animation:\n"); 
                 std::cout << *danceAnimation;
+                */
+
                 item_clicked->setAnimator(danceAnimation);
             }
 
@@ -783,6 +778,14 @@ void UI::showEditorSettingsWindow(Renderer& hui)
         ImGui::Text(SystemInfo::getInfo()->getGPU().data());
         if(SystemInfo::getInfo()->isOcclusionCullingAvailable())
             ImGui::Text("Occlusion Culling is Available\n");
+
+        ImGui::Text("MEMORY INFO: ");
+        auto memoryInformation = SystemInfo::getInfo()->getMemoryInfo(); 
+        ImGui::Text("total virtual memory amount     : %lld Mb", memoryInformation.totalVirtualMem/1024/1024);
+        ImGui::Text("total virtual memory used       : %lld Mb", memoryInformation.virtualMemUsed/1024/1024);
+        ImGui::Text("total phys memory used          : %lld Mb", memoryInformation.physMemUsed/1024/1024);
+        ImGui::Text("total virtual memory used by me : %lld Mb", memoryInformation.virtualMemUsedByMe/1024/1024);
+        ImGui::Text("total phys memory used by me    : %lld Mb", memoryInformation.physMemUsedByMe/1024/1024);
     }
 
     ImGui::Text("Frame Tick: ");

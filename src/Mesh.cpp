@@ -166,14 +166,12 @@ void Mesh::setupMesh()
     OpenglWrapper::EnableAttribute(4);
     OpenglWrapper::AttributePointer(4, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
     
-            glEnableVertexAttribArray(5);
-        glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    OpenglWrapper::EnableAttribute(5);
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
 
-        // weights
-        glEnableVertexAttribArray(6);
-        glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
-        glBindVertexArray(0);
-
+    OpenglWrapper::EnableAttribute(6);
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    glBindVertexArray(0);
 }
 
 void Mesh::printVertices()

@@ -1,71 +1,79 @@
---ARCHITECTURE
-	- colliders response system													
-	- better ECS?
-	- seialize subobjects 
-	- make Serialization separate file.
-	- add enginePath to serealization instead of full path
-	- make serealization deserealization faster!
-	- delete all float comparasions.
-	- remove unnecessary includes to speedup compilation
-	- fix coordinates systems conversion
-	- Do/Undo, (use memnto pattern?)
-	- create some kind of testing (log response from engine and compare it to desired)
-	- Log interface
-	- better batchingCache struct
-	- memory log
-	- threading backtrace 
-	- object ID as id in scene is bad invariant
-	- script properties
-	- cache serialize batches?
-	- timer log
-	- profile serialization
-	- batching memory consumption if we store batched objects
-	- write own hashtable, cause i hate std::hashtable) 
-	- connect renderdoc api
-	- add namespaces
-	- << operator for types
-	- sanitizers
-	- refactor PraticleSystem
-	- guizmos for mesh vertices
-	- guizmos wrapper
+--ACTIVE DEVELOPMENT
+	--ARCHITECTURE
+		- colliders response system													
+		- better ECS?
+		- seialize subobjects 
+		- make Serialization separate file.
+		- add enginePath to serealization instead of full path
+		- make serealization deserealization faster!
+		- delete all float comparasions.
+		- remove unnecessary includes to speedup compilation
+		- fix coordinates systems conversion
+		- Do/Undo, (use memnto pattern?)
+		- create some kind of testing (log response from engine and compare it to desired)
+		- Log interface
+		- better batchingCache struct
+		- memory log
+		- threading backtrace 
+		- object ID as id in scene is bad invariant
+		- script properties
+		- cache serialize batches?
+		- timer log
+		- profile serialization
+		- batching memory consumption if we store batched objects
+		- write own hashtable, cause i hate std::hashtable) 
+		- connect renderdoc api
+		- add namespaces
+		- << operator for types
+		- sanitizers
+		- refactor PraticleSystem
+		- guizmos for mesh vertices
+		- guizmos wrapper
+		- commands buffer?
+		- terrain is a mesh
 
---SERVER
-	- increase amount of connections
 
---RENDERER
-	- finish batching 
-	- finish culling
-	- finish terrain 
-	- occlusion culling
-	- LOD
-	- distanced rendering                                                       
-	- instanced rendering 
-	- finish skeletal animations
-	- terrain editor
+	--SERVER
+		- increase amount of connections
 
-	- shaders for effects drawing on texture
-	- blending stage
-	- deffered light?
-	- finish shadows                                                            
 
-	- 2D normal mapping                                                         
-	- cacheing of flat meshes textures
-	- finish bloom                                                              
-	- Texture resize to apropriate resolution
-	- gamma correction
-	- light shafts?
-	- debug grid distance rendering
-	- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
-	- text rendering
-	- commands buffer?
---UI
-	- assets browser
-	- LOGO
-	- Panels
+	--RENDERER
+		- occlusion culling
+		- LOD
+		- distanced rendering                                                       
+		- terrain editor
+		- shaders for effects drawing on texture
+		- 2D normal mapping                                                         
+		- cacheing of flat meshes textures
+		- Texture resize to apropriate resolution
+		- debug grid distance rendering
+		- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
+		- text rendering
 
---BUGS
-	- fix animation script update bug
-	- bug when assimp dont load first 4 letters(4 bytes) of string
-	- bug with batched forest frustum culling
-	- bug when if u click both button at a time objects teleports to inf
-	- bug when if u type name and press ESC you get abort from imgui
+
+	--UI
+		- assets browser
+		- LOGO
+		- Panels
+
+
+
+--PASSIVE DEVELOPMENT
+	-- RENDERER:
+		- finish batching 
+		- finish culling
+		- finish terrain 
+		- finish skeletal animations
+		- instanced rendering 
+		- blending stage
+		- deffered light?
+		- finish shadows    
+		- finish bloom                              
+
+
+	--BUGS
+		- fix animation script update bug
+		- bug when assimp dont load first 4 letters(4 bytes) of string
+		- bug with batched forest frustum culling
+		- bug when if u click both button at a time objects teleports to inf
+		- bug when if u type name and press ESC you get abort from imgui
