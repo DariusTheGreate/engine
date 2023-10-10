@@ -68,6 +68,13 @@ void Mesh::setTexture(const std::string& path)
     textures.push_back(texture);
 }
 
+void Mesh::clearMesh() 
+{
+    vao.deleteVAO();
+    vbo.deleteVBO();
+    ebo.deleteEBO();
+}
+
 VAO Mesh::getVao()
 {
     return vao;
@@ -81,6 +88,11 @@ DrawMode Mesh::getDrawMode()
 MeshType Mesh::getType()
 {
     return type;
+}
+
+MeshAABB Mesh::getAABB()
+{
+    return aabb;
 }
 
 void Mesh::Draw(Shader& shader, int instancedAmount)

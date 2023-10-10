@@ -18,19 +18,19 @@
 		- object ID as id in scene is bad invariant
 		- script properties
 		- cache serialize batches?
-		- timer log
-		- profile serialization
+		- timestamped log
+		- better profilers workflow
 		- batching memory consumption if we store batched objects
 		- write own hashtable, cause i hate std::hashtable) 
 		- connect renderdoc api
 		- add namespaces
-		- << operator for types
 		- sanitizers
 		- refactor PraticleSystem
 		- guizmos for mesh vertices
-		- guizmos wrapper
 		- commands buffer?
 		- terrain is a mesh
+		- move all geometry to single model
+		- filesystem
 
 
 	--SERVER
@@ -38,6 +38,24 @@
 
 
 	--RENDERER
+		- default textures
+
+		- finish culling
+		- finish terrain 
+		- finish skeletal animations
+		- instanced rendering 
+		- finish batching 
+		- blending stage
+		- deffered light?
+		- finish shadows    
+		- finish bloom        
+
+		- cubemaps
+		- reflections
+
+		- geometry cache
+		- terrain texturing
+		- terrain editor
 		- occlusion culling
 		- LOD
 		- distanced rendering                                                       
@@ -57,21 +75,8 @@
 		- Panels
 
 
-
---PASSIVE DEVELOPMENT
-	-- RENDERER:
-		- finish batching 
-		- finish culling
-		- finish terrain 
-		- finish skeletal animations
-		- instanced rendering 
-		- blending stage
-		- deffered light?
-		- finish shadows    
-		- finish bloom                              
-
-
 	--BUGS
+		- boost netowrking bug with lagging positions 
 		- fix animation script update bug
 		- bug when assimp dont load first 4 letters(4 bytes) of string
 		- bug with batched forest frustum culling

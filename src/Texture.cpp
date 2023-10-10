@@ -80,6 +80,11 @@ std::string Texture::get_type() {
 	return type;
 }
 
+void Texture::set_type(std::string t)
+{
+	type = t;
+}
+
 std::string Texture::get_path() {
 	return path;
 }

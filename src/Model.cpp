@@ -196,68 +196,47 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
             indices.push_back(face.mIndices[j]);
     }
 
-    std::cout << "\nHasMaterials: " << scene->HasMaterials() << "\n";
-    std::cout << "\nHasMaterials: " << scene->mNumMaterials << "\n";
-    std::cout << "\nIndex: " << mesh->mMaterialIndex << "\n";
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-    //NOTE(darius) there was no fro before
-    //for (unsigned int m = 0; m < scene->mNumMaterials; ++m)
-    //{
-        /*	aiMaterial* material = scene->mMaterials[m];//Get the current material
-            aiString materialName;//The name of the material found in mesh file
-            aiReturn ret;//Code which says whether loading something has been successful of not
+    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
-            ret = material->Get(AI_MATKEY_NAME, materialName);//Get the material name (pass by reference)
+    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
-            std::cout << materialName.C_Str() << "\n";
+    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
-            int numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
-            std::cout << "num of diff Textures " << numTextures << "\n";
-
-            aiString textureName;
-
-            if (numTextures > 0)
-            {
-                //Get the file name of the texture by passing the variable by reference again
-                //Second param is 0, which is the first diffuse texture
-                //There can be more diffuse textures but for now we are only interested in the first one
-                ret = material->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), textureName);
-
-                std::cout << "diffuse text name: " << textureName.C_Str() << "\n";
-            }
-        }*/
-
-		//NOTE(darius) mMaterialIndex is material that this meshe uses. Assimp not allow for one mesh to have multiple materials. Its split it
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];//scene->mMaterials[mMaterialIndex];
-
-        // 1. diffuse maps
-        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        // 2. specular maps
-        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-        textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-        textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-        if (diffuseMaps.size() == 0) 
+    if (diffuseMaps.size() == 0) 
+    {
+        std::cout << "\nWARNING! ASSIMP COULDNT DISTINGHUISH MATERIALS. TRAVERSING THROUGH ALL MATERIALS\n";
+        for (unsigned int m = 0; m < scene->mNumMaterials; ++m) 
         {
-            std::cout << "\nWARNING! ASSIMP COULDNT DISTINGHUISH MATERIALS. TRAVERSING THROUGH ALL MATERIALS\n";
-            for (unsigned int m = 0; m < scene->mNumMaterials; ++m) 
-            {
-                aiMaterial* materialRepeat = scene->mMaterials[m];
-                std::vector<Texture> diffuseMapsRepeat = loadMaterialTextures(materialRepeat, aiTextureType_DIFFUSE, "texture_diffuse");
-                if (diffuseMapsRepeat.size() > 0) {
-                    textures.insert(textures.end(), diffuseMapsRepeat.begin(), diffuseMapsRepeat.end());
-                    break;
-                }
+            aiMaterial* materialRepeat = scene->mMaterials[m];
+            std::vector<Texture> diffuseMapsRepeat = loadMaterialTextures(materialRepeat, aiTextureType_DIFFUSE, "texture_diffuse");
+            if (diffuseMapsRepeat.size() > 0) {
+                textures.insert(textures.end(), diffuseMapsRepeat.begin(), diffuseMapsRepeat.end());
+                break;
             }
         }
-    //}
+    }
+    //TODO(darius) check if textures that we ahve dont exist in filesystem
+    if(textures.size() == 0)
+    {
+        print("\nWARNING! NO TEXTURES, LOADING DEFAULT TEXTURE\n");
+        //Texture t(GameState::engine_path + "textures/checkerboard.png");
+        //t.set_type("texture_diffuse"); 
+        //textures.emplace_back(std::move(t)); 
+
+        auto textID = TextureFromFile("checkerboard.png", GameState::engine_path + "textures", false, false); 
+
+        Texture texture(textID, "checkerboard.png", "texture_diffuse");
+        textures.push_back(texture); 
+        println("TEXURES SIZE: ", textures.size());
+    }
 
     ExtractBoneWeightForVertices(vertices,mesh,scene);
 
@@ -267,17 +246,12 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
 {
     std::vector<Texture> textures;
-    std::cout << "texture count of type " << typeName << " " << mat->GetTextureCount(type) << "\n";
-    //NOTE(darius) is it possible to have multiple lets say diffuse textures?
-   // for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+
     if( mat->GetTextureCount(type) > 0)
     {
         aiString str;
 
         mat->GetTexture(type, 0, &str);
-        //mat->GetTexture(type, i, &str);
-
-        std::cout << "textures: " << str.C_Str() << "\n";
 
         auto fnd = Model::textures_set.find(str.C_Str());
         if (fnd != Model::textures_set.end()) 
@@ -290,12 +264,19 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
         else 
         {
-            Texture texture(TextureFromFile(str.C_Str(), this->directory, gammaCorrection, rotate), str.C_Str(), typeName);
+            auto textID = TextureFromFile(str.C_Str(), this->directory, gammaCorrection, rotate); 
+            if(textID == 0)
+                return textures;
+
+            Texture texture(textID, str.C_Str(), typeName);
             textures.push_back(texture);
             Model::textures_loaded.push_back(texture);
             Model::textures_set.insert(str.C_Str());
         }
     }
+
+    println("textures loaded size ", textures.size());
+
     return textures;
 }
 
@@ -306,14 +287,14 @@ void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* 
     {
         int boneID = -1;
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
-        println("Bone number ", boneIndex, ":", boneName);
+        //println("Bone number ", boneIndex, ":", boneName);
         if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
         {
             BoneInfo newBoneInfo;
             newBoneInfo.id = m_BoneCounter;
             newBoneInfo.offset = ConvertMatrixToGLMFormat(
                 mesh->mBones[boneIndex]->mOffsetMatrix);
-            println("Bone Matrice: ", newBoneInfo.offset);
+            //println("Bone Matrice: ", newBoneInfo.offset);
             m_BoneInfoMap[boneName] = newBoneInfo;
             boneID = m_BoneCounter;
             m_BoneCounter++;
@@ -359,7 +340,7 @@ glm::quat Model::GetGLMQuat(const aiQuaternion& pOrientation)
 
 unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate) 
 {
-    unsigned int textureID;
+    unsigned int textureID = 0;
     OpenglWrapper::GenerateTextures(&textureID);
 
     stbi_set_flip_vertically_on_load(rotate);

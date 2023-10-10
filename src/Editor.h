@@ -126,6 +126,10 @@ public:
         events.push(ev);
     }
 
+    static void addProfiler(std::string&& name);
+
+    static void addProfileRecord(std::string&& name, float record);
+
     void setPolygonMode(size_t type = GL_LINE);
 
     void setEditorMode(int mode);
@@ -182,4 +186,6 @@ private:
     std::shared_ptr<Client> client;//NOTE(darius) tempo
 
     std::queue<EditorEvent*> events;
+
+    static std::vector<Profiler<float>> profilers;//TODO(darius) update somehow and give to UI to render
 };

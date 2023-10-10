@@ -22,6 +22,69 @@
 
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+class GuizmoTool
+{
+public:
+    void tool(Object* item)
+    {
+        ImGuizmo::SetDrawlist();
+        ImGuiIO& io = ImGui::GetIO();
+        ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::BeginFrame();
+
+        if(!(!GameState::cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
+            cameraProjection = GameState::cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
+            cameraView = (GameState::cam.getBasicLook());
+        }
+        
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item->getTransform().matrix));
+
+        if(item->getPointLight()){
+            item->getPointLight()->position = item->getTransform().getPosition();
+            //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+        }
+        
+        if(item->getParticleSystem()){
+            item->getParticleSystem()->emitter = item->getTransform().getPosition();
+            //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
+        }
+
+        auto& objtrref = item->getTransform().matrix;
+        item->traverseObjects([&objtrref](Object* obj){
+            obj->getTransform().matrix = objtrref;
+        });
+    } 
+
+    void setOperation(ImGuizmo::OPERATION op)
+    {
+        curr_operation = op;
+    }
+
+    void setMode(ImGuizmo::MODE mode)
+    {
+        guizmoMode = mode;
+    }
+
+    ImGuizmo::MODE getMode()
+    {
+        return guizmoMode; 
+    }
+
+    ImGuizmo::OPERATION getOperation()
+    {
+        return curr_operation;
+    }
+
+private:
+    ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
+    ImGuizmo::MODE guizmoMode = ImGuizmo::WORLD;
+
+    glm::mat4 cameraProjection = glm::mat4(1.0f);
+    glm::mat4 cameraView = glm::mat4(1.0f);
+};
+
 class UI {
 
 public:
@@ -48,7 +111,7 @@ public:
     
     void showEditorSettingsWindow(Renderer& hui);
 
-    void profilesWindow();
+    void profilesWindow(std::vector<Profiler<float>>& profilers);
 
     void sceneCamerasWindow(Scene& scene);
 
@@ -76,11 +139,6 @@ private:
 	Object* item_clicked = nullptr;
     Object* item_copy = nullptr;
 
-    ImGuizmo::OPERATION curr_operation = ImGuizmo::OPERATION::TRANSLATE;
-    ImGuizmo::MODE guizmoMode = ImGuizmo::WORLD;
-
-    glm::mat4 cameraProjection = glm::mat4(1.0f);
-    glm::mat4 cameraView = glm::mat4(1.0f);
 
     GameState* state= nullptr;
 
@@ -88,9 +146,10 @@ private:
 
     double timeVal = 0;
 
+    GuizmoTool guizmoTool;
+
     //std::deque<float> framerateHistory;
     //size_t historySize = 1000;
 
     Profiler<float> profile;
-    std::vector<Profiler<float>> profilers; 
 };

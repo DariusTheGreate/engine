@@ -107,8 +107,10 @@ bool ObjectSelector::RaySphere(glm::vec3 ray_origin, glm::vec3 ray_direction, gl
     */
 }
 
+//NOTE(darius) TODO(darius) its here for occlusion culling
 void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY, Window* w, Renderer* renderer)
 {
+    Timer t;
     //std::cout << "Coords: " << mouseX << "|" << mouseY << "\n";
     //GameState::msg("Coords: " + std::to_string(mouseX) + "|" + std::to_string(mouseY) + "\n");
     auto& objects = scene->get_objects();
@@ -116,16 +118,18 @@ void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY,
     auto ray = GetRayFromMouse(mouseX, mouseY, w);
     //render->getDebugRenderer().renderDebugPoint(ray);
     //render->getDebugRenderer().renderDebugPoint({0,0,0});
-    renderer->getDebugRenderer().pointsToRender.push_back(ray);
-    renderer->getDebugRenderer().pointsToRender.push_back(glm::vec3{ 0,0,0 });
+    //renderer->getDebugRenderer().pointsToRender.push_back(ray);
+    //renderer->getDebugRenderer().pointsToRender.push_back(glm::vec3{ 0,0,0 });
 
     for (size_t i = 0; i < objects.size(); ++i)
     {
         if (RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().getPosition(), 3, renderer)) {
-            std::cout << "clicked " << objects[i]->get_name() << "\n";
+            //std::cout << "clicked " << objects[i]->get_name() << "\n";
             //msg("clicked: " +objects[i]->get_name());
         }
     }
+
+    println("cur time ", t.checkTime());
 }
 
 size_t ObjectSelector::pick_fbo = 0;

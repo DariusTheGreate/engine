@@ -310,6 +310,8 @@ void ShaderLibrary::shaderRoutine(Object* obj)
 
     Shader& sv = getCurrShader();
 
+    auto stageSave = stage;
+
     if(obj->getAnimator()){
         stage = STAGE::SKELETAL;
         auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
@@ -402,6 +404,8 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     //model *= RotationMatrix;
 
     sv.setMat4("model", model);
+
+    stage = stageSave;
 }
 
 void ShaderLibrary::skeletalAnimationShaderRoutine(Transform tr){

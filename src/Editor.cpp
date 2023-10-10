@@ -288,6 +288,20 @@ void Editor::processEvents()
     }
 }
 
+void Editor::addProfiler(std::string&& name)
+{
+    profilers.push_back(Profiler<float>(std::move(name)));
+}
+
+void Editor::addProfileRecord(std::string&& name, float record)
+{
+    for(auto& p : profilers)
+    {
+        if(p.getNameRef() == name)
+            p.addRecord(std::move(record));
+    }
+}
+
 void Editor::setPolygonMode(size_t type) {
     glPolygonMode(GL_FRONT_AND_BACK, static_cast<unsigned int>(type));
 }
@@ -660,3 +674,5 @@ void Editor::consoleInputThread(Editor* currEditor)
 }
 
 Scene Editor::currScene;
+
+std::vector<Profiler<float>> Editor::profilers;

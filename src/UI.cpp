@@ -18,6 +18,9 @@ UI::UI(GLFWwindow* window, GameState* st) {
     const char* glsl_version = "#version 330";
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
+
+    profile.setName("FPS");
+    
 }
 
 void UI::renderUI(Scene& scn, Renderer& r) {
@@ -548,7 +551,7 @@ void UI::componentAdderWindow(Renderer& hui)
 
             if(ImGui::Button("Load")){
                 path.shrink_to_fit();
-                std::string animPath = "meshes/animations/run.DAE";
+                std::string animPath = "meshes/animations/stupidrun.DAE";
 
                 item_clicked->addModel(GameState::engine_path + animPath);
 
@@ -685,54 +688,28 @@ void UI::guizmoWindow()
 
     if (ImGui::Button("Translation tool"))
     {
-        curr_operation = ImGuizmo::OPERATION::TRANSLATE;
+        guizmoTool.setOperation(ImGuizmo::OPERATION::TRANSLATE);
     }
 
     if (ImGui::Button("Rotation tool"))
     {
-        curr_operation = ImGuizmo::OPERATION::ROTATE;
+        guizmoTool.setOperation(ImGuizmo::OPERATION::ROTATE);
     }
 
     if (ImGui::Button("Scale tool"))
     {
-        curr_operation = ImGuizmo::OPERATION::SCALE;
+        guizmoTool.setOperation(ImGuizmo::OPERATION::SCALE);
     }
 
     if (ImGui::Button("Change Mode"))
     {
-        if(guizmoMode == ImGuizmo::LOCAL)
-            guizmoMode = ImGuizmo::WORLD;
+        if(guizmoTool.getMode() == ImGuizmo::LOCAL)
+            guizmoTool.setMode(ImGuizmo::WORLD);
         else
-            guizmoMode = ImGuizmo::LOCAL;
+            guizmoTool.setMode(ImGuizmo::LOCAL);
     }
 
-
-    ImGuizmo::SetDrawlist();
-    ImGuiIO& io = ImGui::GetIO();
-    ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-
-    ImGuizmo::SetOrthographic(false);
-    ImGuizmo::BeginFrame();
-
-    if(!(!GameState::cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
-        cameraProjection = GameState::cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
-		cameraView = (GameState::cam.getBasicLook());
-    }
-    
-    ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item_clicked->getTransform().matrix));
-
-    if(item_clicked->getPointLight()){
-        item_clicked->getPointLight()->position = item_clicked->getTransform().getPosition();
-        //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
-    }
-    if(item_clicked->getParticleSystem()){
-        item_clicked->getParticleSystem()->emitter = item_clicked->getTransform().getPosition();
-        //item_clicked->getTransform().set_scale(glm::vec3{objScl[0][0], objScl[1][1], objScl[2][2]});
-    }
-    auto& objtrref = item_clicked->getTransform().matrix;
-    item_clicked->traverseObjects([&objtrref](Object* obj){
-        obj->getTransform().matrix = objtrref;
-    });
+    guizmoTool.tool(item_clicked);
 
 	//float viewManipulateRight = ImGui::GetWindowPos().x + 900.0f;
 	//float viewManipulateTop = ImGui::GetWindowPos().y;
@@ -797,6 +774,10 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     if(profile.size() > 0)
         ImGui::PlotLines("Frame Times", &profile.getHistoryRef()[0], profile.getHistoryRef().size(), 0, NULL, 0, 500, ImVec2(0,100));
 
+    if (ImGui::Button("Serialize profiler")){
+        profile.serialize(GameState::engine_path + profile.getNameRef() + ".profile");
+    }
+
     ImGui::Text("Frame Rate: ");
     ImGui::SameLine();
     long rate = std::round(1 / timeVal);
@@ -813,7 +794,7 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::End();
 }
 
-void UI::profilesWindow()
+void UI::profilesWindow(std::vector<Profiler<float>>& profilers)
 {
     ImGui::Begin("Profilers");
 

@@ -77,6 +77,8 @@ public:
 	unsigned int* get_texture_ptr();
 
 	std::string get_type();
+
+	void set_type(std::string t);
 	
 	std::string get_path();
 

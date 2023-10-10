@@ -121,19 +121,11 @@ public:
 
     MeshType getType();
 
-    void clearMesh() 
-    {
-        vao.deleteVAO();
-        vbo.deleteVBO();
-        ebo.deleteEBO();
-    }
+    void clearMesh();
 
     void calculateAabb(Transform&);
 
-    MeshAABB getAABB()
-    {
-        return aabb;
-    }
+    MeshAABB getAABB();
 
     std::vector<unsigned int> generateLOD();
 
