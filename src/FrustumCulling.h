@@ -2,6 +2,8 @@
 
 #include <Camera.h>
 #include <Printer.h>
+#include <AABB.h>
+#include <GameState.h>
 
 #include <glm/glm.hpp>
 
@@ -21,7 +23,6 @@ struct Plane
 
 	void printMe()
 	{
-		//std::cout << normal.x << " " << normal.y << " " << normal.z << " " << distance << "\n";
 		print(normal.x, " ",  normal.y, " ", normal.z, " ", distance, "\n");
 	}
 };
@@ -29,6 +30,8 @@ struct Plane
 class Frustum
 {
 public:
+	Frustum() = default;
+	
 	Frustum(Camera& cam, float aspect, float fovY, float zNear, float zFar)
 	{
 	    const float halfVSide = zFar * tanf(fovY * .5f);
@@ -65,4 +68,22 @@ public:
 
     Plane farFace;
     Plane nearFace;
+};
+
+class FrustumCuller
+{
+public:
+	static bool cull(MeshAABB aabb)
+	{
+        return aabb.isOnFrustum(camFrustum);
+	}
+
+	static void updateFrustum()
+	{
+		camFrustum = Frustum(GameState::cam, (float)1920 / (float)1080, glm::radians(GameState::cam.getFov()), 0.1f, 100.0f); 	
+	}
+
+private:
+    static Frustum camFrustum;//(GameState::cam, (float)1920 / (float)1080, glm::radians(GameState::cam.getFov()), 0.1f, 100.0f);
+    
 };

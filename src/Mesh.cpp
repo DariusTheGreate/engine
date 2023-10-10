@@ -6,6 +6,7 @@
 #include <ranges>
 #include <algorithm>
 #include <glm/glm.hpp>
+#include <limits>
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) 
     : vertices(std::move(vertices)), indices(std::move(indices)), textures(std::move(textures))
@@ -93,6 +94,14 @@ MeshType Mesh::getType()
 MeshAABB Mesh::getAABB()
 {
     return aabb;
+}
+
+void Mesh::updateAABB(Transform tr)
+{
+    //TODO(darius) optimise here
+    glm::vec3 aabbNewCenter = tr.matrix * glm::vec4(((aabb.min + aabb.max) * 0.5f), 1.0f); 
+    if(aabb.size != tr.getScale() || aabb.center != aabbNewCenter)
+        calculateAabb(tr);
 }
 
 void Mesh::Draw(Shader& shader, int instancedAmount)
@@ -236,14 +245,30 @@ void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
 //TODO(darius) apply scale?
 void Mesh::calculateAabb(Transform& tr) 
 {
-    glm::vec3 vertex = glm::vec3(vertices[indices[0]].Position);
-    glm::vec3 vmin = vertex;
-    glm::vec3 vmax = vertex;
+    //println("aab update");
+    //glm::vec3 vertex = glm::vec3(vertices[indices[0]].Position);
+    glm::vec3 vmin = glm::vec3(FLT_MAX, FLT_MAX, FLT_MAX);//vertex;
+    glm::vec3 vmax = glm::vec3(FLT_MIN, FLT_MIN, FLT_MIN);//vertex;
 
-    for (size_t i = 0; i < indices.size(); ++i) {
+    /*for (size_t i = 0; i < indices.size(); ++i) {
         vertex = glm::vec3(vertices[indices[i]].Position);
         vmin = glm::length(vmin) < glm::length(vertex) ? vmin : vertex;
         vmax = glm::length(vmax) > glm::length(vertex) ? vmax : vertex;
+    }
+    */
+
+    using std::min;
+    using std::max;
+
+    for (auto& vertex : vertices)
+    {
+        vmin.x = min(vmin.x, vertex.Position.x);
+        vmin.y = min(vmin.y, vertex.Position.y);
+        vmin.z = min(vmin.z, vertex.Position.z);
+
+        vmax.x = max(vmax.x, vertex.Position.x);
+        vmax.y = max(vmax.y, vertex.Position.y);
+        vmax.z = max(vmax.z, vertex.Position.z);
     }
 
     /*glm::mat4 m = glm::mat4(1.0f);
@@ -257,10 +282,15 @@ void Mesh::calculateAabb(Transform& tr)
     vmax = glm::vec3{vmax4.x, vmax4.y, vmax4.z};
     */
 
-    aabb.min = vmin;
-    aabb.max = vmax;
-
     aabb.center = tr.matrix * glm::vec4(((vmin + vmax) * 0.5f), 1.0f);
+
+    aabb.min = tr.matrix * glm::vec4(vmin.x, vmin.y, vmin.z, 1.0f);
+    aabb.max = tr.matrix * glm::vec4(vmax.x, vmax.y, vmax.z, 1.0f);
+
+    println(aabb.min, aabb.max);
+
+    //println("we geet ", vmin, vmax, aabb.center);
+    //std::cout << aabb.center << "\n";
 
     aabb.size = {tr.getScale().x, tr.getScale().y, tr.getScale().z};//(vmax - aabb.center);
 }
@@ -277,22 +307,3 @@ std::vector<unsigned int> Mesh::generateLOD()
 
     return indicesGenerated;
 }
-
-bool MeshAABB::isOnFrustum(Frustum& camFrustum, Transform& transform) 
-{
-    //NOTE(darius) TEMPO while scale dont work
-    //if(transform.getScale() != glm::vec3{1,1,1})
-    //    return true;
-
-    //glm::vec3 globalCenter{ transform.matrix * glm::vec4(center, 1.f) };
-    //glm::vec3 scl = transform.getScale();
-
-    //MeshAABB globalAABB(globalCenter, scl.x, scl.y, scl.z);
-
-    return (isOnOrForwardPlane(camFrustum.leftFace) &&
-        isOnOrForwardPlane(camFrustum.rightFace) &&
-        isOnOrForwardPlane(camFrustum.topFace) &&
-        isOnOrForwardPlane(camFrustum.bottomFace) &&
-        isOnOrForwardPlane(camFrustum.nearFace) &&
-        isOnOrForwardPlane(camFrustum.farFace));
-};

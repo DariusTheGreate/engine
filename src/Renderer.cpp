@@ -2,6 +2,8 @@
 #include <Colider.h>
 #include <ObjectSelector.h>
 #include <Timer.h>
+#include <FrustumCulling.h>
+#include <OcclusionCulling.h>
 
 #include <optional>
 
@@ -355,6 +357,11 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 
 void Renderer::render(Window* wind)
 {
+	FrustumCuller::updateFrustum();
+	OcclusionCuller::updateOrigin();
+	//NOTE(darius) in progress uncomment to test
+	//OcclusionCuller::cull(currScene->get_objects());
+
 	Renderer::drawCallsCount = 0;
 	Renderer::drawCallsInstancedCount = 0;
 
