@@ -287,7 +287,7 @@ void Mesh::calculateAabb(Transform& tr)
     aabb.min = tr.matrix * glm::vec4(vmin.x, vmin.y, vmin.z, 1.0f);
     aabb.max = tr.matrix * glm::vec4(vmax.x, vmax.y, vmax.z, 1.0f);
 
-    println(aabb.min, aabb.max);
+    //println(aabb.min, aabb.max);
 
     //println("we geet ", vmin, vmax, aabb.center);
     //std::cout << aabb.center << "\n";

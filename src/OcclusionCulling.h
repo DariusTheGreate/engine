@@ -6,13 +6,14 @@
 
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
+#include <glm/geometric.hpp>
 
 class Object;
 
 class OcclusionCuller
 {
 public:
-	static bool cull(std::vector<Object*> objs);
+	static void cull(std::vector<Object*> objs);
 
 	static glm::vec2 intersectAABB(MeshAABB aabb, glm::vec3 rayDir) 
 	{

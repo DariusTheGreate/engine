@@ -99,6 +99,26 @@ public:
 
 	void hide();
 
+	bool is_hidden()
+	{
+		return object_hidden;
+	}
+
+	void cull()
+	{
+		object_culled = true;	
+	}
+
+	void uncull()
+	{
+		object_culled = false;	
+	}
+
+	bool is_culled()
+	{
+		return object_culled;	
+	}
+
 	void serialize(std::ostream& file);
 
 	void serializeAsPrefab(std::ofstream& file);
@@ -171,6 +191,8 @@ private:
 	Object* parent = nullptr;
 
 	bool object_hidden = false;
+
+	bool object_culled= false;
 
 	int ID = 0;
 };

@@ -124,7 +124,7 @@ void Object::updateAnimator(float dt)
 
 void Object::renderObject() 
 {
-    if(!object_hidden && model){
+    if(!object_hidden && !object_culled && model){
         model->Draw(this, getPointLight(), getMaterial());
     }
 
