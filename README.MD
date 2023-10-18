@@ -4,7 +4,7 @@
 
 ### Some Game Example:
 ![output example](assets/example_gif3.gif "output example")
-![output example](assets/example_skeletal_anim.gif "skeletal anims")
+![output example](assets/example_sekeltal_anim.gif "skeletal anims")
 
 
 ### Some Editor Examples:
