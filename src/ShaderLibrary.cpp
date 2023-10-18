@@ -25,7 +25,9 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         terrainVertex(GameState::engine_path + "shaders/terrainVertex.glsl", GL_VERTEX_SHADER),
         terrainFragment(GameState::engine_path + "shaders/terrainFragment.glsl", GL_FRAGMENT_SHADER),
         skeletalAnimationVertex(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER),
-        skeletalAnimationFragment(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER)
+        skeletalAnimationFragment(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER),
+        cubeMapVertex(GameState::engine_path + "shaders/cubeMapVertex.glsl", GL_VERTEX_SHADER),
+        cubeMapFragment(GameState::engine_path + "shaders/cubeMapFragment.glsl", GL_FRAGMENT_SHADER)
     
     {
         lightingVertex.compile();
@@ -75,6 +77,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         skeletalAnimationVertex.compile();
         skeletalAnimationFragment.compile();
         skeletalAnimationVertex.link(skeletalAnimationFragment);
+
+        cubeMapVertex.compile();
+        cubeMapFragment.compile();
+        cubeMapVertex.link(cubeMapFragment);
         
         stage = STAGE::DEPTH;
     }
@@ -101,6 +107,8 @@ Shader& ShaderLibrary::getCurrShader()
         return terrainVertex;
     else if (stage == STAGE::SKELETAL)
         return skeletalAnimationVertex;
+    else if (stage == STAGE::CUBEMAP)
+        return cubeMapVertex;
     else
         return lightingVertex;
 }
@@ -158,6 +166,11 @@ Shader& ShaderLibrary::getTerrainShader()
 Shader& ShaderLibrary::getSkeletalShader()
 {
     return skeletalAnimationVertex;
+}
+
+Shader& ShaderLibrary::getCubeMapShader()
+{
+    return cubeMapVertex; 
 }
 
 void ShaderLibrary::checkForShaderReload() 

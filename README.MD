@@ -4,10 +4,11 @@
 
 ### Some Game Example:
 ![output example](assets/example_gif3.gif "output example")
+![output example](assets/example_skeletal_anim.gif "skeletal anims")
+
 
 ### Some Editor Examples:
-![output example](assets/example_gif0.gif "output example")
-![output example](assets/example_gif2.gif "output example")
+#![output example](assets/example_gif2.gif "output example")
 
 ### There is a lot of functional by now:
 - [X] 3D/2D modes, some editor

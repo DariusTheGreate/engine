@@ -22,6 +22,7 @@ public:
         PARTICLES,
         TERRAIN,
         SKELETAL,
+        CUBEMAP,
     };
 
 public:
@@ -50,6 +51,8 @@ public:
     Shader& getTerrainShader();
 
     Shader& getSkeletalShader();
+
+    Shader& getCubeMapShader();
 
     void loadCurrentShader();
     
@@ -99,6 +102,9 @@ private:
 
     Shader skeletalAnimationVertex;
     Shader skeletalAnimationFragment;
+
+    Shader cubeMapVertex;
+    Shader cubeMapFragment;
 
     GraphicsStateCache cache;
 };

@@ -21,7 +21,215 @@
         }
       ],
       "projects": [],
-      "message": "Your license will expire in 8 days. Click 'Renew' to learn more or contact us at support@viva64.com. This is an information message. You can continue using the analyzer with your current license. To hide this message, use the '--disableLicenseExpirationCheck' flag.",
+      "message": "Your license will expire in 7 days. Click 'Renew' to learn more or contact us at support@viva64.com. This is an information message. You can continue using the analyzer with your current license. To hide this message, use the '--disableLicenseExpirationCheck' flag.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V008",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Application.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Unable to start the analysis on this file. E:\\own\\programming\\engine\\src\\Application.cpp",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V008",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\InputManager.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Unable to start the analysis on this file. E:\\own\\programming\\engine\\src\\InputManager.cpp",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V008",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Unable to start the analysis on this file. E:\\own\\programming\\engine\\src\\Scene.cpp",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V008",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Server.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Unable to start the analysis on this file. E:\\own\\programming\\engine\\src\\Server.cpp",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Client.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Cannot open file E:\\own\\programming\\engine\\Build\\engine\\engine\\Client.PVS-Studio.i",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Client.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Could not process file E:\\own\\programming\\engine\\Build\\engine\\engine\\Client.PVS-Studio.i",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Editor.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Cannot open file E:\\own\\programming\\engine\\Build\\engine\\engine\\Editor.PVS-Studio.i",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "",
+      "cwe": 0,
+      "level": 0,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Editor.cpp",
+          "line": 1,
+          "endLine": 1,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 0,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Could not process file E:\\own\\programming\\engine\\Build\\engine\\engine\\Editor.PVS-Studio.i",
       "favorite": false,
       "falseAlarm": false
     },
@@ -52,14 +260,41 @@
       "falseAlarm": false
     },
     {
+      "code": "V591",
+      "cwe": 393,
+      "sastId": "CERT-MSC52-CPP",
+      "level": 1,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\SIMD.h",
+          "line": 15,
+          "endLine": 15,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 522991569,
+            "currentLine": 125,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Non-void function should return a value.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
       "code": "V807",
       "cwe": 0,
       "level": 3,
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 41,
-          "endLine": 41,
+          "line": 42,
+          "endLine": 42,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -85,8 +320,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 84,
-          "endLine": 84,
+          "line": 85,
+          "endLine": 85,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -98,8 +333,8 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 77,
-          "endLine": 77,
+          "line": 78,
+          "endLine": 78,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -107,7 +342,7 @@
       "projects": [
         "engine"
       ],
-      "message": "The 'dirTr' variable is assigned values twice successively. Perhaps this is a mistake. Check lines: 77, 84.",
+      "message": "The 'dirTr' variable is assigned values twice successively. Perhaps this is a mistake. Check lines: 78, 85.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -118,8 +353,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 113,
-          "endLine": 113,
+          "line": 114,
+          "endLine": 114,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -144,8 +379,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 193,
-          "endLine": 193,
+          "line": 194,
+          "endLine": 194,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -157,8 +392,8 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 185,
-          "endLine": 185,
+          "line": 186,
+          "endLine": 186,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -166,7 +401,7 @@
       "projects": [
         "engine"
       ],
-      "message": "Recurring check. The 'maxX() >= c.minX()' condition was already verified in line 185.",
+      "message": "Recurring check. The 'maxX() >= c.minX()' condition was already verified in line 186.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -177,8 +412,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 269,
-          "endLine": 269,
+          "line": 270,
+          "endLine": 270,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -190,8 +425,8 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\Colider.cpp",
-          "line": 7,
-          "endLine": 7,
+          "line": 8,
+          "endLine": 8,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -209,9 +444,625 @@
       "level": 3,
       "positions": [
         {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 129,
+          "endLine": 129,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 782849,
+            "nextLine": 420153,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'aiPlane' class implements a copy constructor, but lacks the copy assignment operator. It is dangerous to use such a class.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V832",
+      "cwe": 0,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 149,
+          "endLine": 149,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 420153,
+            "currentLine": 79350507,
+            "nextLine": -649683385,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "It's better to use '= default;' syntax instead of empty constructor body.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V690",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 147,
+          "endLine": 147,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 195757,
+            "nextLine": 420153,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'aiRay' class implements a copy constructor, but lacks the copy assignment operator. It is dangerous to use such a class.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 184,
+          "endLine": 184,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": 386174797,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: r == other.r. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 184,
+          "endLine": 184,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": 386174797,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: g == other.g. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 184,
+          "endLine": 184,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": 386174797,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: b == other.b. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 188,
+          "endLine": 188,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": -32894659,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: r != other.r. It's probably better to use a comparison with defined precision: fabs(A - B) > Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 188,
+          "endLine": 188,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": -32894659,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: g != other.g. It's probably better to use a comparison with defined precision: fabs(A - B) > Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 188,
+          "endLine": 188,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 4484175,
+            "currentLine": -32894659,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: b != other.b. It's probably better to use a comparison with defined precision: fabs(A - B) > Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 193,
+          "endLine": 193,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 287195506,
+            "currentLine": -1412397614,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: r == other.r. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 193,
+          "endLine": 193,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 287195506,
+            "currentLine": -1412397614,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: g == other.g. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V659",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 222,
+          "endLine": 222,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 1582478834,
+            "currentLine": -526549467,
+            "nextLine": 21941,
+            "columns": 0
+          }
+        },
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\types.h",
+          "line": 217,
+          "endLine": 217,
+          "column": 1,
+          "endColumn": 2147483647
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Declarations of functions with 'operator []' name differ in the 'const' keyword only, but the bodies of these functions have different composition. This is suspicious and can possibly be an error. Check lines: 217, 222.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V835",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\texture.h",
+          "line": 95,
+          "endLine": 95,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 63346292,
+            "currentLine": 1214883129,
+            "nextLine": -744326568,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Passing cheap-to-copy argument by reference may lead to decreased performance. To avoid this, replace the first argument 'const aiTexel& other' with 'aiTexel other'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V835",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\texture.h",
+          "line": 101,
+          "endLine": 101,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -326723979,
+            "currentLine": -1469471431,
+            "nextLine": -726865226,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Passing cheap-to-copy argument by reference may lead to decreased performance. To avoid this, replace the first argument 'const aiTexel& other' with 'aiTexel other'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\mesh.h",
+          "line": 242,
+          "endLine": 242,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 221665206,
+            "currentLine": 2073261101,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison: mWeight == rhs.mWeight. It's probably better to use a comparison with defined precision: fabs(A - B) < Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V809",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\mesh.h",
+          "line": 344,
+          "endLine": 344,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -1276834602,
+            "currentLine": 372197,
+            "nextLine": 4507869,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Verifying that a pointer value is not NULL is not required. The 'if (mWeights)' check can be removed.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V809",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\mesh.h",
+          "line": 876,
+          "endLine": 876,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -123327354,
+            "currentLine": 751813,
+            "nextLine": 2234445,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Verifying that a pointer value is not NULL is not required. The 'if (mBones[a])' check can be removed.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V508",
+      "cwe": 480,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 196,
+          "endLine": 196,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 194261840,
+            "currentLine": -1585906364,
+            "nextLine": 5729,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The use of 'new type(n)' pattern was detected. Probably meant: 'new type[n]'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V508",
+      "cwe": 480,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 201,
+          "endLine": 201,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 388508935,
+            "currentLine": 1123118714,
+            "nextLine": 5729,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The use of 'new type(n)' pattern was detected. Probably meant: 'new type[n]'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V508",
+      "cwe": 480,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 231,
+          "endLine": 231,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 194261712,
+            "currentLine": -1585906108,
+            "nextLine": 5729,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The use of 'new type(n)' pattern was detected. Probably meant: 'new type[n]'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V508",
+      "cwe": 480,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 236,
+          "endLine": 236,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 388508807,
+            "currentLine": 1123118458,
+            "nextLine": 5729,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The use of 'new type(n)' pattern was detected. Probably meant: 'new type[n]'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 515,
+          "endLine": 515,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 558887,
+            "currentLine": -1576788539,
+            "nextLine": 176909,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison. It's probably better to use a comparison with defined precision: fabs(A - B) > Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V550",
+      "cwe": 682,
+      "sastId": "CERT-FLP02-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\metadata.h",
+          "line": 520,
+          "endLine": 520,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 1117499,
+            "currentLine": -1849134688,
+            "nextLine": 176909,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An odd precise comparison. It's probably better to use a comparison with defined precision: fabs(A - B) > Epsilon.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V690",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
           "file": "E:\\own\\programming\\engine\\src\\Model.h",
-          "line": 43,
-          "endLine": 43,
+          "line": 42,
+          "endLine": 42,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -226,172 +1077,6 @@
         "engine"
       ],
       "message": "The 'Model' class implements a copy constructor, but lacks the copy assignment operator. It is dangerous to use such a class.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
-          "line": 112,
-          "endLine": 112,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": -1379176827,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'points' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V1034",
-      "cwe": 834,
-      "sastId": "CERT-FLP30-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
-          "line": 110,
-          "endLine": 110,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": -1737519803,
-            "currentLine": 1278626137,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Do not use real type variables as loop counters.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V1034",
-      "cwe": 834,
-      "sastId": "CERT-FLP30-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
-          "line": 109,
-          "endLine": 109,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 922026289,
-            "currentLine": -1737519803,
-            "nextLine": 1278626137,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Do not use real type variables as loop counters.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V1004",
-      "cwe": 476,
-      "sastId": "CERT-EXP34-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
-          "line": 146,
-          "endLine": 146,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 468080380,
-            "nextLine": 468081476,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
-          "line": 128,
-          "endLine": 128,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'sprite' pointer was used unsafely after it was verified against nullptr. Check lines: 128, 146.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
-          "line": 11,
-          "endLine": 11,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 80502955,
-            "currentLine": -768728708,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'm_FinalBoneMatrices' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
-          "line": 31,
-          "endLine": 31,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 964448053,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'parentTransform' argument should probably be rendered as a constant reference.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -422,6 +1107,416 @@
       "falseAlarm": false
     },
     {
+      "code": "V1003",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\config.h",
+          "line": 428,
+          "endLine": 428,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 724131205,
+            "currentLine": 1301295412,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The macro 'aiComponent_COLORSn' is a dangerous expression. The parameter 'n' must be surrounded by parentheses.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1003",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\c++\\libs\\assimp-5.3.1\\assimp-5.3.1\\include\\assimp\\config.h",
+          "line": 431,
+          "endLine": 431,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 1164209557,
+            "currentLine": 1133524765,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The macro 'aiComponent_TEXCOORDSn' is a dangerous expression. The parameter 'n' must be surrounded by parentheses.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V823",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
+          "line": 120,
+          "endLine": 120,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": -1379176827,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Object may be created in-place in the 'points' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1034",
+      "cwe": 834,
+      "sastId": "CERT-FLP30-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
+          "line": 118,
+          "endLine": 118,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -1737519803,
+            "currentLine": 1278626137,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Do not use real type variables as loop counters.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1034",
+      "cwe": 834,
+      "sastId": "CERT-FLP30-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
+          "line": 117,
+          "endLine": 117,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 922026289,
+            "currentLine": -1737519803,
+            "nextLine": 1278626137,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Do not use real type variables as loop counters.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1004",
+      "cwe": 476,
+      "sastId": "CERT-EXP34-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
+          "line": 154,
+          "endLine": 154,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 468080380,
+            "nextLine": 468081476,
+            "columns": 0
+          }
+        },
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animation.h",
+          "line": 136,
+          "endLine": 136,
+          "column": 1,
+          "endColumn": 2147483647
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'sprite' pointer was used unsafely after it was verified against nullptr. Check lines: 136, 154.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V823",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
+          "line": 11,
+          "endLine": 11,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 80502955,
+            "currentLine": -768728708,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Object may be created in-place in the 'm_FinalBoneMatrices' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
+          "line": 32,
+          "endLine": 32,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 964448053,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'parentTransform' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V821",
+      "cwe": 0,
+      "sastId": "CERT-DCL19-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
+          "line": 55,
+          "endLine": 55,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 912805378,
+            "currentLine": 1719674060,
+            "nextLine": -1430250113,
+            "columns": 0
+          }
+        },
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Animator.cpp",
+          "line": 57,
+          "endLine": 57,
+          "column": 1,
+          "endColumn": 2147483647
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'offset' variable can be constructed in a lower level scope.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V601",
+      "cwe": 704,
+      "sastId": "CERT-INT36-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\OpenglWrapper.cpp",
+          "line": 107,
+          "endLine": 107,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 298829,
+            "nextLine": -1866259069,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'false' value is implicitly cast to the integer type.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\OpenglWrapper.cpp",
+          "line": 283,
+          "endLine": 283,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": -469945841,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'color' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1089",
+      "cwe": 0,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\BlockingQueue.h",
+          "line": 32,
+          "endLine": 32,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 173939549,
+            "currentLine": -656769308,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Waiting on condition variable without predicate. A thread can wait indefinitely or experience a spurious wakeup. Consider passing a predicate as the second argument.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V835",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ThreadPool.h",
+          "line": 16,
+          "endLine": 16,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 895875556,
+            "nextLine": 968867256,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Passing cheap-to-copy argument by reference may lead to decreased performance. To avoid this, pass the first argument by value.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V835",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ThreadPool.h",
+          "line": 56,
+          "endLine": 56,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 11496,
+            "currentLine": -70994078,
+            "nextLine": 1762465799,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Passing cheap-to-copy argument by reference may lead to decreased performance. To avoid this, pass the first argument by value.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V591",
+      "cwe": 393,
+      "sastId": "CERT-MSC52-CPP",
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\NonBlockingQueue.h",
+          "line": 39,
+          "endLine": 39,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 672509,
+            "currentLine": 125,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Non-void function should return a value.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
       "code": "V512",
       "cwe": 119,
       "level": 2,
@@ -448,20 +1543,19 @@
       "falseAlarm": false
     },
     {
-      "code": "V601",
-      "cwe": 704,
-      "sastId": "CERT-INT36-C",
-      "level": 3,
+      "code": "V820",
+      "cwe": 0,
+      "level": 2,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\InputManager.cpp",
-          "line": 11,
-          "endLine": 11,
+          "file": "E:\\own\\programming\\engine\\src\\Profiler.h",
+          "line": 43,
+          "endLine": 43,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 3973991,
-            "currentLine": 68932700,
+            "previousLine": 123,
+            "currentLine": 297995,
             "nextLine": 125,
             "columns": 0
           }
@@ -470,34 +1564,7 @@
       "projects": [
         "engine"
       ],
-      "message": "The 'true' value is implicitly cast to the integer type. Inspect the second argument.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V601",
-      "cwe": 704,
-      "sastId": "CERT-INT36-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\InputManager.cpp",
-          "line": 22,
-          "endLine": 22,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 7947957,
-            "currentLine": 68932700,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'true' value is implicitly cast to the integer type. Inspect the second argument.",
+      "message": "The 'name_in' variable is not used after copying. Copying can be replaced with move/swap for optimization.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -608,55 +1675,46 @@
       "falseAlarm": false
     },
     {
-      "code": "V519",
-      "cwe": 563,
-      "sastId": "CERT-MSC13-C",
-      "level": 3,
+      "code": "V813",
+      "cwe": 0,
+      "level": 2,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\LightingShaderRoutine.cpp",
-          "line": 73,
-          "endLine": 73,
+          "file": "E:\\own\\programming\\engine\\src\\OcclusionCulling.h",
+          "line": 18,
+          "endLine": 18,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": -431130549,
-            "currentLine": 153568945,
-            "nextLine": -1947817906,
+            "previousLine": 0,
+            "currentLine": -1343453968,
+            "nextLine": 123,
             "columns": 0
           }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\LightingShaderRoutine.cpp",
-          "line": 53,
-          "endLine": 53,
-          "column": 1,
-          "endColumn": 2147483647
         }
       ],
       "projects": [
         "engine"
       ],
-      "message": "The 'model' variable is assigned values twice successively. Perhaps this is a mistake. Check lines: 53, 73.",
+      "message": "Decreased performance. The 'aabb', 'rayDir' arguments should probably be rendered as constant references.",
       "favorite": false,
       "falseAlarm": false
     },
     {
-      "code": "V601",
-      "cwe": 704,
-      "sastId": "CERT-INT36-C",
-      "level": 3,
+      "code": "V813",
+      "cwe": 0,
+      "level": 2,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\OpenglWrapper.cpp",
-          "line": 107,
-          "endLine": 107,
+          "file": "E:\\own\\programming\\engine\\src\\OcclusionCulling.h",
+          "line": 26,
+          "endLine": 26,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 123,
-            "currentLine": 298829,
-            "nextLine": -1866259069,
+            "previousLine": 0,
+            "currentLine": -136939566,
+            "nextLine": 123,
             "columns": 0
           }
         }
@@ -664,7 +1722,60 @@
       "projects": [
         "engine"
       ],
-      "message": "The 'false' value is implicitly cast to the integer type.",
+      "message": "Decreased performance. The 'aabb' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V815",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Model.cpp",
+          "line": 70,
+          "endLine": 70,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 184925,
+            "nextLine": 22109,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Consider replacing the expression 'path == \"\"' with 'path.empty()'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V688",
+      "cwe": 0,
+      "sastId": "CERT-DCL01-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Model.cpp",
+          "line": 127,
+          "endLine": 127,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 723230963,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'path' local variable possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -674,14 +1785,14 @@
       "level": 3,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\OpenglWrapper.cpp",
-          "line": 283,
-          "endLine": 283,
+          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
+          "line": 5,
+          "endLine": 5,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
             "previousLine": 0,
-            "currentLine": -469945841,
+            "currentLine": 916587172,
             "nextLine": 123,
             "columns": 0
           }
@@ -690,7 +1801,59 @@
       "projects": [
         "engine"
       ],
-      "message": "Decreased performance. The 'color' argument should probably be rendered as a constant reference.",
+      "message": "Decreased performance. The 'emitter_in' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V823",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
+          "line": 35,
+          "endLine": 35,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 746279297,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Object may be created in-place in the 'positions' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
+          "line": 33,
+          "endLine": 33,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 543541225,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'pos' argument should probably be rendered as a constant reference.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -701,8 +1864,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Mesh.cpp",
-          "line": 58,
-          "endLine": 58,
+          "line": 61,
+          "endLine": 61,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -727,8 +1890,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Mesh.cpp",
-          "line": 237,
-          "endLine": 237,
+          "line": 203,
+          "endLine": 203,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -743,6 +1906,86 @@
         "engine"
       ],
       "message": "Decreased performance. Consider creating a reference to avoid using the 'vertices[i].Position' expression repeatedly.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V807",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Mesh.cpp",
+          "line": 295,
+          "endLine": 295,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 405345289,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Consider creating a reference to avoid using the 'tr.getScale()' expression repeatedly.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V688",
+      "cwe": 0,
+      "sastId": "CERT-DCL01-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ScriptApi.cpp",
+          "line": 16,
+          "endLine": 16,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 1761782028,
+            "currentLine": -663654326,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'path' function argument possesses the same name as one of the class members, which can result in a confusion.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V565",
+      "cwe": 544,
+      "sastId": "CERT-ERR56-CPP",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ScriptApi.cpp",
+          "line": 38,
+          "endLine": 38,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 35837,
+            "currentLine": 123,
+            "nextLine": 0,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "An empty exception handler. Silent suppression of exceptions can hide the presence of bugs in source code during testing.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -796,32 +2039,6 @@
         "engine"
       ],
       "message": "Decreased performance. The 's' argument should probably be rendered as a constant reference.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ObjectSelector.cpp",
-          "line": 120,
-          "endLine": 120,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": -389805079,
-            "currentLine": -2125392955,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in a container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -910,8 +2127,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 478,
-          "endLine": 478,
+          "line": 461,
+          "endLine": 461,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -936,8 +2153,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 479,
-          "endLine": 479,
+          "line": 462,
+          "endLine": 462,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -962,8 +2179,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 504,
-          "endLine": 504,
+          "line": 487,
+          "endLine": 487,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -988,8 +2205,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 505,
-          "endLine": 505,
+          "line": 488,
+          "endLine": 488,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1014,8 +2231,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 609,
-          "endLine": 609,
+          "line": 592,
+          "endLine": 592,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1040,8 +2257,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 610,
-          "endLine": 610,
+          "line": 593,
+          "endLine": 593,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1066,8 +2283,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 626,
-          "endLine": 626,
+          "line": 609,
+          "endLine": 609,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1092,145 +2309,13 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Object.cpp",
-          "line": 628,
-          "endLine": 628,
+          "line": 611,
+          "endLine": 611,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
             "previousLine": 0,
             "currentLine": -1077893296,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'particles->particle_size' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
-          "line": 5,
-          "endLine": 5,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 916587172,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'emitter_in' argument should probably be rendered as a constant reference.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
-          "line": 34,
-          "endLine": 34,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": 746279297,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'positions' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ParticleSystem.cpp",
-          "line": 32,
-          "endLine": 32,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 543541225,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'pos' argument should probably be rendered as a constant reference.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ScriptApi.cpp",
-          "line": 16,
-          "endLine": 16,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 1761782028,
-            "currentLine": -663654326,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'path' function argument possesses the same name as one of the class members, which can result in a confusion.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V565",
-      "cwe": 544,
-      "sastId": "CERT-ERR56-CPP",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\ScriptApi.cpp",
-          "line": 38,
-          "endLine": 38,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 35837,
-            "currentLine": 123,
             "nextLine": 0,
             "columns": 0
           }
@@ -1239,7 +2324,7 @@
       "projects": [
         "engine"
       ],
-      "message": "An empty exception handler. Silent suppression of exceptions can hide the presence of bugs in source code during testing.",
+      "message": "Decreased performance. Consider creating a reference to avoid using the 'particles->particle_size' expression repeatedly.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -1320,59 +2405,6 @@
         "engine"
       ],
       "message": "The 'b' function argument possesses the same name as one of the class members, which can result in a confusion.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V815",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Model.cpp",
-          "line": 61,
-          "endLine": 61,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": 184925,
-            "nextLine": 22109,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider replacing the expression 'path == \"\"' with 'path.empty()'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Model.cpp",
-          "line": 133,
-          "endLine": 133,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": 723230963,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'path' local variable possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -1487,8 +2519,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Transform.cpp",
-          "line": 88,
-          "endLine": 88,
+          "line": 98,
+          "endLine": 98,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1513,8 +2545,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\Transform.cpp",
-          "line": 136,
-          "endLine": 136,
+          "line": 146,
+          "endLine": 146,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -1529,322 +2561,6 @@
         "engine"
       ],
       "message": "Decreased performance. The 'matrix_in' argument should probably be rendered as a constant reference.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 80,
-          "endLine": 80,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 37221825,
-            "currentLine": 2079822479,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'vertices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 89,
-          "endLine": 89,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 1486710313,
-            "nextLine": -1807775768,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'indices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 90,
-          "endLine": 90,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 1486710313,
-            "currentLine": -1807775768,
-            "nextLine": 125,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'indices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 116,
-          "endLine": 116,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": -1612233039,
-            "currentLine": -1425262411,
-            "nextLine": 11283,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'collider->get_size()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 134,
-          "endLine": 134,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": -1463685086,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'pos' argument should probably be rendered as a constant reference.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 151,
-          "endLine": 151,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": -122993274,
-            "currentLine": 1400665514,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'a', 'color' arguments should probably be rendered as constant references.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 196,
-          "endLine": 196,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": -1357124794,
-            "nextLine": 50698768,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'p->color' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V813",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 203,
-          "endLine": 203,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 1385227688,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'projection', 'view' arguments should probably be rendered as constant references.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 328,
-          "endLine": 328,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 1882721841,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 563,
-          "endLine": 563,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 132949103,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 588,
-          "endLine": 588,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": -2113991454,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
-          "line": 637,
-          "endLine": 637,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 64964185,
-            "nextLine": 123,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -1875,452 +2591,19 @@
       "falseAlarm": false
     },
     {
-      "code": "V1009",
-      "cwe": 665,
-      "level": 2,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\SystemInfo.cpp",
-          "line": 10,
-          "endLine": 10,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 19517757,
-            "nextLine": 513445930,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Check the array initialization. Only the first element is initialized explicitly. The rest elements are initialized with zeros.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 2,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 238,
-          "endLine": 238,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 1256477,
-            "nextLine": 859991524,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 252,
-          "endLine": 252,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 256,
-          "endLine": 256,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 258,
-          "endLine": 258,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 262,
-          "endLine": 262,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 280,
-          "endLine": 280,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a pointer to avoid using the 'sceneObjects[i]->getColider()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 2,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 252,
-          "endLine": 252,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 323166809,
-            "currentLine": 1455311875,
-            "nextLine": 1682521445,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 253,
-          "endLine": 253,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 256,
-          "endLine": 256,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 258,
-          "endLine": 258,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 263,
-          "endLine": 263,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a pointer to avoid using the 'sceneObjects[j]->getColider()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V821",
-      "cwe": 0,
-      "sastId": "CERT-DCL19-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 258,
-          "endLine": 258,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 1693707120,
-            "nextLine": 0,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 260,
-          "endLine": 260,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'collision_state' variable can be constructed in a lower level scope.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V789",
-      "cwe": 672,
-      "sastId": "CERT-CTR53-CPP",
-      "level": 1,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 369,
-          "endLine": 369,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 1571087885,
-            "currentLine": 1215300349,
-            "nextLine": 125,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 326,
-          "endLine": 326,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Iterators for the 'sceneObjects' container, used in the range-based for loop, become invalid upon the call of the 'erase' function.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 328,
-          "endLine": 328,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": -1633248497,
-            "nextLine": 608559086,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 339,
-          "endLine": 339,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a pointer to avoid using the 'objI->getModel()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 387,
-          "endLine": 387,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": -1484890094,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'GameState::cam.getCameraPos()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V821",
-      "cwe": 0,
-      "sastId": "CERT-DCL19-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 490,
-          "endLine": 490,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": 322002890,
-            "nextLine": 0,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 501,
-          "endLine": 501,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'shaderRoutine' variable can be constructed in a lower level scope.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V815",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 615,
-          "endLine": 615,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 1499071646,
-            "currentLine": 370497,
-            "nextLine": -315936613,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider replacing the expression 'path != \"\"' with '!path.empty()'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
       "code": "V823",
       "cwe": 0,
       "level": 3,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 654,
-          "endLine": 654,
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 82,
+          "endLine": 82,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 0,
-            "currentLine": -646295311,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'positions' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 657,
-          "endLine": 657,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 1539342010,
-            "currentLine": -1290489876,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'normals' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 660,
-          "endLine": 660,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 467466349,
-            "currentLine": -825781261,
-            "nextLine": 0,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'texcoords' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V823",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 670,
-          "endLine": 670,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 123,
-            "currentLine": -1952857274,
-            "nextLine": 2080633267,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Object may be created in-place in the 'vertices' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V612",
-      "cwe": 670,
-      "sastId": "CERT-MSC01-C",
-      "level": 2,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 710,
-          "endLine": 710,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 2337,
+            "previousLine": 37221825,
+            "currentLine": 2079822479,
             "nextLine": 125,
             "columns": 0
           }
@@ -2329,59 +2612,261 @@
       "projects": [
         "engine"
       ],
-      "message": "An unconditional 'break' within a loop.",
+      "message": "Decreased performance. Object may be created in-place in the 'vertices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
       "favorite": false,
       "falseAlarm": false
     },
     {
-      "code": "V711",
+      "code": "V823",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 91,
+          "endLine": 91,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 1486710313,
+            "nextLine": -1807775768,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Object may be created in-place in the 'indices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V823",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 92,
+          "endLine": 92,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 1486710313,
+            "currentLine": -1807775768,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Object may be created in-place in the 'indices_grid' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V807",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 118,
+          "endLine": 118,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -1612233039,
+            "currentLine": -1425262411,
+            "nextLine": 11283,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Consider creating a reference to avoid using the 'collider->get_size()' expression repeatedly.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 136,
+          "endLine": 136,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 130045838,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'pos' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 153,
+          "endLine": 153,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": -122993274,
+            "currentLine": 1400665514,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'a', 'color' arguments should probably be rendered as constant references.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 174,
+          "endLine": 174,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 1886934799,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'a', 'b' arguments should probably be rendered as constant references.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V807",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 222,
+          "endLine": 222,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": -1357124794,
+            "nextLine": 50698768,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. Consider creating a reference to avoid using the 'p->color' expression repeatedly.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V813",
+      "cwe": 0,
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 229,
+          "endLine": 229,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 1385227688,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Decreased performance. The 'projection', 'view' arguments should probably be rendered as constant references.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V688",
       "cwe": 0,
       "sastId": "CERT-DCL01-C",
-      "level": 1,
+      "level": 3,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 643,
-          "endLine": 643,
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 358,
+          "endLine": 358,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 36158757,
-            "currentLine": 172982387,
-            "nextLine": 0,
+            "previousLine": 0,
+            "currentLine": 1882721841,
+            "nextLine": 123,
             "columns": 0
           }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 632,
-          "endLine": 632,
-          "column": 1,
-          "endColumn": 2147483647
         }
       ],
       "projects": [
         "engine"
       ],
-      "message": "It is dangerous to create a local variable within a loop with a same name as a variable controlling this loop.",
+      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     },
     {
-      "code": "V823",
+      "code": "V688",
       "cwe": 0,
+      "sastId": "CERT-DCL01-C",
       "level": 3,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\Scene.cpp",
-          "line": 816,
-          "endLine": 816,
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 600,
+          "endLine": 600,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 727244200,
-            "currentLine": -129622971,
-            "nextLine": 192481530,
+            "previousLine": 0,
+            "currentLine": 132949103,
+            "nextLine": 123,
             "columns": 0
           }
         }
@@ -2389,7 +2874,61 @@
       "projects": [
         "engine"
       ],
-      "message": "Decreased performance. Object may be created in-place in the 'points' container. Consider replacing methods: 'push_back' -> 'emplace_back'.",
+      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V688",
+      "cwe": 0,
+      "sastId": "CERT-DCL01-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 623,
+          "endLine": 623,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": -2113991454,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V688",
+      "cwe": 0,
+      "sastId": "CERT-DCL01-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Renderer.cpp",
+          "line": 677,
+          "endLine": 677,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 64964185,
+            "nextLine": 123,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'wind' function argument possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -2549,20 +3088,20 @@
       "falseAlarm": false
     },
     {
-      "code": "V807",
+      "code": "V813",
       "cwe": 0,
-      "level": 3,
+      "level": 2,
       "positions": [
         {
-          "file": "E:\\own\\programming\\engine\\src\\SkeletalAnimationShaderRoutine.cpp",
-          "line": 26,
-          "endLine": 26,
+          "file": "E:\\own\\programming\\engine\\src\\Texture.cpp",
+          "line": 83,
+          "endLine": 83,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
-            "previousLine": 80405471,
-            "currentLine": 2068992062,
-            "nextLine": 0,
+            "previousLine": 0,
+            "currentLine": -857988804,
+            "nextLine": 123,
             "columns": 0
           }
         }
@@ -2570,7 +3109,147 @@
       "projects": [
         "engine"
       ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'tr.getScale()' expression repeatedly.",
+      "message": "Decreased performance. The 't' argument should probably be rendered as a constant reference.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V820",
+      "cwe": 0,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Texture.cpp",
+          "line": 85,
+          "endLine": 85,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": 5679,
+            "nextLine": 125,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 't' variable is not used after copying. Copying can be replaced with move/swap for optimization.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V1009",
+      "cwe": 665,
+      "level": 2,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\SystemInfo.cpp",
+          "line": 10,
+          "endLine": 10,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 19517757,
+            "nextLine": 513445930,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Check the array initialization. Only the first element is initialized explicitly. The rest elements are initialized with zeros.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V519",
+      "cwe": 563,
+      "sastId": "CERT-MSC13-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ShaderLibrary.cpp",
+          "line": 393,
+          "endLine": 393,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": 153568945,
+            "nextLine": -1947817906,
+            "columns": 0
+          }
+        },
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ShaderLibrary.cpp",
+          "line": 374,
+          "endLine": 374,
+          "column": 1,
+          "endColumn": 2147483647
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'model' variable is assigned values twice successively. Perhaps this is a mistake. Check lines: 374, 393.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V730",
+      "cwe": 457,
+      "sastId": "CERT-EXP53-CPP",
+      "level": 1,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\ShaderLibrary.cpp",
+          "line": 5,
+          "endLine": 5,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 0,
+            "currentLine": -385622767,
+            "nextLine": -2143569716,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "Not all members of a class are initialized inside the constructor. Consider inspecting: cache.",
+      "favorite": false,
+      "falseAlarm": false
+    },
+    {
+      "code": "V601",
+      "cwe": 704,
+      "sastId": "CERT-INT36-C",
+      "level": 3,
+      "positions": [
+        {
+          "file": "E:\\own\\programming\\engine\\src\\Terrain.cpp",
+          "line": 10,
+          "endLine": 10,
+          "column": 1,
+          "endColumn": 2147483647,
+          "navigation": {
+            "previousLine": 123,
+            "currentLine": -1541697017,
+            "nextLine": -1092099373,
+            "columns": 0
+          }
+        }
+      ],
+      "projects": [
+        "engine"
+      ],
+      "message": "The 'true' value is implicitly cast to the integer type. Inspect the first argument.",
       "favorite": false,
       "falseAlarm": false
     },
@@ -2581,8 +3260,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 176,
-          "endLine": 176,
+          "line": 192,
+          "endLine": 192,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2594,15 +3273,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 178,
-          "endLine": 178,
+          "line": 194,
+          "endLine": 194,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 178,
-          "endLine": 178,
+          "line": 194,
+          "endLine": 194,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2621,8 +3300,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 234,
-          "endLine": 234,
+          "line": 255,
+          "endLine": 255,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2634,15 +3313,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 235,
-          "endLine": 235,
+          "line": 256,
+          "endLine": 256,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 236,
-          "endLine": 236,
+          "line": 257,
+          "endLine": 257,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2661,8 +3340,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 238,
-          "endLine": 238,
+          "line": 259,
+          "endLine": 259,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2674,15 +3353,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 239,
-          "endLine": 239,
+          "line": 260,
+          "endLine": 260,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 240,
-          "endLine": 240,
+          "line": 261,
+          "endLine": 261,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2701,8 +3380,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 256,
-          "endLine": 256,
+          "line": 277,
+          "endLine": 277,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2714,15 +3393,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 257,
-          "endLine": 257,
+          "line": 278,
+          "endLine": 278,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 258,
-          "endLine": 258,
+          "line": 279,
+          "endLine": 279,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2741,8 +3420,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 261,
-          "endLine": 261,
+          "line": 282,
+          "endLine": 282,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2754,15 +3433,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 262,
-          "endLine": 262,
+          "line": 283,
+          "endLine": 283,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 263,
-          "endLine": 263,
+          "line": 284,
+          "endLine": 284,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2781,8 +3460,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 265,
-          "endLine": 265,
+          "line": 286,
+          "endLine": 286,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2794,15 +3473,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 266,
-          "endLine": 266,
+          "line": 287,
+          "endLine": 287,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 267,
-          "endLine": 267,
+          "line": 288,
+          "endLine": 288,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2821,8 +3500,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 317,
-          "endLine": 317,
+          "line": 338,
+          "endLine": 338,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2834,15 +3513,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 318,
-          "endLine": 318,
+          "line": 339,
+          "endLine": 339,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 319,
-          "endLine": 319,
+          "line": 340,
+          "endLine": 340,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2861,8 +3540,8 @@
       "positions": [
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 333,
-          "endLine": 333,
+          "line": 354,
+          "endLine": 354,
           "column": 1,
           "endColumn": 2147483647,
           "navigation": {
@@ -2874,15 +3553,15 @@
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 334,
-          "endLine": 334,
+          "line": 355,
+          "endLine": 355,
           "column": 1,
           "endColumn": 2147483647
         },
         {
           "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 335,
-          "endLine": 335,
+          "line": 356,
+          "endLine": 356,
           "column": 1,
           "endColumn": 2147483647
         }
@@ -2891,107 +3570,6 @@
         "engine"
       ],
       "message": "Decreased performance. Consider creating a reference to avoid using the 'light->specular' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V807",
-      "cwe": 0,
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 521,
-          "endLine": 521,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 45600637,
-            "currentLine": -2070008363,
-            "nextLine": 1090751791,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 524,
-          "endLine": 524,
-          "column": 1,
-          "endColumn": 2147483647
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 525,
-          "endLine": 525,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. Consider creating a reference to avoid using the 'item_clicked->getModel()' expression repeatedly.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V821",
-      "cwe": 0,
-      "sastId": "CERT-DCL19-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 488,
-          "endLine": 488,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 0,
-            "currentLine": 289687606,
-            "nextLine": 0,
-            "columns": 0
-          }
-        },
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 608,
-          "endLine": 608,
-          "column": 1,
-          "endColumn": 2147483647
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "Decreased performance. The 'shadeRroutine' variable can be constructed in a lower level scope.",
-      "favorite": false,
-      "falseAlarm": false
-    },
-    {
-      "code": "V688",
-      "cwe": 0,
-      "sastId": "CERT-DCL01-C",
-      "level": 3,
-      "positions": [
-        {
-          "file": "E:\\own\\programming\\engine\\src\\UI.cpp",
-          "line": 680,
-          "endLine": 680,
-          "column": 1,
-          "endColumn": 2147483647,
-          "navigation": {
-            "previousLine": 846769401,
-            "currentLine": -903192479,
-            "nextLine": 645015978,
-            "columns": 0
-          }
-        }
-      ],
-      "projects": [
-        "engine"
-      ],
-      "message": "The 'io' local variable possesses the same name as one of the class members, which can result in a confusion.",
       "favorite": false,
       "falseAlarm": false
     }

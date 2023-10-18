@@ -5,6 +5,7 @@
 #include <FrustumCulling.h>
 #include <OcclusionCulling.h>
 
+
 #include <optional>
 
 DebugRenderer::DebugRenderer() : dsv(GameState::engine_path + "shaders/debugVertexShader.glsl", GL_VERTEX_SHADER), dsf(GameState::engine_path + "shaders/debugFragmentShader.glsl", GL_FRAGMENT_SHADER)
@@ -30,6 +31,19 @@ DebugRenderer::DebugRenderer() : dsv(GameState::engine_path + "shaders/debugVert
 
 void DebugRenderer::setupSceneGrid()
 {
+	std::vector<std::string> faces
+	{
+	    GameState::engine_path + "/skybox/skybox/right.jpg",
+	    GameState::engine_path + "/skybox/skybox/left.jpg",
+	    GameState::engine_path + "/skybox/skybox/top.jpg",
+	    GameState::engine_path + "/skybox/skybox/bottom.jpg",
+	    GameState::engine_path + "/skybox/skybox/front.jpg",
+	    GameState::engine_path + "/skybox/skybox/back.jpg"
+	};
+
+	cubemap.loadCubemap(faces);
+	cubemap.setup();
+	
     grid_mode = GameState::editor_mode;
     std::cout << "grid setup " << grid_mode << "\n";
     indices_grid.clear();
@@ -196,6 +210,8 @@ void DebugRenderer::renderDebugLine(glm::vec3 a, glm::vec3 b, glm::vec4 color)
 
 void DebugRenderer::renderDebugGrid()
 {
+	cubemap.draw();
+
     if(GameState::editor_mode != grid_mode)
     {
         setupSceneGrid(); 
@@ -242,7 +258,7 @@ void DebugRenderer::renderPoints()
 void DebugRenderer::renderAABB()
 {
 	for(auto& i : aabbToRender)
-		renderDebugCube(i.center, i.size.x, i.size.y, i.size.z);
+		renderDebugCube({i.center.x + i.size.x/2, i.center.y + i.size.y/2, i.center.z - i.size.z/2}, i.size.x, i.size.y, i.size.z);
 }
 
 void DebugRenderer::clearPoints()

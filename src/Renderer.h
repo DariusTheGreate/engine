@@ -28,6 +28,7 @@
 #include <FrameBuffer.h>
 #include <RenderQuad.h>
 #include <GraphicsStateCache.h>
+#include <CubeMap.h>
 
 /*
 TODO(all):
@@ -154,6 +155,7 @@ public:
     bool debug_render = true;// Note(darius) when false - we dont draw debug info
 
 private:
+    CubeMap cubemap;
     size_t length = 0;
     size_t slices = 200;
 	std::vector<glm::vec3> vertices_grid;
