@@ -1,4 +1,4 @@
-#version 410 core
+#version 420 core
 
 //out vec4 FragColor;
 
@@ -13,6 +13,7 @@ layout (location = 1) out vec4 BrightColor;
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
+in vec4 FragPosLightSpace;
 
 struct Material {
     float shininess;
@@ -47,32 +48,35 @@ uniform float gammaFactor;
 
 uniform Material material;//NOTE(darius) diable foe now
 uniform vec3 viewPos;
+uniform bool shadowCaster;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_diffuse2;
-uniform sampler2D texture_diffuse3;
-uniform sampler2D texture_diffuse4;
 
-uniform sampler2D texture_specular1;
-uniform sampler2D texture_specular2;
-uniform sampler2D texture_specular3;
-uniform sampler2D texture_specular4;
+layout(binding=0) uniform sampler2D texture_diffuse1;
+layout(binding=1) uniform sampler2D texture_diffuse2;
+layout(binding=2) uniform sampler2D texture_diffuse3;
+layout(binding=3) uniform sampler2D texture_diffuse4;
 
-uniform sampler2D texture_normal1;
-uniform sampler2D texture_normal2;
-uniform sampler2D texture_normal3;
-uniform sampler2D texture_normal4;
+layout(binding=4) uniform sampler2D texture_specular1;
+layout(binding=5) uniform sampler2D texture_specular2;
+layout(binding=6) uniform sampler2D texture_specular3;
+layout(binding=7) uniform sampler2D texture_specular4;
 
-uniform sampler2D texture_height1;
-uniform sampler2D texture_height2;
-uniform sampler2D texture_height3;
-uniform sampler2D texture_height4;
+layout(binding=8) uniform sampler2D texture_normal1;
+layout(binding=9) uniform sampler2D texture_normal2;
+layout(binding=10) uniform sampler2D texture_normal3;
+layout(binding=11) uniform sampler2D texture_normal4;
+
+layout(binding=12) uniform sampler2D texture_height1;
+layout(binding=13) uniform sampler2D texture_height2;
+layout(binding=14) uniform sampler2D texture_height3;
+layout(binding=15) uniform sampler2D texture_height4;
+
+layout(binding=16) uniform sampler2D depthMap;
 
 uniform float gammaBrightness;
 
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
-
 
 float near = 0.1; 
 float far  = 100.0; 
@@ -83,11 +87,36 @@ float LinearizeDepth(float depth)
     return (2.0 * near * far) / (far + near - z * (far - near));	
 }
 
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    //projCoords = projCoords * 0.1;
+
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(depthMap, projCoords.xy).r; 
+
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+
+    // check whether current frag pos is in shadow
+    //float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+    float bias = 0.0025;
+    if(closestDepth + bias < currentDepth)
+        return 1.0;
+    return 0.5;
+
+
+}  
+
 void main()
 {
-    
-    //Works when i dont specify layout
-    //vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+    //vec3 color = texture(depthMap, TexCoords).rgb;
     //FragColor.rgb = color;
     //return;
 
@@ -110,6 +139,12 @@ void main()
 
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
+
+
+    float shadow = ShadowCalculation(FragPosLightSpace); 
+
+    if(!shadowCaster)
+        result = (1.0 - shadow) * result;
         
     if(lightsCount == 0)
         FragColor = texColor;

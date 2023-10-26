@@ -121,7 +121,7 @@ public:
 
     void renderDebugColider(Window* wind, std::optional<Colider>& collider, std::optional<RigidBody>& body);
 
-    void renderDebugCube(glm::vec3 pos, int x=1, int y=1, int z=1);
+    void renderDebugCube(glm::vec3 pos, float x=1, float y=1, float z=1);
 
     void renderDebugPoint(glm::vec3 a, glm::vec4 color);
 
@@ -155,12 +155,12 @@ public:
     bool debug_render = true;// Note(darius) when false - we dont draw debug info
 
 private:
-    CubeMap cubemap;
+    //CubeMap cubemap;
     size_t length = 0;
     size_t slices = 200;
 	std::vector<glm::vec3> vertices_grid;
 	std::vector<glm::uvec4> indices_grid;
-    int grid_scale = 2;
+    float grid_scale = 0.1;
     int grid_mode = 3;
 
     //TODO(darius) use cubeMesh

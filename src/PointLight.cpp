@@ -25,7 +25,7 @@ void PointLight::setShaderLight(const Shader& sv)
     sv.setFloat("pointLights[" + std::to_string(lightNumber) + "].quadratic", quadratic);
 }
 
-DirectionalLight::DirectionalLight(glm::vec3 direction_in, glm::vec3 color_in, float intensity_in, float radius_in) : direction(direction_in), color(color_in), intensity(intensity_in), radius(radius_in) {
+DirectionalLight::DirectionalLight(glm::vec3 direction_in, glm::vec3 color_in, float intensity_in, float radius_in) : color(color_in), intensity(intensity_in), radius(radius_in) {
     diffuse = color * glm::vec3(0.5f);
     ambient = diffuse * glm::vec3(0.2f);
 }
@@ -55,6 +55,22 @@ void SpotLight::setShaderLight(const Shader& sv)
     sv.setFloat("light.quadratic", quadratic);
 }
 
+glm::mat4 DirectionalLight::getLightMat() 
+{
+    glm::mat4 lightProjection, lightView;
+    glm::mat4 lightSpaceMatrix;
+    float near_plane = 1.0f, far_plane = 4.0f;
+    lightProjection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near_plane, far_plane);
+    //lightPos =// glm::vec3{0,1,0} * glm::vec3{0.1,0.1,0.1};
+    lightView = glm::lookAt(lightPos, lightPoint, direction);
+    lightSpaceMatrix = lightView;
+    //println(lightSpaceMatrix);
+    //return GameState::cam.getView();
+    return lightProjection * lightSpaceMatrix;
+}
+
 int PointLight::LightsCount = 0;
 
-glm::vec3 DirectionalLight::lightPos = glm::vec3(-2.0f, 0.0f, -1.0f);
+glm::vec3 DirectionalLight::lightPos = glm::vec3(0.0f, 3.9f, 0.0f);
+glm::vec3 DirectionalLight::lightPoint = glm::vec3(0.05f, 0.0f, 0.0f);
+glm::vec3 DirectionalLight::direction = glm::vec3(0.0f, 0.1f, 0.0f);

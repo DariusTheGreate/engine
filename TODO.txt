@@ -32,18 +32,18 @@
 		- move all geometry to single model
 		- filesystem
 
+		- port to linux
+		- port to android
+
 
 	--SERVER
 		- increase amount of connections
 
 
 	--RENDERER
-		- default textures
-
 		- finish culling
 		- finish terrain 
-		- finish skeletal animations
-		- instanced rendering 
+		- instanced rendering loop
 		- finish batching 
 		- blending stage
 		- deffered light?
@@ -53,18 +53,14 @@
 		- cubemaps
 		- reflections
 
-		- geometry cache
 		- terrain texturing
 		- terrain editor
 		- occlusion culling
 		- LOD
 		- distanced rendering                                                       
-		- terrain editor
 		- shaders for effects drawing on texture
-		- 2D normal mapping                                                         
-		- cacheing of flat meshes textures
+		- normal mapping                                                         
 		- Texture resize to apropriate resolution
-		- debug grid distance rendering
 		- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
 		- text rendering
 

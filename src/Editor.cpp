@@ -173,16 +173,16 @@ void Editor::updateInput() {
         
         if (GameState::editor_mode == 2) {
             if (GameState::ms.prev_x > GameState::ms.get_x()) {
-                GameState::cam.moveCameraLeft();
-            }
-            if (GameState::ms.prev_x < GameState::ms.get_x()) {
                 GameState::cam.moveCameraRight();
             }
+            if (GameState::ms.prev_x < GameState::ms.get_x()) {
+                GameState::cam.moveCameraLeft();
+            }
             if (GameState::ms.prev_y < GameState::ms.get_y()) {
-                GameState::cam.moveCameraDown();
+                GameState::cam.moveCameraUp();
             }
             if (GameState::ms.prev_y > GameState::ms.get_y()) {
-                GameState::cam.moveCameraUp();
+                GameState::cam.moveCameraDown();
             }
         }
         GameState::ms.prev_x = GameState::ms.get_x();

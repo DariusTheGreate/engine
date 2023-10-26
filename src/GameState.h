@@ -35,6 +35,7 @@ public:
 	static GameState* instance;
     static int editor_mode;
 	static std::string engine_path;
+	static bool cullEnabled;
 
 	//NOTE(darius) nevermind it for now. I used that to test connection between scriptApi and engine app. We need to store objects, not static states. 
 	//Cause when logicScipt reads static field from instacne it actually reads its own state(one that present in engine.lib, that logicScripts uses)

@@ -311,7 +311,7 @@ void ShaderLibrary::checkForShaderReload()
 
 void ShaderLibrary::loadCurrentShader()
 {
-    Timer t;
+    //Timer t;
     Shader& sv = getCurrShader();
     //cache.SwitchShader(sv.getProgram());
     glUseProgram(sv.getProgram());
@@ -323,10 +323,12 @@ void ShaderLibrary::shaderRoutine(Object* obj)
 
     Shader& sv = getCurrShader();
 
-    auto stageSave = stage;
+    //println((int)stage, obj->get_name());
+
+    loadCurrentShader();
 
     if(obj->getAnimator()){
-        stage = STAGE::SKELETAL;
+        //stage = STAGE::SKELETAL;
         auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
 
         //auto tr = glm::mat4(1.0f);
@@ -338,7 +340,9 @@ void ShaderLibrary::shaderRoutine(Object* obj)
         for(int i = 0; i < 99; ++i)
             transforms[i] = ViewRotateX;
             */
-        sv = getCurrShader();
+        //sv = getCurrShader();
+        //loadCurrentShader();
+
         for (int i = 0; i < transforms.size(); ++i)
             sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
     } 
@@ -370,7 +374,14 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     lightSpaceMatrix = lightProjection * lightView;
     */
 
+
+    OpenglWrapper::SetShaderInt(sv.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
+    OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
+    OpenglWrapper::BindTexture(depthMap);
+
     sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
+
+    sv.setBool("shadowCaster", obj->shadowCasterRef());
 
     glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
     glm::mat4 view = (GameState::cam.getBasicLook());
@@ -390,7 +401,6 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     glm::mat4 q = transfromRef.matrix;
     //glm::vec3 scale = obj->getTransform().geS;
 
-
     //TODO(darius) add distanced rendering here. NOTE(darius) Not that hard
     float dist = glm::length(GameState::cam.getCameraPos() - pos);
     if(dist > 99) 
@@ -406,6 +416,8 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     model = glm::mat4(1.0f);
     model *= obj->getTransform().matrix;
     glm::vec3 posm = obj->getTransform().getPosition();
+
+    model = glm::scale(model, {0.1,0.1,0.1});//for space scaling and depth buffer
     //glm::mat4 mvp = glm::translate(model, posm);
 
     //model[3] = glm::vec4(posm.x, posm.y, posm.z, 0);
@@ -417,8 +429,6 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     //model *= RotationMatrix;
 
     sv.setMat4("model", model);
-
-    stage = stageSave;
 }
 
 void ShaderLibrary::skeletalAnimationShaderRoutine(Transform tr){

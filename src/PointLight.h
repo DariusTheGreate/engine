@@ -3,6 +3,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
+#include <GameState.h>
+#include <Printer.h>
 
 class Shader;
 
@@ -48,7 +50,7 @@ public:
 
     void setShaderLight(const Shader& sv);
 
-	glm::vec3 direction = {-0.2f, -1.0f, -0.3f};
+
 	glm::vec3 color = {1,1,1};
 
     glm::vec3 ambient = {0,0,0};
@@ -59,17 +61,10 @@ public:
 	float radius = 1.0f;
 
     static glm::vec3 lightPos;
+    static glm::vec3 direction;
+    static glm::vec3 lightPoint;
 
-    static glm::mat4 getLightMat() 
-    {
-        glm::mat4 lightProjection, lightView;
-        glm::mat4 lightSpaceMatrix;
-        float near_plane = 1.0f, far_plane = 7.5f;
-        lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-        lightSpaceMatrix = lightProjection * lightView;
-        return lightSpaceMatrix;
-    }
+    static glm::mat4 getLightMat(); 
 };
 
 class SpotLight{

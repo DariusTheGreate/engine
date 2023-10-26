@@ -228,6 +228,18 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
         ImGui::DragFloat("position x", &DirectionalLight::lightPos.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position y", &DirectionalLight::lightPos.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position z", &DirectionalLight::lightPos.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+        ImGui::DragFloat("point x", &DirectionalLight::lightPoint.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("point y", &DirectionalLight::lightPoint.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("poiint z", &DirectionalLight::lightPoint.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+        ImGui::DragFloat("dir x", &DirectionalLight::direction.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("dir y", &DirectionalLight::direction.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("dir z", &DirectionalLight::direction.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+    }
+
+    if (ImGui::CollapsingHeader("DirectionalLight component")) {
+        ImGui::Checkbox("ShadowCaster", &obj->shadowCasterRef()); 
     }
     //auto q = glm::quat(objTr);
     //ImGui::Text("orientation quaternion %f, %f, %f, %f", q.x, q.y, q.z, q.w);
@@ -740,6 +752,8 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::Begin("Editor Settings");
 
     ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
+
+    ImGui::Checkbox("Enable Frustum Culling", &GameState::cullEnabled);
 
     ImGui::DragFloat("gamma brightness", &GameState::gammaBrightness, 0.005f, 0, 10, "%.0001f", 1);
 

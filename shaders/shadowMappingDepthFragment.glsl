@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 out vec4 FragColor;
 
@@ -17,7 +17,8 @@ void main()
     //FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
 
     float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
-    FragColor = vec4(vec3(depth), 1.0);
+    //FragColor = vec4(vec3(depth), 1.0);
+    FragColor = vec4(vec3(depth*100), 1.0);
 
     //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
 }

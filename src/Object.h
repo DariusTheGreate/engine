@@ -160,6 +160,11 @@ public:
 
 	int getID();
 
+	bool& shadowCasterRef()
+	{
+		return shadowCaster;
+	}
+
     void addSpriteAnimation(SpriteAnimation&& anim);
 	SpriteAnimation excnahgeSpriteAnimation(SpriteAnimation&& anim);
 	void setSpriteAnimation(SpriteAnimation& anim);
@@ -193,6 +198,8 @@ private:
 	bool object_hidden = false;
 
 	bool object_culled= false;
+
+	bool shadowCaster = false;
 
 	int ID = 0;
 };

@@ -83,7 +83,7 @@ private:
 	float lastY = 600.0f/2.0;
 	float fov = 45.0f;
 
-	float cameraSpeed = 0.5f;
+	float cameraSpeed = 0.05f;
 	float lastFrame = 0.0f;
 
     bool unexpectedUpdate = false;

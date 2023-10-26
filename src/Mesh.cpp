@@ -110,6 +110,7 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
     
     prepareTextures(shader);
 
+    vao.bind();
     //TODO(darius) perfomance issues?
     if(mode == DrawMode::DRAW_AS_ARRAYS)
 		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
@@ -132,11 +133,10 @@ void Mesh::prepareTextures(Shader& shader)
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
 
-    vao.bind();
+    unsigned int i = 0;
 
-    for (unsigned int i = 0; i < textures.size(); i++)
+    for (i = 0; i < textures.size(); i++)
     {
-
         std::string number;
         std::string name = textures[i].get_type();
         if (name == "texture_diffuse")
@@ -151,7 +151,13 @@ void Mesh::prepareTextures(Shader& shader)
         OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
         OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
+        //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
     }
+
+    /*OpenglWrapper::SetShaderInt(shader.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
+    OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
+    OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
+    */
 }
 
 void Mesh::setupMesh()
@@ -282,6 +288,8 @@ void Mesh::calculateAabb(Transform& tr)
     vmax = glm::vec3{vmax4.x, vmax4.y, vmax4.z};
     */
 
+    //tr.matrix = glm::scale(tr.matrix, {0.1,0.1,0.1});//for space scaling and depth buffer stuff
+
     aabb.center = tr.matrix * glm::vec4(((vmin + vmax) * 0.5f), 1.0f);
 
     aabb.min = tr.matrix * glm::vec4(vmin.x, vmin.y, vmin.z, 1.0f);
@@ -293,6 +301,8 @@ void Mesh::calculateAabb(Transform& tr)
     //std::cout << aabb.center << "\n";
 
     aabb.size = {tr.getScale().x, tr.getScale().y, tr.getScale().z};//(vmax - aabb.center);
+
+    aabb.size *= glm::vec3{0.1,0.1,0.1};
 }
 
 std::vector<unsigned int> Mesh::generateLOD()

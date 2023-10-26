@@ -53,4 +53,6 @@ float GameState::gammaFactor = 1.0f;
 
 Camera GameState::cam;
 MouseState GameState::ms;
+
+bool GameState::cullEnabled = true;
 //KeyboardState GameState::ks;

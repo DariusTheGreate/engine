@@ -36,12 +36,21 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 
 			auto points = tmpAabb2.getCorners();
 
+			for(auto& p : points)
+			{
+				//glm::vec4 pnew = glm::vec4(p.x, p.y, p.z, 0) * obj2->getTransform().matrix;
+				//p = {pnew.x, pnew.y, pnew.z};
+				print(p);
+			}
+
+			print("\n");
+
 			bool occlude = true;
 
 			for(auto& p : points)
 			{
-				bool does = (intersectAABB(tmpAabb, glm::normalize(p - origin))[0]);
-				//print(does);
+				bool does = (intersectAABB(tmpAabb, glm::normalize((p) - origin))[0]);
+				print(does);
 
 				if(!does)	
 					occlude = false;
@@ -53,7 +62,7 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 				if(!obj2->is_culled())
 					obj2->uncull();
 
-			//println("");
+			println("");
 		}
 	}
 }

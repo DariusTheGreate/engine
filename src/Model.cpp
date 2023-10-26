@@ -57,9 +57,17 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
 
         //OcclusionCuller::cull(meshes[i].getAABB(), {});
 
-        if(FrustumCuller::cull(meshes[i].getAABB()))
+        if(!GameState::cullEnabled || FrustumCuller::cull(meshes[i].getAABB()))
         {
-            Renderer::shaderLibInstance->shaderRoutine(obj);//not culled
+            //TODO(darius) cringe make beter architecture
+            if(Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::ALBEDO || Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::SKELETAL){
+                if(obj->getAnimator())
+                    Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::SKELETAL;
+                else
+                    Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
+            }
+
+            Renderer::shaderLibInstance->shaderRoutine(obj);
             meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
         }
     }

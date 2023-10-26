@@ -33,16 +33,16 @@ void DebugRenderer::setupSceneGrid()
 {
 	std::vector<std::string> faces
 	{
-	    GameState::engine_path + "/skybox/skybox/right.jpg",
-	    GameState::engine_path + "/skybox/skybox/left.jpg",
-	    GameState::engine_path + "/skybox/skybox/top.jpg",
-	    GameState::engine_path + "/skybox/skybox/bottom.jpg",
-	    GameState::engine_path + "/skybox/skybox/front.jpg",
-	    GameState::engine_path + "/skybox/skybox/back.jpg"
+	    GameState::engine_path + "textures/skybox/skybox/right.jpg",
+	    GameState::engine_path + "textures/skybox/skybox/left.jpg",
+	    GameState::engine_path + "textures/skybox/skybox/top.jpg",
+	    GameState::engine_path + "textures/skybox/skybox/bottom.jpg",
+	    GameState::engine_path + "textures/skybox/skybox/front.jpg",
+	    GameState::engine_path + "textures/skybox/skybox/back.jpg"
 	};
 
-	cubemap.loadCubemap(faces);
-	cubemap.setup();
+	//cubemap.loadCubemap(faces);
+	//cubemap.setup();
 	
     grid_mode = GameState::editor_mode;
     std::cout << "grid setup " << grid_mode << "\n";
@@ -147,7 +147,7 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 	glBindVertexArray(0);
 }
 
-void DebugRenderer::renderDebugCube(glm::vec3 pos, int x, int y, int z)
+void DebugRenderer::renderDebugCube(glm::vec3 pos, float x, float y, float z)
 {
 	glUseProgram(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
@@ -210,7 +210,7 @@ void DebugRenderer::renderDebugLine(glm::vec3 a, glm::vec3 b, glm::vec4 color)
 
 void DebugRenderer::renderDebugGrid()
 {
-	cubemap.draw();
+	//cubemap.draw();
 
     if(GameState::editor_mode != grid_mode)
     {
@@ -376,7 +376,7 @@ void Renderer::render(Window* wind)
 	FrustumCuller::updateFrustum();
 	OcclusionCuller::updateOrigin();
 	//NOTE(darius) in progress uncomment to test
-	//:OcclusionCuller::cull(currScene->get_objects());
+	//	OcclusionCuller::cull(currScene->get_objects());
 
 	Renderer::drawCallsCount = 0;
 	Renderer::drawCallsInstancedCount = 0;
@@ -390,17 +390,19 @@ void Renderer::render(Window* wind)
 
 	shaderLibInstance->checkForShaderReload();
 
-	//depthStage();
+	depthStage();
 
 	// NOTE(darius) to draw ONLY result of last stage
 	// draw it into quad and return from renderer 
-	//quad.DrawQuad(depthTexture);
-	//return
+	//quad.DrawQuad(shaderLibInstance->depthMap);
+	//return;
 
 	//bloomStage();
 
 	if(GameState::editor_mode != 0)
 		EditorIDsStage();
+
+	//return;
     
 	albedoStage();
 
@@ -443,7 +445,7 @@ void Renderer::EditorIDsStage()
 	workerBuff.setTaget(GL_FRAMEBUFFER);
 	workerBuff.Bind();
 	
-
+	//NOTE(darius) this order is important!!
 	OpenglWrapper::ClearScreen(backgroundColor);
 	OpenglWrapper::ClearBuffer();
 	OpenglWrapper::ClearDepthBuffer();
@@ -452,8 +454,6 @@ void Renderer::EditorIDsStage()
 	//TODO(darius) wrap it
 	shaderLibInstance->loadCurrentShader();
 	renderScene();
-
-	//TODO(darius) add UI rendering and Guizmos rendering here with id = -1 or something
 
 	workerBuff.Unbind();
 
@@ -465,20 +465,24 @@ void Renderer::EditorIDsStage()
 void Renderer::depthStage()
 {
 	shaderLibInstance->stage = ShaderLibrary::STAGE::DEPTH;
+	framebuffer.setTaget(GL_FRAMEBUFFER);
 	depthFramebuffer.Bind();
 
-	OpenglWrapper::EnableDepthTest();
-	OpenglWrapper::EnableMultisample();
-	OpenglWrapper::ClearScreen({ 1,0,0.5 });
+	OpenglWrapper::ClearScreen({0.9,0.2,0.9});
 	OpenglWrapper::ClearBuffer();
+	OpenglWrapper::ClearDepthBuffer();
+	OpenglWrapper::EnableDepthTest();
 
-
+	shaderLibInstance->loadCurrentShader();
 	renderScene();
 
-	depthTexture.setTaget(GL_DRAW_FRAMEBUFFER);
-	depthTexture.Bind();
-	depthTexture.Blit();
-	shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
+	depthFramebuffer.Unbind();
+
+	//depthTexture.setTaget(GL_DRAW_FRAMEBUFFER);
+	//depthTexture.Bind();
+	//depthTexture.Blit();
+	shaderLibInstance->depthMap = depthFramebuffer.getTexture().get_texture();
+	//shaderLibInstance->depthMap = depthTexture.getTexture().get_texture();
 }
 
 void Renderer::albedoStage()
@@ -644,7 +648,7 @@ void Renderer::renderAll(Window* wind)
 		dbr.updateCamera(projection, view);
 	}
 
-	 if(dbr.debug_render)
+	if(dbr.debug_render)
 		dbr.renderDebugGrid();
 
 	shaderLibInstance->loadCurrentShader();
@@ -685,7 +689,8 @@ void Renderer::renderScene()
 	currScene->renderScene();
 	Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::PARTICLES;
 	currScene->renderParticles();
-	currScene->updateAnimators(deltaTime);//TODO(darius) check if heres bug with time step instead fo time value
+
+	currScene->updateAnimators(deltaTime);
 	currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
 	//currScene->updateScene();
 }
