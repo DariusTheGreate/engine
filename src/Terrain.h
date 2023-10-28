@@ -7,6 +7,8 @@
 #include <VBO.h>
 #include <EBO.h>
 
+#include <Texture.h>
+
 class Terrain
 {
 public:
@@ -22,6 +24,8 @@ private:
     VAO terrainVAO;
     VBO terrainVBO;
     EBO terrainEBO;
+
+    Texture texture;
 
     std::vector<float> vertices;
     std::vector<unsigned> indices;

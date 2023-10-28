@@ -98,6 +98,11 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
             scene.AddEmpty(emptyCreated++);        
         }
 
+        if (ImGui::Button("Add Entity")) {
+            auto* enttobj = scene.AddEmpty(emptyCreated++);        
+            scene.createEntity(enttobj, path, false);
+        }
+        
         path.resize(100);
         ImGui::InputText("path", (char*)path.c_str(), 100);
         if (ImGui::Button("Load Prefab")) {
@@ -236,6 +241,11 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
         ImGui::DragFloat("dir x", &DirectionalLight::direction.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("dir y", &DirectionalLight::direction.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("dir z", &DirectionalLight::direction.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+
+        ImGui::DragFloat("orto x", &DirectionalLight::orthoBounds.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("orto y", &DirectionalLight::orthoBounds.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("orto z", &DirectionalLight::orthoBounds.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::DragFloat("orto w", &DirectionalLight::orthoBounds.w, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
     }
 
     if (ImGui::CollapsingHeader("DirectionalLight component")) {
@@ -405,8 +415,11 @@ std::optional<RigidBody> rbody;
         {
             modelV->meshes[0].calculateAabb(obj->getTransform());
             assert(Renderer::currentRendererPtr);
-            auto aabb = modelV->meshes[0].getAABB();
-            Renderer::currentRendererPtr->getDebugRenderer().aabbToRender.push_back(std::move(aabb));//(globalCenter, scl.x, scl.y, scl.z);
+            for(auto& mi : modelV->meshes)
+            {
+                auto aabb = mi.getAABB();
+                Renderer::currentRendererPtr->getDebugRenderer().aabbToRender.push_back(std::move(aabb));//(globalCenter, scl.x, scl.y, scl.z);
+            }
         }
     }
 

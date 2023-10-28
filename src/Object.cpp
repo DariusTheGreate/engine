@@ -56,10 +56,11 @@ Object::Object(Object* parentObject, Mesh& m)
 
     name = parentObject->get_name() + " child " + std::to_string((size_t)this);
 
-    colider.emplace(parentObject -> getColider()->get_size(), tr, 0, false);
+    //if(parentObject.getColider())
+    //    colider.emplace(parentObject -> getColider()->get_size(), tr, 0, false);
 
-    script = parentObject->getScript();
-    script -> setParentObject(this);
+    //script = parentObject->getScript();
+    //script -> setParentObject(this);
 }
 
 Object::Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m,

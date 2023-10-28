@@ -474,7 +474,12 @@ void Renderer::depthStage()
 	OpenglWrapper::EnableDepthTest();
 
 	shaderLibInstance->loadCurrentShader();
+
+	//glCullFace(GL_FRONT);
+
 	renderScene();
+
+	//glCullFace(GL_BACK);
 
 	depthFramebuffer.Unbind();
 
@@ -642,20 +647,27 @@ void Renderer::renderDebug(Window* wind)
 
 void Renderer::renderAll(Window* wind)
 {
+	glm::mat4 projection = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+
 	if (GameState::cam.cursor_hidden) {
-		glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
-		glm::mat4  view = GameState::cam.getBasicLook();
-		dbr.updateCamera(projection, view);
+		projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
+		view = GameState::cam.getBasicLook();
 	}
 
 	if(dbr.debug_render)
 		dbr.renderDebugGrid();
 
+	//TODO(darius) optimize here
 	shaderLibInstance->loadCurrentShader();
 	renderScene();
 
 	if (!dbr.debug_render)
 		return;
+
+	if (GameState::cam.cursor_hidden) {
+		dbr.updateCamera(projection, view);
+	}
 
 	for (int i = 0; i < currScene->get_objects().size(); ++i) {
 		if (currScene->get_objects()[i]) {

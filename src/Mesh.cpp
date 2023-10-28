@@ -266,7 +266,7 @@ void Mesh::calculateAabb(Transform& tr)
     using std::min;
     using std::max;
 
-    for (auto& vertex : vertices)
+    /*for (auto& vertex : vertices)
     {
         vmin.x = min(vmin.x, vertex.Position.x);
         vmin.y = min(vmin.y, vertex.Position.y);
@@ -276,6 +276,26 @@ void Mesh::calculateAabb(Transform& tr)
         vmax.y = max(vmax.y, vertex.Position.y);
         vmax.z = max(vmax.z, vertex.Position.z);
     }
+    */
+
+    glm::vec3 vertex = glm::vec3(vertices[0].Position);
+    vmin = vertex;
+    vmax = vertex;
+
+    for (size_t i = 0; i < vertices.size(); ++i) {
+        vertex = glm::vec3(vertices[i].Position);
+
+        vmin.x = min(vmin.x, vertex.x);
+        vmin.y = min(vmin.y, vertex.y);
+        vmin.z = min(vmin.z, vertex.z);
+
+        vmax.x = max(vmax.x, vertex.x);
+        vmax.y = max(vmax.y, vertex.y);
+        vmax.z = max(vmax.z, vertex.z);
+    }
+
+    //println("min ", vmin);
+    //println("max ", vmax);
 
     /*glm::mat4 m = glm::mat4(1.0f);
 
@@ -288,21 +308,21 @@ void Mesh::calculateAabb(Transform& tr)
     vmax = glm::vec3{vmax4.x, vmax4.y, vmax4.z};
     */
 
-    //tr.matrix = glm::scale(tr.matrix, {0.1,0.1,0.1});//for space scaling and depth buffer stuff
+    auto sclMat = glm::scale(tr.matrix, {0.1,0.1,0.1});//for space scaling and depth buffer stuff
 
-    aabb.center = tr.matrix * glm::vec4(((vmin + vmax) * 0.5f), 1.0f);
-
-    aabb.min = tr.matrix * glm::vec4(vmin.x, vmin.y, vmin.z, 1.0f);
-    aabb.max = tr.matrix * glm::vec4(vmax.x, vmax.y, vmax.z, 1.0f);
+    aabb.min = sclMat * glm::vec4(vmin.x, vmin.y, vmin.z, 1.0f);
+    aabb.max = sclMat * glm::vec4(vmax.x, vmax.y, vmax.z, 1.0f);
+    aabb.center = glm::vec4(((aabb.min + aabb.max) * 0.5f), 1.0f);
 
     //println(aabb.min, aabb.max);
 
     //println("we geet ", vmin, vmax, aabb.center);
     //std::cout << aabb.center << "\n";
 
-    aabb.size = {tr.getScale().x, tr.getScale().y, tr.getScale().z};//(vmax - aabb.center);
+    aabb.size = (aabb.max - aabb.min);// * 0.5f;
+    //aabb.size = {tr.getScale().x, tr.getScale().y, tr.getScale().z};//(vmax - aabb.center);
 
-    aabb.size *= glm::vec3{0.1,0.1,0.1};
+    //aabb.size *= glm::vec3{0.1,0.1,0.1};
 }
 
 std::vector<unsigned int> Mesh::generateLOD()

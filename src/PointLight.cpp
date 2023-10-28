@@ -60,7 +60,7 @@ glm::mat4 DirectionalLight::getLightMat()
     glm::mat4 lightProjection, lightView;
     glm::mat4 lightSpaceMatrix;
     float near_plane = 1.0f, far_plane = 4.0f;
-    lightProjection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, near_plane, far_plane);
+    lightProjection = glm::ortho(orthoBounds.x, orthoBounds.y, orthoBounds.z, orthoBounds.w, near_plane, far_plane);
     //lightPos =// glm::vec3{0,1,0} * glm::vec3{0.1,0.1,0.1};
     lightView = glm::lookAt(lightPos, lightPoint, direction);
     lightSpaceMatrix = lightView;
@@ -74,3 +74,4 @@ int PointLight::LightsCount = 0;
 glm::vec3 DirectionalLight::lightPos = glm::vec3(0.0f, 3.9f, 0.0f);
 glm::vec3 DirectionalLight::lightPoint = glm::vec3(0.05f, 0.0f, 0.0f);
 glm::vec3 DirectionalLight::direction = glm::vec3(0.0f, 0.1f, 0.0f);
+glm::vec4 DirectionalLight::orthoBounds = glm::vec4(-1.0f, 1.0f, -1.0f, 1.0f);

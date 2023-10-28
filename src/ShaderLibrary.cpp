@@ -313,12 +313,13 @@ void ShaderLibrary::loadCurrentShader()
 {
     //Timer t;
     Shader& sv = getCurrShader();
-    //cache.SwitchShader(sv.getProgram());
-    glUseProgram(sv.getProgram());
+    cache.SwitchShader(sv.getProgram());
+    //glUseProgram(sv.getProgram());
 }
 
 void ShaderLibrary::shaderRoutine(Object* obj)
 {
+    //Timer t(true);
     //TODO(darius) if{} else{} is better than uniform set
 
     Shader& sv = getCurrShader();

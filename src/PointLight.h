@@ -64,6 +64,8 @@ public:
     static glm::vec3 direction;
     static glm::vec3 lightPoint;
 
+    static glm::vec4 orthoBounds;
+
     static glm::mat4 getLightMat(); 
 };
 

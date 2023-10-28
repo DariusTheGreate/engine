@@ -52,6 +52,9 @@ Terrain::Terrain(std::string heightMap)
 
     terrainEBO.init();
     terrainEBO.bind(indices.size() * sizeof(unsigned), &indices[0]);
+    auto textID = TextureFromFile("checkerboard.png", GameState::engine_path + "textures", false, false); 
+
+    texture = Texture(textID, "checkerboard.png", "texture_diffuse");
 }
 
 void Terrain::draw()
@@ -61,10 +64,15 @@ void Terrain::draw()
     glUseProgram(sv.getProgram());	
 
     Object tmp{"terrainTmp"};
-    tmp.getTransform().setScale({0.1,0.2,0.1});
+    tmp.getTransform().setScale({0.01,0.01,0.01});
     Renderer::shaderLibInstance->shaderRoutine(&tmp);
 
+    OpenglWrapper::SetShaderInt(sv.getShader(), "texture_diffuse1", 0);
+    OpenglWrapper::ActivateTexture(GL_TEXTURE0);
+    OpenglWrapper::BindTexture(static_cast<int>(texture.get_texture()));
+
 	terrainVAO.bind();
+
     for(unsigned strip = 0; strip < numStrips; strip++)
     {
         glDrawElements(GL_TRIANGLE_STRIP, numTrisPerStrip+2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned) * (numTrisPerStrip+2) * strip));

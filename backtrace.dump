@@ -4,17 +4,29 @@
  3# raise in ucrtbased
  4# setmbcp in ucrtbased
  5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportA in ucrtbased
- 7# CrtDbgReport in ucrtbased
- 8# std::vector<Mesh,std::allocator<Mesh> >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
- 9# OcclusionCuller::cull at E:\own\programming\engine\src\OcclusionCulling.cpp:23
-10# Renderer::render at E:\own\programming\engine\src\Renderer.cpp:365
-11# Editor::update at E:\own\programming\engine\src\Editor.cpp:56
-12# Application::Run at E:\own\programming\engine\src\Application.cpp:22
-13# main at E:\own\programming\engine\src\main.cpp:15
-14# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-15# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-16# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-17# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-18# BaseThreadInitThunk in KERNEL32
-19# RtlUserThreadStart in ntdll
+ 6# VCrtDbgReportW in ucrtbased
+ 7# CrtDbgReportW in ucrtbased
+ 8# _threadid in ucrtbased
+ 9# _threadid in ucrtbased
+10# abort in ucrtbased
+11# terminate in ucrtbased
+12# __scrt_unhandled_exception_filter at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\utility\utility_desktop.cpp:96
+13# UnhandledExceptionFilter in KERNELBASE
+14# memset in ntdll
+15# _C_specific_handler in ntdll
+16# _chkstk in ntdll
+17# RtlRaiseException in ntdll
+18# RtlRaiseException in ntdll
+19# RaiseException in KERNELBASE
+20# CxxThrowException in VCRUNTIME140D
+21# main$catch$1 at E:\own\programming\engine\src\main.cpp:20
+22# 0x00007FFACD4F1080 in VCRUNTIME140_1D
+23# _NLG_Return2 in VCRUNTIME140_1D
+24# RtlCaptureContext2 in ntdll
+25# main at E:\own\programming\engine\src\main.cpp:15
+26# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+27# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+28# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+29# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+30# BaseThreadInitThunk in KERNEL32
+31# RtlUserThreadStart in ntdll
