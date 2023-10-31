@@ -565,7 +565,7 @@ void UI::componentAdderWindow(Renderer& hui)
         item_clicked->setMaterial(m);
     }
 
-    if(!item_clicked->getModel() && ImGui::CollapsingHeader("Model")){
+    if(ImGui::CollapsingHeader("Model")){
         ImGui::Indent();
 
         size_t routine = hui.getShaderRoutine();

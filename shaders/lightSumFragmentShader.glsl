@@ -14,6 +14,7 @@ in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
 in vec4 FragPosLightSpace;
+in mat3 TBN;
 
 struct Material {
     float shininess;
@@ -52,26 +53,11 @@ uniform bool shadowCaster;
 
 
 layout(binding=0) uniform sampler2D texture_diffuse1;
-layout(binding=1) uniform sampler2D texture_diffuse2;
-layout(binding=2) uniform sampler2D texture_diffuse3;
-layout(binding=3) uniform sampler2D texture_diffuse4;
+layout(binding=1) uniform sampler2D texture_specular1;
+layout(binding=2) uniform sampler2D texture_normal1;
+layout(binding=3) uniform sampler2D texture_height1;
 
-layout(binding=4) uniform sampler2D texture_specular1;
-layout(binding=5) uniform sampler2D texture_specular2;
-layout(binding=6) uniform sampler2D texture_specular3;
-layout(binding=7) uniform sampler2D texture_specular4;
-
-layout(binding=8) uniform sampler2D texture_normal1;
-layout(binding=9) uniform sampler2D texture_normal2;
-layout(binding=10) uniform sampler2D texture_normal3;
-layout(binding=11) uniform sampler2D texture_normal4;
-
-layout(binding=12) uniform sampler2D texture_height1;
-layout(binding=13) uniform sampler2D texture_height2;
-layout(binding=14) uniform sampler2D texture_height3;
-layout(binding=15) uniform sampler2D texture_height4;
-
-layout(binding=16) uniform sampler2D depthMap;
+layout(binding=4) uniform sampler2D depthMap;
 
 uniform float gammaBrightness;
 
@@ -130,7 +116,10 @@ void main()
     if(texColor.a < 0.1)
         discard;
 
-    vec3 norm = normalize(Normal);
+    //vec3 norm = normalize(Normal);
+    vec3 norm = texture(texture_specular1, TexCoords).rgb;
+    norm = normalize(TBN * (norm * 2.0 - 1.0));
+
     vec3 viewDir = normalize(viewPos - FragPos);
     
     vec3 result = calcDirectionalLight(dirLight, norm, viewDir);
@@ -183,6 +172,10 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
+
+    //lightDir = TBN * normalize(light.position - fragPos);
+    //viewDir  = TBN * normalize(viewPos - fragPos);    
+
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading

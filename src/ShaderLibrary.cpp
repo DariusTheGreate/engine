@@ -372,8 +372,8 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     }
 
     if(GameState::shadowEnabled){
-        OpenglWrapper::SetShaderInt(sv.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
-        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
+        OpenglWrapper::SetShaderInt(sv.getShader(), "depthMap", 4);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
+        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 4);
         OpenglWrapper::BindTexture(depthMap);
     }
 

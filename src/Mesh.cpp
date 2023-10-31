@@ -130,29 +130,22 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
 
 void Mesh::prepareTextures(Shader& shader)
 {
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    unsigned int heightNr = 1;
-
-    unsigned int i = 0;
-
-    for (i = 0; i < textures.size(); i++)
+    for (int i = 0; i < textures.size(); i++)
     {
         std::string number;
         std::string name = textures[i].get_type();
         if (name == "texture_diffuse")
-            number = std::to_string(diffuseNr++);
+            number = std::to_string(0);
         else if (name == "texture_specular")
-            number = std::to_string(specularNr++);
+            number = std::to_string(1);
         else if (name == "texture_normal")
-            number = std::to_string(normalNr++);
+            number = std::to_string(2);
         else if (name == "texture_height")
-            number = std::to_string(heightNr++);
+            number = std::to_string(3);
 
         //std::cout << (name + number) << "\n";
 
-        OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
+        OpenglWrapper::SetShaderInt(shader.getShader(), (name + "1").c_str(), i);
         OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
         //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
