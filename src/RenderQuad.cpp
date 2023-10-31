@@ -1,4 +1,5 @@
 #include <RenderQuad.h>
+#include <Renderer.h>
 
 RendererQuad::RendererQuad() : qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), 
     qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
@@ -38,7 +39,7 @@ void RendererQuad::DrawQuad(unsigned int screenTexture)
     glDrawArrays(GL_TRIANGLES, 0, 6);
     */
 
-    glUseProgram(qv.getProgram());
+    Renderer::shaderLibInstance->getCache().SwitchShader(qv.getProgram());
 
     glBindVertexArray(quadVAO);
 
@@ -60,7 +61,7 @@ void RendererQuad::DrawQuad(FrameBuffer& buff, unsigned int textureNumber)
 
 void RendererQuad::DrawQuadToBindedTexture(Shader s) 
 {
-    glUseProgram(s.getProgram());
+    Renderer::shaderLibInstance->getCache().SwitchShader(s.getProgram());
 
     glBindVertexArray(quadVAO);
 

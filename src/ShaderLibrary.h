@@ -62,6 +62,11 @@ public:
 
     void checkForShaderReload(); 
 
+    GraphicsStateCache getCache()
+    {
+        return cache;
+    }
+
     STAGE stage;
 
     unsigned int depthMap = 0;

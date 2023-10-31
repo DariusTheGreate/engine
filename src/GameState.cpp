@@ -55,4 +55,5 @@ Camera GameState::cam;
 MouseState GameState::ms;
 
 bool GameState::cullEnabled = true;
+bool GameState::shadowEnabled = true;
 //KeyboardState GameState::ks;

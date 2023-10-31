@@ -311,92 +311,21 @@ void ShaderLibrary::checkForShaderReload()
 
 void ShaderLibrary::loadCurrentShader()
 {
-    //Timer t;
+    //Timer t(1);
     Shader& sv = getCurrShader();
     cache.SwitchShader(sv.getProgram());
     //glUseProgram(sv.getProgram());
 }
 
-void ShaderLibrary::shaderRoutine(Object* obj)
+void getColorFromRgbId(double id)
 {
-    //Timer t(true);
-    //TODO(darius) if{} else{} is better than uniform set
+    //double r = ((id) & 0x000000FF) >> 0;
+    //double b = ((id) & 0x0000FF00) >> 8;
+    //double g = (id & 0x00FF0000) >> 16; 
+}
 
-    Shader& sv = getCurrShader();
-
-    //println((int)stage, obj->get_name());
-
-    loadCurrentShader();
-
-    if(obj->getAnimator()){
-        //stage = STAGE::SKELETAL;
-        auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
-
-        //auto tr = glm::mat4(1.0f);
-        /*glm::mat4 ViewRotateX = glm::rotate(
-            tr,
-            3.14f,
-            glm::vec3(-1.0f, 0.0f, 0.0f)
-        );
-        for(int i = 0; i < 99; ++i)
-            transforms[i] = ViewRotateX;
-            */
-        //sv = getCurrShader();
-        //loadCurrentShader();
-
-        for (int i = 0; i < transforms.size(); ++i)
-            sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
-    } 
-
-    sv.setVec3("viewPos", GameState::cam.getCameraPos());
-    sv.setInt("lightsCount", PointLight::LightsCount);
-    sv.setFloat("gammaFactor", GameState::gammaFactor); 
-    sv.setFloat("gammaBrightness", GameState::gammaBrightness); 
-
-    //std::cout << "ID: " << obj->getID() << "\n";
-    /*int id = obj->getID() * 25500;
-    double r = ((id) & 0x000000FF) >> 0;
-    double b = ((id) & 0x0000FF00) >> 8;
-    double g = (id & 0x00FF0000) >> 16;
-
-    sv.setVec4("PickingColor", glm::vec4{float(r/255),float(g/255),float(b/255),0});
-    */
-
-    double id = obj->getID();
-
-    sv.setVec4("PickingColor", glm::vec4{id/255,id/255,id/255,0});
-
-    /*glm::vec3 lightPos = glm::vec3(-2.0f, 0.0f, -1.0f);
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
-    float near_plane = 1.0f, far_plane = 7.5f;
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-    lightSpaceMatrix = lightProjection * lightView;
-    */
-
-
-    OpenglWrapper::SetShaderInt(sv.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
-    OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
-    OpenglWrapper::BindTexture(depthMap);
-
-    sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
-
-    sv.setBool("shadowCaster", obj->shadowCasterRef());
-
-    glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
-    glm::mat4 view = (GameState::cam.getBasicLook());
-
-    sv.setVec3("lightPos", DirectionalLight::lightPos);
-    sv.setMat4("projection", projection);
-    sv.setMat4("view", view);
-
-    //if(directionalLight)
-    //    directionalLight->setShaderLight(sv);
-    //if(pointLight)
-    //    pointLight->setShaderLight(sv);
-
-    glm::mat4 model = glm::mat4(1.0f);
+void distanceRendering(Object* obj)
+{
     auto& transfromRef = obj->getTransform();
     glm::vec3 pos = transfromRef.getPosition();
     glm::mat4 q = transfromRef.matrix;
@@ -409,25 +338,57 @@ void ShaderLibrary::shaderRoutine(Object* obj)
         //scale *= 0.5;//2 * GameState::cam.getFov()/dist;
         pos = GameState::cam.getCameraPos() + ((GameState::cam.getCameraPos() - pos));
     }
+}
 
-    //model = glm::translate(model, pos);
-    //model = glm::scale(model, scale);
-    //model *= q;
+void ShaderLibrary::shaderRoutine(Object* obj)
+{
+    //Timer t(true);//~0.0003
 
-    model = glm::mat4(1.0f);
+    Shader& sv = getCurrShader();
+
+    //println((int)stage, obj->get_name());
+
+    loadCurrentShader();
+
+    if(obj->getAnimator()){
+        auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
+
+        for (int i = 0; i < transforms.size(); ++i)
+            sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);
+    } 
+
+    if(stage == STAGE::ALBEDO)
+    {
+        sv.setVec3("viewPos", GameState::cam.getCameraPos());
+        sv.setInt("lightsCount", PointLight::LightsCount);
+        sv.setFloat("gammaFactor", GameState::gammaFactor); 
+        sv.setFloat("gammaBrightness", GameState::gammaBrightness); 
+        sv.setBool("shadowCaster", obj->shadowCasterRef());
+    }
+
+    if(stage == STAGE::EDITOR_ID){
+        double id = obj->getID();
+        sv.setVec4("PickingColor", glm::vec4{id/255,id/255,id/255,0});
+    }
+
+    if(GameState::shadowEnabled){
+        OpenglWrapper::SetShaderInt(sv.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
+        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
+        OpenglWrapper::BindTexture(depthMap);
+    }
+
+    sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
+    sv.setVec3("lightPos", DirectionalLight::lightPos);
+
+    glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
+    glm::mat4 view = (GameState::cam.getBasicLook());
+
+    sv.setMat4("projection", projection);
+    sv.setMat4("view", view);
+
+    glm::mat4 model = glm::mat4(1.0f);
     model *= obj->getTransform().matrix;
-    glm::vec3 posm = obj->getTransform().getPosition();
-
     model = glm::scale(model, {0.1,0.1,0.1});//for space scaling and depth buffer
-    //glm::mat4 mvp = glm::translate(model, posm);
-
-    //model[3] = glm::vec4(posm.x, posm.y, posm.z, 0);
-    //model = glm::translate(model, obj->getTransform().getPosition());
-    //model = glm::scale(model, obj->getTransform().getScale());
-    //glm::quat qu = obj->getTransform().matrix;
-    //glm::mat4 RotationMatrix = glm::toMat4(qu);
-    //NOTE(darius) brokes if uncomment
-    //model *= RotationMatrix;
 
     sv.setMat4("model", model);
 }

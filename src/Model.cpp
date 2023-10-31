@@ -49,15 +49,16 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
     }
 
     for (unsigned int i = 0; i < meshes.size(); i++) {
-        Timer t;
 
         //TODO(darius) move to separate thread?
 
-        meshes[i].updateAABB(obj->getTransform());
+        if(GameState::cullEnabled)
+            meshes[i].updateAABB(obj->getTransform());//TODO(darius) mega slow 
 
         //OcclusionCuller::cull(meshes[i].getAABB(), {});
 
-        if(!GameState::cullEnabled || FrustumCuller::cull(meshes[i].getAABB()))
+        //if(!GameState::cullEnabled || FrustumCuller::cull(meshes[i].getAABB()))
+        if(FrustumCuller::cull(meshes[i].getAABB()))
         {
             //TODO(darius) cringe make beter architecture
             if(Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::ALBEDO || Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::SKELETAL){
@@ -214,15 +215,19 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    println("diffMaps size ", diffuseMaps.size());
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
     std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    println("specMaps size ", specularMaps.size());
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
     std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    println("normMaps size ", normalMaps.size());
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    println("heightMaps size ", heightMaps.size());
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     if (diffuseMaps.size() == 0) 
@@ -236,8 +241,15 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
                 textures.insert(textures.end(), diffuseMapsRepeat.begin(), diffuseMapsRepeat.end());
                 break;
             }
+
+            std::vector<Texture> normMapsRepeat = loadMaterialTextures(materialRepeat, aiTextureType_HEIGHT, "texture_normal");
+            if (normMapsRepeat.size() > 0) {
+                textures.insert(textures.end(), normMapsRepeat.begin(), normMapsRepeat.end());
+                break;
+            }
         }
     }
+    
     //TODO(darius) check if textures that we ahve dont exist in filesystem
     if(textures.size() == 0)
     {

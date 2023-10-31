@@ -127,7 +127,7 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 	if(!collider)
 		return;
 
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
 	if(body)
@@ -149,7 +149,7 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 
 void DebugRenderer::renderDebugCube(glm::vec3 pos, float x, float y, float z)
 {
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	//print(pos, x, y, z, "\n");
 	model = glm::translate(model, pos + glm::vec3(-0.5 * x, -0.5 * y, 0.5 * z));
@@ -169,7 +169,7 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
     if(!debug_render)
         return;
 
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, a);
 	model = glm::scale(model, {0.05,0.05,0.05});
@@ -187,7 +187,7 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 
 void DebugRenderer::renderDebugLine(glm::vec3 a, glm::vec3 b, glm::vec4 color)
 {
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	
 	float x = b.x - a.x;
@@ -217,7 +217,7 @@ void DebugRenderer::renderDebugGrid()
         setupSceneGrid(); 
     }
 
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	dsv.setVec4("objectColor", {0.4,0.4,0.4,0});
 	dsv.setMat4("model", model);
@@ -230,7 +230,7 @@ void DebugRenderer::renderDebugLightSource(std::optional<PointLight>& p)
 {
 	if(!p)
 		return;
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, p->position);
 	model = glm::scale(model, glm::vec3{0.2,0.2,0.2});
@@ -244,7 +244,7 @@ void DebugRenderer::renderDebugLightSource(std::optional<PointLight>& p)
 
 void DebugRenderer::updateCamera(glm::mat4 projection, glm::mat4 view)
 {
-	glUseProgram(dsv.getProgram());
+	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	dsv.setMat4("projection", projection);
 	dsv.setMat4("view", view);
 }
@@ -390,7 +390,8 @@ void Renderer::render(Window* wind)
 
 	shaderLibInstance->checkForShaderReload();
 
-	depthStage();
+	if(GameState::shadowEnabled)
+		depthStage();
 
 	// NOTE(darius) to draw ONLY result of last stage
 	// draw it into quad and return from renderer 
@@ -452,7 +453,7 @@ void Renderer::EditorIDsStage()
 	OpenglWrapper::EnableDepthTest();
 
 	//TODO(darius) wrap it
-	shaderLibInstance->loadCurrentShader();
+	//shaderLibInstance->loadCurrentShader();
 	renderScene();
 
 	workerBuff.Unbind();
@@ -464,6 +465,7 @@ void Renderer::EditorIDsStage()
 
 void Renderer::depthStage()
 {
+	//Timer t(true);
 	shaderLibInstance->stage = ShaderLibrary::STAGE::DEPTH;
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	depthFramebuffer.Bind();
@@ -473,7 +475,7 @@ void Renderer::depthStage()
 	OpenglWrapper::ClearDepthBuffer();
 	OpenglWrapper::EnableDepthTest();
 
-	shaderLibInstance->loadCurrentShader();
+	//shaderLibInstance->loadCurrentShader();
 
 	//glCullFace(GL_FRONT);
 
@@ -492,6 +494,7 @@ void Renderer::depthStage()
 
 void Renderer::albedoStage()
 {
+	//Timer t(true);
 	shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
 	framebuffer.setTaget(GL_FRAMEBUFFER);
 	framebuffer.Bind();
@@ -647,6 +650,7 @@ void Renderer::renderDebug(Window* wind)
 
 void Renderer::renderAll(Window* wind)
 {
+	//Timer t(true);
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 
@@ -659,7 +663,7 @@ void Renderer::renderAll(Window* wind)
 		dbr.renderDebugGrid();
 
 	//TODO(darius) optimize here
-	shaderLibInstance->loadCurrentShader();
+	//shaderLibInstance->loadCurrentShader();
 	renderScene();
 
 	if (!dbr.debug_render)

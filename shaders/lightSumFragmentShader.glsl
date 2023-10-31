@@ -114,7 +114,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    //vec3 color = texture(depthMap, TexCoords).rgb;
+    //vec3 color = texture(texture_diffuse1, TexCoords).rgb;
     //FragColor.rgb = color;
     //return;
 

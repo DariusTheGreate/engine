@@ -23,8 +23,9 @@ Object* Scene::createEntity(Object* po, std::string path, bool rotateTextures = 
 
 	std::vector<Object*> subobjects;
 	subobjects.reserve(meshes.size());
-	for (int i = 0; i < meshes.size(); ++i) {
-		Object* pt = mem_man.construct(po, meshes[i]);
+	for (int i = 0; i < meshes.size()/2; ++i) {
+		Object* pt = mem_man.construct("cihld");
+		pt->getModel().emplace(meshes[i]);
 		std::cout << "created pt\n";
 		subobjects.push_back(pt);
 	}
@@ -95,11 +96,13 @@ void Scene::updateScene()
 // Then u will traverse through whis groups and render each group?
 void Scene::renderScene()
 {
+	//println("-------------------------------");
 	for (int i = 0; i < sceneObjects.size(); ++i) {
 		if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 			continue;
 		sceneObjects[i]->renderObject();
 	}
+	//println("-------------------------------");
 
 	for(auto& t : terrains)
 	{

@@ -102,6 +102,22 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
             auto* enttobj = scene.AddEmpty(emptyCreated++);        
             scene.createEntity(enttobj, path, false);
         }
+
+        if (ImGui::Button("Add Objects")) {
+            //E:\own\programming\engine\meshes\supersponza\Sponza\sponza.obj
+            //auto* enttobj = scene.AddEmpty(emptyCreated++);        
+            //scene.createEntity(enttobj, path, false);
+            Model m = Model(path);
+            auto meshes = m.loadModel();
+
+            for(int i = 0; i < meshes.size()/2; ++i)
+            {
+                auto* obj = scene.createObject("mesh" + std::to_string(i)); 
+                obj->addModel(std::move(meshes[i]));
+                //obj->getTransform().setScale({0.1,0.1,0.1});
+            }
+        }
+        
         
         path.resize(100);
         ImGui::InputText("path", (char*)path.c_str(), 100);
@@ -767,6 +783,7 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
 
     ImGui::Checkbox("Enable Frustum Culling", &GameState::cullEnabled);
+    ImGui::Checkbox("Enable Shadows", &GameState::shadowEnabled);
 
     ImGui::DragFloat("gamma brightness", &GameState::gammaBrightness, 0.005f, 0, 10, "%.0001f", 1);
 

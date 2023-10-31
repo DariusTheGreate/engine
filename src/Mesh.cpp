@@ -98,6 +98,7 @@ MeshAABB Mesh::getAABB()
 
 void Mesh::updateAABB(Transform tr)
 {
+    //Timer t(1);
     //TODO(darius) optimise here
     glm::vec3 aabbNewCenter = tr.matrix * glm::vec4(((aabb.min + aabb.max) * 0.5f), 1.0f); 
     if(aabb.size != tr.getScale() || aabb.center != aabbNewCenter)
@@ -108,6 +109,7 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
 {
     //std::unique_lock<std::mutex>(draw_mutex);
     
+    //Timer t(true);
     prepareTextures(shader);
 
     vao.bind();
@@ -147,6 +149,8 @@ void Mesh::prepareTextures(Shader& shader)
             number = std::to_string(normalNr++);
         else if (name == "texture_height")
             number = std::to_string(heightNr++);
+
+        //std::cout << (name + number) << "\n";
 
         OpenglWrapper::SetShaderInt(shader.getShader(), (name + number).c_str(), i);
         OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);

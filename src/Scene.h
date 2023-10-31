@@ -142,6 +142,8 @@ public:
 
 	void updateScene();
 
+	void updateSceneAABBs();
+
 	void renderScene();
 
 	void renderParticles();
