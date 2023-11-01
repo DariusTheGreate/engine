@@ -112,6 +112,13 @@ void FrameBuffer::SetImage(int i)
     OpenglWrapper::ImageFrameBuffer((unsigned int)textures[i].get_texture(), GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D);
 }
 
+
+void FrameBuffer::Resize(unsigned int width, unsigned int height)
+{
+    for(auto& t : textures)    
+        t.resize(width, height);
+}
+
 Texture& FrameBuffer::getTexture()
 {
     return textures[0];

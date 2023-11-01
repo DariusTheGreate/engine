@@ -388,6 +388,11 @@ void Renderer::render(Window* wind)
 	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
 	OpenglWrapper::SetWindow(display_w, display_h);
 
+	if(display_w != wind->getWidth() || display_h != wind->getHeight())
+	{
+		intermidiateFramebuffer.Resize(display_w, display_h);
+	}
+
 	shaderLibInstance->checkForShaderReload();
 
 	if(GameState::shadowEnabled)

@@ -69,6 +69,8 @@ public:
 
 	void unbind(GLenum target = GL_TEXTURE_2D);
 
+	void resize(unsigned int width, unsigned int height);
+
 	void filters();
 	
 	unsigned int get_texture();

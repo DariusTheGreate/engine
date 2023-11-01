@@ -26,6 +26,8 @@ public:
 
     void SetImage(int i);
 
+    void Resize(unsigned int width, unsigned int height);
+
 	Texture& getTexture();
     Texture& getTextureAt(int i);
     std::vector<Texture>& getTextures();
