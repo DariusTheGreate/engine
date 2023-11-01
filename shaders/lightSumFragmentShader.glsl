@@ -100,16 +100,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    //vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+    vec3 color = texture(texture_diffuse1, TexCoords).rgb;
     //FragColor.rgb = color;
-    //return;
-
-    //works
-    //float depth = LinearizeDepth(gl_FragCoord.z) / far; // divide by far for demonstration
-    //FragColor = vec4(vec3(depth), 1.0);
-    //return;
-
-    //FragColor = vec4(1.0f,0.0f,1.0f,1.0f);//texture(texture_diffuse1, TexCoords);
     //return;
 
     vec4 texColor = texture(texture_diffuse1, TexCoords);
@@ -118,7 +110,8 @@ void main()
 
     //vec3 norm = normalize(Normal);
     vec3 norm = texture(texture_specular1, TexCoords).rgb;
-    norm = normalize(TBN * (norm * 2.0 - 1.0));
+    norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
+    //norm = normalize((norm * 2.0 - 1.0));
 
     vec3 viewDir = normalize(viewPos - FragPos);
     
@@ -127,11 +120,10 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
 
-
     float shadow = ShadowCalculation(FragPosLightSpace); 
 
-    if(!shadowCaster)
-        result = (1.0 - shadow) * result;
+    //if(!shadowCaster)
+    //    result = (1.0 - shadow) * result;
         
     if(lightsCount == 0)
         FragColor = texColor;

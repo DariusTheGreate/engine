@@ -358,7 +358,7 @@ void Editor::fileDropCallbackDispatch(std::string_view path)
     {
         currScene.deserialize(path);
     }
-    else if(path.find(".png") != std::string_view::npos)
+    else if(path.find(".png") != std::string_view::npos || path.find(".jpg") != std::string_view::npos)
     {
         FlatMesh* flat = currScene.createFlatMesh();
         flat->setTexture(std::string(path));

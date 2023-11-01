@@ -657,6 +657,14 @@ void UI::componentAdderWindow(Renderer& hui)
                 (itemFlat)->setTextureNormal(path);
             }
 
+            if(ImGui::Button("Load Parallax")){
+                path.shrink_to_fit();
+                name.shrink_to_fit();
+                //TODO(darius) fix this cringe
+                FlatMesh* itemFlat = (FlatMesh*)&(item_clicked->getModel()->meshes[0]);
+                (itemFlat)->setTextureParallax(path);
+            }
+
             if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                 FlatMesh flat;
 

@@ -13,6 +13,8 @@ public:
 
     void setTextureNormal(const std::string& path);
 
+    void setTextureParallax(const std::string& path);
+
     void DrawRaw(Shader& shader, glm::vec3 pos, glm::vec3 scale);
 
     void setTextureCoords(float x1, float y1, float x2, float y2);
