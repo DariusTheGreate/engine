@@ -53,11 +53,15 @@ uniform bool shadowCaster;
 
 
 layout(binding=0) uniform sampler2D texture_diffuse1;
-layout(binding=1) uniform sampler2D texture_specular1;
-layout(binding=2) uniform sampler2D texture_normal1;
+layout(binding=1) uniform sampler2D texture_normal1;
+layout(binding=2) uniform sampler2D texture_specular1;
 layout(binding=3) uniform sampler2D texture_height1;
-
 layout(binding=4) uniform sampler2D depthMap;
+
+uniform int texture_diffuse_was_set;
+uniform int texture_normal_was_set;
+uniform int texture_specular_was_set;
+uniform int texture_height_was_set;
 
 uniform float gammaBrightness;
 
@@ -100,22 +104,44 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    vec3 color = texture(texture_diffuse1, TexCoords).rgb;
-    //FragColor.rgb = color;
-    //return;
+    if(texture_diffuse_was_set == 666){
+        vec3 color = texture(texture_normal1, TexCoords).rgb;
+        FragColor.rgb = color;
+        return;
+    }
+    else
+    {
+        FragColor.rgb = vec3(0.0f,0.0f,1.0f);
+        return;
+    }
+
+    if(texture_diffuse_was_set != 666)
+    {
+        FragColor.rgb = vec3(1.0f,0.0f,0.0f);
+            return;
+    }
 
     vec4 texColor = texture(texture_diffuse1, TexCoords);
     if(texColor.a < 0.1)
         discard;
 
-    //vec3 norm = normalize(Normal);
-    vec3 norm = texture(texture_specular1, TexCoords).rgb;
-    norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
-    //norm = normalize((norm * 2.0 - 1.0));
+    vec3 norm = vec3(0.0f,0.0f,1.0f);
+
+    if(texture_normal_was_set == 666)
+        norm = texture(texture_normal1, TexCoords).rgb;
+    else
+        norm = normalize(Normal);
+
+    if(true){
+        norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
+    }
+    else{
+        norm = normalize((norm * 2.0 - 1.0)); //for flatMeshes dont forget to uncomment
+    }
 
     vec3 viewDir = normalize(viewPos - FragPos);
     
-    vec3 result = calcDirectionalLight(dirLight, norm, viewDir);
+    vec3 result = vec3(0.0f,0.0f,0.0f); //calcDirectionalLight(dirLight, norm, viewDir);
 
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
@@ -135,15 +161,6 @@ void main()
         BrightColor = vec4(FragColor.rgb, 1.0);
     else
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
-
-
-    //u can transfer depth map in r channel but cant in a channel
-    //FragColor.r = depth;
-
-    //gamma corecion
-    //FragColor.rgb = pow((texture(texture_diffuse1, TexCoords) * vec4(result, 1.0f)).rgb, vec3(1.0/gammaFactor));
-    //FragColor.rgb = gammaBrightness * (texture(texture_diffuse1, TexCoords)).rgb;
-    //FragColor.a = 1.0;
 }   
 
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
@@ -156,7 +173,10 @@ vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 
     vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
+
+    vec3 specular = vec3(0.0f,0.0f,0.0f);
+    if(texture_specular_was_set == 666)
+        specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
 
     return (ambient + diffuse + specular);
 }
@@ -165,34 +185,31 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
 
-    //lightDir = TBN * normalize(light.position - fragPos);
-    //viewDir  = TBN * normalize(viewPos - fragPos);    
-
-    // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
-    // specular shading
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
-    // attenuation
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
-    // combine results
     vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
+
+    vec3 specular = vec3(0.0f,0.0f,0.0f);
+    if(texture_specular_was_set == 666)
+        specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
+
     ambient *= attenuation;
     diffuse *= attenuation;
     specular *= attenuation;
- 
-    //float intensity = 0.4 * spec;
 
- 	//if (intensity > 0.9) 
- 	//	intensity = 1.1;
- 	//else if (intensity > 0.5) 
- 	//	intensity = 0.7;
- 	//else 
- 	//	intensity = 0.5;
+    float intensity = 0.4 * spec;
+
+ 	if (intensity > 0.9) 
+ 		intensity = 1.1;
+ 	else if (intensity > 0.5) 
+ 		intensity = 0.7;
+ 	else 
+ 		intensity = 0.5;
 
 
-    return (ambient + diffuse + specular);// * intensity;
+    return (ambient + diffuse + specular) * intensity;
 }

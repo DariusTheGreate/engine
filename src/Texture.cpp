@@ -58,7 +58,6 @@ void Texture::unbind(GLenum target)
 	OpenglWrapper::UnbindTexture();
 }
 
-
 void Texture::resize(unsigned int width, unsigned int height)
 {
 	OpenglWrapper::ImageTexture(format, width, height, nullptr);	

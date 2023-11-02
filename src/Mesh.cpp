@@ -130,26 +130,37 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
 
 void Mesh::prepareTextures(Shader& shader)
 {
+    std::cout << "--------------------------\n";
+
+    shader.setInt(("texture_diffuse_was_set"), 666);
+    shader.setInt(("texture_normal_was_set"), 667);
+    shader.setInt(("texture_specular_was_set"), 667);
+    shader.setInt(("texture_height_was_set"), 667);
+
     for (int i = 0; i < textures.size(); i++)
     {
-        std::string number;
+        int number = 0;
         std::string name = textures[i].get_type();
         if (name == "texture_diffuse")
-            number = std::to_string(0);
-        else if (name == "texture_specular")
-            number = std::to_string(1);
+            number = (0);
         else if (name == "texture_normal")
-            number = std::to_string(2);
+            number = (1);
+        else if (name == "texture_specular")
+            number = (2);
         else if (name == "texture_height")
-            number = std::to_string(3);
+            number = (3);
 
-        //std::cout << (name + number) << "\n";
+        std::cout << (name + std::to_string(number)) << "\n";
+        std::cout << "texture: " << textures[i].get_path() << " " << textures[i].get_type() << "\n";
 
-        OpenglWrapper::SetShaderInt(shader.getShader(), (name + "1").c_str(), i);
-        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + i);
+        //OpenglWrapper::SetShaderInt(shader.getShader(), (name + "_was_set").c_str(), 666);
+        shader.setInt((name + "_was_set"), 666);
+        OpenglWrapper::ActivateTexture(GL_TEXTURE0 + number);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
         //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
     }
+
+    std::cout << "--------------------------\n";
 
     /*OpenglWrapper::SetShaderInt(shader.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
     OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
