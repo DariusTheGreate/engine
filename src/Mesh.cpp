@@ -132,7 +132,7 @@ void Mesh::prepareTextures(Shader& shader)
 {
     std::cout << "--------------------------\n";
 
-    shader.setInt(("texture_diffuse_was_set"), 666);
+    shader.setInt(("texture_diffuse_was_set"), 667);
     shader.setInt(("texture_normal_was_set"), 667);
     shader.setInt(("texture_specular_was_set"), 667);
     shader.setInt(("texture_height_was_set"), 667);
