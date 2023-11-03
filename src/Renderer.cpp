@@ -387,6 +387,7 @@ void Renderer::render(Window* wind)
 	int display_w, display_h;
 	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
 	OpenglWrapper::SetWindow(display_w, display_h);
+	FrustumCuller::setFrustumSize(display_w, display_h);
 
 	if(display_w != wind->getWidth() || display_h != wind->getHeight())
 	{

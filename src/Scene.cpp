@@ -900,9 +900,28 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 
 			std::string path(tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
 
-			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, false), path, "texture_diffuse"));
+			size_t texTypePos = tkn.find("Type:", i);
 
-			break;
+			std::string textureType;
+
+			if (texPos == std::string::npos)
+			{
+				break;
+				//textureType = "texture_diffuse";
+			}
+
+			brckStart = tkn.find("{", texTypePos);
+			brckEnd = tkn.find("}", brckStart);
+
+			textureType = (tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
+
+			print(textureType);
+
+			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, false), path, textureType));
+
+			i = brckEnd;
+
+			//break;
 		}
 
 		/*

@@ -130,7 +130,7 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
 
 void Mesh::prepareTextures(Shader& shader)
 {
-    std::cout << "--------------------------\n";
+    //std::cout << "--------------------------\n";
 
     shader.setInt(("texture_diffuse_was_set"), 667);
     shader.setInt(("texture_normal_was_set"), 667);
@@ -150,8 +150,8 @@ void Mesh::prepareTextures(Shader& shader)
         else if (name == "texture_height")
             number = (3);
 
-        std::cout << (name + std::to_string(number)) << "\n";
-        std::cout << "texture: " << textures[i].get_path() << " " << textures[i].get_type() << "\n";
+        //std::cout << (name + std::to_string(number)) << "\n";
+        //std::cout << "texture: " << textures[i].get_path() << " " << textures[i].get_type() << "\n";
 
         //OpenglWrapper::SetShaderInt(shader.getShader(), (name + "_was_set").c_str(), 666);
         shader.setInt((name + "_was_set"), 666);
@@ -160,7 +160,7 @@ void Mesh::prepareTextures(Shader& shader)
         //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
     }
 
-    std::cout << "--------------------------\n";
+    //std::cout << "--------------------------\n";
 
     /*OpenglWrapper::SetShaderInt(shader.getShader(), "depthMap", 16);//NOTE(darius) now depthMap is at binmding 16(works on glsl version 420)
     OpenglWrapper::ActivateTexture(GL_TEXTURE0 + 16);
