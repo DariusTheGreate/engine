@@ -18,10 +18,26 @@ uniform mat4 lightSpaceMatrix;
 
 void main()
 {
-
 	vec3 T = normalize(vec3(model * vec4(aTangent,   0.0)));
 	vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
 	vec3 N = normalize(vec3(model * vec4(aNormal,    0.0)));
+
+	//TODO: set default tangets here
+	if(aTangent == vec3(0.0f, 0.0f, 0.0f)){
+		//T = cross(normalize(N), vec3(1.0,0.0,0.0));
+		T = vec3(1.0, 0.0, 0.0);
+	}
+
+	if(aBitangent == vec3(0.0f, 0.0f, 0.0f)){
+		//B = cross(normalize(N), vec3(0.0,1.0,0.0));
+		B = vec3(0.0, 1.0, 0.0);
+	}
+
+	if(aNormal == vec3(0.0, 0.0, 0.0)){
+		N = vec3(0.0, 0.0, 1.0);
+	}
+
+
 	TBN = mat3(T, B, N);
 
     TexCoords = aTexCoords;    

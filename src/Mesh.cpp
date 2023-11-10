@@ -152,6 +152,15 @@ void Mesh::prepareTextures(Shader& shader)
 
         //std::cout << (name + std::to_string(number)) << "\n";
         //std::cout << "texture: " << textures[i].get_path() << " " << textures[i].get_type() << "\n";
+        /*[this]()
+        {
+            for(auto& v : vertices){
+                println("btgn: ", v.Bitangent);
+                println("atgn: ", v.Tangent);
+            }
+
+
+        }();*/
 
         //OpenglWrapper::SetShaderInt(shader.getShader(), (name + "_was_set").c_str(), 666);
         shader.setInt((name + "_was_set"), 666);

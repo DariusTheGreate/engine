@@ -9,6 +9,7 @@ Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsign
 	stbi_set_flip_vertically_on_load(true);
 
 	int width, height, nrChannels;
+	//NOTE(darius) internalFormat and nrChannels stuff
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 
 	generate();

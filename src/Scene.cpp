@@ -907,7 +907,7 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 			if (texPos == std::string::npos)
 			{
 				break;
-				//textureType = "texture_diffuse";
+				textureType = "texture_diffuse";
 			}
 
 			brckStart = tkn.find("{", texTypePos);

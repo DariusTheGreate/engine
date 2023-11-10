@@ -50,6 +50,7 @@ void Camera::setCameraLook(double xposIn, double yposIn)
 
 void Camera::setScroolState(double xoffset, double yoffset)
 {
+    return;
     if(GameState::editor_mode == 3){
         fov -= (float)yoffset;
         if (fov < 1.0f)

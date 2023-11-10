@@ -132,7 +132,7 @@ void main()
     else
         norm = normalize(Normal);
 
-    if(false){
+    if(true){
         norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
     }
     else{
