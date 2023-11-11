@@ -72,6 +72,14 @@ int Window::getHeight() {
 	return height;
 }
 
+void Window::setWidth(int W) {
+	width = W;
+}
+
+void Window::setHeight(int H) {
+	height = H;
+}
+
 void Window::swapBuffers() {
 	glfwSwapBuffers(m_window);
 }

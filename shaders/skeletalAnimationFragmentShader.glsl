@@ -1,31 +1,33 @@
-#version 410 core
+#version 420 core
 out vec4 FragColor;
 
 in vec2 TexCoords;
 in vec3 Normal;
 
-uniform sampler2D texture_diffuse1;
-uniform sampler2D texture_diffuse2;
-uniform sampler2D texture_diffuse3;
-uniform sampler2D texture_diffuse4;
-
-uniform sampler2D texture_specular1;
-uniform sampler2D texture_specular2;
-uniform sampler2D texture_specular3;
-uniform sampler2D texture_specular4;
-
-uniform sampler2D texture_normal1;
-uniform sampler2D texture_normal2;
-uniform sampler2D texture_normal3;
-uniform sampler2D texture_normal4;
+layout(binding=0) uniform sampler2D texture_diffuse1;
+layout(binding=1) uniform sampler2D texture_normal1;
+layout(binding=2) uniform sampler2D texture_specular1;
+layout(binding=3) uniform sampler2D texture_height1;
+layout(binding=4) uniform sampler2D depthMap;
 
 
-uniform sampler2D texture_height1;
-uniform sampler2D texture_height2;
-uniform sampler2D texture_height3;
-uniform sampler2D texture_height4;
+uniform int texture_diffuse_was_set;
+uniform int texture_normal_was_set;
+uniform int texture_specular_was_set;
+uniform int texture_height_was_set;
+
 
 void main()
 {    
-    FragColor = texture(texture_diffuse1, TexCoords);
+    
+    if(texture_diffuse_was_set == 666){
+        vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+        FragColor.rgb = color;
+        return;
+    }
+    else
+    {
+        FragColor.rgb = vec3(0.0f,0.0f,1.0f);
+        return;
+    }
 }

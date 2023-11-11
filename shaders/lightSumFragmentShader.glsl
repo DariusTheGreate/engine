@@ -104,8 +104,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    /*if(texture_diffuse_was_set == 666){
-        vec3 color = texture(texture_diffuse1, TexCoords).rgb;
+    /*if(texture_normal_was_set == 666){
+        vec3 color = texture(texture_normal1, TexCoords).rgb;
         FragColor.rgb = color;
         return;
     }

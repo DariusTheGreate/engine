@@ -30,6 +30,10 @@ public:
 
 	int getHeight();
 
+	void setWidth(int W);
+
+	void setHeight(int H);
+
 private:
 	GLFWwindow* m_window = nullptr;
 	char* m_window_name;

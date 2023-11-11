@@ -391,7 +391,18 @@ void Renderer::render(Window* wind)
 
 	if(display_w != wind->getWidth() || display_h != wind->getHeight())
 	{
+		println("resized here");
+		framebuffer.Resize(display_w, display_h);
+		deferredLightingBuffer.Resize(display_w, display_h);
+		bloomBuffer.Resize(display_w, display_h);
+		pingPongBlurBufferA.Resize(display_w, display_h);
+		pingPongBlurBufferB.Resize(display_w, display_h);
+		depthFramebuffer.Resize(display_w, display_h);
 		intermidiateFramebuffer.Resize(display_w, display_h);
+		ObjectSelector::buff.Resize(display_w, display_h);
+
+		wind->setWidth(display_w);
+		wind->setHeight(display_h);
 	}
 
 	shaderLibInstance->checkForShaderReload();
