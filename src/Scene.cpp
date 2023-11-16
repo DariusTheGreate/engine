@@ -506,7 +506,7 @@ void Scene::serialize(std::string_view path)
     if(!file.is_open())
         return;
 
-    file << "CameraPos: {" << GameState::cam.getCameraPos().x << " " << GameState::cam.getCameraPos().y << " " << GameState::cam.getCameraPos().z << "}\n";
+    file << "CameraPos: {" << GameState::instance->cam.getCameraPos().x << " " << GameState::instance->cam.getCameraPos().y << " " << GameState::instance->cam.getCameraPos().z << "}\n";
     
 	for (auto& i : sceneObjects)
 	{
@@ -616,7 +616,7 @@ void Scene::parseScene(std::string_view data)
 		size_t brcktEnd = data.find('}', brcktStart);
 		glm::vec3 cameraPosition = extractVectorFromToken(data.substr(brcktStart, brcktEnd - brcktStart));
 
-		GameState::cam.setCameraPos(cameraPosition);
+		GameState::instance->cam.setCameraPos(cameraPosition);
 	}
 
 	std::vector<std::string> objectTokens;
@@ -917,7 +917,8 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 
 			print(textureType);
 
-			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, false), path, textureType));
+			bool rotateByDefault = true;
+			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, rotateByDefault), path, textureType));
 
 			i = brckEnd;
 

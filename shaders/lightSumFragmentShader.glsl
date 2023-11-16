@@ -104,9 +104,13 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    /*if(texture_normal_was_set == 666){
-        vec3 color = texture(texture_normal1, TexCoords).rgb;
-        FragColor.rgb = color;
+    /*if(texture_diffuse_was_set == 666){
+        vec4 color = texture(texture_diffuse1, TexCoords);
+
+        if(color.a < 0.1)
+            discard;
+
+        FragColor.rgb = color.rgb;
         return;
     }
     else
@@ -132,7 +136,7 @@ void main()
     else
         norm = normalize(Normal);
 
-    if(true){
+    if(false){
         norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
     }
     else{
@@ -186,8 +190,13 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 lightDir = normalize(light.position - fragPos);
 
     float diff = max(dot(normal, lightDir), 0.0);
+
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
+
+    //vec3 halfwayDir = normalize(lightDir + viewDir);  
+    //float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));

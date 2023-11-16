@@ -30,6 +30,20 @@ Texture::Texture(const std::string& path_in, unsigned int internalFormat, unsign
 	Height = height;
 }
 
+Texture::Texture(unsigned char* data, size_t W, size_t H, unsigned int format)
+{
+	generate();	
+	bind();
+
+	if(data){
+		imageTexture(format, W, H);
+		filters();
+	}
+
+	Width = W;
+	Height = H;
+}
+
 void Texture::generate()
 {
 	OpenglWrapper::GenerateTextures(&texture);

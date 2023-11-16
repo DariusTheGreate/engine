@@ -373,6 +373,7 @@ unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate)
     stbi_set_flip_vertically_on_load(rotate);
     int width, height, nrComponents;
     unsigned char* data = stbi_load(filename, &width, &height, &nrComponents, 0);
+    //ImageUtils::printImageRawData(data, width * height);
     if (data)
     {
         GLenum format = GL_RGBA;

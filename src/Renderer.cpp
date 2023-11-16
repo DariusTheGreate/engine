@@ -233,7 +233,7 @@ void DebugRenderer::renderDebugLightSource(std::optional<PointLight>& p)
 	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
 	model = glm::translate(model, p->position);
-	model = glm::scale(model, glm::vec3{0.2,0.2,0.2});
+	model = glm::scale(model, glm::vec3{0.02,0.02,0.02});
 
 	dsv.setVec4("objectColor", {p->color.x, p->color.y, p->color.z, 0});
 	dsv.setMat4("model", model);
@@ -644,9 +644,9 @@ void Renderer::bloomStage()
 
 void Renderer::renderDebug(Window* wind) 
 {
-    if (GameState::cam.cursor_hidden) {
-        glm::mat4 projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
-        glm::mat4  view = GameState::cam.getBasicLook();
+    if (GameState::instance->cam.cursor_hidden) {
+        glm::mat4 projection = GameState::instance->cam.getPerspective(wind->getWidth(), wind->getHeight());
+        glm::mat4  view = GameState::instance->cam.getBasicLook();
         dbr.updateCamera(projection, view);
     }
 
@@ -671,9 +671,9 @@ void Renderer::renderAll(Window* wind)
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 
-	if (GameState::cam.cursor_hidden) {
-		projection = GameState::cam.getPerspective(wind->getWidth(), wind->getHeight());
-		view = GameState::cam.getBasicLook();
+	if (GameState::instance->cam.cursor_hidden) {
+		projection = GameState::instance->cam.getPerspective(wind->getWidth(), wind->getHeight());
+		view = GameState::instance->cam.getBasicLook();
 	}
 
 	if(dbr.debug_render)
@@ -686,7 +686,7 @@ void Renderer::renderAll(Window* wind)
 	if (!dbr.debug_render)
 		return;
 
-	if (GameState::cam.cursor_hidden) {
+	if (GameState::instance->cam.cursor_hidden) {
 		dbr.updateCamera(projection, view);
 	}
 

@@ -34,9 +34,9 @@ public:
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::BeginFrame();
 
-        if(!(!GameState::cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
-            cameraProjection = GameState::cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
-            cameraView = (GameState::cam.getBasicLook());
+        if(!(!GameState::instance->cam.cursor_hidden && !GameState::instance->ks.get_mouse_right_button())){
+            cameraProjection = GameState::instance->cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
+            cameraView = (GameState::instance->cam.getBasicLook());
         }
         
         ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item->getTransform().matrix));

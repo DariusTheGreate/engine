@@ -67,4 +67,18 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 	}
 }
 
+void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
+{
+	auto* buff = raster.getBuff();	
+
+	for(size_t i = 0; i < raster.getW(); ++i){
+		for(size_t j = 0; j < raster.getH(); ++j){
+			*raster.at(i, j) = (i + j) > 255 ? 6 : (i + j);
+		}
+	}
+
+	raster.printBuff();	
+}
+
 glm::vec3 OcclusionCuller::origin = {0,0,0};
+Rasterizer OcclusionCuller::raster = Rasterizer(512, 256);

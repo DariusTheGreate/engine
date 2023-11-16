@@ -27,14 +27,14 @@ void GameState::setEditorCameraMode()
 	if(!editorCamera)
 		return;
 
-	cam = *editorCamera;
+	GameState::instance->cam = *editorCamera;
 }
 
 void GameState::saveActiveCameraStateIntoEditorCamera()
 {
 	if(!editorCamera)
 		return;
-	*editorCamera = cam;
+	*editorCamera = GameState::instance->cam;
 }
 
 //std::string GameState::debug_msg;
@@ -47,11 +47,11 @@ GameState* GameState::instance = nullptr;
 
 std::string GameState::engine_path = "E:/own/programming/engine/";
 
-float GameState::gammaBrightness = 1.0f;
+float GameState::gammaBrightness = 3.0f;
 
 float GameState::gammaFactor = 1.0f;
 
-Camera GameState::cam;
+//Camera GameState::cam;
 MouseState GameState::ms;
 
 bool GameState::cullEnabled = true;

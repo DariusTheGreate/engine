@@ -15,7 +15,7 @@ public:
 
 	static void set_instance(GameState* ptr);
 
-	GameState* get_instance();
+	static GameState* get_instance();
 
 	static void setEditorCameraMode();
 
@@ -23,7 +23,7 @@ public:
 	
 public:
 	//TODO(darius) make it not static? See why below
-	static Camera cam;// active camera
+	Camera cam;// active camera
 	static Camera* editorCamera;
 	static bool editorCameraMode;
 

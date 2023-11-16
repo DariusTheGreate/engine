@@ -80,7 +80,7 @@ public:
 
 	static void updateFrustum()
 	{
-		camFrustum = Frustum(GameState::cam, w / h, glm::radians(GameState::cam.getFov()), 0.01f, 100.0f); 	
+		camFrustum = Frustum(GameState::instance->cam, w / h, glm::radians(GameState::GameState::instance->cam.getFov()), 0.01f, 100.0f); 	
 	}
 
 	static void setFrustumSize(float w_in, float h_in)

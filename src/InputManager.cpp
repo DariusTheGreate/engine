@@ -157,7 +157,7 @@ void InputManager::processInput(GLFWwindow* window)
 
 void InputManager::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-    if (!GameState::cam.cursor_hidden){
+    if (!GameState::instance->cam.cursor_hidden){
     //    return;
         //std::cout << "here " << xposIn << "|" << yposIn << "\n";
         GameState::ms.click_x = static_cast<int>(xposIn);

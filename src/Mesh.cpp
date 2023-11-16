@@ -65,7 +65,7 @@ void Mesh::setTexture(const std::string& path, const std::string& name)
 void Mesh::setTexture(const std::string& path)
 {
     //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_diffuse");
+    Texture texture(TextureFromFile(path.c_str(), false, true), path , "texture_diffuse");
     textures.push_back(texture);
 }
 
@@ -223,7 +223,7 @@ void Mesh::printVertices()
     std::cout << "Verts:\n";
     for(int i = 0; i < vertices.size(); ++i)
     {
-        std::cout << vertices[i].Position.x << " " << vertices[i].Position.y << " " << vertices[i].Position.z << "\n"; 
+        std::cout << aabb.center.x + vertices[i].Position.x << " " << aabb.center.y + vertices[i].Position.y << " " << aabb.center.z + vertices[i].Position.z << "\n"; 
     } 
 
     std::cout << "Inds:\n";

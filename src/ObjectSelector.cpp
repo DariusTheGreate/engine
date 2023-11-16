@@ -63,10 +63,10 @@ glm::vec3 ObjectSelector::GetRayFromMouse(float mouseX, float mouseY, Window* w)
 
     glm::vec2 ray_nds = glm::vec2(mouseX, mouseY);
     glm::vec4 ray_clip = glm::vec4(ray_nds.x, ray_nds.y, -1.0f, 1.0f);
-    glm::mat4 invProjMat = glm::inverse(GameState::cam.getPerspective(w->getWidth(), w->getHeight()));
+    glm::mat4 invProjMat = glm::inverse(GameState::instance->cam.getPerspective(w->getWidth(), w->getHeight()));
     glm::vec4 eyeCoords = invProjMat * ray_clip;
     eyeCoords = glm::vec4(eyeCoords.x, eyeCoords.y, -1.0f, 0.0f);
-    glm::mat4 invViewMat = glm::inverse(GameState::cam.getBasicLook());
+    glm::mat4 invViewMat = glm::inverse(GameState::instance->cam.getBasicLook());
     glm::vec4 rayWorld = invViewMat * eyeCoords;
     glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld));
 
@@ -123,7 +123,7 @@ void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY,
 
     for (size_t i = 0; i < objects.size(); ++i)
     {
-        if (RaySphere(GameState::cam.getCameraPos(), ray, objects[i]->getTransform().getPosition(), 3, renderer)) {
+        if (RaySphere(GameState::instance->cam.getCameraPos(), ray, objects[i]->getTransform().getPosition(), 3, renderer)) {
             //std::cout << "clicked " << objects[i]->get_name() << "\n";
             //msg("clicked: " +objects[i]->get_name());
         }

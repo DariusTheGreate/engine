@@ -48,8 +48,8 @@ void CubeMap::draw()
     glUseProgram(sv.getProgram());
 
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-    glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
-    glm::mat4 view = (GameState::cam.getBasicLook());
+    glm::mat4 projection = GameState::instance->cam.getPerspective(1920, 1080);
+    glm::mat4 view = (GameState::instance->cam.getBasicLook());
 
     sv.setMat4("view", view);
     sv.setMat4("projection", projection);

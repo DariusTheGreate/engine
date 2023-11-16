@@ -14,8 +14,8 @@
 
 struct Player 
 {
-	float speed = 0.01f;
-	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - dance
+	float speed = 0.001f;
+	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - jump; 4 - attack
 };
 
 class DefaultScript : public ScriptRoutine {
@@ -24,7 +24,6 @@ public:
 	void start(ScriptArgument& args) override {
 		instance->debug_msg.append("Enter Script..\n");
 		std::cout << "Enter Scrtipt..\n";
-		//return;
 
 		if (!instance) {
 			std::cout << "Iam super duper mega start but i have no instance\n";
@@ -53,7 +52,7 @@ public:
 		*/
 
 
-		if (scene->getObjectByName("UpAnim")) {
+		/*if (scene->getObjectByName("UpAnim")) {
 
 			WalkUpMesh = &scene->getObjectByName("UpAnim")->getModel()->meshes[0];
 
@@ -69,28 +68,43 @@ public:
 			instance->debug_msg.append("down loaded\n");
 
 			std::cout << "loaded..\n";
-		}
+		}*/
 
-		if (scene->getObjectByName("SideAn")) {
-			WalkSideMesh = &scene->getObjectByName("SideAn")->getModel()->meshes[0];
-			WalkSide = *scene->getObjectByName("SideAn")->getSpriteAnimation();
-			instance->debug_msg.append("side loaded\n");
+		if (scene->getObjectByName("runAnimation")) {
+			WalkSideMesh = &scene->getObjectByName("runAnimation")->getModel()->meshes[0];
+			WalkSide = *scene->getObjectByName("runAnimation")->getSpriteAnimation();
+			instance->debug_msg.append("runAnimation loaded\n");
 
 			std::cout << "loaded..\n";
 		}
 
-		if (scene->getObjectByName("IdleAn")) {
-			IdleMesh = &scene->getObjectByName("IdleAn")->getModel()->meshes[0];
-			Idle = *scene->getObjectByName("IdleAn")->getSpriteAnimation();
-			instance->debug_msg.append("idle loaded\n");
+		if (scene->getObjectByName("idleAnimation")) {
+			IdleMesh = &scene->getObjectByName("idleAnimation")->getModel()->meshes[0];
+			Idle = *scene->getObjectByName("idleAnimation")->getSpriteAnimation();
+			instance->debug_msg.append("idleAnimation loaded\n");
 
 			std::cout << "idle loaded..\n";
 		}
 
-		if(scene->getObjectByName("PlayerLight"))
-			playerLight = &(scene->getObjectByName("PlayerLight")->getPointLight().value());
+		if (scene->getObjectByName("jumpAnimation")) {
+			JumpMesh = &scene->getObjectByName("jumpAnimation")->getModel()->meshes[0];
+			Jump = *scene->getObjectByName("jumpAnimation")->getSpriteAnimation();
+			instance->debug_msg.append("jumpAnimation loaded\n");
 
-		int i = 0;
+			std::cout << "loaded..\n";
+		}
+		if (scene->getObjectByName("attackAnimation")) {
+			AttackMesh = &scene->getObjectByName("attackAnimation")->getModel()->meshes[0];
+			Attack = *scene->getObjectByName("attackAnimation")->getSpriteAnimation();
+			instance->debug_msg.append("attackAnimation loaded\n");
+
+			std::cout << "loaded..\n";
+		}
+
+		//if(scene->getObjectByName("PlayerLight"))
+		//	playerLight = &(scene->getObjectByName("PlayerLight")->getPointLight().value());
+
+		/*int i = 0;
 		Object* enemyObj = nullptr;
 		while (enemyObj = scene->getObjectByName("EnemyWalkingAnim" + std::to_string(i))) {
 			enemyObjects.push_back(enemyObj);
@@ -104,8 +118,9 @@ public:
 		}
 
 		enemyWalkDirs.resize(enemyObjects.size());
+		*/
 
-		obj = scene->getObjectByName("Play");
+		obj = scene->getObjectByName("Player");
 		if (!obj) {
 			instance->debug_msg.append("no obj\n");
 			return;
@@ -120,7 +135,7 @@ public:
 		if (!cam)
 			instance->debug_msg.append("couldnt ge camera\n");
 		else
-			*(cam->getCameraSpeed()) = 100000;
+			*(cam->getCameraSpeed()) = p.speed * 10;
 
 		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
 		//runMesh = scene->createFlatMesh();//nor that
@@ -133,10 +148,11 @@ public:
 			std::cout << "Iam super duper mega start but i have no instance\n";
 			return;
 		}
+
  
 		//obj = scene->get_object_at(2);
 
-		if (instance->ks.get_a()) 
+		if (instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
 			if (p.currAnim != 2) {
 				obj->getModel()->meshes[0] = *WalkSideMesh;
@@ -157,17 +173,17 @@ public:
 			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 
 			//obj->getTransform().rotateBy(180, {0,0,1});
-			//if (cam)
+			if (cam)
 				cam->moveCameraLeft();
 		}
 
-		if(!instance->ks.get_a() && rotatedToLeft)
+		if(!instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e() && rotatedToLeft)
 		{
 			rotatedToLeft = false;
 			obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
 		}
 
-		if (instance->ks.get_d())
+		if (instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
 			if (p.currAnim != 1) {
 				obj->getModel()->meshes[0] = *WalkSideMesh;
@@ -176,19 +192,31 @@ public:
 			}
 			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
 			obj->getTransform().translatePosition({ p.speed, 0,0 });
-			//if (cam)
+			if (cam) {
+				instance->debug_msg.append("moving camera right\n");
 				cam->moveCameraRight();
+			}
+			
 		}
-        if (instance->ks.get_q()) 
+        if (instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_e() && p.currAnim != 3)
 		{
-            //instance->debug_msg.append("clicked q");
-			obj->getModel()->meshes[0] = *WalkUpMesh;
-			obj->setSpriteAnimation(WalkUp);
-			if(obj->getRigidBody())
-				obj->getRigidBody()->apply_impulse({0,15*p.speed,0});
-			p.currAnim = 3;
+			if (p.currAnim != 3) {
+				//instance->debug_msg.append("clicked q");
+				obj->getModel()->meshes[0] = *JumpMesh;
+				obj->setSpriteAnimation(Jump);
+				if (obj->getRigidBody())
+					obj->getRigidBody()->apply_impulse({ 0,15 * p.speed,0 });
+				p.currAnim = 3;
+			}
 		}
-        if(instance->ks.get_w())
+		if (instance->ks.get_e() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_a() && p.currAnim != 4)
+		{
+			//instance->debug_msg.append("clicked q");
+			obj->getModel()->meshes[0] = *AttackMesh;
+			obj->setSpriteAnimation(Attack);
+			p.currAnim = 4;
+		}
+        /*if (instance->ks.get_w())
         {
             if (p.currAnim != 1) {
                 obj->getModel()->meshes[0] = *WalkUpMesh;
@@ -219,35 +247,35 @@ public:
 				obj->getTransform().translatePosition({0,0,p.speed});
 			else
 				obj->getTransform().translatePosition({0,0,-p.speed});
-        }
-        if(!instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_w() && !instance->ks.get_s()){
-            //if (p.currAnim != 0) {
+        }*/
+        if(!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()){
+            if (p.currAnim != 0) {
                 obj->getModel()->meshes[0] = *IdleMesh;
-                //obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
+                obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
                 p.currAnim = 0;
-            //}
+            }
         }
 
 		if (instance->ks.get_lshift()) 
 		{
-			p.speed = 0.03;
+			p.speed = 0.003;
 			WalkUp.setDelay(6);
 			WalkDown.setDelay(6);
 			WalkSide.setDelay(6);
 		}
 		else
 		{
-			p.speed = 0.02;
+			p.speed = 0.002;
 
 			WalkUp.setDelay(100);
 			WalkDown.setDelay(100);
 			WalkSide.setDelay(100);
 		}
 
-		if(playerLight)
-			playerLight->position = obj->getTransform().getPosition();
+		//if(playerLight)
+		//	playerLight->position = obj->getTransform().getPosition();
 
-		int i = 0;
+		/*int i = 0;
 		while(i < enemyObjects.size())
 		{
 			std::time_t currT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -289,6 +317,7 @@ public:
 
 			i++;
 		}
+		*/
 
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
@@ -308,6 +337,8 @@ public:
 
 	Player p;
 	SpriteAnimation WalkUp;
+	SpriteAnimation Attack;
+	SpriteAnimation Jump;
 	SpriteAnimation WalkDown;
 	SpriteAnimation WalkSide;
 	SpriteAnimation Idle;
@@ -327,6 +358,8 @@ public:
 	//Mesh initMesh;
 
 	Mesh* WalkUpMesh = nullptr;
+	Mesh* AttackMesh = nullptr;
+	Mesh* JumpMesh = nullptr;
 	Mesh* WalkDownMesh = nullptr;
 	Mesh* WalkSideMesh = nullptr;
 	Mesh* IdleMesh = nullptr;

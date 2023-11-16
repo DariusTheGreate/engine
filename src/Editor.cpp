@@ -23,9 +23,12 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
 
     ImageUtils::ImageLoaderPtr imageLoader(GameState::engine_path + "assets/logo.png");
     GLFWimage images[1]; 
-    images[0].pixels = imageLoader.data;
-    images[0].width = imageLoader.W;
-    images[0].height = imageLoader.H;
+    unsigned char rawData[] = {255, 0, 0, 255, 0, 0, 255, 0, 0, 
+                             0, 255, 0, 0, 255, 0, 0, 255, 0,
+                             0, 0, 255, 0, 0, 255, 0, 0, 255};
+    images[0].pixels = rawData;//imageLoader.data;
+    images[0].width = 3;//imageLoader.W;
+    images[0].height = 3;//imageLoader.H;
     glfwSetWindowIcon(wind->getWindow(), 1, images); 
 
     //TODO(darius) DANGER
@@ -70,27 +73,27 @@ void Editor::updateInput() {
     if(GameState::editorCameraMode && GameState::instance->ks.get_mouse_right_button()){
         if (GameState::instance->ks.get_w()) {
             if(GameState::editor_mode == 3 || GameState::editor_mode == 0)
-                GameState::cam.moveCameraForward();
+                GameState::instance->cam.moveCameraForward();
             else
-                GameState::cam.moveCameraUp();
+                GameState::instance->cam.moveCameraUp();
         }
         if (GameState::instance->ks.get_a()) {
-            GameState::cam.moveCameraLeft();
+            GameState::instance->cam.moveCameraLeft();
         }
         if (GameState::instance->ks.get_s()) {
             if(GameState::editor_mode == 3 || GameState::editor_mode == 0)
-                GameState::cam.moveCameraBackward();
+                GameState::instance->cam.moveCameraBackward();
             else
-                GameState::cam.moveCameraDown();
+                GameState::instance->cam.moveCameraDown();
         }
         if (GameState::instance->ks.get_d()) {
-            GameState::cam.moveCameraRight();
+            GameState::instance->cam.moveCameraRight();
         }
         if (GameState::instance->ks.get_q()) {
-            GameState::cam.moveCameraBackward();
+            GameState::instance->cam.moveCameraBackward();
         }
         if (GameState::instance->ks.get_e()) {
-            GameState::cam.moveCameraForward();
+            GameState::instance->cam.moveCameraForward();
         }
     }
 	if (GameState::instance->ks.get_c() && GameState::instance->ks.get_cntrl()) {
@@ -141,11 +144,11 @@ void Editor::updateInput() {
         currScene.deserialize(GameState::engine_path + "scene.dean");
     }
     if(GameState::instance->ks.get_lshift() && !leftShiftIsOnHold){
-        *GameState::cam.getCameraSpeed() *= speedMultiplyFactor;
+        *GameState::instance->cam.getCameraSpeed() *= speedMultiplyFactor;
         leftShiftIsOnHold = true;
     }
     if(!GameState::instance->ks.get_lshift() && leftShiftIsOnHold){
-        *GameState::cam.getCameraSpeed() /= speedMultiplyFactor;
+        *GameState::instance->cam.getCameraSpeed() /= speedMultiplyFactor;
         leftShiftIsOnHold = false;
     }
     if (GameState::instance->ks.get_9()) {
@@ -156,7 +159,7 @@ void Editor::updateInput() {
 
     if(GameState::instance->ks.get_mouse_right_button() && GameState::editorCameraMode && !leftMouseButtonIsOnHold)
     {
-        if (GameState::cam.cursor_hidden == false) {
+        if (GameState::instance->cam.cursor_hidden == false) {
             //GameState::ms.cursor_x = GameState::ms.get_x();
             //GameState::ms.cursor_y = GameState::ms.get_y();
 
@@ -166,23 +169,23 @@ void Editor::updateInput() {
             GameState::ms.set_firstX(GameState::ms.get_x());
             GameState::ms.set_firstY(GameState::ms.get_y());
 
-            GameState::cam.cursor_hidden = true;
+            GameState::instance->cam.cursor_hidden = true;
             glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPos(window->getWindow(), GameState::ms.prev_x, GameState::ms.prev_y);
         }
         
         if (GameState::editor_mode == 2) {
             if (GameState::ms.prev_x > GameState::ms.get_x()) {
-                GameState::cam.moveCameraRight();
+                GameState::instance->cam.moveCameraRight();
             }
             if (GameState::ms.prev_x < GameState::ms.get_x()) {
-                GameState::cam.moveCameraLeft();
+                GameState::instance->cam.moveCameraLeft();
             }
             if (GameState::ms.prev_y < GameState::ms.get_y()) {
-                GameState::cam.moveCameraUp();
+                GameState::instance->cam.moveCameraUp();
             }
             if (GameState::ms.prev_y > GameState::ms.get_y()) {
-                GameState::cam.moveCameraDown();
+                GameState::instance->cam.moveCameraDown();
             }
         }
         GameState::ms.prev_x = GameState::ms.get_x();
@@ -191,7 +194,7 @@ void Editor::updateInput() {
 
     if(!GameState::instance->ks.get_mouse_right_button())
     {
-        if (GameState::cam.cursor_hidden == true) {
+        if (GameState::instance->cam.cursor_hidden == true) {
             //glfwSetCursorPos(window->getWindow(), GameState::ms.cursor_x, GameState::ms.cursor_y);
 
             //GameState::ms.set_x(GameState::ms.cursor_x);
@@ -202,7 +205,7 @@ void Editor::updateInput() {
             glfwSetInputMode(window->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 
-            GameState::cam.cursor_hidden = false;
+            GameState::instance->cam.cursor_hidden = false;
         }
 		GameState::ms.cursor_x = GameState::ms.get_x();
 		GameState::ms.cursor_y = GameState::ms.get_y();
@@ -240,14 +243,14 @@ void Editor::updateInput() {
 
 void Editor::updateCamera()
 {
-    if (GameState::cam.cursor_hidden == false) {
+    if (GameState::instance->cam.cursor_hidden == false) {
         return;
     }
 
     if(GameState::editorCameraMode)
     {
-        GameState::cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
-        GameState::cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
+        GameState::instance->cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
+        GameState::instance->cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
     }
 
     //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());
@@ -663,7 +666,7 @@ void Editor::consoleInputThread(Editor* currEditor)
                     */
 
                 print("test camera move\n");
-                GameState::cam.moveCameraLeft();
+                GameState::instance->cam.moveCameraLeft();
             }
         }
     }

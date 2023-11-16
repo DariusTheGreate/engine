@@ -481,9 +481,9 @@ void UI::objectManipulationWindow(Scene& scene)
 
         glm::vec3 front = glm::normalize(item_clicked->get_pos() - v);
 
-        GameState::cam.setCameraPos(v);
-        GameState::cam.setCameraFront(front);
-        GameState::cam.setUnexpectedUpdate(true);
+        GameState::instance->cam.setCameraPos(v);
+        GameState::instance->cam.setCameraFront(front);
+        GameState::instance->cam.setUnexpectedUpdate(true);
     }
 
     if (ImGui::Button("Copy Object") && item_clicked) {
@@ -788,7 +788,7 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 {
     ImGui::Begin("Editor Settings");
 
-    ImGui::DragFloat("camera speed", GameState::cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
+    ImGui::DragFloat("camera speed", GameState::instance->cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
 
     ImGui::Checkbox("Enable Frustum Culling", &GameState::cullEnabled);
     ImGui::Checkbox("Enable Shadows", &GameState::shadowEnabled);
@@ -864,7 +864,7 @@ void UI::sceneCamerasWindow(Scene& scene)
     ImGui::Begin("Scene Cameras");
 
     if(ImGui::CollapsingHeader("EditorCamera")){
-        auto& vec = GameState::cam.getCameraPosRef();
+        auto& vec = GameState::instance->cam.getCameraPosRef();
         ImGui::DragFloat("position X", &vec.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position Y", &vec.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("position Z", &vec.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);

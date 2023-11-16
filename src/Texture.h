@@ -46,8 +46,19 @@ struct ImageUtils
 	{
 		stbi_image_free(data);
 	}
+
+	static void printImageRawData(unsigned char* data, size_t sz)
+	{
+		//size_t i = 0;	
+		//while(data[i] != '\0'){
+
+		for(size_t i = 0; i < sz; ++i){
+			print((unsigned int)(data[i]), "|");
+		}
+	}
 };
 
+//TODO(darius) refactor invariants
 class Texture
 {
 public:
@@ -58,6 +69,8 @@ public:
 	Texture(unsigned int texture_in, const std::string& path_in, const std::string& type_in) : texture(texture_in), path(path_in), type(type_in) {}
 
 	Texture(const std::string& path_in, unsigned int internalFormat = GL_RGBA, unsigned int format = GL_RGBA);
+
+	Texture(unsigned char* data, size_t W, size_t H, unsigned int format = GL_RGBA);
 
 	void generate();
 	

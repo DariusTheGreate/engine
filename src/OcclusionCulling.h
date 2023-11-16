@@ -3,6 +3,7 @@
 #include <AABB.h>
 #include <Printer.h>
 #include <GameState.h>
+#include <Rasterizer.h>
 
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
@@ -14,6 +15,8 @@ class OcclusionCuller
 {
 public:
 	static void cull(std::vector<Object*> objs);
+
+	static void rasterizeOccluders(std::vector<Object*> objs);
 
 	static glm::vec2 intersectAABB(MeshAABB aabb, glm::vec3 rayDir) 
 	{
@@ -74,9 +77,10 @@ public:
 
     static void updateOrigin()
     {
-    	origin = GameState::cam.getCameraPos();
+    	origin = GameState::instance->cam.getCameraPos();
     }
 
 private:	
 	static glm::vec3 origin;
+	static Rasterizer raster;
 };

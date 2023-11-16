@@ -332,11 +332,11 @@ void distanceRendering(Object* obj)
     //glm::vec3 scale = obj->getTransform().geS;
 
     //TODO(darius) add distanced rendering here. NOTE(darius) Not that hard
-    float dist = glm::length(GameState::cam.getCameraPos() - pos);
+    float dist = glm::length(GameState::instance->cam.getCameraPos() - pos);
     if(dist > 99) 
     {
         //scale *= 0.5;//2 * GameState::cam.getFov()/dist;
-        pos = GameState::cam.getCameraPos() + ((GameState::cam.getCameraPos() - pos));
+        pos = GameState::instance->cam.getCameraPos() + ((GameState::instance->cam.getCameraPos() - pos));
     }
 }
 
@@ -359,7 +359,7 @@ void ShaderLibrary::shaderRoutine(Object* obj)
 
     if(stage == STAGE::ALBEDO)
     {
-        sv.setVec3("viewPos", GameState::cam.getCameraPos());
+        sv.setVec3("viewPos", GameState::instance->cam.getCameraPos());
         sv.setInt("lightsCount", PointLight::LightsCount);
         sv.setFloat("gammaFactor", GameState::gammaFactor); 
         sv.setFloat("gammaBrightness", GameState::gammaBrightness); 
@@ -380,8 +380,8 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
     sv.setVec3("lightPos", DirectionalLight::lightPos);
 
-    glm::mat4 projection = GameState::cam.getPerspective(1920, 1080);
-    glm::mat4 view = (GameState::cam.getBasicLook());
+    glm::mat4 projection = GameState::instance->cam.getPerspective(1920, 1080);
+    glm::mat4 view = (GameState::instance->cam.getBasicLook());
 
     sv.setMat4("projection", projection);
     sv.setMat4("view", view);
