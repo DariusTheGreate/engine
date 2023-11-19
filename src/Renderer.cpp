@@ -522,7 +522,13 @@ void Renderer::albedoStage()
 	OpenglWrapper::ClearDepthBuffer();
 	OpenglWrapper::EnableDepthTest();
 
+	//NOTE(darius) work on that
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   
+
 	renderAll(wind);
+
+    //glDisable(GL_BLEND);
 
 	intermidiateFramebuffer.Blit(framebuffer, intermidiateFramebuffer);
 }

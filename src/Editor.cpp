@@ -26,9 +26,10 @@ Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rend
     unsigned char rawData[] = {255, 0, 0, 255, 0, 0, 255, 0, 0, 
                              0, 255, 0, 0, 255, 0, 0, 255, 0,
                              0, 0, 255, 0, 0, 255, 0, 0, 255};
-    images[0].pixels = rawData;//imageLoader.data;
-    images[0].width = 3;//imageLoader.W;
-    images[0].height = 3;//imageLoader.H;
+    //NOTE(darius) can use rawData/3/3 here:
+    images[0].pixels = imageLoader.data;
+    images[0].width = imageLoader.W;
+    images[0].height = imageLoader.H;
     glfwSetWindowIcon(wind->getWindow(), 1, images); 
 
     //TODO(darius) DANGER

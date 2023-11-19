@@ -2,7 +2,7 @@ from PIL import Image
 import os
 from os import listdir
 
-folder_dir = "E:/own/programming/engine/textures/Warrior-V1.3/pipino"
+folder_dir = "E:/own/programming/engine/textures/oak_woods_v1.0/oak_woods_v1.0/decorations"
 for imageName in os.listdir(folder_dir):
 	if (imageName.endswith(".png")):
 		print(folder_dir + '/' + imageName)

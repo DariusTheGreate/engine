@@ -14,7 +14,7 @@
 
 struct Player 
 {
-	float speed = 0.001f;
+	float speed = 1.0f;
 	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - jump; 4 - attack
 };
 
@@ -134,8 +134,8 @@ public:
 		cam = &(instance->cam);
 		if (!cam)
 			instance->debug_msg.append("couldnt ge camera\n");
-		else
-			*(cam->getCameraSpeed()) = p.speed * 10;
+		//else
+		//	*(cam->getCameraSpeed()) = p.speed * 10;
 
 		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
 		//runMesh = scene->createFlatMesh();//nor that
@@ -161,40 +161,56 @@ public:
 			}
 
 			if (!rotatedToLeft) {
-				obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
+				//obj->moveTransform(glm::vec3{ 10 * p.speed, 0, 0 });
+
+				//obj->getTransform().addToPosition({ 10 * p.speed, 0,0 });
 				obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 				rotatedToLeft = true;
 			}
 
 			if(rotatedToLeft){
-				obj->getTransform().translatePosition({ p.speed,0,0 });
+				//obj->getTransform().translatePosition({ p.speed,0,0 });
+
+				obj->getTransform().addToPosition({ -10 * p.speed, 0,0 });
 			}
 
 			//obj->getTransform().rotate(glm::radians(180.0f), glm::vec3{0,1,0});
 
 			//obj->getTransform().rotateBy(180, {0,0,1});
-			if (cam)
-				cam->moveCameraLeft();
+			if (cam) {
+			//	cam->moveCameraLeft();
+				cam->getCameraPosRef() -= glm::vec3{10 * p.speed, 0, 0};
+			}
 		}
 
 		if(!instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e() && rotatedToLeft)
 		{
-			rotatedToLeft = false;
-			obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
+		//	rotatedToLeft = false;
+		//	obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
 		}
 
 		if (instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
 			if (p.currAnim != 1) {
+					
+				if (rotatedToLeft) {
+					rotatedToLeft = false;
+					obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
+				}
+
 				obj->getModel()->meshes[0] = *WalkSideMesh;
 				obj->setSpriteAnimation(WalkSide);
 				p.currAnim = 1;
 			}
 			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
-			obj->getTransform().translatePosition({ p.speed, 0,0 });
+			//obj->getTransform().translatePosition({ p.speed, 0,0 });
+			obj->getTransform().addToPosition({ 10 * p.speed, 0,0 });
+
 			if (cam) {
 				instance->debug_msg.append("moving camera right\n");
-				cam->moveCameraRight();
+				//cam->moveCameraRight();
+
+				cam->getCameraPosRef() += glm::vec3{ 10 * p.speed, 0, 0};
 			}
 			
 		}
@@ -259,9 +275,9 @@ public:
 		if (instance->ks.get_lshift()) 
 		{
 			p.speed = 0.003;
-			WalkUp.setDelay(6);
-			WalkDown.setDelay(6);
-			WalkSide.setDelay(6);
+			WalkUp.setDelay(70);
+			WalkDown.setDelay(70);
+			WalkSide.setDelay(70);
 		}
 		else
 		{
