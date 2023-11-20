@@ -74,7 +74,7 @@ float far  = 100.0;
 float LinearizeDepth(float depth) 
 {
     float z = depth * 2.0 - 1.0; // back to NDC 
-    return (2.0 * near * far) / (far + near - z * (far - near));	
+    return (2.0 * near * far) / (far + near - z * (far - near));    
 }
 
 float ShadowCalculation(vec4 fragPosLightSpace)
@@ -104,8 +104,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 void main()
 {
-    /*if(texture_diffuse_was_set == 666){
-        vec4 color = texture(texture_diffuse1, TexCoords);
+    /*if(texture_normal_was_set == 666){
+        vec4 color = texture(texture_normal1, TexCoords);
 
         if(color.a < 0.1)
             discard;
@@ -136,7 +136,7 @@ void main()
     else
         norm = normalize(Normal);
 
-    if(true){
+    if(false){
         norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
     }
     else{
@@ -150,15 +150,18 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
 
-    float shadow = ShadowCalculation(FragPosLightSpace); 
+    //float shadow = ShadowCalculation(FragPosLightSpace); 
 
     //if(!shadowCaster)
     //    result = (1.0 - shadow) * result;
         
-    if(lightsCount == 0)
+    if(lightsCount == 0){
         FragColor = texColor;
-    else
-        FragColor = gammaBrightness * texColor * vec4(result, 1.0f);
+    }
+    else{
+        //FragColor = gammaBrightness * texColor * vec4(result, 1.0f);
+        FragColor = gammaBrightness *  vec4(result, 1.0f);
+    }
 
     float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
     if(brightness > 1.0)
@@ -198,6 +201,7 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     //float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
 
     float distance = length(light.position - fragPos);
+    //distance /= 10;
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
     vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
@@ -212,13 +216,13 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
     float intensity = 0.4 * spec;
 
- 	if (intensity > 0.9) 
- 		intensity = 1.1;
- 	else if (intensity > 0.5) 
- 		intensity = 0.7;
- 	else 
- 		intensity = 0.5;
+    //if (intensity > 0.9) 
+    //    intensity = 1.1;
+    //else if (intensity > 0.5) 
+    //    intensity = 0.7;
+    //else 
+    //    intensity = 0.5;
 
 
-    return (ambient + diffuse + specular) * intensity;
+    return (ambient + diffuse + specular);// * intensity;
 }

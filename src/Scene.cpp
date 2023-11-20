@@ -344,11 +344,12 @@ void Scene::batchProbeSimilarObjects()
 
 			if(meshI.getTexturesRef()[0].get_path() == meshJ.getTexturesRef()[0].get_path())
 			{
-				//NOTE(darius) i think its kinda works now, look into better uproach?
-				//TODO(darius) add rotation and scale!
+				//NOTE(darius) i think its kinda works now, look into better approach?
+				//TODO(darius) add rotation!
 				//NOTE(darius) float precision not cool?
 				glm::vec3 shift = (objJ->getTransform().getPosition() - objI->getTransform().getPosition());
-				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x, shift.y/originalScale.y, shift.z/originalScale.z);
+				//NOTE(darius)IMPORTANT(darius) * 10 cause of render-space scaling, i belive. Brokes on rotating
+				glm::vec3 shiftScaled = glm::vec3(shift.x/originalScale.x * 10, shift.y/originalScale.y * 10, shift.z/originalScale.z * 10);
 
 				meshI.addVerticesBath(meshJ, shiftScaled);
 			    Mesh batchCopy(meshI.getVertices(), meshI.getIndices(), meshI.getTextures());
