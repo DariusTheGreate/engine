@@ -18,7 +18,7 @@
 #include <CubeMesh.h>
 #include <PointLight.h>
 #include <ParticleSystem.h>
-#include <Animator.h>
+#include <Animation.h>
 
 class Object
 {
@@ -152,9 +152,9 @@ public:
 
 	std::optional<Material>& getMaterial();
 
-	void setAnimator(Animation* anim);
+	void setAnimator(SkeletalAnimation* anim);
 
-	std::optional<Animator>& getAnimator();
+	std::optional<SkeletalAnimation>& getAnimator();
 
 	void setID(int id);
 
@@ -186,7 +186,7 @@ private:
 	std::optional<PointLight> pointLight;
 	std::optional<Material> material = std::nullopt;
 	std::optional<ParticleSystem> particles;
-	std::optional<Animator> animator;
+	std::optional<SkeletalAnimation> skeletAnim;
     std::optional<SpriteAnimation> spriteAnimation;
 
 	Transform tr;

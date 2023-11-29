@@ -15,7 +15,7 @@
 #include "Texture.h"
 #include "EBO.h"
 #include "Model.h"
-#include <Animator.h>
+#include <Animation.h>
 #include <CubeMesh.h>
 #include <FlatMesh.h>
 #include <Scene.h>

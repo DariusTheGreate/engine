@@ -1,7 +1,7 @@
 #include <Animation.h>
 #include <StackTrace.h>
 
-Animation::Animation(const std::string& animationPath, Model* model)
+SkeletalAnimation::SkeletalAnimation(const std::string& animationPath, Model* model)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(animationPath, aiProcess_Triangulate);
@@ -11,9 +11,17 @@ Animation::Animation(const std::string& animationPath, Model* model)
 	m_TicksPerSecond = static_cast<float>(animation->mTicksPerSecond);
 	ReadHierarchyData(m_RootNode, scene->mRootNode);
 	ReadMissingBones(animation, *model);
+
+
+	m_CurrentTime = 0.0;
+
+	m_FinalBoneMatrices.reserve(100);
+
+	for (int i = 0; i < 100; i++)
+		m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
 }
 
-Bone* Animation::FindBone(const std::string& name)
+Bone* SkeletalAnimation::FindBone(const std::string& name)
 {
 	auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
 		[&](const Bone& Bone)
@@ -27,7 +35,7 @@ Bone* Animation::FindBone(const std::string& name)
 		return &(*iter);
 }
 
-void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
+void SkeletalAnimation::ReadMissingBones(const aiAnimation* animation, Model& model)
 {
 	int size = animation->mNumChannels;
 
@@ -53,7 +61,7 @@ void Animation::ReadMissingBones(const aiAnimation* animation, Model& model)
 	m_BoneInfoMap = boneInfoMap;
 }
 
-void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
+void SkeletalAnimation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
 {
 	assert(src);
 
@@ -69,7 +77,54 @@ void Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
 	}
 }
 
-std::ostream& operator<<(std::ostream& os, Animation& a)
+
+void SkeletalAnimation::UpdateAnimation(float dt)
+{
+	m_DeltaTime = dt;
+	m_CurrentTime += GetTicksPerSecond() * dt;
+	m_CurrentTime = fmod(m_CurrentTime, GetDuration());
+	CalculateBoneTransform(&(GetRootNode()), glm::mat4(1.0f));
+}
+
+void SkeletalAnimation::PlayAnimation(SkeletalAnimation* pAnimation)
+{
+	m_CurrentTime = 0.0f;
+}
+
+void SkeletalAnimation::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
+{
+	if (!node) {
+		std::cout << "node is null\n";
+		return;
+	}
+	std::string nodeName = node->name;
+	glm::mat4 nodeTransform = node->transformation;
+
+	Bone* Bone = FindBone(nodeName);
+
+	if (Bone)
+	{
+		Bone->Update(m_CurrentTime);
+		nodeTransform = Bone->GetLocalTransform();
+	}
+
+	glm::mat4 globalTransformation = parentTransform * nodeTransform;
+
+	auto boneInfoMap = GetBoneIDMap();
+	if (boneInfoMap.find(nodeName) != boneInfoMap.end())
+	{
+		int index = boneInfoMap[nodeName].id;
+		glm::mat4 offset = boneInfoMap[nodeName].offset;
+		if(index < m_FinalBoneMatrices.size())
+			m_FinalBoneMatrices[index] = globalTransformation * offset;
+	}
+
+	for (int i = 0; i < node->childrenCount; i++)
+		CalculateBoneTransform(&node->children[i], globalTransformation);
+}
+
+
+std::ostream& operator<<(std::ostream& os, SkeletalAnimation& a)
 {
 	for(auto& b : a.getBones())
 	{

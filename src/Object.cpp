@@ -117,10 +117,10 @@ void Object::updateScript()
 
 void Object::updateAnimator(float dt)
 {
-    if(!animator)
+    if(!skeletAnim)
         return;
 
-    animator->UpdateAnimation(dt);
+    skeletAnim->UpdateAnimation(dt);
 }
 
 void Object::renderObject() 
@@ -386,16 +386,16 @@ std::optional<Material>& Object::getMaterial()
     return material;
 }
 
-void Object::setAnimator(Animation* anim)
+void Object::setAnimator(SkeletalAnimation* anim)
 {
-    if(animator)
+    if(skeletAnim)
         return;
-    animator.emplace(anim);
+    skeletAnim.emplace(*anim);
 }
 
-std::optional<Animator>& Object::getAnimator()
+std::optional<SkeletalAnimation>& Object::getAnimator()
 {
-    return animator;
+    return skeletAnim;
 }
 
 void Object::setID(int id)

@@ -3,7 +3,7 @@
 #include <GameState.h>
 #include <Renderer.h>
 #include <Mesh.h>
-#include <Animator.h>
+#include <Animation.h>
 #include <SystemInfo.h>
 #include <Profiler.h>
 

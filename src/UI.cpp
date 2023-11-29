@@ -604,13 +604,15 @@ void UI::componentAdderWindow(Renderer& hui)
                     print(b.second.offset, "\n-------------\n");
                 }*/
 
-                Animation* danceAnimation = new Animation(GameState::engine_path + animPath, &item_clicked->getModel().value());
+                SkeletalAnimation* danceAnimation = new SkeletalAnimation(GameState::engine_path + animPath, &item_clicked->getModel().value());
                 
                 /*print("Animation:\n"); 
                 std::cout << *danceAnimation;
                 */
 
                 item_clicked->setAnimator(danceAnimation);
+
+                //delete danceAnimation;
             }
 
             ImGui::Unindent();

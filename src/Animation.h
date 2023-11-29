@@ -27,10 +27,12 @@ struct AssimpNodeData
 //					Which is, i think, actually, good. But we need to work on this. 
 
 // ALSO MAKE UR OWN FKN ANIMATION FORMAT AND CONVERTORS, CAUSE THIS FCKN FBX DAE HUE FILES ARE SO FKIN BS THERE IS FKN SIMDJSON THAT FAST AS FUCK SO USE IT INSTEAD
-class Animation
+class SkeletalAnimation
 {
 public:
-	Animation(const std::string& animationPath, Model* model);
+	SkeletalAnimation(const std::string& animationPath, Model* model);
+
+	SkeletalAnimation(const SkeletalAnimation& anim) = default;
 
 	Bone* FindBone(const std::string& name);
 
@@ -59,6 +61,25 @@ public:
 		return m_BoneInfoMap;
 	}
 
+	void UpdateAnimation(float dt);
+
+	void PlayAnimation(SkeletalAnimation* pAnimation);
+
+	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
+
+	std::vector<glm::mat4> GetFinalBoneMatrices()
+	{
+		return m_FinalBoneMatrices;
+	}
+
+	float getCurrTime(){
+		return m_CurrentTime;
+	}
+
+	float getDeltaTime(){
+		return m_DeltaTime;
+	}
+
 private:
 	void ReadMissingBones(const aiAnimation* animation, Model& model);
 
@@ -70,9 +91,14 @@ private:
 	std::vector<Bone> m_Bones;
 	AssimpNodeData m_RootNode;
 	std::map<std::string, BoneInfo> m_BoneInfoMap;
+
+
+	std::vector<glm::mat4> m_FinalBoneMatrices;
+	float m_CurrentTime = 0;
+	float m_DeltaTime = 0;
 };
 
-std::ostream& operator<<(std::ostream& os, Animation& a);
+std::ostream& operator<<(std::ostream& os, SkeletalAnimation& a);
 
 class SpriteAnimation
 {
