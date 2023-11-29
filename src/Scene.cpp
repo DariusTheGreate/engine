@@ -1,9 +1,10 @@
+#include <Editor.h>
 #include <Scene.h>
 #include <Object.h>
 #include <Colider.h>
 #include <Model.h>
 #include <ParticleSystem.h>
-#include <Renderer.h>
+
 
 #include <string>
 #include <iostream>
@@ -76,7 +77,7 @@ void Scene::destroyObject(size_t id)
 
 void Scene::destroyObject(std::string_view name)
 {
-	Object* pt = getObjectByName(name);	
+	Object* pt = getObjectByName(std::string(name));	
 	destroyObject(pt->getID());
 }
 
@@ -146,14 +147,16 @@ Object* Scene::get_object_at(int i)
 	return sceneObjects.at(i);
 }
 
-Object* Scene::getObjectByName(std::string_view name)
+Object* Scene::getObjectByName(const std::string& name)
 {
 	for (auto* objp : sceneObjects) 
 	{
 		if(!objp)
 			continue;
-		if (std::string_view(objp->get_name()) == name)
+
+		if (std::strcmp(objp->get_name().c_str(), name.c_str()) == 0){
 			return objp;
+		}
 	}
 
 	return nullptr;
@@ -245,19 +248,22 @@ void Scene::update_objects()
 	//TODO(darius) make it separated threads for collisions and rendering and update?
 	updateObjectsIDs();
 	
-	if (false && CheckColTime.checkTime() >= 0.02) {
-	CheckColTime.clearTime();
+	if (CheckColTime.checkTime() >= 0.02) {
+		CheckColTime.clearTime();
 		for (int i = 0; i < sceneObjects.size(); ++i) {
 			if (!sceneObjects[i]) // in case sceneObjects[i] was deleted by index
 				continue;
 
 			sceneObjects[i]->updateScript();
 
-
 			if (sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()) {
 				sceneObjects[i]->updatePos();
 				continue;
 			}
+
+			auto rbodyCopyInitTr = (sceneObjects[i]->getTransform());
+
+			sceneObjects[i]->updatePos();
 
 		//COLLISIONS RESOLUTION:
 		// O(n^2) 
@@ -269,31 +275,33 @@ void Scene::update_objects()
 					!sceneObjects[i]->getColider()
 					|| !sceneObjects[j]->getColider()
 					|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j]->getColider()->get_tag()
-					|| !sceneObjects[j]->getColider()->is_active()
+					//|| !sceneObjects[j]->getColider()->is_active()
 					)	continue;
 
 				auto collision_state_gjk = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
 
 				auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
 
+				//println(sceneObjects[i]->get_name());
+
 				if (collision_state != glm::vec3(0, 0, 0)) {
 					//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
 					sceneObjects[i]->getColider()->collider_debug_color = { 1,0,0,0 };
 					sceneObjects[j]->getColider()->collider_debug_color = { 1,0,0,0 };
-					////is_there_collision = true;
+					is_there_collision = true;
 
-				//glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
-				//std::cout << epa.x << " " << epa.y << " " << epa.z << "\n";
-				//std::cout << collision_state.x << " " << collision_state.y << "\n";
+					//glm::vec3 epa = sceneObjects[i]->getColider()->get_epa();
+					//std::cout << epa.x << " " << epa.y << " " << epa.z << "\n";
+					//std::cout << collision_state.x << " " << collision_state.y << "\n";
 
-				//NOTE(darius) this is a trick to check if float is Nan
-				//TODO(darius) not good
-				/*if (epa.x == epa.x && epa.y == epa.y && epa.z == epa.z)
-				{
-					sceneObjects[i]->getTransform().position += glm::vec3{ -0.1, -0.1,0};
-					*sceneObjects[i]->getColider()->get_collision_state() = false;
-				}
-				*/
+					//NOTE(darius) this is a trick to check if float is Nan
+					//TODO(darius) not good
+					/*if (epa.x == epa.x && epa.y == epa.y && epa.z == epa.z)
+					{
+						sceneObjects[i]->getTransform().position += glm::vec3{ -0.1, -0.1,0};
+						*sceneObjects[i]->getColider()->get_collision_state() = false;
+					}
+					*/
 
 					sceneObjects[i]->getTransform().addToPosition(collision_state);
 					*sceneObjects[i]->getColider()->get_collision_state() = false;
@@ -312,8 +320,13 @@ void Scene::update_objects()
 					sceneObjects[j]->getColider()->collider_debug_color = { 0,1,0,0 };
 				}
 			}
-			if (!is_there_collision) {
-				sceneObjects[i]->updatePos();
+			if (is_there_collision) {
+				//sceneObjects[i]->updatePos();
+				sceneObjects[i]->getTransform() = rbodyCopyInitTr;
+				sceneObjects[i]->getRigidBody()->resetFroces();
+			}
+			else{
+				//sceneObjects[i]->getRigidBody()->resetFroces();
 			}
 		}
 	}
@@ -596,10 +609,13 @@ void Scene::parseSynchronizationMsg(std::string data)
 		transs.emplace_back(extractTransformFromToken(tkn));
 	}
 
+	//NOTE(darius) synchronization here
+
 	for(int i = 0; i < sceneObjects.size(); ++i)
 	{
 		for(int j = 0; j < names.size(); ++j)
-		{
+		{   
+			//NOTE(darius) copy other components here?
 			if(sceneObjects[i]->get_name() == names[j])
 				sceneObjects[i]->getTransform() = (transs[j]);
 		}
@@ -671,14 +687,6 @@ void Scene::parseScene(std::string_view data)
 	{
 		scripts.emplace_back(extractScriptFromToken(tkn));
 	}
-
-	//Recreation here after
-	/*Shader vshdr = Shader(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER);
-	Shader fshdr = Shader(GameState::engine_path + "shaders/lightSumFragmentShader.glsl", GL_FRAGMENT_SHADER);
-	vshdr.compile();
-	fshdr.compile();
-	vshdr.link(fshdr);
-	*/
 
 	for (int i = 0; i < objectTokens.size(); ++i)
 	{

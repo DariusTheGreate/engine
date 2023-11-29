@@ -1,4 +1,5 @@
 #include <OpenglWrapper.h>
+#include <Shader.h>
 #include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 
@@ -117,6 +118,11 @@ void OpenglWrapper::GetShaderLog(int shader, char* infoLog, int err_len)
 void OpenglWrapper::UseProgram(int shader)
 {
     glUseProgram(shader);
+}
+
+void OpenglWrapper::UseProgram(const Shader& shader)
+{
+    glUseProgram(shader.getProgram());
 }
 
 void OpenglWrapper::DeleteShader(int shader)
@@ -249,6 +255,11 @@ void OpenglWrapper::GetWindowSize(Window* wind, int* W, int* H)
     glfwGetFramebufferSize(wind->getWindow(), W, H);
 }
 
+void OpenglWrapper::SetWindowSize(Window* wind, int W, int H)
+{
+    glfwSetWindowSize(wind->getWindow(), W, H);
+}
+
 void OpenglWrapper::SetWindow(int W, int H)
 {
     glViewport(0, 0, W, H);
@@ -259,11 +270,20 @@ void OpenglWrapper::EnableDepthTest()
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenglWrapper::DisabelDepthTest()
+void OpenglWrapper::DisableDepthTest()
 {
 	glDisable(GL_DEPTH_TEST);
 }
 
+void OpenglWrapper::EnableBlending()
+{
+    glEnable(GL_BLEND);
+}
+
+void OpenglWrapper::DisableBlending()
+{
+    glDisable(GL_BLEND);
+}
 
 void OpenglWrapper::EnableMultisample()
 {

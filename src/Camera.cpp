@@ -90,6 +90,8 @@ void Camera::moveCameraUp() {
 }
 
 glm::mat4 Camera::getPerspective(int w, int h) const {
+    if(h == 0)
+        return {};
     return glm::perspective(glm::radians(fov), (float)w / (float)h, 0.1f, 100.0f);
 }
 

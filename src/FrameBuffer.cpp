@@ -101,7 +101,7 @@ void FrameBuffer::Blit(FrameBuffer& buff1, FrameBuffer& buff2)
 void FrameBuffer::ClearBlit()
 {
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
-	OpenglWrapper::DisabelDepthTest();
+	OpenglWrapper::DisableDepthTest();
 	OpenglWrapper::ClearScreen({1,1,1});
 }
 

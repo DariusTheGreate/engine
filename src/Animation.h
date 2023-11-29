@@ -26,7 +26,6 @@ struct AssimpNodeData
 //					Now theres nothing in common between ANimation and SpriteAnimation. 
 //					Which is, i think, actually, good. But we need to work on this. 
 
-//TODO(darius) check this tutorial out https://ogldev.org/www/tutorial38/tutorial38.html
 // ALSO MAKE UR OWN FKN ANIMATION FORMAT AND CONVERTORS, CAUSE THIS FCKN FBX DAE HUE FILES ARE SO FKIN BS THERE IS FKN SIMDJSON THAT FAST AS FUCK SO USE IT INSTEAD
 class Animation
 {
@@ -247,6 +246,7 @@ private:
 	//NOTE(darius) this is used in case we wont spriteAnimation to use multiple separated texture files,
 	//			   and not single texture Atlas. Bad think is that even if we use texture atlas we store this vector.. 
 	//             But alternative is to do som hierarchy magic that i dont want to do now, plus i have a feeling that its faster this way.
+	//TODO(darius) combine this multiple textures into single one (easy)
 	std::vector<FlatMesh> spritesList;
 	bool animationUseMultipleTextures = false;
 	std::string pathToFolder;

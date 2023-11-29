@@ -5,8 +5,9 @@
 #include <iostream>
 #include <thread>
 
-Editor::Editor(Window* wind) : window(wind), ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
+Editor::Editor(Window* wind) : ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
 {
+    Editor::window = wind;
     GameState::ms.init(wind->getWidth() / 2, wind->getHeight() / 2);
     GameState::instance = &state;
     GameState::editor_mode = 3;
@@ -497,7 +498,8 @@ void Editor::consoleInputThread(Editor* currEditor)
                 std::cin >> objName;
 
                 Object* obj = currEditor->currScene.getObjectByName(objName);
-                obj->hide();
+                if(obj)
+                    obj->hide();
             }
             //NOTE(darius) crashes
             if (command == "copy")
@@ -581,6 +583,7 @@ void Editor::consoleInputThread(Editor* currEditor)
                 }
             }
 
+            //NOTE(darius) to test multiplayer behaviour 1)netSync Object 2)server 3)netSync Object 4) clientSync 25001 5) test it
             if(command == "server")
             {
                 currEditor->createServer();
@@ -678,5 +681,7 @@ void Editor::consoleInputThread(Editor* currEditor)
 }
 
 Scene Editor::currScene;
+
+Window* Editor::window = nullptr;
 
 std::vector<Profiler<float>> Editor::profilers;

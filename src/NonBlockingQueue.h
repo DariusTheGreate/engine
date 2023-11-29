@@ -30,7 +30,8 @@ public:
 
     size_t size()
     {
-    	return buffer.size();
+        //TODO(darius) bruh..
+    	return 0;//buffer.size();
     }
 
     size_t Clear() 

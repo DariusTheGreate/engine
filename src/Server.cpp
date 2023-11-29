@@ -97,7 +97,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
         if(bytes_transferred > 0)
         {
         	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
-        	//std::cout << s << "\n"; 	
+        	std::cout << s << "\n"; 	
 
         	currScene.parseSynchronizationMsg(s);
 
@@ -112,7 +112,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 				    syncer.TakeAt(obj, i);
 
 				    if(obj){
-					    std::cout << "serializing: " << i << "\n";
+					    //std::cout << "serializing: " << i << "\n";
 					    obj->serialize(ss);
 				    }
 		    	}

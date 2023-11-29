@@ -30,6 +30,8 @@ public:
 
 	void reset();
 
+	void resetFroces();
+
 	void set_pos(glm::vec3 pos);
 
 	glm::vec3 get_pos() const;
@@ -77,5 +79,5 @@ public:
 	float restitution = 0; 
 	float friction = 0;
 
-	bool is_static = true;
+	bool is_static = false;
 };

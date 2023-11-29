@@ -1,5 +1,6 @@
 #include <ShaderLibrary.h>
 #include <Timer.h>
+#include <Editor.h>
 #include <Object.h>
 
 ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shaders/vertexShader.glsl", GL_VERTEX_SHADER),
@@ -380,7 +381,7 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     sv.setMat4("lightSpaceMatrix", DirectionalLight::getLightMat());
     sv.setVec3("lightPos", DirectionalLight::lightPos);
 
-    glm::mat4 projection = GameState::instance->cam.getPerspective(1920, 1080);
+    glm::mat4 projection = GameState::instance->cam.getPerspective(Editor::window->getWidth(), Editor::window->getHeight());
     glm::mat4 view = (GameState::instance->cam.getBasicLook());
 
     sv.setMat4("projection", projection);

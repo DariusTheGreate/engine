@@ -2,6 +2,8 @@
 #include <Window.h>
 #include <glm/glm.hpp>
 
+class Shader;
+
 class OpenglWrapper // : GraphicsWrapper
 {
 public:
@@ -53,6 +55,8 @@ public:
 
 	static void UseProgram(int shader);
 
+	static void UseProgram(const Shader& shader);
+
 	static void DeleteShader(int shader);
 
 	static void SetShaderInt(int ID, const char* name, int value);
@@ -103,13 +107,20 @@ public:
 
 	static void PollEvents();
 
+	//NOTE(darius) its framebuffer size!
 	static void GetWindowSize(Window* wind, int* W, int* H);
+
+	static void SetWindowSize(Window* wind, int W, int H);
 
 	static void SetWindow(int W, int H);
 
 	static void EnableDepthTest();
 
-	static void DisabelDepthTest();
+	static void DisableDepthTest();
+
+	static void EnableBlending();
+
+	static void DisableBlending();
 
 	static void EnableMultisample();
 

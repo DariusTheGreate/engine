@@ -213,10 +213,10 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
     obj->get_name().resize(max_name_length);
 
     ImGui::InputText("Name: ", (char*)obj->get_name().c_str(), obj->get_name().size());
+    if(ImGui::Button("clear name"))
+        obj->get_name().clear();
     
 	ImGui::Checkbox("Hide Object", &obj -> object_hidden_state());
-    if(obj->getRigidBody())
-		ImGui::Checkbox("Static Object", &obj -> getRigidBody()->get_is_static_ref()); 
 
     //TODO(darius) so objTr updates quaternion at the end of UI work, cause of Guizmos. This is ugly
 
@@ -286,6 +286,7 @@ std::optional<RigidBody> rbody;
     auto& body = obj->getRigidBody();
     if (body && ImGui::CollapsingHeader("RigidBody component")){
         ImGui::DragFloat("mass", &body->mass, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
+        ImGui::Checkbox("Static Object", &obj -> getRigidBody()->get_is_static_ref()); 
     } 
 
     auto& particles = obj->getParticleSystem();
@@ -348,7 +349,7 @@ std::optional<RigidBody> rbody;
         ImGui::DragFloat("point y", &coliderPoint.y, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("point z", &coliderPoint.z, 0.05f, -FLT_MAX, +FLT_MAX, "%.3f", 1);
 
-        ImGui::Checkbox("state", collider->get_collision_state());
+        ImGui::Checkbox("active", collider->activeAdr());
     }
 
     auto& script = obj->getScript();

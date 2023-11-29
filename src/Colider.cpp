@@ -194,7 +194,7 @@ glm::vec3 Colider::check_collision(const Colider& c) const
 		if (maxX() >= c.minX())
 		{
 			tmp = -(maxX() - c.minX()) - collisionEpsilon;
-			//std::cout << "tmpx" << tmp << "\n";                          // // // ÍÅ ÇÀÁÓÄÜ ÐÀÑÊÎÌÅÍÒÈÒÜ
+			//std::cout << "tmpx" << tmp << "\n";                          // // // ÍÅ ÇÀÁÓÄÜ ÐÀÑÊÎÌÅÍÒÈÒÜ NOTE(darius) fedot forgot to delete it:)lets keep it here forever.
 			if (std::abs(lesserDiff) > std::abs(tmp)) 
 			{
 				lesserDiff = std::abs(tmp);
@@ -338,6 +338,10 @@ glm::vec3 Colider::get_epa()
 
 bool Colider::is_active() const {
 	return active;
+}
+
+bool* Colider::activeAdr(){
+	return &active;
 }
 
 bool* Colider::get_collision_state()

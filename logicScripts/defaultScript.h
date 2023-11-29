@@ -221,7 +221,7 @@ public:
 				obj->getModel()->meshes[0] = *JumpMesh;
 				obj->setSpriteAnimation(Jump);
 				if (obj->getRigidBody())
-					obj->getRigidBody()->apply_impulse({ 0,15 * p.speed,0 });
+					obj->getRigidBody()->velocity += glm::vec3({ 0,5,0 });
 				p.currAnim = 3;
 			}
 		}

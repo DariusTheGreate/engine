@@ -154,7 +154,7 @@ public:
 
 	Object* get_object_at(int i);
 
-	Object* getObjectByName(std::string_view name);
+	Object* getObjectByName(const std::string& name);
 
 	Object* getObjectByID(int ID);
 

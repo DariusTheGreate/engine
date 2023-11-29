@@ -1,4 +1,5 @@
 #include "RigidBody.h"
+#include <Printer.h>
 
 RigidBody::RigidBody(double mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(static_cast<float>(mass_in)), is_static(is_st)
 {
@@ -18,12 +19,14 @@ void RigidBody::update(float dt)
 	//tr.position = tr.position + dt * velocity;
 	tr.setPosition(tr.getPosition() + dt * velocity);
 
-	glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
+	//TODO(darius) finish it
+	/*glm::vec4 angular_accelerationtmp = glm::inverse(inertia_tensor) * glm::vec4(torque_accumulator.x, torque_accumulator.y, torque_accumulator.z, 0);
 	glm::vec3 angular_acceleration = { angular_accelerationtmp.x, angular_accelerationtmp.y, angular_accelerationtmp.z };
 	angular_velocity = angular_velocity + dt * angular_acceleration;
 	angular_velocity *= 0.98;
 
 	tr.matrix = glm::toMat4(construct_quat(angular_velocity, dt)) * tr.matrix;
+	*/
 }
 
 void RigidBody::apply_impulse(const glm::vec3 impulse) {
@@ -31,8 +34,8 @@ void RigidBody::apply_impulse(const glm::vec3 impulse) {
 		return;
 	}
 
-	if (glm::length(velocity) < 0.2)
-		return;
+	//if (glm::length(velocity) < 0.2)
+	//	return;
 
 	velocity = velocity + impulse;
 }
@@ -84,6 +87,15 @@ void RigidBody::reset()
 	//tr.getPosition = { 0,0,0 };
 	tr.setPosition({0,0,0});
 	velocity = { 0,0,0 };
+}
+
+void RigidBody::resetFroces()
+{
+	//tr.getPosition = { 0,0,0 };
+	velocity = { 0,0,0 };
+	angular_velocity = {0,0,0};
+	//force_accumulator = {0,0,0};
+	torque_accumulator = {0,0,0};
 }
 
 void RigidBody::set_pos(glm::vec3 pos)

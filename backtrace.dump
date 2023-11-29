@@ -2,33 +2,25 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# StackTrace::setSignalHandlers at E:\own\programming\engine\src\StackTrace.cpp:28
- 5# seh_filter_exe in ucrtbased
- 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
- 7# _C_specific_handler in VCRUNTIME140D
- 8# _chkstk in ntdll
- 9# RtlRaiseException in ntdll
-10# KiUserExceptionDispatcher in ntdll
-11# std::exchange<std::_Iterator_base12 *,std::nullptr_t> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\utility:654
-12# std::_Container_base12::_Orphan_all_unlocked_v3 at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory:1231
-13# std::_Container_base12::_Orphan_all_locked_v3 at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory:1088
-14# std::_Container_base12::_Orphan_all at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory:1247
-15# std::vector<Texture,std::allocator<Texture> >::_Change_array at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:2086
-16# std::vector<Texture,std::allocator<Texture> >::_Resize_reallocate<std::_Value_init_tag> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1611
-17# std::vector<Texture,std::allocator<Texture> >::_Resize<std::_Value_init_tag> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1634
-18# std::vector<Texture,std::allocator<Texture> >::resize at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1656
-19# SpriteAnimation::update at E:\own\programming\engine\src\Animation.h:157
-20# Object::updateSpriteAnimation at E:\own\programming\engine\src\Object.cpp:150
-21# Scene::updateSpriteAnimations at E:\own\programming\engine\src\Scene.cpp:129
-22# Renderer::renderScene at E:\own\programming\engine\src\Renderer.cpp:735
-23# Renderer::EditorIDsStage at E:\own\programming\engine\src\Renderer.cpp:476
-24# Renderer::render at E:\own\programming\engine\src\Renderer.cpp:425
-25# Editor::update at E:\own\programming\engine\src\Editor.cpp:60
-26# Application::Run at E:\own\programming\engine\src\Application.cpp:22
-27# main at E:\own\programming\engine\src\main.cpp:15
-28# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-29# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-30# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-31# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-32# BaseThreadInitThunk in KERNEL32
-33# RtlUserThreadStart in ntdll
+ 4# setmbcp in ucrtbased
+ 5# CrtSetReportHookW2 in ucrtbased
+ 6# VCrtDbgReportA in ucrtbased
+ 7# CrtDbgReport in ucrtbased
+ 8# std::optional<SpriteAnimation>::operator-> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\optional:376
+ 9# Object::serialize at E:\own\programming\engine\src\Object.cpp:577
+10# `ClientConnection::sync'::`7'::<lambda_2>::operator() at E:\own\programming\engine\src\Server.cpp:118
+11# boostSaveUse<`ClientConnection::sync'::`7'::<lambda_2> > at E:\own\programming\engine\src\Server.h:19
+12# ClientConnection::sync at E:\own\programming\engine\src\Server.cpp:104
+13# `Server::listen'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\Server.cpp:147
+14# `ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:29
+15# std::invoke<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
+16# std::_Invoker_ret<void>::_Call<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1> &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:674
+17# std::_Func_impl_no_alloc<`ThreadPool::SubmitVoid<`Server::listen'::`4'::<lambda_1> >'::`2'::<lambda_1>,void>::_Do_call at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:834
+18# std::_Func_class<void>::operator() at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\functional:875
+19# ThreadPool::get_task at E:\own\programming\engine\src\ThreadPool.h:72
+20# `ThreadPool::initialize_workers'::`4'::<lambda_1>::operator() at E:\own\programming\engine\src\ThreadPool.h:60
+21# std::invoke<`ThreadPool::initialize_workers'::`4'::<lambda_1> > at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\type_traits:1565
+22# std::thread::_Invoke<std::tuple<`ThreadPool::initialize_workers'::`4'::<lambda_1> >,0> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\thread:56
+23# register_onexit_function in ucrtbased
+24# BaseThreadInitThunk in KERNEL32
+25# RtlUserThreadStart in ntdll

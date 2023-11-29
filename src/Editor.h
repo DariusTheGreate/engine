@@ -157,6 +157,8 @@ public:
 public:
     bool consoleOnly = false;
     
+    static Window* window;
+    
 private:
     GameState state;
     Camera editorCamera;
@@ -165,7 +167,6 @@ private:
     
     static Scene currScene;
 
-    Window* window;
     Renderer rendol;
     ObjectSelector selector;
 

@@ -62,14 +62,14 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* c
 		    std::stringstream ss;
 		    //TODO(darius) wrong other thread may change size or object
 		    //TODO(darius) BUG(darius) if delete object - will crash all due to cring vector objects design.
-		    std::cout << "sync sz: " << syncer.size() << "\n";
+		    //std::cout << "sync sz: " << syncer.size() << "\n";
 	    	for(int i = 0; i < syncer.size(); ++i)
 	    	{
 			    Object* obj = nullptr; 
 			    syncer.TakeAt(obj, i);
 
 			    if(obj){
-				    std::cout << "serializing: " << i << "\n";
+				    //std::cout << "serializing: " << i << "\n";
 				    obj->serialize(ss);
 			    }
 	    	}
@@ -92,7 +92,7 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* c
 
         if(bytes_transferred > 0){
             std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
-            std::cout << "response: " << s << "\n";
+            //std::cout << "response: " << s << "\n";
         	currScene->parseSynchronizationMsg(s);
         }
 	});

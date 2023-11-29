@@ -160,7 +160,7 @@ private:
     size_t slices = 200;
 	std::vector<glm::vec3> vertices_grid;
 	std::vector<glm::uvec4> indices_grid;
-    float grid_scale = 0.1;
+    float grid_scale = 0.1f;
     int grid_mode = 3;
 
     //TODO(darius) use cubeMesh
@@ -278,6 +278,10 @@ public:
     
     void deferredStage();
 
+    void resizeFrameBuffers(int W, int H);
+
+    void resizeWindow(int W, int H);
+
 public:
     glm::vec3 backgroundColor = glm::vec3{0.1f, 0.0f, 0.1f};
 
@@ -306,7 +310,6 @@ public:
     GraphicsStateCache state;
 
 private:
-	void renderDebug(Window* wind);
     void renderScene();
     void renderAll(Window* wind);
 

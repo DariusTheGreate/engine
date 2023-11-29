@@ -55,7 +55,7 @@ void ParticleSystem::renderParticles()
         return;
 
     //TODO(darius) add blending stage
-    glEnable(GL_BLEND);
+    OpenglWrapper::EnableBlending();
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);   
 
     auto comp = [](glm::vec4 a, glm::vec4 b){return a.z < b.z;};
@@ -64,13 +64,13 @@ void ParticleSystem::renderParticles()
     {
         Object tmpObj("tmp");
         Shader sv = Renderer::shaderLibInstance->getCurrShader();
-        glUseProgram(sv.getProgram());
+        OpenglWrapper::UseProgram(sv.getProgram());
 
         Renderer::shaderLibInstance->shaderRoutine(&tmpObj);
         particle->Draw(sv, positions.size());
     }
 
-    glDisable(GL_BLEND);
+    OpenglWrapper::DisableBlending();
 }
 
 void ParticleSystem::updateUniform3DDistribution(float timeValue)

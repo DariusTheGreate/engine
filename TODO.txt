@@ -29,7 +29,7 @@
 		- guizmos for mesh vertices
 		- commands buffer?
 		- terrain is a mesh
-		- move all geometry to single model
+		- move all geometry to single module
 		- filesystem
 
 		- port to linux
@@ -42,7 +42,7 @@
 
 	--RENDERER
 		- finish culling
-		- finish terrain 
+
 		- instanced rendering loop
 		- finish batching 
 		- blending stage
@@ -52,7 +52,8 @@
 
 		- cubemaps
 		- reflections
-
+		
+		- finish terrain 
 		- terrain texturing
 		- terrain editor
 		- occlusion culling

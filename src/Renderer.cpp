@@ -129,15 +129,20 @@ void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& col
 
 	Renderer::shaderLibInstance->getCache().SwitchShader(dsv.getProgram());
 	auto model = glm::mat4(1.0f);
-	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2} - collider->get_render_shift());
-	if(body)
-		model *= body->get_quatmat();
-	model *= glm::toMat4(collider->get_transform().matrixQuaternion());
+	model = glm::translate(model, collider->get_transform().getPosition() + glm::vec3{collider->get_size().x / 2, collider->get_size().y / 2, collider->get_size().z / 2});
+
+	//if(body)
+	//	model *= body->get_quatmat();
+
+	//model *= glm::toMat4(collider->get_transform().matrixQuaternion());
 	auto vv = collider->get_render_shift();
-	model = glm::translate(model, glm::vec3{vv.x/2, vv.y/2, vv.z/2});
+	model = glm::translate(model, glm::vec3{vv.x, vv.y, vv.z});
 
 	//TODO(darius) its not size, its scale
 	model = glm::scale(model, collider->get_size());
+
+    //dont! model = glm::scale(model, {0.1,0.1,0.1});//for space scaling and depth buffer
+
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", collider->collider_debug_color);
@@ -268,80 +273,12 @@ void DebugRenderer::clearPoints()
 }
 
 Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : currScene(currScene_in), wind(wind_in) {
-	//v.compile();
-	//sf.compile();
-	//sv.link(sf);
-
 	//NOTE(darius) this leak doesnt matter
 	shaderLibInstance = new ShaderLibrary();
 
-	//depthv.compile();
-	//depthf.compile();
-	//depthv.link(depthf);
-
-	//currShaderRoutine = { Shader(sv) };
 	FlatMesh flat;
 	m.addMesh(flat);
-
-	/*FlatMesh flat;
-	FlatMesh idle;
-	FlatMesh runAnimTexture;
-	FlatMesh runLeftAnimTexture;
-	FlatMesh danceAnimation;
-	FlatMesh enemyAnimation;
-
-	flat.setTexture(GameState::engine_path + "textures/hornet", "iddle.png");
-	idle.setTexture(GameState::engine_path + "textures/hornet", "iddle.png");
-	enemyAnimation.setTexture(GameState::engine_path + "textures", "HollowSpid.png");
-
-	runLeftAnimTexture.setTexture(GameState::engine_path + "textures/hornet", "runLeft.png");
-	runAnimTexture.setTexture(GameState::engine_path + "textures/hornet", "runRight.png");
-	danceAnimation.setTexture(GameState::engine_path + "textures/hornet", "jump.png");
-
-	auto* obj0 = currScene->AddEmpty(228);
-	auto* obj1 = currScene->AddEmpty(229);
-	auto* player= currScene->AddEmpty(230);
-	auto* obj3 = currScene->AddEmpty(231);
-	auto* obj4 = currScene->AddEmpty(232);
-	auto* enemy = currScene->AddEmpty(232);
-
-	obj0->hide();
-	obj1->hide();
-	obj3->hide();
-	obj4->hide();
-
-	obj0 ->addModel(std::move(flat), sv, currShaderRoutine);
-	obj1->addModel(std::move(runAnimTexture), sv, currShaderRoutine);
-	obj3->addModel(std::move(runLeftAnimTexture), sv, currShaderRoutine);
-	obj4->addModel(std::move(danceAnimation), sv, currShaderRoutine);
-	player->addModel(std::move(idle), sv, currShaderRoutine);
-	enemy->addModel(std::move(enemyAnimation), sv, currShaderRoutine);
-
-	auto enemySprite = SpriteAnimation(4, 8, 100);
-	enemy->setSpriteAnimation(enemySprite);
-	enemy->moveTransform({5,0,0});
-	enemy->addCollider();
-	enemy->getColider()->set_size({2,2,1});
-	enemy->getColider()->set_shift({1,1,0.5});
-
-	//obj->addSpriteAnimation(SpriteAnimation(4,8,500));
-	player->addScript(currScene, &routine);
-	player->addCollider();
-	player->addRigidBody();
-	player->getColider()->set_size({1,1,1});
-	player->getColider()->set_shift({0.5,0.5,0.5});
-
-	/*for (int i = 0; i < 1; i += 1) {
-		auto* op = currScene->createObject("pistol " + std::to_string(i), glm::vec3{ i * 2,i,0 }, glm::vec3{ 1,1,1 }, glm::vec3{ 1,1,3 }, GameState::engine_path + "meshes/pistol/homemade_lasergun_upload.obj",
-			sv, currShaderRoutine, currScene, &routine, false, false);
-		op->frozeObject();
-		op->setMaterial(Material(32));
-		//op -> addPointLight(PointLight(glm::vec3{-0.2f, -1.0f, -0.3f}, glm::vec3(1,1,1)));
-	}
-
-	//danceAnimation = Animation("../../../meshes/animations/bot/reach.dae", &ourModel);
-	*/
-
+    
 	//OpenglWrapper::EnableDepthTest();
 	state.EnableDepthTesting();
 
@@ -349,26 +286,22 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 	framebuffer.Unbind();
 
 	deferredLightingBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 3);
-
 	bloomBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 2);
 	//NOTE(darius) make it two buffers, not two color attachments
 	pingPongBlurBufferA.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
 	pingPongBlurBufferB.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
-
 	bokeBuffer.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
-	
 	bufferCombination.AttachTexture(wind->getWidth(), wind->getHeight(), 1);
-
 	depthFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
-
 	depthTexture.AttachTexture(wind->getWidth(), wind->getHeight());
-
-
 	//u draw inside of this one
 	intermidiateFramebuffer.AttachTexture(wind->getWidth(), wind->getHeight());
 	intermidiateFramebuffer.setTaget(GL_DRAW_FRAMEBUFFER);
 
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
+
+	OpenglWrapper::SetWindowSize(wind, 1600, 800);
+    resizeFrameBuffers(1600, 800);
 }
 
 void Renderer::render(Window* wind)
@@ -385,22 +318,13 @@ void Renderer::render(Window* wind)
     //t.setBoolPrint(true);
 
 	int display_w, display_h;
-	glfwGetFramebufferSize(wind->getWindow(), &display_w, &display_h);
+	OpenglWrapper::GetWindowSize(wind, &display_w, &display_h);
 	OpenglWrapper::SetWindow(display_w, display_h);
-	FrustumCuller::setFrustumSize(display_w, display_h);
+	FrustumCuller::setFrustumSize(static_cast<float>(display_w), static_cast<float>(display_h));
 
 	if(display_w != wind->getWidth() || display_h != wind->getHeight())
 	{
-		println("resized here");
-		framebuffer.Resize(display_w, display_h);
-		deferredLightingBuffer.Resize(display_w, display_h);
-		bloomBuffer.Resize(display_w, display_h);
-		pingPongBlurBufferA.Resize(display_w, display_h);
-		pingPongBlurBufferB.Resize(display_w, display_h);
-		depthFramebuffer.Resize(display_w, display_h);
-		intermidiateFramebuffer.Resize(display_w, display_h);
-		ObjectSelector::buff.Resize(display_w, display_h);
-
+		resizeFrameBuffers(display_w, display_h);	
 		wind->setWidth(display_w);
 		wind->setHeight(display_h);
 	}
@@ -648,27 +572,24 @@ void Renderer::bloomStage()
 	quad.drawArrays();
 }
 
-void Renderer::renderDebug(Window* wind) 
+void Renderer::resizeFrameBuffers(int W, int H)
 {
-    if (GameState::instance->cam.cursor_hidden) {
-        glm::mat4 projection = GameState::instance->cam.getPerspective(wind->getWidth(), wind->getHeight());
-        glm::mat4  view = GameState::instance->cam.getBasicLook();
-        dbr.updateCamera(projection, view);
-    }
+	framebuffer.Resize(W, H);
+	deferredLightingBuffer.Resize(W, H);
+	bloomBuffer.Resize(W, H);
+	pingPongBlurBufferA.Resize(W, H);
+	pingPongBlurBufferB.Resize(W, H);
+	depthFramebuffer.Resize(W, H);
+	intermidiateFramebuffer.Resize(W, H);
+	ObjectSelector::buff.Resize(W, H);
+}
 
-	dbr.renderDebugGrid();
-
-	for (int i = 0; i < currScene->get_objects().size(); ++i) {
-		if (currScene->get_objects()[i]) {
-			dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
-				currScene->get_object_at(i)->getRigidBody());
-			dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight());
-			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
-				dbr.renderDebugLightSource(obj->getPointLight());
-				});
-		}
-	}
-	//dbr.renderPoints();
+void Renderer::resizeWindow(int W, int H)
+{
+	OpenglWrapper::SetWindowSize(wind, W, H);
+    resizeFrameBuffers(W, H);
+    wind->setWidth(W);
+	wind->setHeight(H);
 }
 
 void Renderer::renderAll(Window* wind)
@@ -677,7 +598,7 @@ void Renderer::renderAll(Window* wind)
 	glm::mat4 projection = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 
-	if (GameState::instance->cam.cursor_hidden) {
+	if (true || GameState::instance->cam.cursor_hidden) {
 		projection = GameState::instance->cam.getPerspective(wind->getWidth(), wind->getHeight());
 		view = GameState::instance->cam.getBasicLook();
 	}
@@ -692,7 +613,7 @@ void Renderer::renderAll(Window* wind)
 	if (!dbr.debug_render)
 		return;
 
-	if (GameState::instance->cam.cursor_hidden) {
+	if (true || GameState::instance->cam.cursor_hidden) {
 		dbr.updateCamera(projection, view);
 	}
 

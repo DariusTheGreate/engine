@@ -12,7 +12,7 @@
 
 struct Simplex;
 
-constexpr float collisionEpsilon = 0.01f;
+constexpr float collisionEpsilon = 0.000000000000000001f;
 
 class Colider
 {
@@ -67,6 +67,7 @@ public:
 	glm::vec3 get_epa();
 	
 	bool is_active() const;
+	bool* activeAdr();//TODO(darius) make it macro UICONTROL(active) or smthng
 	bool* get_collision_state();
 
 	Transform& get_transform();

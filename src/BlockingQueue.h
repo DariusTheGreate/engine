@@ -26,7 +26,8 @@ public:
         buffer_size_condition.notify_one();
     }
 
-    T Take(bool remove = true){
+    T Take(){
+        bool remove = true;
         std::unique_lock<std::mutex> lock(buffer_mutex);
         while(buffer.empty()){
             buffer_size_condition.wait(lock);
