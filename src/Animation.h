@@ -13,6 +13,7 @@
 #include <chrono>
 #include <thread>
 #include <filesystem>
+#include <variant>
 
 struct AssimpNodeData
 {
@@ -22,245 +23,105 @@ struct AssimpNodeData
 	std::vector<AssimpNodeData> children;
 };
 
-//IMPORTANT(darius) Animation system needs some ierarchy. 
-//					Now theres nothing in common between ANimation and SpriteAnimation. 
+//IMPORTANT(darius) Animation system needs some hierarchy. 
+//					Now theres nothing in common between ANimation and SpriteAnimation. 
 //					Which is, i think, actually, good. But we need to work on this. 
 
 // ALSO MAKE UR OWN FKN ANIMATION FORMAT AND CONVERTORS, CAUSE THIS FCKN FBX DAE HUE FILES ARE SO FKIN BS THERE IS FKN SIMDJSON THAT FAST AS FUCK SO USE IT INSTEAD
-class SkeletalAnimation
+// SEE: https://www.youtube.com/watch?v=sQKAoiMPPOQ
+
+
+struct AnimationBase
+{
+	float length = 0;
+	float currTime = 0;
+};
+
+class SkeletalAnimation : public AnimationBase
 {
 public:
 	SkeletalAnimation(const std::string& animationPath, Model* model);
 
 	SkeletalAnimation(const SkeletalAnimation& anim) = default;
 
-	Bone* FindBone(const std::string& name);
+	Bone* findBone(const std::string& name);
 
-	std::vector<Bone>& getBones()
-	{
-		return m_Bones;
-	}
-	
-	float GetTicksPerSecond() 
-	{ 
-		return m_TicksPerSecond; 
-	}
+	void update(float dt);
 
-	float GetDuration() 
-	{ 
-		return m_Duration;
-	}
+	void calculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
 
-	const AssimpNodeData& GetRootNode() 
-	{
-		return m_RootNode;
-	}
+	std::vector<Bone>& getBones();
 
-	const std::map<std::string,BoneInfo>& GetBoneIDMap() 
-	{ 
-		return m_BoneInfoMap;
-	}
+	float getLength(); 
 
-	void UpdateAnimation(float dt);
+	const std::map<std::string,BoneInfo>& getBoneIDMap(); 
 
-	void PlayAnimation(SkeletalAnimation* pAnimation);
-
-	void CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform);
-
-	std::vector<glm::mat4> GetFinalBoneMatrices()
-	{
-		return m_FinalBoneMatrices;
-	}
-
-	float getCurrTime(){
-		return m_CurrentTime;
-	}
-
-	float getDeltaTime(){
-		return m_DeltaTime;
-	}
+	std::vector<glm::mat4> getFinalBoneMatrices();
 
 private:
-	void ReadMissingBones(const aiAnimation* animation, Model& model);
+	void readMissingBones(const aiAnimation* animation, Model& model);
 
-	void ReadHierarchyData(AssimpNodeData& dest, const aiNode* src);
+	void readHierarchyData(AssimpNodeData& dest, const aiNode* src);
 
 private:
-	float m_Duration;
-	float m_TicksPerSecond;
-	std::vector<Bone> m_Bones;
-	AssimpNodeData m_RootNode;
-	std::map<std::string, BoneInfo> m_BoneInfoMap;
+	float deltaTime;
+	std::vector<glm::mat4> finalBoneMatrices;//NOTE(darius) maybe use Transform here?
 
-
-	std::vector<glm::mat4> m_FinalBoneMatrices;
-	float m_CurrentTime = 0;
-	float m_DeltaTime = 0;
+	AssimpNodeData rootNode;
+	std::vector<Bone> bones;
+	std::map<std::string, BoneInfo> boneInfoMap;
 };
 
 std::ostream& operator<<(std::ostream& os, SkeletalAnimation& a);
 
-class SpriteAnimation
+class SpriteAnimation : public AnimationBase
 {
 public:
 	SpriteAnimation() = default;
     SpriteAnimation(std::vector<glm::vec4> points_in, float delay) : points(points_in), delayMs(delay) {}
 
-    SpriteAnimation(float rows_in, float cols_in, float delay) :  delayMs(delay), rows(rows_in), cols(cols_in), length(rows*cols) 
-	{
-        initPoints();
-    }
+    SpriteAnimation(float rows_in, float cols_in, float delay);
 
-	SpriteAnimation(std::string animationFolderPathStr) : pathToFolder(animationFolderPathStr)
-	{
-		animationUseMultipleTextures = true;//!
+	SpriteAnimation(std::string animationFolderPathStr);
 
-		namespace fs = std::filesystem;
+    void initPoints();
 
-		using directory_iterator = fs::directory_iterator;
-		using f_path = fs::path;
+	void setSprite(FlatMesh* mesh);
 
-		//NOTE(darius) important to .c_str()
-		f_path animationFolderPath{ animationFolderPathStr.c_str()};
+	void update(float currentTime);
 
-		for (const auto& dirEntry : directory_iterator(animationFolderPath)) {
-			if (f_path{ dirEntry }.extension() == ".png") {
-				std::cout << dirEntry.path().string() << std::endl;
-				FlatMesh m;
-				m.setTexture((dirEntry.path().string()));
-				spritesList.push_back(m);
-			}
-		}
+	void stop(); 
 
-		length = static_cast<float>(spritesList.size());
-	}
+    float* getDelay();
 
-    void initPoints()
-    {
-        points.clear();
-		float dc = border * (length - 1) * 0.001f;
-        for (float i = 1; i <= rows; ++i) {
-			for (float j = 1; j <= cols; ++j) 
-			{
-				points.push_back(glm::vec4((j-1)/cols + dc,(i-1)/rows, j/cols - dc, i/rows));
-			}
-		}
-    }
+    void setDelay(float delay);
 
-	void setSprite(FlatMesh* mesh)
-	{
-		sprite = mesh;
-	}
+    float* getRows();
 
-	void update(float currentTime) 
-	{
-		//TODO(darius) refactor this
-		if ((currentTime - lastTime)*1000 < delayMs || !play)
-			return;
+    float* getCols();
 
-		if (sprite && !animationUseMultipleTextures) {
-			if (points.size() > frameNum && frameNum < length) {
-				int id = static_cast<int>(frameNum);
-				sprite->setTextureCoords(points[id].x, points[id].y, points[id].z, points[id].w);
-			}
+    float* getLength();
 
-			frameNum++;
-			if (frameNum > points.size()-1 || frameNum > length)
-				frameNum = start;
-		}
-		
-		if (animationUseMultipleTextures) 
-		{
-			if(spritesList.size() > frameNum && frameNum < length)
-			{
-				int id = static_cast<int>(frameNum);
-				//sprite = &spritesList[id];//NOTE(darius) invalidation?
-
-				if (sprite->getTexturesRef().size() == 0)
-					sprite->getTexturesRef().resize(1);
-
-				sprite->getTexturesRef()[0] = spritesList[id].getTexturesRef()[0];
-			}
-
-			frameNum++;
-			if (frameNum > spritesList.size() - 1 || frameNum > length)
-				frameNum = start;
-		}
-
-		lastTime = currentTime;
-	}
-
-	void stop() 
-	{
-		play = false;
-	}
-
-    float* getDelay()
-    {
-        return &delayMs;
-    }
-
-    void setDelay(float delay)
-    {
-    	delayMs = delay;
-    }
-
-    float* getRows()
-    {
-        return &rows;
-    }
-
-    float* getCols()
-    {
-        return &cols;
-    }
-
-    float* getLength()
-    {
-        return &length;
-    }
-
-	float* getStart() 
-	{
-		return &start;
-	}
+	float* getStart(); 
 	
-	float* getBorder() 
-	{
-		return &border;
-	}
+	float* getBorder(); 
 
-	bool* getPlay() 
-	{
-		return &play;
-	}
+	bool* getPlay(); 
 
-	std::vector<glm::vec4> getPoints() 
-	{
-		return points;
-	}
+	std::vector<glm::vec4> getPoints(); 
 
-	bool isAnimationUsesMultipleTextures()
-	{
-		return animationUseMultipleTextures;
-	}
+	bool isAnimationUsesMultipleTextures();
 
-	std::string_view getAnimationFolderPath()
-	{
-		return pathToFolder;
-	}
+	std::string_view getAnimationFolderPath();
 
 private:
     std::vector<glm::vec4> points;
-
-	float frameNum = 0;
 	float lastTime = 0;
 	float delayMs = 500;
 
     float rows = 0;
     float cols = 0;
 
-    float length = 0;
 	float start = 0;
 	float border = 0;
 
@@ -278,3 +139,4 @@ private:
 	std::string pathToFolder;
 };
 
+using AnimationVariant = std::variant<SkeletalAnimation, SpriteAnimation>;

@@ -38,11 +38,6 @@ public:
 	static bool cullEnabled;
 	static bool shadowEnabled;
 
-	//NOTE(darius) nevermind it for now. I used that to test connection between scriptApi and engine app. We need to store objects, not static states. 
-	//Cause when logicScipt reads static field from instacne it actually reads its own state(one that present in engine.lib, that logicScripts uses)
-
-	int connect = 228;
-
 	//TODO(darius) make it a class
 	std::string debug_msg;
 	size_t debug_len = 0;

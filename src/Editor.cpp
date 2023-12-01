@@ -125,7 +125,6 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_2()) {
         setEditorMode(3);
 		state.debug_msg.append("3D\n");
-        state.connect--;
     }
     if (GameState::instance->ks.get_3()) {
         rendol.getDebugRenderer().debug_render= false;

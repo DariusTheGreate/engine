@@ -136,7 +136,8 @@ void main()
     else
         norm = normalize(Normal);
 
-    if(false){
+    bool useTMN = false;
+    if(useTMN){
         norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
     }
     else{
@@ -150,7 +151,7 @@ void main()
     for(int i = 0; i < lightsCount; i++)
         result += calcPointLight(pointLights[i], norm, FragPos, viewDir);    
 
-    //float shadow = ShadowCalculation(FragPosLightSpace); 
+    float shadow = ShadowCalculation(FragPosLightSpace); 
 
     //if(!shadowCaster)
     //    result = (1.0 - shadow) * result;

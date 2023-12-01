@@ -58,14 +58,14 @@ void Mesh::setTexture(const std::string& path, const std::string& name)
     fullPath.append("/");
     fullPath.append(name);
 
-    Texture texture(TextureFromFile(name.c_str(), path.c_str(), false, false), fullPath , "texture_diffuse");
+    Texture texture(ImageUtils::TextureFromFile(name.c_str(), path.c_str(), true), fullPath , "texture_diffuse");
     textures.push_back(texture);
 }
 
 void Mesh::setTexture(const std::string& path)
 {
     //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(path.c_str(), false, true), path , "texture_diffuse");
+    Texture texture(ImageUtils::TextureFromFile(path.c_str(), true), path , "texture_diffuse");
     textures.push_back(texture);
 }
 

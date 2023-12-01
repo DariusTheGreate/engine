@@ -11,6 +11,7 @@
 #include <queue>
 #include <functional>
 
+//TODO(darius) work on this event system. 
 enum class Event
 {
     LoadScene,

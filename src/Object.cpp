@@ -6,11 +6,6 @@
 
 Object::Object(const Object& copy_me) = default;
 
-/*Object::Object(std::string name_in) : name(std::move(name_in))
-{
-    material = std::nullopt;
-}*/
-
 Object::Object(std::string name_in) 
     : name(std::move(name_in))
 {
@@ -115,14 +110,6 @@ void Object::updateScript()
     //traverseObjects([](Object* op){op->updateScript()});
 }
 
-void Object::updateAnimator(float dt)
-{
-    if(!skeletAnim)
-        return;
-
-    skeletAnim->UpdateAnimation(dt);
-}
-
 void Object::renderObject() 
 {
     if(!object_hidden && !object_culled && model){
@@ -139,13 +126,6 @@ void Object::updateParticleSystem(float dt)
     if(particles){
         particles->updateUniform3DDistribution(dt);
         particles->renderParticles();
-    }
-}
-
-void Object::updateSpriteAnimation(float dt) 
-{
-    if (spriteAnimation) {
-        spriteAnimation->update(dt);
     }
 }
 
@@ -304,9 +284,29 @@ void Object::unhide()
     object_hidden = false;
 }
 
+bool Object::is_hidden()
+{
+    return object_hidden;
+}
+
 bool& Object::object_hidden_state()
 {
     return object_hidden;
+}
+
+void Object::cull()
+{
+    object_culled = true;   
+}
+
+void Object::uncull()
+{
+    object_culled = false;  
+}
+
+bool Object::is_culled()
+{
+    return object_culled;   
 }
 
 void Object::addPointLight(PointLight&& pl, glm::vec3 pos)
@@ -369,6 +369,11 @@ std::optional<PointLight>& Object::getPointLight()
     return pointLight;
 }
 
+bool& Object::shadowCasterRef()
+{
+    return shadowCaster;
+}
+
 void Object::setDefaultMaterial()
 {
     setMaterial(Material(32));
@@ -386,18 +391,6 @@ std::optional<Material>& Object::getMaterial()
     return material;
 }
 
-void Object::setAnimator(SkeletalAnimation* anim)
-{
-    if(skeletAnim)
-        return;
-    skeletAnim.emplace(*anim);
-}
-
-std::optional<SkeletalAnimation>& Object::getAnimator()
-{
-    return skeletAnim;
-}
-
 void Object::setID(int id)
 {
     ID = id;
@@ -413,6 +406,7 @@ void Object::addSpriteAnimation(SpriteAnimation&& anim)
     //TODO(darius) its actually ugly.
     if(spriteAnimation)
         return;
+    
     spriteAnimation.emplace(std::move(anim));
     if (model && model->meshes.size() > 0)
         spriteAnimation->setSprite((FlatMesh*) &model->meshes[0]);
@@ -440,6 +434,33 @@ void Object::setSpriteAnimation(SpriteAnimation& anim)
 std::optional<SpriteAnimation>& Object::getSpriteAnimation()
 {
     return spriteAnimation;
+}
+
+void Object::updateSpriteAnimation(float dt) 
+{
+    if (spriteAnimation) {
+        spriteAnimation->update(dt);
+    }
+}
+
+void Object::updateAnimator(float dt)
+{
+    if(!skeletAnim)
+        return;
+
+    skeletAnim->update(dt);
+}
+
+void Object::setAnimator(SkeletalAnimation* anim)
+{
+    if(skeletAnim)
+        return;
+    skeletAnim.emplace(*anim);
+}
+
+std::optional<SkeletalAnimation>& Object::getAnimator()
+{
+    return skeletAnim;
 }
 
 void Object::serializeAsPrefab(std::ofstream& file)
@@ -492,7 +513,6 @@ void Object::serialize(std::ostream& file)
 
     if (model)
     {
-        //NOTE(darius) just store name of model. Name of shader. Wheather or not it has routine
         //NOTE(darius) in case it was created without path - store its meshes 
         //NOTE(darius) mesh seriliztion is just 1) storing vector of Vertices
                                               //2) indices

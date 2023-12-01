@@ -352,7 +352,7 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     loadCurrentShader();
 
     if(obj->getAnimator()){
-        auto transforms = obj->getAnimator()->GetFinalBoneMatrices();
+        auto transforms = obj->getAnimator()->getFinalBoneMatrices();
 
         for (int i = 0; i < transforms.size(); ++i)
             sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);

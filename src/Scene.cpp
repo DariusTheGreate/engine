@@ -622,6 +622,8 @@ void Scene::parseSynchronizationMsg(std::string data)
 	}
 }
 
+//TODO(darius) refactor
+//TODO(darius) its not fast nor cool to load stuff and create it at same time. You want to load all the stuff, and start creating stuff after
 void Scene::parseScene(std::string_view data)
 {
 	std::unique_lock<std::mutex> lck(sceneLock);
@@ -926,8 +928,7 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 
 			print(textureType);
 
-			bool rotateByDefault = true;
-			textures.emplace_back(Texture(TextureFromFile(path.c_str(), false, rotateByDefault), path, textureType));
+			textures.emplace_back(Texture(ImageUtils::TextureFromFile(path.c_str(), true), path, textureType));
 
 			i = brckEnd;
 

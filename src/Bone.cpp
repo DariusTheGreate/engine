@@ -48,8 +48,6 @@ Bone::Bone(const std::string& name, int ID, const aiNodeAnim* channel)
 
 void Bone::Update(float animationTime)
 {
-	//its crashes here.
-	//return;
 	glm::mat4 translation = InterpolatePosition(animationTime);
 	glm::mat4 rotation = InterpolateRotation(animationTime);
 	glm::mat4 scale = InterpolateScaling(animationTime);

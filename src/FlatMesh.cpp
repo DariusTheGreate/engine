@@ -25,7 +25,7 @@ FlatMesh::FlatMesh()
 void FlatMesh::setTextureNormal(const std::string& path)
 {
     //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_normal");
+    Texture texture(ImageUtils::TextureFromFile(path.c_str()), path , "texture_normal");
     textures.push_back(texture);
 }
 
@@ -33,7 +33,7 @@ void FlatMesh::setTextureNormal(const std::string& path)
 void FlatMesh::setTextureParallax(const std::string& path)
 {
    //TODO(darius) make it single texture
-    Texture texture(TextureFromFile(path.c_str(), false, false), path , "texture_height");
+    Texture texture(ImageUtils::TextureFromFile(path.c_str()), path , "texture_height");
     textures.push_back(texture); 
 }
 

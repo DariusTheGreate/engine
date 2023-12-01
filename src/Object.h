@@ -49,8 +49,6 @@ public:
 
 	void updateScript(); 
 
-	void updateAnimator(float dt);
-
 	void renderObject(); 
 
 	void updateParticleSystem(float dt);
@@ -61,8 +59,6 @@ public:
 
 	glm::vec3 get_pos(); 
 	
-	//TODO(darius) fuck you, incapsulation
-
 	std::optional<Colider>& getColider(); 
 
 	void addRigidBody(float mass = 0.0);
@@ -99,35 +95,23 @@ public:
 
 	void hide();
 
-	bool is_hidden()
-	{
-		return object_hidden;
-	}
+	void unhide();
 
-	void cull()
-	{
-		object_culled = true;	
-	}
+	bool is_hidden();
 
-	void uncull()
-	{
-		object_culled = false;	
-	}
+	bool& object_hidden_state();
 
-	bool is_culled()
-	{
-		return object_culled;	
-	}
+	void cull();
+
+	void uncull();
+
+	bool is_culled();
 
 	void serialize(std::ostream& file);
 
 	void serializeAsPrefab(std::ofstream& file);
 
 	void deserialize(std::ofstream& file);
-
-	void unhide();
-
-	bool& object_hidden_state();
 
 	void addPointLight(PointLight&& pl = {}, glm::vec3 pos = { 0,0,0 });
 
@@ -146,30 +130,33 @@ public:
 
 	std::optional<PointLight>& getPointLight();
 
+	bool& shadowCasterRef();
+
     void setDefaultMaterial();
 
 	void setMaterial(const Material& m);
 
 	std::optional<Material>& getMaterial();
 
-	void setAnimator(SkeletalAnimation* anim);
-
-	std::optional<SkeletalAnimation>& getAnimator();
-
 	void setID(int id);
 
 	int getID();
 
-	bool& shadowCasterRef()
-	{
-		return shadowCaster;
-	}
+	void setAnimator(SkeletalAnimation* anim);
+
+	std::optional<SkeletalAnimation>& getAnimator();
 
     void addSpriteAnimation(SpriteAnimation&& anim);
+
 	SpriteAnimation excnahgeSpriteAnimation(SpriteAnimation&& anim);
+
 	void setSpriteAnimation(SpriteAnimation& anim);
+
     std::optional<SpriteAnimation>& getSpriteAnimation();
+
 	void updateSpriteAnimation(float dt);
+
+	void updateAnimator(float dt);
 
 private:
 	//TODO(darius) make it Component system
@@ -184,7 +171,7 @@ private:
 	std::optional<Colider> colider;
 	std::optional<Script> script;
 	std::optional<PointLight> pointLight;
-	std::optional<Material> material = std::nullopt;
+	std::optional<Material> material;
 	std::optional<ParticleSystem> particles;
 	std::optional<SkeletalAnimation> skeletAnim;
     std::optional<SpriteAnimation> spriteAnimation;
@@ -195,10 +182,9 @@ private:
 	std::vector<Object*> child_opbjects = {};
 	Object* parent = nullptr;
 
+	//TODO(darius) looks like cull is same as hide, or is it
 	bool object_hidden = false;
-
-	bool object_culled= false;
-
+	bool object_culled = false;
 	bool shadowCaster = false;
 
 	int ID = 0;

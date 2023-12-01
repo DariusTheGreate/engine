@@ -14,8 +14,8 @@
 #include <assimp/postprocess.h>
 
 
-Model::Model(std::string_view path_in, Shader& shader_in, bool gamma, bool rotate_in, bool constructSubobjects_in) 
-    : gammaCorrection(gamma), rotate(rotate_in), path(path_in)
+Model::Model(std::string_view path_in, Shader& shader_in) 
+    : path(path_in)
 {
     loadModel();
 }
@@ -24,10 +24,6 @@ Model::Model(Mesh mesh_in)
 {
     meshes.push_back(mesh_in);
 }
-
-//Model::Model(std::string path_in, bool rotate_in) : path(path_in), rotate(rotate_in)
-//{
-//}
 
 Model::Model(const Model& m) : meshes(m.meshes), path(m.path)
 {
@@ -258,7 +254,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
         //t.set_type("texture_diffuse"); 
         //textures.emplace_back(std::move(t)); 
 
-        auto textID = TextureFromFile("checkerboard.png", GameState::engine_path + "textures", false, false); 
+        auto textID = ImageUtils::TextureFromFile("checkerboard.png", GameState::engine_path + "textures"); 
 
         Texture texture(textID, "checkerboard.png", "texture_diffuse");
         textures.push_back(texture); 
@@ -291,7 +287,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
         else 
         {
-            auto textID = TextureFromFile(str.C_Str(), this->directory, gammaCorrection, rotate); 
+            auto textID = ImageUtils::TextureFromFile(str.C_Str(), this->directory); 
             if(textID == 0)
                 return textures;
 
@@ -309,27 +305,27 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 {
-    println("Extracting Bones mNumBones: ", mesh->mNumBones);
+    //println("Extracting Bones mNumBones: ", mesh->mNumBones);
     for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex)
     {
         int boneID = -1;
         std::string boneName = mesh->mBones[boneIndex]->mName.C_Str();
         //println("Bone number ", boneIndex, ":", boneName);
-        if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+        if (modelBoneInfoMap.find(boneName) == modelBoneInfoMap.end())
         {
             BoneInfo newBoneInfo;
-            newBoneInfo.id = m_BoneCounter;
-            newBoneInfo.offset = ConvertMatrixToGLMFormat(
-                mesh->mBones[boneIndex]->mOffsetMatrix);
-            //println("Bone Matrice: ", newBoneInfo.offset);
-            m_BoneInfoMap[boneName] = newBoneInfo;
-            boneID = m_BoneCounter;
-            m_BoneCounter++;
+            newBoneInfo.id = boneCounter;
+            newBoneInfo.offset = ConvertMatrixToGLMFormat(mesh->mBones[boneIndex]->mOffsetMatrix);
+
+            modelBoneInfoMap[boneName] = newBoneInfo;
+            boneID = boneCounter;
+            boneCounter++;
         }
         else
         {
-            boneID = m_BoneInfoMap[boneName].id;
+            boneID = modelBoneInfoMap[boneName].id;
         }
+
         assert(boneID != -1);
         auto weights = mesh->mBones[boneIndex]->mWeights;
         int numWeights = mesh->mBones[boneIndex]->mNumWeights;
@@ -363,51 +359,6 @@ glm::vec3 Model::GetGLMVec(const aiVector3D& vec)
 glm::quat Model::GetGLMQuat(const aiQuaternion& pOrientation)
 {
     return glm::quat(pOrientation.w, pOrientation.x, pOrientation.y, pOrientation.z);
-}
-
-unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate) 
-{
-    unsigned int textureID = 0;
-    OpenglWrapper::GenerateTextures(&textureID);
-
-    stbi_set_flip_vertically_on_load(rotate);
-    int width, height, nrComponents;
-    unsigned char* data = stbi_load(filename, &width, &height, &nrComponents, 0);
-    //ImageUtils::printImageRawData(data, width * height);
-    if (data)
-    {
-        GLenum format = GL_RGBA;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        
-        OpenglWrapper::BindTexture(static_cast<int>(textureID));
-        OpenglWrapper::ImageTexture(format, width, height, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
-        OpenglWrapper::TextureParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-        OpenglWrapper::TextureParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else
-    {
-        std::cout << "Texture failed to load at path: " << filename << std::endl;
-        stbi_image_free(data);
-    }
-
-    return static_cast<unsigned int>(textureID);
-
-}
-
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate = false)
-{
-    std::string filename = std::string(path);
-    filename = directory + '/' + filename;
-    return TextureFromFile(filename.c_str(), gamma, rotate);
 }
 
 std::unordered_set<std::string_view> Model::textures_set = {};

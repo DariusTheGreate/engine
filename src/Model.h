@@ -28,9 +28,6 @@
 #include <functional>
 #include <optional>
 
-unsigned int TextureFromFile(const char* filename, bool gamma, bool rotate);
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma, bool rotate);
-
 class Object;
 
 struct BoneInfo
@@ -45,26 +42,20 @@ public:
     static std::unordered_set<std::string_view> textures_set;
     static std::vector<Texture> textures_loaded;
     
-	std::vector<Mesh>    meshes;
+	std::vector<Mesh> meshes;
 
     std::string directory;
     std::string path;
 
-    bool gammaCorrection = false;
-    bool rotate = false;
-    bool constructSubobjects = false;
-
-    std::map<std::string, BoneInfo> m_BoneInfoMap;
-    int m_BoneCounter = 0;
+    std::map<std::string, BoneInfo> modelBoneInfoMap;
+    int boneCounter = 0;
 
 public:
     Model() = default;
 
-    Model(std::string_view path_in, Shader& shader_in, bool gamma = false, bool rotate_in = false, bool constructSubobjects_in = false); 
+    Model(std::string_view path_in, Shader& shader_in); 
 
     Model(Mesh mesh_in); 
-
-    //Model(std::string path_in, bool rotate_in = false);
 
     Model(const Model& m);
 
@@ -77,9 +68,9 @@ public:
 
     void addMesh(const Mesh& m);
 
-    auto& GetBoneInfoMap() { return m_BoneInfoMap; }
+    auto& GetBoneInfoMap() { return modelBoneInfoMap; }
 
-    int& GetBoneCount() { return m_BoneCounter; } 
+    int& GetBoneCount() { return boneCounter; } 
 
     void SetVertexBoneDataToDefault(Vertex& vertex);
 

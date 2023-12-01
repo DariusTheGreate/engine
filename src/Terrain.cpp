@@ -52,7 +52,7 @@ Terrain::Terrain(std::string heightMap)
 
     terrainEBO.init();
     terrainEBO.bind(indices.size() * sizeof(unsigned), &indices[0]);
-    auto textID = TextureFromFile("checkerboard.png", GameState::engine_path + "textures", false, false); 
+    auto textID = ImageUtils::TextureFromFile("checkerboard.png", GameState::engine_path + "textures"); 
 
     texture = Texture(textID, "checkerboard.png", "texture_diffuse");
 }

@@ -332,7 +332,6 @@ std::optional<RigidBody> rbody;
     auto& animator = obj->getAnimator(); 
 
     if (animator && ImGui::CollapsingHeader("Animator component")){
-        ImGui::Text("timestamps %f, %f", animator->getCurrTime(), animator->getDeltaTime());
     }
 
     auto& collider = obj->getColider();

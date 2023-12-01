@@ -9,6 +9,7 @@
 // https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html
 struct Transform
 {
+public:
 	Transform() = default;
 
 	Transform(glm::vec3 pos, glm::vec3 scl);
@@ -66,9 +67,7 @@ struct Transform
 
 	void setMatrix(glm::mat4 matrix_in);
 
-	//NOTE(darius) it shouldnt be here (?) but its best if it here.
-	int objectID = 0;
-
+public:
     glm::mat4 matrix = { 1.f, 0.f, 0.f, 0.f,
                         0.f, 1.f, 0.f, 0.f,
                         0.f, 0.f, 1.f, 0.f,

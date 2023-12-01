@@ -56,6 +56,51 @@ struct ImageUtils
 			print((unsigned int)(data[i]), "|");
 		}
 	}
+
+
+	static unsigned int TextureFromFile(const char* filename, bool rotateTextureOnLoad = false)
+	{
+		unsigned int textureID = 0;
+	    OpenglWrapper::GenerateTextures(&textureID);
+
+	    stbi_set_flip_vertically_on_load(rotateTextureOnLoad);
+	    int width, height, nrComponents;
+	    unsigned char* data = stbi_load(filename, &width, &height, &nrComponents, 0);
+	    //ImageUtils::printImageRawData(data, width * height);
+	    if (data)
+	    {
+	        GLenum format = GL_RGBA;
+	        if (nrComponents == 1)
+	            format = GL_RED;
+	        else if (nrComponents == 3)
+	            format = GL_RGB;
+	        
+	        OpenglWrapper::BindTexture(static_cast<int>(textureID));
+	        OpenglWrapper::ImageTexture(format, width, height, data);
+	        glGenerateMipmap(GL_TEXTURE_2D);
+
+	        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+	        OpenglWrapper::TextureParameter(GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
+	        OpenglWrapper::TextureParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	        OpenglWrapper::TextureParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	        stbi_image_free(data);
+	    }
+	    else
+	    {
+	        std::cout << "Texture failed to load at path: " << filename << std::endl;
+	        stbi_image_free(data);
+	    }
+
+	    return static_cast<unsigned int>(textureID);
+	}
+
+	static unsigned int TextureFromFile(const std::string& path, const std::string& directory, bool rotateTextureOnLoad = false)
+	{
+	    std::string filename = path;
+	    filename = directory + '/' + filename;
+	    return TextureFromFile(filename.c_str(), rotateTextureOnLoad);	
+	}
 };
 
 //TODO(darius) refactor invariants
