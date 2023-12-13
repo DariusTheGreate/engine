@@ -351,9 +351,9 @@ void ShaderLibrary::shaderRoutine(Object* obj)
 
     loadCurrentShader();
 
-    if(obj->getAnimator() && obj->getAnimator()->isVariantHoldsSkeletal()){
+    if(obj->getSkeletalAnimation()){
         //auto transforms = obj->getAnimator()->getCurrentAnimation()->getFinalBoneMatrices();
-        std::vector<glm::mat4> transforms;
+        auto transforms = obj->getSkeletalAnimation()->getFinalBoneMatrices();
         //auto variantCaller = [&transforms](auto& obj){ transforms = obj.getFinalBoneMatrices(); };
 
         //obj->getAnimator()->access(variantCaller);

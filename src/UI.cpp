@@ -92,7 +92,7 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
             scene.recoverBatchedObjects();
         }
 
-        ImGui::Text("onjects count %i", scene.get_objects().size());
+        ImGui::Text("onjects count %i", scene.getObjects().size());
 
         if (ImGui::Button("Add Object")) {
             scene.AddEmpty(emptyCreated++);        
@@ -136,7 +136,7 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
         if (ImGui::TreeNodeEx("Scene objects", parent_flags))
         {
             ImGui::PushStyleVar(ImGuiStyleVar_IndentSpacing, ImGui::GetFontSize() * 3);
-            auto objects = scene.get_objects();
+            auto objects = scene.getObjects();
             for (int i = 0; i < objects.size(); i++)
             {
                 if (!objects[i])
@@ -144,7 +144,7 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
 
                 //TODO(darius) selectalbes here? This chunk can be used to create selectable think
                 /*
-                ImGui::Selectable(objects[i]->get_name().c_str());
+                ImGui::Selectable(objects[i]->getName().c_str());
                 if (ImGui::BeginDragDropSource(src_flags))
                 {
                     if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip)){
@@ -156,12 +156,12 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
                 }
                 */
 
-                ImGuiTreeNodeFlags node_flags = objects[i]->get_child_objects().empty() ? leaf_flags : parent_flags;
+                ImGuiTreeNodeFlags node_flags = objects[i]->getChildObjects().empty() ? leaf_flags : parent_flags;
 
-                if (ImGui::TreeNodeEx(objects[i]->get_name().c_str(), parent_flags)) {
+                if (ImGui::TreeNodeEx(objects[i]->getName().c_str(), parent_flags)) {
 					objects[i]->traverseObjects([&](Object* op) {
-						ImGuiTreeNodeFlags node_flags = op->get_child_objects().empty() ? leaf_flags : parent_flags;
-						if (ImGui::TreeNodeEx(op->get_name().c_str(), parent_flags)) {
+						ImGuiTreeNodeFlags node_flags = op->getChildObjects().empty() ? leaf_flags : parent_flags;
+						if (ImGui::TreeNodeEx(op->getName().c_str(), parent_flags)) {
 							bool node_open2 = ImGui::TreeNodeEx("object", leaf_flags);
 							if (ImGui::IsItemClicked()) {
 								show_object_window = true;
@@ -209,14 +209,14 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
     }
 
 	ImGui::Begin("Object window", &show_object_window);
-	//ImGui::Text(obj -> get_name().c_str());
-    obj->get_name().resize(max_name_length);
+	//ImGui::Text(obj -> getName().c_str());
+    obj->getName().resize(max_name_length);
 
-    ImGui::InputText("Name: ", (char*)obj->get_name().c_str(), obj->get_name().size());
+    ImGui::InputText("Name: ", (char*)obj->getName().c_str(), obj->getName().size());
     if(ImGui::Button("clear name"))
-        obj->get_name().clear();
+        obj->getName().clear();
     
-	ImGui::Checkbox("Hide Object", &obj -> object_hidden_state());
+	ImGui::Checkbox("Hide Object", &obj -> objectHiddenState());
 
     //TODO(darius) so objTr updates quaternion at the end of UI work, cause of Guizmos. This is ugly
 
@@ -329,11 +329,21 @@ std::optional<RigidBody> rbody;
         ImGui::DragFloat("shininess", &material->shininess, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
     } 
 
-    auto& animator = obj->getAnimator(); 
+    auto& spriteAnimator = obj->getSpriteAnimator(); 
 
     if (ImGui::CollapsingHeader("Animator component")){
         if(ImGui::Button("init animator")) 
             obj->initAnimator();
+
+        if(spriteAnimator){
+            if(ImGui::CollapsingHeader("Add Sprite Animation")){
+
+                ImGui::InputText("path", (char*)path.c_str(), 100); 
+
+                if(ImGui::Button("load")) 
+                    item_clicked->addSpriteAnimation(SpriteAnimation(path));
+            }
+        }
     }
 
     auto& collider = obj->getColider();
@@ -478,10 +488,10 @@ void UI::objectManipulationWindow(Scene& scene)
     ImGui::Begin("Objects manipulation");
 
     if (ImGui::Button("Show Object") && item_clicked) {
-        auto v = item_clicked->get_pos();
+        auto v = item_clicked->getTransform().getPosition();
         v += glm::vec3{0, 0, 10};
 
-        glm::vec3 front = glm::normalize(item_clicked->get_pos() - v);
+        glm::vec3 front = glm::normalize(item_clicked->getTransform().getPosition() - v);
 
         GameState::instance->cam.setCameraPos(v);
         GameState::instance->cam.setCameraFront(front);
@@ -495,12 +505,12 @@ void UI::objectManipulationWindow(Scene& scene)
 
     if (ImGui::Button("Delete Object") && item_clicked) {
         //ImGui::Text("not implemented yet");
-        scene.destroyObject(item_clicked->get_name());
+        scene.destroyObject(item_clicked->getName());
         item_clicked = nullptr;
     } 
 
     if (ImGui::Button("Make prefab") && item_clicked) {
-        std::string prefabName = item_clicked->get_name();
+        std::string prefabName = item_clicked->getName();
 
         //NOTE(darius)TODO(darius) because we resize name name etter Ui element. We cant concat stirngs here.Fix it
         //prefabName.substr(0, max_name_length-1);
@@ -611,7 +621,7 @@ void UI::componentAdderWindow(Renderer& hui)
                 std::cout << *danceAnimation;
                 */
 
-                item_clicked->setAnimator(danceAnimation);
+                item_clicked->setSkeletalAnimation(danceAnimation);
 
                 //delete danceAnimation;
             }

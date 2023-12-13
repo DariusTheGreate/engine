@@ -31,7 +31,7 @@ Object* Scene::createEntity(Object* po, std::string path, bool rotateTextures = 
 		subobjects.push_back(pt);
 	}
 
-	po->set_child_objects(std::move(subobjects));
+	po->setChildObjects(std::move(subobjects));
 
 	po->startScript();
 
@@ -154,7 +154,7 @@ Object* Scene::getObjectByName(const std::string& name)
 		if(!objp)
 			continue;
 
-		if (std::strcmp(objp->get_name().c_str(), name.c_str()) == 0){
+		if (std::strcmp(objp->getName().c_str(), name.c_str()) == 0){
 			return objp;
 		}
 	}
@@ -178,7 +178,7 @@ Object* Scene::getObjectByID(int ID)
 	return nullptr;
 }
 
-std::vector<Object*>& Scene::get_objects()
+std::vector<Object*>& Scene::getObjects()
 {
 	return sceneObjects;
 }
@@ -256,14 +256,13 @@ void Scene::update_objects()
 
 			sceneObjects[i]->updateScript();
 
+			auto rbodyCopyInitTr = (sceneObjects[i]->getTransform());
+			sceneObjects[i]->updateRigidBody();
+
 			if (sceneObjects[i]->getColider() && !sceneObjects[i]->getColider()->is_active()) {
-				sceneObjects[i]->updatePos();
 				continue;
 			}
 
-			auto rbodyCopyInitTr = (sceneObjects[i]->getTransform());
-
-			sceneObjects[i]->updatePos();
 
 		//COLLISIONS RESOLUTION:
 		// O(n^2) 
@@ -342,7 +341,7 @@ void Scene::batchProbeSimilarObjects()
 
 		Batch combinationBatch;
 
-		std::cout << "Batching object " << objI->get_name() << "...\n";
+		std::cout << "Batching object " << objI->getName() << "...\n";
 
 		glm::vec3 originalScale = objI->getTransform().getScale();
 		auto meshI = objI->getModel()->meshes[0];
@@ -616,7 +615,7 @@ void Scene::parseSynchronizationMsg(std::string data)
 		for(int j = 0; j < names.size(); ++j)
 		{   
 			//NOTE(darius) copy other components here?
-			if(sceneObjects[i]->get_name() == names[j])
+			if(sceneObjects[i]->getName() == names[j])
 				sceneObjects[i]->getTransform() = (transs[j]);
 		}
 	}

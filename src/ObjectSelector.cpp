@@ -113,7 +113,7 @@ void ObjectSelector::ProbeSceneObjects(Scene* scene, float mouseX, float mouseY,
     Timer t;
     //std::cout << "Coords: " << mouseX << "|" << mouseY << "\n";
     //GameState::msg("Coords: " + std::to_string(mouseX) + "|" + std::to_string(mouseY) + "\n");
-    auto& objects = scene->get_objects();
+    auto& objects = scene->getObjects();
 
     auto ray = GetRayFromMouse(mouseX, mouseY, w);
     //render->getDebugRenderer().renderDebugPoint(ray);

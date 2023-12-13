@@ -106,7 +106,7 @@ void Editor::updateInput() {
     if (GameState::instance->ks.get_d() && GameState::instance->ks.get_cntrl()) {
         Object* item_clicked = ui.getItemClicked();
         if(item_clicked){
-            currScene.destroyObject(item_clicked->get_name());
+            currScene.destroyObject(item_clicked->getName());
             ui.setItemClickedForced(nullptr);
         }
         //currScene.AddEmpty(currScene.getEmptyIndex());
@@ -515,9 +515,9 @@ void Editor::consoleInputThread(Editor* currEditor)
 
             if (command == "list")
             {
-                for (Object* obj : currEditor->currScene.get_objects())
+                for (Object* obj : currEditor->currScene.getObjects())
                 {
-                    std::cout << obj->get_name() << "\n";
+                    std::cout << obj->getName() << "\n";
                 }
             }
 
@@ -527,7 +527,7 @@ void Editor::consoleInputThread(Editor* currEditor)
 
                 for (Object* obj : cache)
                 {
-                    std::cout << obj->get_name() << "\n";
+                    std::cout << obj->getName() << "\n";
                 }
             }
 

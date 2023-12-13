@@ -158,7 +158,7 @@ public:
 
 	Object* getObjectByID(int ID);
 
-	std::vector<Object*>& get_objects();
+	std::vector<Object*>& getObjects();
 
 	int getEmptyIndex();
 

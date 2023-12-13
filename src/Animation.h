@@ -140,61 +140,30 @@ private:
 	std::string pathToFolder;
 };
 
-using AnimationVariant = std::variant<SkeletalAnimation, SpriteAnimation>;
-
+template<typename AnimationT>
 class Animator
 {
 public:
-	void addAnimation(const SkeletalAnimation& skeletal)
+	void addAnimation(const AnimationT& anim)
 	{
-		animations.push_back({skeletal});
-	}
-
-	void addAnimation(const SpriteAnimation& sprited)
-	{
-		animations.push_back({sprited});
+		animations.push_back(anim);
 	}
 
 	//NOTE(darius) beware that you can updating animations but not render or rendering the wrong ones
 	void update(float t)
 	{
-		//animations[currAnim].update(t);
 		if(!animations.size())
 			return;
 
-		auto caller = [t](auto& obj) { obj.update(t); };
-		//std::visit(caller, animations[currAnim]);	
-		access(caller);
+		animations[currAnim].update(t);
 	}
 
-	AnimationVariant& getCurrentAnimation()
+	AnimationT& getCurrentAnimation()
 	{
 		return animations[currAnim];	
 	}
-	
-	//NOTE(darius) kinda cringe
-	bool isVariantHoldsSkeletal()
-	{
-		if(!animations.size())
-			return false;
-
-		return std::holds_alternative<SkeletalAnimation>(animations[0]);
-	}
-
-	bool isVariantHoldsSpriteAnimation()
-	{
-		if(!animations.size())
-			return false;
-
-		return std::holds_alternative<SpriteAnimation>(animations[0]);
-	}
-
-	auto access(auto&& func)
-	{
-		return std::visit(func, animations[currAnim]);	
-	}
 
 private:
-	std::vector<AnimationVariant> animations;
+	std::vector<AnimationT> animations;
 	size_t currAnim = 0;
 };

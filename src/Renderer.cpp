@@ -617,12 +617,12 @@ void Renderer::renderAll(Window* wind)
 		dbr.updateCamera(projection, view);
 	}
 
-	for (int i = 0; i < currScene->get_objects().size(); ++i) {
-		if (currScene->get_objects()[i]) {
+	for (int i = 0; i < currScene->getObjects().size(); ++i) {
+		if (currScene->getObjects()[i]) {
 			dbr.renderDebugColider(wind, currScene->get_object_at(i)->getColider(),
 				currScene->get_object_at(i)->getRigidBody());
-			dbr.renderDebugLightSource(currScene->get_objects()[i]->getPointLight());
-			currScene->get_objects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
+			dbr.renderDebugLightSource(currScene->getObjects()[i]->getPointLight());
+			currScene->getObjects()[i]->traverseObjects([&dbr = dbr](Object* obj) {
 				dbr.renderDebugLightSource(obj->getPointLight());
 				});
 		}

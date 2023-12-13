@@ -25,20 +25,6 @@ class Object
 public:
 	Object(std::string name_in);
 
-	//NOTE(darius) not sure about this stuff anymore. clean up constructors that we dont need and create new constructors that we need?
-	Object(std::string name_in, Shader model_shader);
-
-	Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, std::string_view model_path_in,
-																									Scene* scn, EmptyScriptRoutine* routine,
-																									bool gammaShader = false, bool rotateTextures = false);
-
-	Object(Object* parentObject, Mesh& m);
-
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, Mesh& m,
-																					Scene* scn, EmptyScriptRoutine* routine, bool active = true);
-
-	Object(std::string&& name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::vec3 collider_in, const Model& m, Scene* scn, EmptyScriptRoutine* routine, bool active);
-
 	Object(const Object& copy_me);
 
 	Object& operator =(const Object& obj) = delete;
@@ -51,21 +37,13 @@ public:
 
 	void renderObject(); 
 
-	void updateParticleSystem(float dt);
-
-	void apply_force(glm::vec3 force); 
-
-	void updatePos(); 
-
-	glm::vec3 get_pos(); 
-	
-	std::optional<Colider>& getColider(); 
-
 	void addRigidBody(float mass = 0.0);
 
 	std::optional<RigidBody>& getRigidBody();
 
-	std::optional<Model>& getModel();
+	void addForce(glm::vec3 force); 
+
+	void updateRigidBody(); 
 
 	void frozeObject();
 
@@ -81,9 +59,9 @@ public:
 	
 	std::optional<Script>& getScript();
 	
-	void set_child_objects(std::vector<Object*>&& objects);
+	void setChildObjects(std::vector<Object*>&& objects);
 
-	std::vector<Object*>& get_child_objects(); 
+	std::vector<Object*>& getChildObjects(); 
 
 	void addChild(Object* obj);
 
@@ -91,21 +69,21 @@ public:
 
 	void traverseObjects(std::function<void(Object*)> functor, bool include_root = false);
 	
-	std::string& get_name(); 
+	std::string& getName(); 
 
 	void hide();
 
 	void unhide();
 
-	bool is_hidden();
+	bool isHidden();
 
-	bool& object_hidden_state();
+	bool& objectHiddenState();
 
 	void cull();
 
 	void uncull();
 
-	bool is_culled();
+	bool isCulled();
 
 	void serialize(std::ostream& file);
 
@@ -117,14 +95,19 @@ public:
 
 	void addCollider(glm::vec3 size = {0,0,0}, glm::vec3 shift = { 0,0,0 });
 
+	std::optional<Colider>& getColider(); 
+
 	void addModel();
 
 	void addModel(Mesh&& m);
 
-	//TODO(darius) when loading big models add threading
 	void addModel(std::string_view path);
+
+	std::optional<Model>& getModel();
 	
 	void addParticleSystem(ParticleSystem&& ps);
+
+	void updateParticleSystem(float dt);
 
 	std::optional<ParticleSystem>& getParticleSystem();
 
@@ -142,11 +125,12 @@ public:
 
 	int getID();
 
-	void setAnimator(SkeletalAnimation* anim);
+
+	void setSkeletalAnimation(SkeletalAnimation* anim);
 
 	std::optional<SkeletalAnimation>& getSkeletalAnimation();
 
-	std::optional<Animator>& getAnimator();
+	std::optional<Animator<SpriteAnimation>>& getSpriteAnimator();
 
 	void initAnimator();
 
@@ -184,18 +168,20 @@ private:
 	std::optional<ParticleSystem> particles;
 	std::optional<SkeletalAnimation> skeletAnim;
     std::optional<SpriteAnimation> spriteAnimation;
-    std::optional<Animator> animator;
+
+    std::optional<Animator<SpriteAnimation>> spriteAnimator;
+    //std::optional<Animator<SkeletalAnimation>> animator;
 
 	Transform tr;
 	std::string name;
 
 	//NOTE(darius) maybe get rid of it?
-	std::vector<Object*> child_opbjects = {};
+	std::vector<Object*> childObjects = {};
 	Object* parent = nullptr;
 
 	//TODO(darius) looks like cull is same as hide, or is it
-	bool object_hidden = false;
-	bool object_culled = false;
+	bool objectHidden = false;
+	bool objectCulled = false;
 	bool shadowCaster = false;
 
 	int ID = 0;

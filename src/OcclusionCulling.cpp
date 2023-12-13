@@ -59,7 +59,7 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 			if(occlude)
 				obj2->cull();
 			else
-				if(!obj2->is_culled())
+				if(!obj2->isCulled())
 					obj2->uncull();
 
 			println("");
