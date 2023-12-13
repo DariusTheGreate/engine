@@ -133,7 +133,7 @@ void Scene::updateSpriteAnimations(float dt)
 void Scene::updateAnimators(float dt)
 {
 	for (auto& obj : sceneObjects) {
-		if (!obj->getAnimator())
+		if (!obj->getSkeletalAnimation())
 			continue;
 
 		obj->updateAnimator(dt);

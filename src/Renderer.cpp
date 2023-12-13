@@ -652,6 +652,7 @@ void Renderer::renderScene()
 
 	currScene->updateAnimators(deltaTime);
 	currScene->updateSpriteAnimations(static_cast<float>(glfwGetTime()));
+
 	//currScene->updateScene();
 }
 

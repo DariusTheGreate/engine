@@ -20,7 +20,7 @@ Model::Model(std::string_view path_in, Shader& shader_in)
     loadModel();
 }
 
-Model::Model(Mesh mesh_in) 
+Model::Model(const Mesh& mesh_in) 
 {
     meshes.push_back(mesh_in);
 }
@@ -58,7 +58,7 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
         {
             //TODO(darius) cringe make beter architecture
             if(Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::ALBEDO || Renderer::shaderLibInstance->stage == ShaderLibrary::STAGE::SKELETAL){
-                if(obj->getAnimator())
+                if(obj->getSkeletalAnimation())
                     Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::SKELETAL;
                 else
                     Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
@@ -76,9 +76,9 @@ std::vector<Mesh> Model::loadModel()
         return {};
     
     Assimp::Importer importer;
-    std::cout << "Read started...\n";
+    //std::cout << "Read started...\n";
     const aiScene* scene = importer.ReadFile(path.data(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    std::cout << "Read ended!\n";
+    //std::cout << "Read ended!\n";
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) 
     {
@@ -125,18 +125,16 @@ void Model::SetVertexBoneData(Vertex& vertex, int boneID, float weight)
 }
 
 //TODO(darius) Bench it for recursive BFS, i think recursive is faster
-//TODO(darius) Dont use std::queue
-//TODO(darius) Either somehow reserve meshes. Or make meshes move
 void Model::processNode(aiNode* root, const aiScene* scene)
 {
-    std::queue<aiNode*> path;
+    std::queue<aiNode*> nodePath;
 
-    path.push(root);
+    nodePath.push(root);
     meshes.reserve(scene -> mNumMeshes);
 
-    while (!path.empty()) {
-        auto* curr = path.front();
-        path.pop();
+    while (!nodePath.empty()) {
+        auto* curr = nodePath.front();
+        nodePath.pop();
 
         for (unsigned int i = 0; i < curr->mNumMeshes; ++i)
         {
@@ -146,7 +144,7 @@ void Model::processNode(aiNode* root, const aiScene* scene)
 
         for (unsigned int i = 0; i < curr->mNumChildren; i++)
         {
-            path.push(curr -> mChildren[i]);
+            nodePath.push(curr -> mChildren[i]);
         }
     }
 }
@@ -211,19 +209,19 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
     std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    println("diffMaps size ", diffuseMaps.size());
+    //println("diffMaps size ", diffuseMaps.size());
     textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
 
     std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    println("specMaps size ", specularMaps.size());
+    //println("specMaps size ", specularMaps.size());
     textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
     std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    println("normMaps size ", normalMaps.size());
+    //println("normMaps size ", normalMaps.size());
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    println("heightMaps size ", heightMaps.size());
+    //println("heightMaps size ", heightMaps.size());
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
 
     if (diffuseMaps.size() == 0) 
@@ -258,7 +256,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
         Texture texture(textID, "checkerboard.png", "texture_diffuse");
         textures.push_back(texture); 
-        println("TEXURES SIZE: ", textures.size());
+        //println("TEXURES SIZE: ", textures.size());
     }
 
     ExtractBoneWeightForVertices(vertices,mesh,scene);
@@ -298,7 +296,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
         }
     }
 
-    println("textures loaded size ", textures.size());
+    //println("textures loaded size ", textures.size());
 
     return textures;
 }

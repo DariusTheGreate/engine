@@ -77,6 +77,7 @@ void SkeletalAnimation::update(float dt)
 {
 	currTime += deltaTime * dt;
 	currTime = fmod(currTime, getLength());
+	println("update skeletal ", dt, " ", currTime);
 	calculateBoneTransform(&(rootNode), glm::mat4(1.0f));
 }
 

@@ -351,8 +351,12 @@ void ShaderLibrary::shaderRoutine(Object* obj)
 
     loadCurrentShader();
 
-    if(obj->getAnimator()){
-        auto transforms = obj->getAnimator()->getFinalBoneMatrices();
+    if(obj->getAnimator() && obj->getAnimator()->isVariantHoldsSkeletal()){
+        //auto transforms = obj->getAnimator()->getCurrentAnimation()->getFinalBoneMatrices();
+        std::vector<glm::mat4> transforms;
+        //auto variantCaller = [&transforms](auto& obj){ transforms = obj.getFinalBoneMatrices(); };
+
+        //obj->getAnimator()->access(variantCaller);
 
         for (int i = 0; i < transforms.size(); ++i)
             sv.setMat4("finalBonesMatrices[" + std::to_string(i) + "]", transforms[i]);

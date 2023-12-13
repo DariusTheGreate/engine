@@ -331,7 +331,9 @@ std::optional<RigidBody> rbody;
 
     auto& animator = obj->getAnimator(); 
 
-    if (animator && ImGui::CollapsingHeader("Animator component")){
+    if (ImGui::CollapsingHeader("Animator component")){
+        if(ImGui::Button("init animator")) 
+            obj->initAnimator();
     }
 
     auto& collider = obj->getColider();

@@ -40,9 +40,9 @@ class Model
 {
 public:
     static std::unordered_set<std::string_view> textures_set;
-    static std::vector<Texture> textures_loaded;
+    static std::vector<Texture> textures_loaded;//TODO(darius) create single buffer for all Textures data?
     
-	std::vector<Mesh> meshes;
+	std::vector<Mesh> meshes;//TODO(darius) create single buffer for all Mesh data?
 
     std::string directory;
     std::string path;
@@ -55,13 +55,12 @@ public:
 
     Model(std::string_view path_in, Shader& shader_in); 
 
-    Model(Mesh mesh_in); 
+    Model(const Mesh& mesh_in); 
 
     Model(const Model& m);
 
     Model(std::string_view path_in);
 
-    //TODO(darius) make it shaderRoutine(tr[i]) for each mesh
     void Draw(Object* obj, std::optional<PointLight>& light, std::optional<Material>& m);
 
     std::vector<Mesh> loadModel();
@@ -77,8 +76,6 @@ public:
     void SetVertexBoneData(Vertex& vertex, int boneID, float weight);
 
 private:
-    //TODO(darius) Bench it for recursive BFS, i think recursive is faster
-    //TODO(darius) Dont use std::queue
     void processNode(aiNode* root, const aiScene* scene);
 
     Mesh processMesh(aiMesh* mesh, const aiScene* scene);

@@ -45,11 +45,12 @@ struct Transform;
 
 class Mesh {
 public:
+    //NOTE(darius) maybe work on that
     Mesh() noexcept = default;
-  
-    //TODO(darius) make it moveable for fuck sake!!!!
-    //Mesh(cosnt Mesh& m) = delete;
-    //Mesh(Mesh&& m) = default;
+    Mesh(const Mesh& m) = default;
+    Mesh& operator =(const Mesh&) = default;
+    Mesh(Mesh&& m) = default;
+    Mesh& operator =(Mesh&&) = default;
     
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
     

@@ -144,7 +144,11 @@ public:
 
 	void setAnimator(SkeletalAnimation* anim);
 
-	std::optional<SkeletalAnimation>& getAnimator();
+	std::optional<SkeletalAnimation>& getSkeletalAnimation();
+
+	std::optional<Animator>& getAnimator();
+
+	void initAnimator();
 
     void addSpriteAnimation(SpriteAnimation&& anim);
 
@@ -166,19 +170,26 @@ private:
 	// NOTE(darius) dont forget optional cant contain reference or heap object
 	// use indexing?
 	// make it vector pointer to all components of specific type, for each component type?
+
+	//NOTE(darius) How bad this is?
+	//suppose O(amount of objects) = 10000 
+	//sizeof(Object) ~= 1616b => 10000 * 1616b = 16Mb. Thats very little of waste!
+
 	std::optional<Model> model;
 	std::optional<RigidBody> rbody;
 	std::optional<Colider> colider;
-	std::optional<Script> script;
+	std::optional<Script> script;//NOTE(darius) there shouldnt be many scripts, its bad
 	std::optional<PointLight> pointLight;
 	std::optional<Material> material;
 	std::optional<ParticleSystem> particles;
 	std::optional<SkeletalAnimation> skeletAnim;
     std::optional<SpriteAnimation> spriteAnimation;
+    std::optional<Animator> animator;
 
 	Transform tr;
 	std::string name;
 
+	//NOTE(darius) maybe get rid of it?
 	std::vector<Object*> child_opbjects = {};
 	Object* parent = nullptr;
 

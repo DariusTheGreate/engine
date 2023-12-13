@@ -1,8 +1,10 @@
 #include "RigidBody.h"
+#include <btBulletDynamicsCommon.h>
 #include <Printer.h>
 
 RigidBody::RigidBody(double mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(static_cast<float>(mass_in)), is_static(is_st)
 {
+	//btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
 	//startPosition = tr.position;
 	//tr.matrix = construct_quat({ 0,0,0 }, 0);
 }

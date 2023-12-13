@@ -22,7 +22,7 @@ Object::Object(std::string name_in, glm::vec3 pos_in, glm::vec3 scale_in, glm::v
 {
     model.emplace(model_path_in);
     
-	model->loadModel();
+	//model->loadModel();
 
     script = Script(scn, this, routine);
 
@@ -438,17 +438,19 @@ std::optional<SpriteAnimation>& Object::getSpriteAnimation()
 
 void Object::updateSpriteAnimation(float dt) 
 {
-    if (spriteAnimation) {
-        spriteAnimation->update(dt);
+    if (animator && spriteAnimation) {
+        animator->update(dt);
     }
 }
 
 void Object::updateAnimator(float dt)
 {
-    if(!skeletAnim)
+    if(!skeletAnim || !animator)
         return;
-
-    skeletAnim->update(dt);
+    //NOTE(darius) you update copy inside animator
+    // fix it in shaderLibrary
+    animator->update(dt);
+    //skeletAnim->update(dt);
 }
 
 void Object::setAnimator(SkeletalAnimation* anim)
@@ -458,9 +460,23 @@ void Object::setAnimator(SkeletalAnimation* anim)
     skeletAnim.emplace(*anim);
 }
 
-std::optional<SkeletalAnimation>& Object::getAnimator()
+std::optional<SkeletalAnimation>& Object::getSkeletalAnimation()
 {
     return skeletAnim;
+}
+
+std::optional<Animator>& Object::getAnimator()
+{
+    return animator; 
+}
+
+void Object::initAnimator()
+{
+    animator.emplace(Animator());
+    if(spriteAnimation)
+        animator->addAnimation(*spriteAnimation);
+    if(skeletAnim)
+        animator->addAnimation(*skeletAnim);
 }
 
 void Object::serializeAsPrefab(std::ofstream& file)
