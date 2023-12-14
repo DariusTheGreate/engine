@@ -349,7 +349,7 @@ std::optional<RigidBody> rbody;
         //Indenter(16.0f);
 
         if(ImGui::Button("init animator")) 
-            obj->initAnimator();
+            obj->initAnimator(SpriteAnimator());
 
         ImGui::Text("Animator animations count: %i", spriteAnimator->size());
         ImGui::Text("Animator currAnim number: %i", spriteAnimator->currPlayedAnim());

@@ -192,6 +192,7 @@ void SpriteAnimation::setSprite(FlatMesh* mesh)
 
 void SpriteAnimation::update(float currentTime) 
 {
+	assert(sprite, "sprite animation sprite not set\n");
 	//TODO(darius) refactor this
 	if ((currentTime - lastTime)*1000 < delayMs || !play)
 		return;

@@ -132,7 +132,7 @@ public:
 
 	std::optional<Animator<SpriteAnimation>>& getSpriteAnimator();
 
-	void initAnimator();
+	void initAnimator(Animator<SpriteAnimation>&& animator_in);
 
     void addSpriteAnimation(SpriteAnimation&& anim);
 

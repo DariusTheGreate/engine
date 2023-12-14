@@ -41,6 +41,8 @@
 
 
 	--RENDERER
+		- render static 2D backend to one texture
+
 		- finish culling
 
 		- instanced rendering loop

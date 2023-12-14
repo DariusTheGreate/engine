@@ -190,3 +190,5 @@ private:
 	std::vector<AnimationT> animations;
 	size_t currAnim = 0;
 };
+
+using SpriteAnimator = Animator<SpriteAnimation>;

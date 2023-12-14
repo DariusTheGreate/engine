@@ -703,9 +703,11 @@ void Scene::parseScene(std::string_view data)
 		{
 			obj->getModel() = (models[i]);
 
-			auto anim = extractSpriteAnimationFromToken(objectTokens[i]);
-			if(anim)
-				obj->addSpriteAnimation(std::move(*anim));
+			std::optional<Animator<SpriteAnimation>> spriteAnimator = extractSpriteAnimatorFromToken(objectTokens[i]);
+			if(spriteAnimator){
+				obj->initAnimator(std::move(*spriteAnimator));
+				//obj->addSpriteAnimation(std::move(*spriteAnimator));
+			}
 
 			auto col = extractColliderFromToken(objectTokens[i]);
 			if (col)
@@ -999,50 +1001,66 @@ std::optional<RigidBody> Scene::extractRigidBodyFromToken(std::string_view tkn)
 	return res;
 }
 
-std::optional<SpriteAnimation> Scene::extractSpriteAnimationFromToken(std::string_view tkn)
+std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_view tkn)
 {
-	size_t animStart = tkn.find("SpriteAnimation:");
-	
-	if (animStart == std::string::npos)
+	size_t spriteAnimatorStart = tkn.find("SpriteAnimator:");
+
+	if(spriteAnimatorStart == std::string::npos)
 		return std::nullopt;
 
-	size_t delayStart = tkn.find("Delay: {", animStart);
+	std::optional<SpriteAnimator> resSpriteAnimator = std::nullopt;
+	resSpriteAnimator.emplace(Animator<SpriteAnimation>());
 
-	size_t brcktStart = tkn.find("{", delayStart);
-	size_t brcktEnd = tkn.find("}", brcktStart);
+	size_t currAnimStart = spriteAnimatorStart;
 
-	float delayVal = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));
-
-	size_t i = tkn.find("Point:", animStart);
-
-	if (i == std::string::npos)
-	{
-		size_t animationPathStart = tkn.find("AnimationPath: {", animStart);
-		if(animationPathStart == std::string::npos)
-			return std::nullopt;
-
-		size_t pathStart = tkn.find("{", animationPathStart);
-		size_t pathEnd = tkn.find("}", pathStart);
+	while(currAnimStart < tkn.size()){
+		currAnimStart = tkn.find("SpriteAnimation:", currAnimStart + 1);
 		
-		//TODO(darius) remove copcupast here and there (747)
-		SpriteAnimation res = SpriteAnimation(std::string(tkn.substr(pathStart+1, pathEnd - pathStart-1)));
+		if (currAnimStart == std::string::npos)
+			return resSpriteAnimator;
+
+		size_t delayStart = tkn.find("Delay: {", currAnimStart);
+
+		size_t brcktStart = tkn.find("{", delayStart);
+		size_t brcktEnd = tkn.find("}", brcktStart);
+
+		float delayVal = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));
+
+		size_t pointStart = tkn.find("Point:", currAnimStart);
+
+		if (pointStart == std::string::npos)//NOTE(darius) no point animation => animationPaths
+		{
+			size_t animationPathStart = tkn.find("AnimationPath: {", currAnimStart);
+			if(animationPathStart == std::string::npos)
+				return resSpriteAnimator;
+
+			size_t pathStart = tkn.find("{", animationPathStart);
+			size_t pathEnd = tkn.find("}", pathStart);
+			
+			SpriteAnimation res = SpriteAnimation(std::string(tkn.substr(pathStart+1, pathEnd - pathStart-1)));
+			*res.getDelay() = delayVal;
+
+			resSpriteAnimator->addAnimation(res);
+			continue;
+			//return resSpriteAnimator;
+		}
+
+		//NOTE(darius) pointsParsing 
+		size_t i = pointStart;
+		std::vector<glm::vec4> points;
+		while (i < tkn.size()) 
+		{
+			size_t vecEnd = tkn.find("}", i);
+			points.push_back(extractVector4FromToken(tkn.substr(i, vecEnd - i)));
+			i = tkn.find("Point:", vecEnd);
+		}
+
+		SpriteAnimation res = SpriteAnimation(points, 100);
+		*res.getLength() = static_cast<float>(points.size());
 		*res.getDelay() = delayVal;
+	}	
 
-		return res;
-	}
-
-	std::vector<glm::vec4> points;
-	while (i < tkn.size()) 
-	{
-		size_t vecEnd = tkn.find("}", i);
-		points.push_back(extractVector4FromToken(tkn.substr(i, vecEnd - i)));
-		i = tkn.find("Point:", vecEnd);
-	}
-
-	SpriteAnimation res = SpriteAnimation(points, 100);
-	*res.getLength() = static_cast<float>(points.size());
-	*res.getDelay() = delayVal;
-	return res;
+	return resSpriteAnimator;
 }
 
 std::string Scene::extractScriptFromToken(std::string_view tkn)

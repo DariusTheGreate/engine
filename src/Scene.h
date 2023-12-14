@@ -236,7 +236,7 @@ public:
 
 	std::optional<RigidBody> extractRigidBodyFromToken(std::string_view);
 
-	std::optional<SpriteAnimation> extractSpriteAnimationFromToken(std::string_view);
+	std::optional<SpriteAnimator> extractSpriteAnimatorFromToken(std::string_view);
 
 	std::string extractScriptFromToken(std::string_view);
 

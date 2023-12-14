@@ -317,9 +317,16 @@ int Object::getID()
     return ID;
 }
 
-void Object::initAnimator()
+void Object::initAnimator(Animator<SpriteAnimation>&& animator_in)
 {
-    spriteAnimator.emplace(Animator<SpriteAnimation>());
+    spriteAnimator.emplace(std::move(animator_in));
+
+    auto& animations = spriteAnimator->getAnimations();
+
+    for(auto& animI : animations){
+        if (model && model->meshes.size() > 0)
+            animI.setSprite((FlatMesh*) &model->meshes[0]);
+    }
     //if(spriteAnimation)
     //    spriteAnimator->addAnimation(*spriteAnimation);
     //if(skeletAnim)
@@ -328,8 +335,11 @@ void Object::initAnimator()
 
 void Object::addSpriteAnimation(SpriteAnimation&& anim)
 {
+    //if(!spriteAnimator)
+    //    initAnimator();
+
     if(!spriteAnimator)
-        initAnimator();
+        return;
 
     //TODO(darius) its actually ugly.
     //if(spriteAnimation)
@@ -493,6 +503,43 @@ void Object::serialize(std::ostream& file)
     }
 
     //TODO(darius) serialize here all sprite animations of spriteAnimator
+
+    if(spriteAnimator)
+    {
+        file << "\tSpriteAnimator: {\n";
+
+        file << "\t\tCurrAnim: {" << spriteAnimator->currPlayedAnim() << "}\n";
+
+        file << "\t\tAnimations: {\n";
+
+        for(auto& anim : spriteAnimator->getAnimations())
+        {
+            file << "\t\t\tSpriteAnimation: {\n";
+
+            file << "\t\t\t\tDelay: {" << std::to_string((long)*anim.getDelay()) << "}\n"; 
+
+            if (!anim.isAnimationUsesMultipleTextures())
+            {
+                for (auto& p : anim.getPoints())
+                {
+                    file << "\t\t\t Point: {" << std::to_string(p.x) << " " << std::to_string(p.y) << " " << std::to_string(p.z) << " " << std::to_string(p.w) << "}\n";
+                    file << "\n";
+                }
+            }
+            else
+            {
+                file << "\t\t\t\tAnimationPath: {" << anim.getAnimationFolderPath() << "}\n";
+            }
+
+            file << "\t\t\t}\n";
+        }
+
+        file << "\t\t }\n";
+
+
+        file << "\t}\n";
+    }
+
     /*if (spriteAnimation)
     {
         file << "\tSpriteAnimation: {\n";
