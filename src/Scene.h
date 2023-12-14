@@ -251,6 +251,8 @@ public:
 
 	bool extractBoolFromToken(std::string_view);
 
+	int extractCurrAnimIdFromToken(std::string_view tkn, int start = 0);
+
 private:
 
 	void init_memory();

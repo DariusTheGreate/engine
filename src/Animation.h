@@ -152,7 +152,6 @@ public:
 	//NOTE(darius) beware that you can updating animations but not render or rendering the wrong ones
 	void update(float t)
 	{
-		println("UPDATED ANIM ", currAnim);
 		if(!animations.size())
 			return;
 
@@ -184,6 +183,14 @@ public:
 	size_t currPlayedAnim()
 	{
 		return currAnim;
+	}
+
+	void setCurrAnim(int currAnimId)
+	{
+		if(currAnimId < 0)
+			currAnimId = 0;
+
+		currAnim = currAnimId;
 	}
 
 private:

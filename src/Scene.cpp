@@ -568,6 +568,7 @@ void Scene::deserialize(std::string_view path)
 	parseScene(data);
 }
 
+//TODO(darius) make separate abstraction for syncMsg or something
 void Scene::parseSynchronizationMsg(std::string data)
 {
 	//std::cout << "MSG:\n";
@@ -602,10 +603,12 @@ void Scene::parseSynchronizationMsg(std::string data)
 		std::cout << i << "\n";
 
 	std::vector<Transform>  transs;
+	std::vector<int>  animIds;
 
 	for (std::string_view tkn : objectTokens) 
 	{
 		transs.emplace_back(extractTransformFromToken(tkn));
+		animIds.emplace_back(extractCurrAnimIdFromToken(tkn));
 	}
 
 	//NOTE(darius) synchronization here
@@ -615,8 +618,10 @@ void Scene::parseSynchronizationMsg(std::string data)
 		for(int j = 0; j < names.size(); ++j)
 		{   
 			//NOTE(darius) copy other components here?
-			if(sceneObjects[i]->getName() == names[j])
+			if(sceneObjects[i]->getName() == names[j]){
 				sceneObjects[i]->getTransform() = (transs[j]);
+				sceneObjects[i]->getSpriteAnimator()->setCurrAnim(animIds[j]);
+			}
 		}
 	}
 }
@@ -1011,6 +1016,10 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 	std::optional<SpriteAnimator> resSpriteAnimator = std::nullopt;
 	resSpriteAnimator.emplace(Animator<SpriteAnimation>());
 
+	int currAnimId = extractCurrAnimIdFromToken(tkn, spriteAnimatorStart);
+
+	resSpriteAnimator->setCurrAnim(currAnimId);
+
 	size_t currAnimStart = spriteAnimatorStart;
 
 	while(currAnimStart < tkn.size()){
@@ -1061,6 +1070,20 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 	}	
 
 	return resSpriteAnimator;
+}
+
+int Scene::extractCurrAnimIdFromToken(std::string_view tkn, int start)
+{
+	size_t currAnimStart = tkn.find("CurrAnim:");
+	if(currAnimStart == std::string::npos)
+		return -1;
+
+	size_t brcktStart = tkn.find("{", currAnimStart);
+	size_t brcktEnd = tkn.find("}", brcktStart);
+
+	int currAnimId = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));	
+
+	return currAnimId;
 }
 
 std::string Scene::extractScriptFromToken(std::string_view tkn)
