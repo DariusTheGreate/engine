@@ -136,15 +136,9 @@ public:
 
     void addSpriteAnimation(SpriteAnimation&& anim);
 
-	SpriteAnimation excnahgeSpriteAnimation(SpriteAnimation&& anim);
+	void updateSpriteAnimator(float dt);
 
-	void setSpriteAnimation(SpriteAnimation& anim);
-
-    std::optional<SpriteAnimation>& getSpriteAnimation();
-
-	void updateSpriteAnimation(float dt);
-
-	void updateAnimator(float dt);
+	void updateSkeletalAnimation(float dt);
 
 private:
 	//TODO(darius) make it Component system
@@ -167,7 +161,6 @@ private:
 	std::optional<Material> material;
 	std::optional<ParticleSystem> particles;
 	std::optional<SkeletalAnimation> skeletAnim;
-    std::optional<SpriteAnimation> spriteAnimation;
 
     std::optional<Animator<SpriteAnimation>> spriteAnimator;
     //std::optional<Animator<SkeletalAnimation>> animator;

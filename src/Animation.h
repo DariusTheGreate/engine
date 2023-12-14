@@ -152,6 +152,7 @@ public:
 	//NOTE(darius) beware that you can updating animations but not render or rendering the wrong ones
 	void update(float t)
 	{
+		println("UPDATED ANIM ", currAnim);
 		if(!animations.size())
 			return;
 
@@ -161,6 +162,28 @@ public:
 	AnimationT& getCurrentAnimation()
 	{
 		return animations[currAnim];	
+	}
+
+	std::vector<AnimationT>& getAnimations()
+	{
+		return animations;
+	}
+
+	size_t size()
+	{
+		return animations.size();
+	}
+
+	void nextAnim()
+	{
+		currAnim++;
+		if(currAnim > size()-1)
+			currAnim = 0;
+	}
+
+	size_t currPlayedAnim()
+	{
+		return currAnim;
 	}
 
 private:

@@ -317,49 +317,47 @@ int Object::getID()
     return ID;
 }
 
+void Object::initAnimator()
+{
+    spriteAnimator.emplace(Animator<SpriteAnimation>());
+    //if(spriteAnimation)
+    //    spriteAnimator->addAnimation(*spriteAnimation);
+    //if(skeletAnim)
+    //    animator->addAnimation(*skeletAnim);
+}
+
 void Object::addSpriteAnimation(SpriteAnimation&& anim)
 {
+    if(!spriteAnimator)
+        initAnimator();
+
     //TODO(darius) its actually ugly.
-    if(spriteAnimation)
-        return;
+    //if(spriteAnimation)
+    //    return;
+
+    //if(spriteAnimation)
+    //    spriteAnimator->addAnimation(*spriteAnimation);
     
-    spriteAnimation.emplace(std::move(anim));
+    //spriteAnimation.emplace(std::move(anim));
     if (model && model->meshes.size() > 0)
-        spriteAnimation->setSprite((FlatMesh*) &model->meshes[0]);
+        anim.setSprite((FlatMesh*) &model->meshes[0]);
+
+    spriteAnimator->addAnimation(std::move(anim));
 }
 
-//todo(darius) check NRVO
-SpriteAnimation Object::excnahgeSpriteAnimation(SpriteAnimation&& anim)
+std::optional<Animator<SpriteAnimation>>& Object::getSpriteAnimator()
 {
-    assert(spriteAnimation);
-
-    SpriteAnimation&& tmp = std::move(spriteAnimation.value());
-    spriteAnimation.emplace(std::move(anim));
-
-    return tmp;
+    return spriteAnimator; 
 }
 
-void Object::setSpriteAnimation(SpriteAnimation& anim)
+void Object::updateSpriteAnimator(float dt) 
 {
-    spriteAnimation.emplace(anim);
-
-    if (model && model->meshes.size() > 0)
-        spriteAnimation->setSprite((FlatMesh*)&model->meshes[0]);
-}
-
-std::optional<SpriteAnimation>& Object::getSpriteAnimation()
-{
-    return spriteAnimation;
-}
-
-void Object::updateSpriteAnimation(float dt) 
-{
-    if (spriteAnimator && spriteAnimation) {
+    if (spriteAnimator) {
         spriteAnimator->update(dt);
     }
 }
 
-void Object::updateAnimator(float dt)
+void Object::updateSkeletalAnimation(float dt)
 {
     if(!skeletAnim)
         return;
@@ -379,20 +377,6 @@ void Object::setSkeletalAnimation(SkeletalAnimation* anim)
 std::optional<SkeletalAnimation>& Object::getSkeletalAnimation()
 {
     return skeletAnim;
-}
-
-std::optional<Animator<SpriteAnimation>>& Object::getSpriteAnimator()
-{
-    return spriteAnimator; 
-}
-
-void Object::initAnimator()
-{
-    spriteAnimator.emplace(Animator<SpriteAnimation>());
-    if(spriteAnimation)
-        spriteAnimator->addAnimation(*spriteAnimation);
-    //if(skeletAnim)
-    //    animator->addAnimation(*skeletAnim);
 }
 
 void Object::serializeAsPrefab(std::ofstream& file)
@@ -508,7 +492,8 @@ void Object::serialize(std::ostream& file)
         file << "\t}\n";
     }
 
-    if (spriteAnimation)
+    //TODO(darius) serialize here all sprite animations of spriteAnimator
+    /*if (spriteAnimation)
     {
         file << "\tSpriteAnimation: {\n";
 
@@ -530,7 +515,7 @@ void Object::serialize(std::ostream& file)
         }
 
         file << "\t}\n";
-    }
+    }*/
 
     if(script)
     {

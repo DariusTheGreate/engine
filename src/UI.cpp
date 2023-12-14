@@ -2,6 +2,19 @@
 #include <Terrain.h>
 #include <StackTrace.h>
 
+struct Indenter
+{
+    Indenter(float dx_in) : dx(dx_in){
+        ImGui::Indent(dx);
+    }
+
+    ~Indenter(){
+        ImGui::Unindent(dx);
+    }
+
+    float dx;
+};
+
 UI::UI(GLFWwindow* window, GameState* st) {
     state = st;
 	IMGUI_CHECKVERSION();
@@ -331,19 +344,51 @@ std::optional<RigidBody> rbody;
 
     auto& spriteAnimator = obj->getSpriteAnimator(); 
 
-    if (ImGui::CollapsingHeader("Animator component")){
+    if (spriteAnimator && ImGui::CollapsingHeader("Animator component")){
+        ImGui::Indent( 16.0f );
+        //Indenter(16.0f);
+
         if(ImGui::Button("init animator")) 
             obj->initAnimator();
 
-        if(spriteAnimator){
-            if(ImGui::CollapsingHeader("Add Sprite Animation")){
+        ImGui::Text("Animator animations count: %i", spriteAnimator->size());
+        ImGui::Text("Animator currAnim number: %i", spriteAnimator->currPlayedAnim());
 
-                ImGui::InputText("path", (char*)path.c_str(), 100); 
-
-                if(ImGui::Button("load")) 
-                    item_clicked->addSpriteAnimation(SpriteAnimation(path));
-            }
+        if(ImGui::Button("Next Animation")){
+            spriteAnimator->nextAnim();
         }
+
+        if(ImGui::CollapsingHeader("Animations:"))
+        {
+            ImGui::Indent( 16.0f );
+
+            auto& anims = spriteAnimator->getAnimations(); 
+            for(size_t i = 0; i < anims.size(); ++i){
+                auto& animI = anims[i];
+                ImGui::Text("SpriteAnimation: %i",i);
+
+                ImGui::DragFloat("delay", animI.getDelay(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("rows", animI.getRows(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("cols", animI.getCols(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("length", animI.getLength(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("start", animI.getStart(), 1.0f, 0, FLT_MAX, "%.3f", 1);
+                ImGui::DragFloat("border", animI.getBorder(), 0.1f, 0, FLT_MAX, "%.1f", 1);
+                ImGui::Checkbox("Play me", animI.getPlay());
+                if(ImGui::Button("CropPoints")){
+                    animI.initPoints();
+                }
+            }
+            ImGui::Unindent( 16.0f );
+        }
+
+        if(ImGui::CollapsingHeader("Add Sprite Animation")){
+
+            ImGui::InputText("path", (char*)path.c_str(), 100); 
+
+            if(ImGui::Button("load")) 
+                item_clicked->addSpriteAnimation(SpriteAnimation(path));
+        }
+        ImGui::Unindent( 16.0f );
     }
 
     auto& collider = obj->getColider();
@@ -406,26 +451,7 @@ std::optional<RigidBody> rbody;
         ImGui::DragFloat("specular z", &light->specular.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
     }
 
-    auto& sprite = obj->getSpriteAnimation();
-    if (sprite && ImGui::CollapsingHeader("SpriteAnimation")) 
-    {
-        /*if (ImGui::Button("Play"))
-        {
-            sprite->play();
-        }
-        */
-
-        ImGui::DragFloat("delay", sprite->getDelay(), 1.0f, 0, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("rows", sprite->getRows(), 1.0f, 0, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("cols", sprite->getCols(), 1.0f, 0, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("length", sprite->getLength(), 1.0f, 0, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("start", sprite->getStart(), 1.0f, 0, FLT_MAX, "%.3f", 1);
-        ImGui::DragFloat("border", sprite->getBorder(), 0.1f, 0, FLT_MAX, "%.1f", 1);
-        ImGui::Checkbox("Play me", sprite->getPlay());
-        if(ImGui::Button("CropPoints")){
-            sprite->initPoints();
-        }
-    }
+   
 
     auto& modelV = obj->getModel();
     if(modelV && ImGui::CollapsingHeader("ModelMesh"))

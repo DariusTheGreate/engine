@@ -126,7 +126,7 @@ void Scene::updateSpriteAnimations(float dt)
 {
 	for (int i = 0; i < sceneObjects.size(); ++i) 
 	{
-		sceneObjects[i]->updateSpriteAnimation(dt);
+		sceneObjects[i]->updateSpriteAnimator(dt);
 	}
 }
 
@@ -136,7 +136,7 @@ void Scene::updateAnimators(float dt)
 		if (!obj->getSkeletalAnimation())
 			continue;
 
-		obj->updateAnimator(dt);
+		obj->updateSkeletalAnimation(dt);
 		//println("Animator:"); 
         //print(obj->getAnimator().value());
 	}
@@ -924,8 +924,6 @@ Model Scene::extractMeshesFromToken(std::string_view tkn)
 			brckEnd = tkn.find("}", brckStart);
 
 			textureType = (tkn.substr(brckStart + 1, brckEnd - brckStart - 1));
-
-			print(textureType);
 
 			textures.emplace_back(Texture(ImageUtils::TextureFromFile(path.c_str(), true), path, textureType));
 
