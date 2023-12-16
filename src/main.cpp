@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Application.h"
-#include <UI.h>
-#include "GameState.h"
-#include <StackTrace.h>
+#include "Engine/Application.h"
+#include <Engine/UI.h>
+#include "Engine/GameState.h"
+#include <Engine/StackTrace.h>
 
 int main()
 {
