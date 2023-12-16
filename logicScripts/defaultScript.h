@@ -70,37 +70,6 @@ public:
 			std::cout << "loaded..\n";
 		}*/
 
-		if (scene->getObjectByName("runAnimation")) {
-			WalkSideMesh = &scene->getObjectByName("runAnimation")->getModel()->meshes[0];
-			WalkSide = *scene->getObjectByName("runAnimation")->getSpriteAnimation();
-			instance->debug_msg.append("runAnimation loaded\n");
-
-			std::cout << "loaded..\n";
-		}
-
-		if (scene->getObjectByName("idleAnimation")) {
-			IdleMesh = &scene->getObjectByName("idleAnimation")->getModel()->meshes[0];
-			Idle = *scene->getObjectByName("idleAnimation")->getSpriteAnimation();
-			instance->debug_msg.append("idleAnimation loaded\n");
-
-			std::cout << "idle loaded..\n";
-		}
-
-		if (scene->getObjectByName("jumpAnimation")) {
-			JumpMesh = &scene->getObjectByName("jumpAnimation")->getModel()->meshes[0];
-			Jump = *scene->getObjectByName("jumpAnimation")->getSpriteAnimation();
-			instance->debug_msg.append("jumpAnimation loaded\n");
-
-			std::cout << "loaded..\n";
-		}
-		if (scene->getObjectByName("attackAnimation")) {
-			AttackMesh = &scene->getObjectByName("attackAnimation")->getModel()->meshes[0];
-			Attack = *scene->getObjectByName("attackAnimation")->getSpriteAnimation();
-			instance->debug_msg.append("attackAnimation loaded\n");
-
-			std::cout << "loaded..\n";
-		}
-
 		//if(scene->getObjectByName("PlayerLight"))
 		//	playerLight = &(scene->getObjectByName("PlayerLight")->getPointLight().value());
 
@@ -128,8 +97,6 @@ public:
 		
 		obj->unhide();
 
-		obj->setSpriteAnimation(Idle);
-
 		//cam = scene->getCameraAt(0);
 		cam = &(instance->cam);
 		if (!cam)
@@ -155,8 +122,7 @@ public:
 		if (instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
 			if (p.currAnim != 2) {
-				obj->getModel()->meshes[0] = *WalkSideMesh;
-				obj->setSpriteAnimation(WalkSide);
+				obj->getSpriteAnimator()->setCurrAnim(3);
 				p.currAnim = 2;
 			}
 
@@ -198,8 +164,7 @@ public:
 					obj->getTransform().rotate(glm::radians(-180.0f), glm::vec3{0,1,0});
 				}
 
-				obj->getModel()->meshes[0] = *WalkSideMesh;
-				obj->setSpriteAnimation(WalkSide);
+				obj->getSpriteAnimator()->setCurrAnim(3);
 				p.currAnim = 1;
 			}
 			//obj->moveTransform(glm::vec3{ 1 * p.speed, 0, 0 });
@@ -218,8 +183,8 @@ public:
 		{
 			if (p.currAnim != 3) {
 				//instance->debug_msg.append("clicked q");
-				obj->getModel()->meshes[0] = *JumpMesh;
-				obj->setSpriteAnimation(Jump);
+				obj->getSpriteAnimator()->setCurrAnim(2);
+
 				if (obj->getRigidBody())
 					obj->getRigidBody()->velocity += glm::vec3({ 0,5,0 });
 				p.currAnim = 3;
@@ -228,8 +193,8 @@ public:
 		if (instance->ks.get_e() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_a() && p.currAnim != 4)
 		{
 			//instance->debug_msg.append("clicked q");
-			obj->getModel()->meshes[0] = *AttackMesh;
-			obj->setSpriteAnimation(Attack);
+
+			obj->getSpriteAnimator()->setCurrAnim(1);
 			p.currAnim = 4;
 		}
         /*if (instance->ks.get_w())
@@ -266,8 +231,9 @@ public:
         }*/
         if(!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()){
             if (p.currAnim != 0) {
-                obj->getModel()->meshes[0] = *IdleMesh;
-                obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
+                //obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
+
+				obj->getSpriteAnimator()->setCurrAnim(0);
                 p.currAnim = 0;
             }
         }
@@ -275,17 +241,10 @@ public:
 		if (instance->ks.get_lshift()) 
 		{
 			p.speed = 0.003;
-			WalkUp.setDelay(70);
-			WalkDown.setDelay(70);
-			WalkSide.setDelay(70);
 		}
 		else
 		{
 			p.speed = 0.002;
-
-			WalkUp.setDelay(100);
-			WalkDown.setDelay(100);
-			WalkSide.setDelay(100);
 		}
 
 		//if(playerLight)
@@ -352,14 +311,6 @@ public:
 	GameState* instance = nullptr;
 
 	Player p;
-	SpriteAnimation WalkUp;
-	SpriteAnimation Attack;
-	SpriteAnimation Jump;
-	SpriteAnimation WalkDown;
-	SpriteAnimation WalkSide;
-	SpriteAnimation Idle;
-
-	SpriteAnimation EnemyWalkSide;
 
 	std::vector<Object*> enemyObjects;
 	std::vector<PointLight*> enemyLights;
@@ -372,15 +323,6 @@ public:
 	//DANGER(darius) NOTE(darius) you cant create opengl entities, cause u have no opengl initialized here, TODO(darius) make some factory inside engine
 	//FlatMesh runMesh;
 	//Mesh initMesh;
-
-	Mesh* WalkUpMesh = nullptr;
-	Mesh* AttackMesh = nullptr;
-	Mesh* JumpMesh = nullptr;
-	Mesh* WalkDownMesh = nullptr;
-	Mesh* WalkSideMesh = nullptr;
-	Mesh* IdleMesh = nullptr;
-
-	Mesh* EnemyWalkSideMesh = nullptr;
 
 	PointLight* playerLight = nullptr;
 	PointLight* enemyLight = nullptr;

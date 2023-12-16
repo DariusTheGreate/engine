@@ -79,6 +79,7 @@ void ClientConnection::process()
     }
 }
 
+//TODO(darius) here currScene is &, but in client is *. Choose one
 void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 {
 	while(1)
@@ -90,6 +91,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 		std::cout << "Waiting for client message.." << std::endl;
         boost::system::error_code error;
         size_t bytes_transferred = 0;
+        //NOTE(darius) blocks here
        	boostSaveUse([&](){ 
 	        bytes_transferred = readSocket(*socket2, buffer);//boost::asio::read_until(*socket2, buffer, '@');
 	    });
@@ -97,15 +99,24 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
         if(bytes_transferred > 0)
         {
         	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
-        	std::cout << s << "\n"; 	
+        	//std::cout << s << "\n"; 	
 
-        	currScene.parseSynchronizationMsg(s);
+        	if(std::strcmp(s.c_str(), "EMPTY_SYNCER@") != 0)
+	        	currScene.parseSynchronizationMsg(s);
 
         	boostSaveUse([&](){
 	        	std::stringstream ss;
 			    //TODO(darius) wrong other thread may change size or object
 			    //TODO(darius) BUG(darius) if delete object - will crash all due to cring vector objects design.
 			    std::cout << "sync sz: " << syncer.size() << "\n";
+
+			    //TODO(darius) refactor
+			    if(!syncer.size()){
+			    	ss << "EMPTY_SYNCER@";
+				    sendData(*socket2, ss.str());
+				    return;
+			    }
+
 		    	for(int i = 0; i < syncer.size(); ++i)
 		    	{
 				    Object* obj = nullptr; 
@@ -121,7 +132,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 
 			    ss << "@";
 			    sendData(*socket2, ss.str());
-			    std::cout << "sended data, time to send: " << timeToSend.checkTime(); //NOTE(darius) less than 1ms localy, check what about distanced
+			    //std::cout << "sended data, time to send: " << timeToSend.checkTime(); //NOTE(darius) less than 1ms localy, check what about distanced
         	});
         }
 	}

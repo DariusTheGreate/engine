@@ -149,7 +149,7 @@ public:
 		animations.push_back(anim);
 	}
 
-	//NOTE(darius) beware that you can updating animations but not render or rendering the wrong ones
+	//NOTE(darius) beware that you could updating animations but not render or rendering the wrong ones
 	void update(float t)
 	{
 		if(!animations.size())

@@ -1,5 +1,5 @@
 #include "RigidBody.h"
-#include <btBulletDynamicsCommon.h>
+
 #include <Printer.h>
 
 RigidBody::RigidBody(double mass_in, Transform& tr_ptr, bool is_st) : tr(tr_ptr), mass(static_cast<float>(mass_in)), is_static(is_st)

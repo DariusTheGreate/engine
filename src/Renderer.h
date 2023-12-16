@@ -110,6 +110,7 @@ TODO(all):
         - GTA5 - https://www.adriancourreges.com/blog/2015/11/02/gta-v-graphics-study/
         - Far Objects - https://www.reddit.com/r/opengl/comments/8z5egn/rendering_large_and_distant_object/?utm_source=share&utm_medium=web2x&context=3
         - GTA6 - https://vk.com/video-120800128_456251871?ysclid=lkfo8jp8lg311066769
+        - Meshes optim, Greedy Meshing - https://codereview.stackexchange.com/questions/62562/voxel-world-optimization
 */
 
 class DebugRenderer 

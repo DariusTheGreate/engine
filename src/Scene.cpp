@@ -589,7 +589,7 @@ void Scene::parseSynchronizationMsg(std::string data)
 		}
 	}
 
-	std::cout << "objTkns size: " << objectTokens.size() << "\n";
+	//std::cout << "objTkns size: " << objectTokens.size() << "\n";
 
 	std::vector<std::string> names;
 
@@ -598,9 +598,10 @@ void Scene::parseSynchronizationMsg(std::string data)
 		names.emplace_back(extractNameFromToken(tkn));
 	}
 
-	std::cout << "names:\n";
+	/*std::cout << "names:\n";
 	for(auto& i : names)
 		std::cout << i << "\n";
+	*/
 
 	std::vector<Transform>  transs;
 	std::vector<int>  animIds;

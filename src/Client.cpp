@@ -56,7 +56,7 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* c
 
 	boostSaveUse([this, port, &syncer, &currScene](){
 	    connectToSocket(socket, resolver, "127.0.0.1", port);
-	    std::cout << "connected\n";
+	    //std::cout << "connected\n";
 
 	    if(syncer.size()){
 		    std::stringstream ss;
@@ -81,19 +81,26 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* c
 		    profile.addRecord(timeToSend.checkTime());
 		    //std::cout << "sended data, time to send: " << timeToSend.checkTime(); //NOTE(darius) less than 1ms localy, check what about distanced
 		}
+		else{
+		    std::stringstream ss;
+		    ss << "EMPTY_SYNCER@";
+		    sendData(socket, ss.str());
+		}
 
 	    boost::asio::streambuf buffer;
         boost::system::error_code error;
         size_t bytes_transferred = 0;
 
+        //NOTE(darius) blocks here
 		boostSaveUse([&](){ 
 	        bytes_transferred = readSocket(socket, buffer);//boost::asio::read_until(*socket2, buffer, '@');
 	    });        	
 
         if(bytes_transferred > 0){
             std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
-            //std::cout << "response: " << s << "\n";
-        	currScene->parseSynchronizationMsg(s);
+            std::cout << "response: " << s << "\n";
+            if(std::strcmp(s.c_str(), "EMPTY_SYNCER@") != 0)
+	        	currScene->parseSynchronizationMsg(s);
         }
 	});
 }
