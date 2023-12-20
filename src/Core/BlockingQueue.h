@@ -7,9 +7,13 @@
 #include <iostream>
 #include <atomic>
 
+//TODO(darius) zalupa i am a fucking idiot
 template <typename T> 
 class BlockingQueue
 {
+public:
+    using iterator = T*;
+
 private:
     std::vector<T> buffer;
     std::mutex buffer_mutex;
@@ -48,6 +52,39 @@ public:
         std::unique_lock<std::mutex> lock(buffer_mutex);
 
         spc = buffer[i];
+    }
+
+    T& TakeAt(int i)
+    {
+        std::unique_lock<std::mutex> lock(buffer_mutex);
+        return buffer[i];
+    }
+
+    std::vector<T>& getBufferRef()
+    {
+        return buffer;
+    }
+
+    //TODO(darius) are there exceptions for this shit?
+    void forceLock()
+    {
+        buffer_mutex.lock();
+    }
+
+    void forceUnlock()
+    {
+        buffer_mutex.unlock();
+    }
+
+    //TODO(darius) hate this shit
+    iterator begin()
+    {
+        return &buffer[0];
+    }
+
+    iterator end()
+    {
+        return &buffer[0] + buffer.size();
     }
 
     size_t size() const {

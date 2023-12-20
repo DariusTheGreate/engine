@@ -263,6 +263,8 @@ void Scene::update_objects()
 				continue;
 			}
 
+			if(!sceneObjects[i]->getRigidBody())
+				continue;
 
 		//COLLISIONS RESOLUTION:
 		// O(n^2) 
@@ -282,6 +284,7 @@ void Scene::update_objects()
 				auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
 
 				//println(sceneObjects[i]->get_name());
+				//println(collision_state_gjk);
 
 				if (collision_state != glm::vec3(0, 0, 0)) {
 					//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";
@@ -303,7 +306,8 @@ void Scene::update_objects()
 					*/
 
 					sceneObjects[i]->getTransform().addToPosition(collision_state);
-					*sceneObjects[i]->getColider()->get_collision_state() = false;
+					
+					//*sceneObjects[i]->getColider()->get_collision_state() = false;
 
 					/*
 					if (sceneObjects[i]->getRigidBody() && sceneObjects[j]->getRigidBody() && epa.x == epa.x && epa.y == epa.y && epa.z == epa.z) {
@@ -320,12 +324,15 @@ void Scene::update_objects()
 				}
 			}
 			if (is_there_collision) {
-				//sceneObjects[i]->updatePos();
-				sceneObjects[i]->getTransform() = rbodyCopyInitTr;
-				sceneObjects[i]->getRigidBody()->resetFroces();
+				//if(sceneObjects[i].getRigidBody())
+				//sceneObjects[i]->updateRigidBody();
+				//sceneObjects[i]->getTransform() = rbodyCopyInitTr;
+				//if(sceneObjects[i]->getRigidBody())
+				//	sceneObjects[i]->getRigidBody()->resetFroces();
 			}
 			else{
-				//sceneObjects[i]->getRigidBody()->resetFroces();
+				//if(sceneObjects[i]->getRigidBody())
+				//	sceneObjects[i]->getRigidBody()->resetFroces();
 			}
 		}
 	}
@@ -520,6 +527,31 @@ void Scene::serialize(std::string_view path)
         return;
 
     file << "CameraPos: {" << GameState::instance->cam.getCameraPos().x << " " << GameState::instance->cam.getCameraPos().y << " " << GameState::instance->cam.getCameraPos().z << "}\n";
+
+    file << "NetworkSynchronizer: {\n"; 
+
+	/*for(auto& i : networkSync)
+	{
+		if(i)
+			i->serializeName(file);
+	}*/
+
+	/*networkSync.forceLock();
+	auto& stuff = networkSync.getBufferRef();
+	for(auto& i : stuff)	{
+		//i->serializeName(file);
+		if(i)
+		    file << "\tName: {\n\t\t" << i->getName() << "\n\t}\n";    
+		file << "\tsosi hui\n";
+	}
+	networkSync.forceUnlock();
+	*/
+
+	for(int i = 0; i < networkSync.size(); ++i){
+		networkSync.TakeAt(i)->serializeName(file);
+	}
+
+	file << "\n}";
     
 	for (auto& i : sceneObjects)
 	{
@@ -571,6 +603,7 @@ void Scene::deserialize(std::string_view path)
 //TODO(darius) make separate abstraction for syncMsg or something
 void Scene::parseSynchronizationMsg(std::string data)
 {
+
 	//std::cout << "MSG:\n";
 	//std::cout << data;
 	std::vector<std::string> objectTokens;
@@ -603,8 +636,8 @@ void Scene::parseSynchronizationMsg(std::string data)
 		std::cout << i << "\n";
 	*/
 
-	std::vector<Transform>  transs;
-	std::vector<int>  animIds;
+	std::vector<Transform> transs;
+	std::vector<int> animIds;
 
 	for (std::string_view tkn : objectTokens) 
 	{
@@ -613,7 +646,6 @@ void Scene::parseSynchronizationMsg(std::string data)
 	}
 
 	//NOTE(darius) synchronization here
-
 	for(int i = 0; i < sceneObjects.size(); ++i)
 	{
 		for(int j = 0; j < names.size(); ++j)
@@ -621,6 +653,9 @@ void Scene::parseSynchronizationMsg(std::string data)
 			//NOTE(darius) copy other components here?
 			if(sceneObjects[i]->getName() == names[j]){
 				sceneObjects[i]->getTransform() = (transs[j]);
+
+				//NOTE(darius) it is possible to make animations unsynchronized between server and client?
+				//TODO(darius) u probably also need to sync timeStamps of currently played animation
 				sceneObjects[i]->getSpriteAnimator()->setCurrAnim(animIds[j]);
 			}
 		}
@@ -740,6 +775,15 @@ void Scene::parseScene(std::string_view data)
 
 		//auto* obj = createObject(std::string(names[i]), transs[i].position, transs[i].scale, glm::vec3{0,0,0}, std::move(models[i]), vshdr, std::move(shaderRoutine), this, nullptr);
 	}
+
+	//NOTE(darius) after we loaded all objects we load NetworkSynchronizer
+	auto networkSyncNames = extractNetworkSynchronizerNamesFromToken(data);
+
+	for(auto& ni : networkSyncNames){
+		auto* objByName = getObjectByName(ni);
+		if(objByName)
+			networkSync.pushObject(objByName);
+	}	
 
 	start_scripts();
 }
@@ -1169,6 +1213,32 @@ std::optional<ParticleSystem> Scene::extractParticleSystemFromToken(std::string_
 	p.maxBound = bounds.y;
 
 	return p;
+}
+
+std::vector<std::string> Scene::extractNetworkSynchronizerNamesFromToken(std::string_view tkn)
+{
+	size_t start = tkn.find("NetworkSynchronizer:");
+	if(start == std::string::npos)
+		return {};	
+
+	std::vector<std::string> res;
+
+	//TODO(darius) refactor?
+	size_t nextObjectPos = tkn.find("Object:", start);
+
+	while(1){
+		start = tkn.find("Name", start);
+
+		if(start > nextObjectPos)
+			break;
+
+		size_t brcktEnd = tkn.find("}", start);
+		res.push_back(extractNameFromToken(tkn.substr(start, brcktEnd - start)));
+
+		start = brcktEnd;
+	}
+
+	return res;
 }
 
 //TODO(darius) optimise, test and refactor this shit, or switch to simdjson

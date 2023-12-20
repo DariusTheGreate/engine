@@ -89,6 +89,18 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
     
     if (ImGui::Begin("Game Objects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
     {
+        if (ImGui::CollapsingHeader("NetworkSynchronizer"))//, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+
+            ImGui::Text("Objects count %i", (scene.getNetworkSynchronizer().size()));
+
+            auto& objectsSync = scene.getNetworkSynchronizer();
+            for(auto& obj : objectsSync)
+            {
+                ImGui::Text(obj->getName().c_str());
+                //auto& scene.getNetworkSynchronizer();
+            }
+        }
 
         if (ImGui::Button("batch objects")) {
             scene.batchProbeSimilarObjects();

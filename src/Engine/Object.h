@@ -87,6 +87,8 @@ public:
 
 	void serialize(std::ostream& file);
 
+	void serializeName(std::ostream& file);
+
 	void serializeAsPrefab(std::ofstream& file);
 
 	void deserialize(std::ofstream& file);

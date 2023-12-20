@@ -64,8 +64,8 @@ void Object::addForce(glm::vec3 force)
 
 void Object::updateRigidBody() 
 {
-    if (colider && *colider->get_collision_state() == true)
-        return;
+    //if (colider && *colider->get_collision_state() == true)
+    //    return;
 
     if(rbody.has_value())
         rbody->update(0.01f);
@@ -401,7 +401,9 @@ void Object::serializeAsPrefab(std::ofstream& file)
 void Object::serialize(std::ostream& file)
 {
     file << "Object: {\n";
-    file << "\tName: {\n\t\t" << getName().c_str() << "\n\t}\n";
+    //file << "\tName: {\n\t\t" << getName().c_str() << "\n\t}\n";
+    serializeName(file);
+
     file << "\tHidden: {\n\t\t" << (objectHidden == true ? "true" : "false") << "\n\t}\n";
     //CM std::to_string() to convert digit to string
     {
@@ -603,3 +605,7 @@ void Object::serialize(std::ostream& file)
     file << "\n\t\t}\n";
 }
 
+void Object::serializeName(std::ostream& file)
+{
+    file << "\tName: {\n\t\t" << getName().c_str() << "\n\t}\n";    
+}

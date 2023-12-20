@@ -222,6 +222,7 @@ public:
 
 	std::string readFileToString(std::string_view path);
 
+	//TODO(darius) make extractors const
 	std::string extractNameFromToken(std::string_view);
 
 	bool extractHiddenStateFromToken(std::string_view tkn);
@@ -252,6 +253,8 @@ public:
 	bool extractBoolFromToken(std::string_view);
 
 	int extractCurrAnimIdFromToken(std::string_view tkn, int start = 0);
+
+	std::vector<std::string> extractNetworkSynchronizerNamesFromToken(std::string_view tkn);
 
 private:
 

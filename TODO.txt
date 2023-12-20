@@ -41,7 +41,7 @@
 
 
 	--RENDERER
-		- render static 2D backend to one texture
+		- render static 2D backend to one texture?
 
 		- finish culling
 
