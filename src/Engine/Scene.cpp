@@ -271,20 +271,20 @@ void Scene::update_objects()
 		// sort by tag + traverse in O(Nlg + N)?
 		// make it two types of collision detection: 1) important collision inside renderer thread 2) queued colllision that processed in separate thread?
 			bool is_there_collision = false;
-			for (int j = i + 1; j < sceneObjects.size(); ++j) {
+			for (int j = 0; j < sceneObjects.size(); ++j) {
+				if(j == i)	
+					continue;
+
 				if (
 					!sceneObjects[i]->getColider()
 					|| !sceneObjects[j]->getColider()
-					|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j]->getColider()->get_tag()
+					//|| sceneObjects[i]->getColider()->get_tag() != sceneObjects[j]->getColider()->get_tag()
 					//|| !sceneObjects[j]->getColider()->is_active()
 					)	continue;
 
 				auto collision_state_gjk = sceneObjects[i]->getColider()->gjk(&sceneObjects[i]->getColider().value(), &sceneObjects[j]->getColider().value());
 
 				auto collision_state = sceneObjects[i]->getColider()->check_collision(sceneObjects[j]->getColider().value());
-
-				//println(sceneObjects[i]->get_name());
-				//println(collision_state_gjk);
 
 				if (collision_state != glm::vec3(0, 0, 0)) {
 					//std::cout << "collision of" << sceneObjects[i]->get_name() << "\n";

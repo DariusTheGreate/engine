@@ -32,6 +32,8 @@ public:
         return ev;
     }
 
+    void operator delete(EditorEvent*, std::destroying_delete_t);
+
 private:
     Event ev = Event::NoEvent;
 };

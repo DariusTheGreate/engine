@@ -5,6 +5,22 @@
 #include <iostream>
 #include <thread>
 
+
+void EditorEvent::operator delete(EditorEvent* p, std::destroying_delete_t) {
+    switch (p->ev) {
+        case Event::LoadScene:
+            static_cast<LoadSceneEvent*>(p)->~LoadSceneEvent();
+            break;
+        case Event::CreateObject:
+            static_cast<CreateObjectEvent*>(p)->~CreateObjectEvent();
+            break;
+        case Event::ManipulateObject:
+            static_cast<ManipulateObjectEvent*>(p)->~ManipulateObjectEvent();
+            break;
+    }
+    ::operator delete(p);
+}
+
 Editor::Editor(Window* wind) : ui(wind->getWindow(), &state), rendol(&currScene, &state, wind), selector(wind->getWidth(), wind->getHeight())
 {
     Editor::window = wind;
@@ -270,25 +286,27 @@ void Editor::processEvents()
         {
             auto str = reinterpret_cast<LoadSceneEvent*>(e)->getScene();
             currScene.parseScene(str);
-            delete reinterpret_cast<LoadSceneEvent*>(e);
+            //delete reinterpret_cast<LoadSceneEvent*>(e);
         }
         else if(e->getEventType() == Event::CreateObject)
         {
             auto name = reinterpret_cast<CreateObjectEvent*>(e)->getName();
             currScene.AddObject(name);
-            delete reinterpret_cast<CreateObjectEvent*>(e);
+            //delete reinterpret_cast<CreateObjectEvent*>(e);
         }
         else if(e->getEventType() == Event::ManipulateObject)
         {
             auto* func = reinterpret_cast<ManipulateObjectEvent*>(e);
             func->operator()();
 
-            delete reinterpret_cast<ManipulateObjectEvent*>(e);
+            //delete reinterpret_cast<ManipulateObjectEvent*>(e);
         }
         else
         {
-            delete reinterpret_cast<EditorEvent*>(e);
+            //delete reinterpret_cast<EditorEvent*>(e);
         }
+
+        delete e;
     }
 }
 
