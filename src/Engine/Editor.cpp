@@ -5,7 +5,7 @@
 #include <iostream>
 #include <thread>
 
-
+//NOTE(darius) no UB here.
 void EditorEvent::operator delete(EditorEvent* p, std::destroying_delete_t) {
     switch (p->ev) {
         case Event::LoadScene:
@@ -134,21 +134,21 @@ void Editor::updateInput() {
         GameState::editorCameraMode = true;
 		state.msg("debug mode toogled\n");
     }
-    if (GameState::instance->ks.get_1()) {
+    if (GameState::instance->ks.get_1() && GameState::instance->ks.get_cntrl()) {
         setEditorMode(2);
 		state.debug_msg.append("2D\n");
     }
-    if (GameState::instance->ks.get_2()) {
+    if (GameState::instance->ks.get_2() && GameState::instance->ks.get_cntrl()) {
         setEditorMode(3);
 		state.debug_msg.append("3D\n");
     }
-    if (GameState::instance->ks.get_3()) {
+    if (GameState::instance->ks.get_3() && GameState::instance->ks.get_cntrl()) {
         rendol.getDebugRenderer().debug_render= false;
         //showUI = false;
         //currScene.batchProbeSimilarObjects();
         GameState::editor_mode = 0;
     }
-    if (GameState::instance->ks.get_4()) {
+    if (GameState::instance->ks.get_4() && GameState::instance->ks.get_cntrl()) {
         rendol.getDebugRenderer().debug_render= true;
         //showUI = true;
         //currScene.recoverBatchedObjects();

@@ -342,7 +342,6 @@ std::optional<RigidBody> rbody;
         ImGui::DragFloat("ambient y", &material->ambient.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("ambient z", &material->ambient.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
 
-
         ImGui::DragFloat("diffuse x", &material->diffuse.x, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("diffuse y", &material->diffuse.y, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
         ImGui::DragFloat("diffuse z", &material->diffuse.z, 0.05f, -FLT_MAX, FLT_MAX, "%.3f", 1);
@@ -397,8 +396,14 @@ std::optional<RigidBody> rbody;
 
             ImGui::InputText("path", (char*)path.c_str(), 100); 
 
-            if(ImGui::Button("load")) 
+            if(ImGui::Button("load")) {
+                if(!item_clicked->getModel()){
+                    FlatMesh flat;
+                    item_clicked->addModel(std::move(flat));
+                }
+
                 item_clicked->addSpriteAnimation(SpriteAnimation(path));
+            }
         }
         ImGui::Unindent( 16.0f );
     }
@@ -583,6 +588,9 @@ void UI::componentAdderWindow(Renderer& hui)
     if (ImGui::Button("RigidBody"))
         item_clicked->addRigidBody();
 
+    if(ImGui::Button("Animator"))
+        item_clicked->addSpriteAnimator();
+
     if(item_clicked->getModel() && ImGui::Button("PointLight")){
         item_clicked->addPointLight();    
     }
@@ -719,6 +727,9 @@ void UI::componentAdderWindow(Renderer& hui)
 
             if(!item_clicked -> getModel() && ImGui::Button("Load SpriteAnimation")){
                 FlatMesh flat;
+
+                //std::string windowName = "Sprite Animation Window";
+                //new Window(windowName.data(), 300, 600);
 
                 path.shrink_to_fit();
                 name.shrink_to_fit();

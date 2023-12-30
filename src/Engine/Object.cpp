@@ -355,6 +355,11 @@ void Object::addSpriteAnimation(SpriteAnimation&& anim)
     spriteAnimator->addAnimation(std::move(anim));
 }
 
+void Object::addSpriteAnimator()
+{
+    spriteAnimator.emplace(Animator<SpriteAnimation>());
+}
+
 std::optional<Animator<SpriteAnimation>>& Object::getSpriteAnimator()
 {
     return spriteAnimator; 

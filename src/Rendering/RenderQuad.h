@@ -29,8 +29,8 @@ private:
     unsigned int quadVAO;
     unsigned int quadVBO;
 
-    Shader qv;
-    Shader qf;
+    //Shader qv;
+    //Shader qf;
 
     std::vector<float> vertices = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
     // positions   // texCoords

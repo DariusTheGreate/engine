@@ -38,8 +38,12 @@ public:
             cameraProjection = GameState::instance->cam.getPerspective((int)io.DisplaySize.x, (int)io.DisplaySize.y);//glm::perspective(45.0f, (GLfloat)1600/ (GLfloat)900, 1.0f, 150.0f);
             cameraView = (GameState::instance->cam.getBasicLook());
         }
+
+        static float snapVal[3] = {0.01f,0.01f,0.01f};
+
+        ImGui::InputFloat3("Snap", &snapVal[0]);
         
-        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item->getTransform().matrix));
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), curr_operation, guizmoMode, glm::value_ptr(item->getTransform().matrix), nullptr, &snapVal[0]);
 
         if(item->getPointLight()){
             item->getPointLight()->position = item->getTransform().getPosition();

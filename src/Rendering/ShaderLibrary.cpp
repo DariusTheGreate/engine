@@ -28,7 +28,9 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         skeletalAnimationVertex(GameState::engine_path + "shaders/skeletalAnimationVertexShader.glsl", GL_VERTEX_SHADER),
         skeletalAnimationFragment(GameState::engine_path + "shaders/skeletalAnimationFragmentShader.glsl", GL_FRAGMENT_SHADER),
         cubeMapVertex(GameState::engine_path + "shaders/cubeMapVertex.glsl", GL_VERTEX_SHADER),
-        cubeMapFragment(GameState::engine_path + "shaders/cubeMapFragment.glsl", GL_FRAGMENT_SHADER)
+        cubeMapFragment(GameState::engine_path + "shaders/cubeMapFragment.glsl", GL_FRAGMENT_SHADER),
+        quadVertex(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER),
+        quadFragment(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
     
     {
         lightingVertex.compile();
@@ -82,6 +84,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         cubeMapVertex.compile();
         cubeMapFragment.compile();
         cubeMapVertex.link(cubeMapFragment);
+
+        quadVertex.compile();
+        quadFragment.compile();
+        quadVertex.link(quadFragment);
         
         stage = STAGE::DEPTH;
     }
@@ -172,6 +178,11 @@ Shader& ShaderLibrary::getSkeletalShader()
 Shader& ShaderLibrary::getCubeMapShader()
 {
     return cubeMapVertex; 
+}
+
+Shader& ShaderLibrary::getQuadShader()
+{
+    return quadVertex;
 }
 
 void ShaderLibrary::checkForShaderReload() 
@@ -307,6 +318,18 @@ void ShaderLibrary::checkForShaderReload()
         skeletalAnimationVertex.link(skeletalAnimationFragment);
 
         std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SKELETAL ANIMATION SHADER: " << std::endl;
+    }
+
+    if (quadFragment.checkForSourceChanges() || quadVertex.checkForSourceChanges())
+    {
+        quadVertex.reload();
+        quadFragment.reload();
+
+        quadVertex.compile();
+        quadFragment.compile();
+        quadVertex.link(quadFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN QUAD SHADER: " << std::endl;
     }
 }
 

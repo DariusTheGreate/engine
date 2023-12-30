@@ -586,6 +586,7 @@ void Renderer::resizeFrameBuffers(int W, int H)
 
 void Renderer::resizeWindow(int W, int H)
 {
+	//NOTE(darius) https://github.com/ocornut/imgui/issues/2442
 	OpenglWrapper::SetWindowSize(wind, W, H);
     resizeFrameBuffers(W, H);
     wind->setWidth(W);

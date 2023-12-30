@@ -132,6 +132,8 @@ public:
 
 	std::optional<SkeletalAnimation>& getSkeletalAnimation();
 
+	void addSpriteAnimator();
+
 	std::optional<Animator<SpriteAnimation>>& getSpriteAnimator();
 
 	void initAnimator(Animator<SpriteAnimation>&& animator_in);

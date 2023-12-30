@@ -5,11 +5,22 @@
 #include "Engine/GameState.h"
 #include <Engine/StackTrace.h>
 
+#define DEAN_UNIT_TEST_SHIT
+
+#ifdef DEAN_UNIT_TEST_SHIT
+    #include <Engine/UnitTests.h>
+#endif
+
 int main()
 {
     try {
         std::cout << "------\n";
         StackTrace backtrace;
+
+        #ifdef DEAN_UNIT_TEST_SHIT
+            UnitTests::run();
+        #endif
+
         Application* app = new Application((char*)"Dean", 1920, 1080);
         app->Run();
         std::cout << "------\n";

@@ -54,6 +54,8 @@ public:
 
     Shader& getCubeMapShader();
 
+    Shader& getQuadShader();
+
     void loadCurrentShader();
     
     void shaderRoutine(Object* obj);
@@ -110,6 +112,9 @@ private:
 
     Shader cubeMapVertex;
     Shader cubeMapFragment;
+
+    Shader quadVertex;
+    Shader quadFragment;
 
     GraphicsStateCache cache;
 };

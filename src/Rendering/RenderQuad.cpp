@@ -1,12 +1,13 @@
 #include <Rendering/RenderQuad.h>
 #include <Rendering/Renderer.h>
+#include <Rendering/ShaderLibrary.h>
 
-RendererQuad::RendererQuad() : qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), 
-    qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
+RendererQuad::RendererQuad()// : qv(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER), 
+    //qf(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
 {
-    qv.compile();
-    qf.compile();
-    qv.link(qf);
+    //qv.compile();
+    //qf.compile();
+    //qv.link(qf);
 
     /*vao.init();
     vbo.init();
@@ -39,7 +40,7 @@ void RendererQuad::DrawQuad(unsigned int screenTexture)
     glDrawArrays(GL_TRIANGLES, 0, 6);
     */
 
-    Renderer::shaderLibInstance->getCache().SwitchShader(qv.getProgram());
+    Renderer::shaderLibInstance->getCache().SwitchShader(Renderer::shaderLibInstance->getQuadShader().getProgram());
 
     glBindVertexArray(quadVAO);
 

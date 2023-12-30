@@ -9,6 +9,7 @@
 
 Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_name(windowName)
 {
+	//TODO(darius) i dont want to create context each time i create window
 	glfwInit();
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -23,6 +24,8 @@ Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_n
 		std::cerr << "cant create window\n";
 		glfwTerminate(); 
 		return;
+	}else{
+		std::cout << "can create window\n";	
 	}
 
 	glfwMakeContextCurrent(m_window);
