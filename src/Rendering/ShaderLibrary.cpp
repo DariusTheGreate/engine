@@ -197,7 +197,7 @@ void ShaderLibrary::checkForShaderReload()
         lightingFragment.compile();
         lightingVertex.link(lightingFragment);
         
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN ALBEDO SHADER: " << std::endl;
     }
 
     if(textureCombinerFragment.checkForSourceChanges() || textureCombinerVertex.checkForSourceChanges())
@@ -209,7 +209,7 @@ void ShaderLibrary::checkForShaderReload()
         textureCombinerFragment.compile();
         textureCombinerVertex.link(textureCombinerFragment);
         
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN TEXTURE COMBINER SHADER: " << std::endl;
     }
 
     if(depthFragment.checkForSourceChanges() || depthVertex.checkForSourceChanges())
@@ -221,7 +221,7 @@ void ShaderLibrary::checkForShaderReload()
         depthFragment.compile();
         depthVertex.link(depthFragment);
 
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN DEPTH SHADER: " << std::endl;
     }
 
     if (shadowFragment.checkForSourceChanges() || shadowVertex.checkForSourceChanges()) 
@@ -233,7 +233,7 @@ void ShaderLibrary::checkForShaderReload()
         shadowFragment.compile();
         shadowVertex.link(shadowFragment);
 
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN SHADOW SHADER: " << std::endl;
     }
 
     if(blurFragment.checkForSourceChanges() || blurVertex.checkForSourceChanges())
@@ -245,7 +245,7 @@ void ShaderLibrary::checkForShaderReload()
         shadowFragment.compile();
         shadowVertex.link(shadowFragment);
 
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN BLUR SHADER: " << std::endl;
     }
 
     if(editorIdFragment.checkForSourceChanges() || editorIdVertex.checkForSourceChanges())
@@ -257,7 +257,7 @@ void ShaderLibrary::checkForShaderReload()
         editorIdFragment.compile();
         editorIdVertex.link(editorIdFragment);
 
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN EDITOR_ID SHADER: " << std::endl;
     }
 
     if(bokeFragment.checkForSourceChanges() || bokeVertex.checkForSourceChanges())
@@ -269,7 +269,7 @@ void ShaderLibrary::checkForShaderReload()
         bokeFragment.compile();
         bokeVertex.link(bokeFragment);
 
-		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
+		std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN BOKE SHADER: " << std::endl;
     }
 
     if (gBufferFragment.checkForSourceChanges() || gBufferVertex.checkForSourceChanges())
@@ -281,7 +281,7 @@ void ShaderLibrary::checkForShaderReload()
         gBufferFragment.compile();
         gBufferVertex.link(gBufferFragment);
 
-        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN GBUFFER SHADER: " << std::endl;
     }
 
     if (particlesFragment.checkForSourceChanges() || particlesVertex.checkForSourceChanges())
@@ -293,7 +293,7 @@ void ShaderLibrary::checkForShaderReload()
         particlesFragment.compile();
         particlesVertex.link(particlesFragment);
 
-        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN PARTICLES SHADER: " << std::endl;
     }
 
     if (terrainFragment.checkForSourceChanges() || terrainVertex.checkForSourceChanges())
@@ -305,7 +305,7 @@ void ShaderLibrary::checkForShaderReload()
         terrainFragment.compile();
         terrainVertex.link(terrainFragment);
 
-        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN TERRAIN SHADER: " << std::endl;
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN TERRAIN SHADER: " << std::endl;
     }
 
     if (skeletalAnimationFragment.checkForSourceChanges() || skeletalAnimationVertex.checkForSourceChanges())
@@ -317,7 +317,7 @@ void ShaderLibrary::checkForShaderReload()
         skeletalAnimationFragment.compile();
         skeletalAnimationVertex.link(skeletalAnimationFragment);
 
-        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN SKELETAL ANIMATION SHADER: " << std::endl;
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN SKELETAL ANIMATION SHADER: " << std::endl;
     }
 
     if (quadFragment.checkForSourceChanges() || quadVertex.checkForSourceChanges())
@@ -329,7 +329,7 @@ void ShaderLibrary::checkForShaderReload()
         quadFragment.compile();
         quadVertex.link(quadFragment);
 
-        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANED_RELOADING_HAPPENED IN QUAD SHADER: " << std::endl;
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN QUAD SHADER: " << std::endl;
     }
 }
 

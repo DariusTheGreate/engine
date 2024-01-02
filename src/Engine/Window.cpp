@@ -25,7 +25,7 @@ Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_n
 		glfwTerminate(); 
 		return;
 	}else{
-		std::cout << "can create window\n";	
+		//std::cout << "can create window\n";	
 	}
 
 	glfwMakeContextCurrent(m_window);

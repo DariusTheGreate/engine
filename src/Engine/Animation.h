@@ -36,6 +36,11 @@ struct AnimationBase
 	float length = 0;
 	float currTime = 0;
 	//TODO(darius) make same interface for update dt not the same as currTime and its soo cringe
+
+	bool isOver()
+	{
+		return currTime == length-1;
+	}
 };
 
 class SkeletalAnimation : public AnimationBase
@@ -147,6 +152,12 @@ public:
 	void addAnimation(const AnimationT& anim)
 	{
 		animations.push_back(anim);
+
+		for(int i = 0; i < animationsGraph.size(); ++i){
+			animationsGraph[i].resize(animations.size());
+		}
+
+		animationsGraph.emplace_back(std::vector<size_t>(animations.size()));
 	}
 
 	//NOTE(darius) beware that you could updating animations but not render or rendering the wrong ones
@@ -155,7 +166,15 @@ public:
 		if(!animations.size())
 			return;
 
-		animations[currAnim].update(t);
+		//TODO(darius) work here
+		if(!animations[currAnim].isOver()){
+			animations[currAnim].update(t);
+		}
+		else{
+			animations[currAnim].update(t);
+			println("switching animation");
+			currAnim = getNextAnimFromGraphLink(currAnim);
+		}
 	}
 
 	AnimationT& getCurrentAnimation()
@@ -166,6 +185,11 @@ public:
 	std::vector<AnimationT>& getAnimations()
 	{
 		return animations;
+	}
+
+	std::vector<std::vector<size_t>>& getAnimationsGraph()
+	{
+		return animationsGraph;
 	}
 
 	size_t size()
@@ -193,8 +217,26 @@ public:
 		currAnim = currAnimId;
 	}
 
+	void addLinkToGraph(size_t animA, size_t animB)
+	{
+		assert(animA < animations.size() && animB < animations.size());
+		animationsGraph[animA][animB] = 1;
+	}
+
+	size_t getNextAnimFromGraphLink(size_t animA)
+	{
+		for(size_t i = 0; i < animationsGraph[animA].size(); ++i){
+			if(animationsGraph[animA][i])
+				return i;
+		}
+
+		return animA;
+	}
+
 private:
 	std::vector<AnimationT> animations;
+	//NOTE(darius) maybe use vector<int> graph[i] = j => i -> j
+	std::vector<std::vector<size_t>> animationsGraph;//TODO(darius) optimise it, but ok for now
 	size_t currAnim = 0;
 };
 

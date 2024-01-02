@@ -327,8 +327,8 @@ void Scene::update_objects()
 				//if(sceneObjects[i].getRigidBody())
 				//sceneObjects[i]->updateRigidBody();
 				//sceneObjects[i]->getTransform() = rbodyCopyInitTr;
-				//if(sceneObjects[i]->getRigidBody())
-				//	sceneObjects[i]->getRigidBody()->resetFroces();
+				if(sceneObjects[i]->getRigidBody())
+					sceneObjects[i]->getRigidBody()->resetFroces();
 			}
 			else{
 				//if(sceneObjects[i]->getRigidBody())

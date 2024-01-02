@@ -42,9 +42,7 @@
 
 	--RENDERER
 		- render static 2D backend to one texture?
-
 		- finish culling
-
 		- instanced rendering loop
 		- finish batching 
 		- blending stage
@@ -62,7 +60,6 @@
 		- LOD
 		- distanced rendering                                                       
 		- shaders for effects drawing on texture
-		- normal mapping                                                         
 		- Texture resize to apropriate resolution
 		- cool lighting simulation (global ilumination, ray tracing. path tracing, etc)
 		- text rendering

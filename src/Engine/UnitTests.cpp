@@ -52,7 +52,7 @@ void UnitTests::testSIMD()
 
 		auto sumDot = SIMD::dot(val, val2);
 
-		println("dot: ", sumDot);
+		//println("dot: ", sumDot);
 		//SIMD::assertEqual(20, sumDot);
 	}
 

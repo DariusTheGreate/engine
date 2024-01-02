@@ -1,11 +1,11 @@
 #pragma once
 
-#include <ScriptApi.h>
-#include <GameState.h>
-#include <Object.h>
-#include <Animation.h>
-#include <KeyboardState.h>
-#include <Printer.h>
+#include <Engine/ScriptApi.h>
+#include <Engine/GameState.h>
+#include <Engine/Object.h>
+#include <Engine/Animation.h>
+#include <Engine/KeyboardState.h>
+#include <Core/Printer.h>
 
 #include <boost/config.hpp> 
 #include <iostream>
@@ -15,6 +15,7 @@
 struct Player 
 {
 	float speed = 1.0f;
+	bool inJump = false;
 	int currAnim = 0;//0 - idle; 1 - runR; 2 - run; 3 - jump; 4 - attack
 };
 
@@ -30,64 +31,35 @@ public:
 			return;
 		}
 
-		instance->debug_msg.append("Start Script..");
+		//instance->debug_msg.append("Start Script..");
         
         auto* obj = args.obj;
 		auto* scene = args.scene;
+
 		//obj->addPointLight();//wont affect lighting 
 		//obj->frozeObject();
 
 		//scene->AddEmpty(555);
 
-		/*run = SpriteAnimation(1, 8, 100);
-		*run.getBorder() = 0.5;
-		run.initPoints();
-		init = SpriteAnimation(1,6,100);
-		*init.getBorder() = 0.8f;
-		init.initPoints();
-		dance = SpriteAnimation(1,9,100);
-		*dance.getLength() = 14;
-		*dance.getBorder() = 0.3f;
-		dance.initPoints();
-		*/
-
-
-		/*if (scene->getObjectByName("UpAnim")) {
-
-			WalkUpMesh = &scene->getObjectByName("UpAnim")->getModel()->meshes[0];
-
-			WalkUp = *scene->getObjectByName("UpAnim")->getSpriteAnimation();
-			instance->debug_msg.append("up loaded\n");
-			std::cout << "Up loaded..\n";
-		}
-
-		if (scene->getObjectByName("DownAn")) {
-			WalkDownMesh = &scene->getObjectByName("DownAn")->getModel()->meshes[0];
-
-			WalkDown = *scene->getObjectByName("DownAn")->getSpriteAnimation();
-			instance->debug_msg.append("down loaded\n");
-
-			std::cout << "loaded..\n";
-		}*/
-
 		//if(scene->getObjectByName("PlayerLight"))
 		//	playerLight = &(scene->getObjectByName("PlayerLight")->getPointLight().value());
 
-		/*int i = 0;
+		int i = 1;
 		Object* enemyObj = nullptr;
-		while (enemyObj = scene->getObjectByName("EnemyWalkingAnim" + std::to_string(i))) {
+		while (enemyObj = scene->getObjectByName("batPrefab" + std::to_string(i))) {
 			enemyObjects.push_back(enemyObj);
 			enemyObj = nullptr;
 			//enemyLights.reserve(1);
 
-			if(scene->getObjectByName("EnemyLight" + std::to_string(i)))
-				enemyLights.push_back(&(scene->getObjectByName("EnemyLight" + std::to_string(i))->getPointLight().value()));
+			//if(scene->getObjectByName("EnemyLight" + std::to_string(i)))
+				//enemyLights.push_back(&(scene->getObjectByName("EnemyLight" + std::to_string(i))->getPointLight().value()));
 
 			i++;	
 		}
 
+		instance->debug_msg.append("Objects size: " + enemyObjects.size());
+
 		enemyWalkDirs.resize(enemyObjects.size());
-		*/
 
 		obj = scene->getObjectByName("Player");
 		if (!obj) {
@@ -101,11 +73,6 @@ public:
 		cam = &(instance->cam);
 		if (!cam)
 			instance->debug_msg.append("couldnt ge camera\n");
-		//else
-		//	*(cam->getCameraSpeed()) = p.speed * 10;
-
-		//runMesh = new FlatMesh();//DANGER(darius) cant do that either
-		//runMesh = scene->createFlatMesh();//nor that
 	}
 
 	void update(ScriptArgument& args) override {
@@ -116,7 +83,15 @@ public:
 			return;
 		}
 
- 
+		//println("velocity y ", obj->getRigidBody()->velocity);
+
+		/*if (obj->getRigidBody()->velocity.y < 0) {
+			if (p.currAnim != 5) {
+				obj->getSpriteAnimator()->setCurrAnim(4);
+				p.currAnim = 5;
+			}
+		}*/
+
 		//obj = scene->get_object_at(2);
 
 		if (instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e())
@@ -181,12 +156,14 @@ public:
 		}
         if (instance->ks.get_q() && !instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_e() && p.currAnim != 3)
 		{
-			if (p.currAnim != 3) {
+			if (p.currAnim != 3 && p.currAnim != 5) {
+				p.inJump = true;
 				//instance->debug_msg.append("clicked q");
 				obj->getSpriteAnimator()->setCurrAnim(2);
 
-				if (obj->getRigidBody())
-					obj->getRigidBody()->velocity += glm::vec3({ 0,5,0 });
+				if (obj->getRigidBody()) {
+					obj->getRigidBody()->velocity += glm::vec3({ 0,7,0 });
+				}
 				p.currAnim = 3;
 			}
 		}
@@ -197,40 +174,9 @@ public:
 			obj->getSpriteAnimator()->setCurrAnim(1);
 			p.currAnim = 4;
 		}
-        /*if (instance->ks.get_w())
-        {
-            if (p.currAnim != 1) {
-                obj->getModel()->meshes[0] = *WalkUpMesh;
-                obj->setSpriteAnimation(WalkUp);
-                p.currAnim = 1;
-            }
 
-			//std::cout << "pos " << obj->getTransform().getPosition().x << " " << obj->getTransform().getPosition().y << " " << obj->getTransform().getPosition().z;
-            //obj->moveTransform(glm::vec3{ 0, 0, -1*p.speed});
-			//std::cout << "pos after " << obj->getTransform().getPosition().x << " " << obj->getTransform().getPosition().y << " " << obj->getTransform().getPosition().z;
-
-			glm::vec3 pos = obj->getTransform().getPosition();
-			//pos += glm::vec3{ 0, 0, -1 * p.speed };
-			if(rotatedToLeft)
-				obj->getTransform().translatePosition({0,0,-p.speed});
-			else
-				obj->getTransform().translatePosition({0,0,p.speed});
-        }
-        if(instance->ks.get_s())
-        {
-            if (p.currAnim != 1) {
-                obj->getModel()->meshes[0] = *WalkDownMesh;
-                obj->setSpriteAnimation(WalkDown);
-                p.currAnim = 1;
-            }
-            //obj->moveTransform(glm::vec3{ 0, 0, 1*p.speed });
-			if(rotatedToLeft)
-				obj->getTransform().translatePosition({0,0,p.speed});
-			else
-				obj->getTransform().translatePosition({0,0,-p.speed});
-        }*/
-        if(!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()){
-            if (p.currAnim != 0) {
+		if(!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()){
+            if (p.currAnim != 0 && p.currAnim != 5) {
                 //obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
 
 				obj->getSpriteAnimator()->setCurrAnim(0);
@@ -250,7 +196,7 @@ public:
 		//if(playerLight)
 		//	playerLight->position = obj->getTransform().getPosition();
 
-		/*int i = 0;
+		int i = 0;
 		while(i < enemyObjects.size())
 		{
 			std::time_t currT = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -262,7 +208,7 @@ public:
 					char randDir = randDirection();
 
 					if (randDir == 'u')
-						enemyWalkDirs[j] = glm::vec3{0,0, enemySpeed};
+						enemyWalkDirs[j] = glm::vec3{0,enemySpeed,0};
 
 					if (randDir == 'l')
 						enemyWalkDirs[j] = { -enemySpeed, 0,0 };
@@ -271,7 +217,7 @@ public:
 						enemyWalkDirs[j] = { enemySpeed,0,0 };
 
 					if (randDir == 'd')
-						enemyWalkDirs[j] = {0,0, -enemySpeed};
+						enemyWalkDirs[j] = {0, -enemySpeed, 0};
 				}
 
 				enemyMotionUpdateTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -292,7 +238,6 @@ public:
 
 			i++;
 		}
-		*/
 
         //obj->getModel().value().meshes[0] = initMesh;
         //obj->setSpriteAnimation(init);
@@ -318,7 +263,7 @@ public:
 
 	std::time_t enemyMotionUpdateTime = 0;
 
-	float enemySpeed = 0.01;
+	float enemySpeed = 0.0001;
 
 	//DANGER(darius) NOTE(darius) you cant create opengl entities, cause u have no opengl initialized here, TODO(darius) make some factory inside engine
 	//FlatMesh runMesh;
@@ -330,5 +275,4 @@ public:
     Camera* cam = nullptr;
 
 	bool rotatedToLeft = false;
-
 };

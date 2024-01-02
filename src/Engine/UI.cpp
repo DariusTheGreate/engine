@@ -405,6 +405,26 @@ std::optional<RigidBody> rbody;
                 item_clicked->addSpriteAnimation(SpriteAnimation(path));
             }
         }
+
+        if(ImGui::CollapsingHeader("Add Graph Link")){
+            static int animA = 0;
+            static int animB = 0;
+            ImGui::DragInt("animaA", &animA, 1);
+            ImGui::DragInt("animaB", &animB, 1);
+
+            if(ImGui::Button("addLink")){
+                spriteAnimator->addLinkToGraph(animA, animB);
+            }
+
+            auto& animationsGraph = spriteAnimator->getAnimationsGraph();
+
+            for(int i = 0; i < animationsGraph.size(); ++i)
+            {
+                for(int j = 0; j < animationsGraph[i].size(); ++j)
+                    ImGui::Text("%i -> %i = %d", i, j, animationsGraph[i][j]);
+            }
+        }
+
         ImGui::Unindent( 16.0f );
     }
 
@@ -471,7 +491,7 @@ std::optional<RigidBody> rbody;
    
 
     auto& modelV = obj->getModel();
-    if(modelV && ImGui::CollapsingHeader("ModelMesh"))
+    if(modelV && !modelV->meshes.empty() && ImGui::CollapsingHeader("ModelMesh"))
     {
         ImGui::Text("Draw Mode: %i", modelV->meshes[0].getDrawMode()); 
 

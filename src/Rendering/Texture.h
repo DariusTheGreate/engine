@@ -31,7 +31,7 @@ struct ImageUtils
 		unsigned char *data = stbi_load(std::string(path).c_str(), W, H, numOfChan, 0);
 	    if (data)
 	    {
-	        print("Loaded Texture\n");
+	        //print("Loaded Texture\n");
 	    }
 	    else
 	    {

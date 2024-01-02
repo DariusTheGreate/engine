@@ -15,9 +15,9 @@ SkeletalAnimation::SkeletalAnimation(const std::string& animationPath, Model* mo
 	currTime = 0.0;
 
 	//note: reserve(100)
-	finalBoneMatrices.reserve(length);
+	finalBoneMatrices.reserve(animation->mDuration);
 
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < animation->mDuration; i++)
 		finalBoneMatrices.push_back(glm::mat4(1.0f));
 }
 

@@ -45,7 +45,7 @@ void DebugRenderer::setupSceneGrid()
 	//cubemap.setup();
 	
     grid_mode = GameState::editor_mode;
-    std::cout << "grid setup " << grid_mode << "\n";
+    //std::cout << "grid setup " << grid_mode << "\n";
     indices_grid.clear();
     vertices_grid.clear();
     vertices_grid.shrink_to_fit();
@@ -183,8 +183,8 @@ void DebugRenderer::renderDebugPoint(glm::vec3 a, glm::vec4 color = glm::vec4(0,
 	//model = glm::scale(model, glm::vec3{size.x, size.y,size.z});
 	//model[3] += glm::vec4{size.x/2 -size.x, size.y/2-size.x,size.z/2-size.x,0};
 	dsv.setVec4("objectColor", color);
-	//dsv.setMat4("model", model);
-	flat.DrawRaw(dsv, a, {0.01,0.01,0.01});
+	dsv.setMat4("model", model);
+	flat.DrawRaw(dsv, a, {1,1,1});
 	//vao.bind();
 	//glDrawArrays(GL_LINE_STRIP, 0, 36);
 	//glBindVertexArray(0);
@@ -629,9 +629,9 @@ void Renderer::renderAll(Window* wind)
 		}
 	}
 
-	dbr.renderDebugLine({0,0,0}, {1,1,1});
+	//dbr.renderDebugLine({0,0,0}, {1,1,1});
 
-	//dbr.renderDebugCube({0,0,0}, 1,1,1);
+	dbr.renderDebugPoint(DirectionalLight::lightPos, {1,0,0,0});
 
 	//dbr.renderPoints();
 	dbr.renderAABB();
