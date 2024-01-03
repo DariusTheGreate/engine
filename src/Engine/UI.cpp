@@ -418,10 +418,12 @@ std::optional<RigidBody> rbody;
 
             auto& animationsGraph = spriteAnimator->getAnimationsGraph();
 
-            for(int i = 0; i < animationsGraph.size(); ++i)
+            for(int gi = 0; gi < animationsGraph.size(); ++gi)
             {
-                for(int j = 0; j < animationsGraph[i].size(); ++j)
-                    ImGui::Text("%i -> %i = %d", i, j, animationsGraph[i][j]);
+                for(int gj = 0; gj < animationsGraph[gi].size(); ++gj){
+                    println(gi);
+                    ImGui::Text("%i -> %i = %d", gi, gj, animationsGraph[gi][gj]);
+                }
             }
         }
 

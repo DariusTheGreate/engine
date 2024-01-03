@@ -172,7 +172,7 @@ public:
 		}
 		else{
 			animations[currAnim].update(t);
-			println("switching animation");
+			//println("switching animation");
 			currAnim = getNextAnimFromGraphLink(currAnim);
 		}
 	}
@@ -185,6 +185,11 @@ public:
 	std::vector<AnimationT>& getAnimations()
 	{
 		return animations;
+	}
+
+	void setAnimationsGraph(std::vector<std::vector<size_t>>&& graph_in)
+	{
+		animationsGraph = std::move(graph_in);
 	}
 
 	std::vector<std::vector<size_t>>& getAnimationsGraph()

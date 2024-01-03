@@ -543,6 +543,22 @@ void Object::serialize(std::ostream& file)
 
         file << "\t\t }\n";
 
+        auto& animGraph = spriteAnimator->getAnimationsGraph();
+        if(animGraph.size() > 0){
+            file << "\t\tAnimationsGraph: {\n";
+
+            for(int ai = 0; ai < animGraph.size(); ++ai){
+                file << "\t\t\t|";
+                for(int aj = 0; aj < animGraph[ai].size(); ++aj){
+                    file << animGraph[ai][aj] << " ";
+                }
+
+                file << "\n";
+            }
+
+            file << "\t\t}\n";
+        }
+
 
         file << "\t}\n";
     }

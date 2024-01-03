@@ -1064,14 +1064,47 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 	int currAnimId = extractCurrAnimIdFromToken(tkn, spriteAnimatorStart);
 
 	resSpriteAnimator->setCurrAnim(currAnimId);
+	std::vector<std::vector<size_t>> graphRes;
 
 	size_t currAnimStart = spriteAnimatorStart;
+
+	{
+		size_t animationsGraphStart = tkn.find("AnimationsGraph: {", spriteAnimatorStart);
+		size_t animationsGraphEnd = tkn.find("}", animationsGraphStart);
+
+		if(animationsGraphStart != std::string::npos)
+		{
+			size_t graphi = animationsGraphStart;
+
+			//graphRes.emplace_back(std::vector<size_t>());
+			//TODO(darius) refactor?
+			int graphRow = -1;
+
+			while(graphi < animationsGraphEnd && graphi < tkn.size()){
+				if(std::isdigit(tkn[graphi])){
+					char symbol = tkn[graphi];
+					print(symbol);
+					graphRes[graphRow].push_back(std::atoi(&symbol));
+				}
+
+				else if(tkn[graphi] == '|'){
+					print('\n');
+					graphRes.emplace_back(std::vector<size_t>());
+					graphRow++;
+				}
+
+				graphi++;
+			}
+		}
+	}
 
 	while(currAnimStart < tkn.size()){
 		currAnimStart = tkn.find("SpriteAnimation:", currAnimStart + 1);
 		
-		if (currAnimStart == std::string::npos)
-			return resSpriteAnimator;
+		if (currAnimStart == std::string::npos){
+			//return resSpriteAnimator;
+			break;
+		}
 
 		size_t delayStart = tkn.find("Delay: {", currAnimStart);
 
@@ -1085,8 +1118,10 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 		if (pointStart == std::string::npos)//NOTE(darius) no point animation => animationPaths
 		{
 			size_t animationPathStart = tkn.find("AnimationPath: {", currAnimStart);
-			if(animationPathStart == std::string::npos)
-				return resSpriteAnimator;
+			if(animationPathStart == std::string::npos){
+				//return resSpriteAnimator;
+				break;
+			}
 
 			size_t pathStart = tkn.find("{", animationPathStart);
 			size_t pathEnd = tkn.find("}", pathStart);
@@ -1113,6 +1148,18 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 		*res.getLength() = static_cast<float>(points.size());
 		*res.getDelay() = delayVal;
 	}	
+
+	/*println("\nAnimationsGraph:");
+	for(int i = 0; i < graphRes.size(); ++i){
+		for(int j = 0; j < graphRes[i].size(); ++j){
+			print(graphRes[i][j]);
+		}
+
+		print("\n");
+	}
+	*/
+
+	resSpriteAnimator->setAnimationsGraph(std::move(graphRes));
 
 	return resSpriteAnimator;
 }

@@ -96,7 +96,7 @@ public:
 
 		if (instance->ks.get_a() && !instance->ks.get_d() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
-			if (p.currAnim != 2) {
+			if (true || p.currAnim != 2) {
 				obj->getSpriteAnimator()->setCurrAnim(3);
 				p.currAnim = 2;
 			}
@@ -132,7 +132,7 @@ public:
 
 		if (instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e())
 		{
-			if (p.currAnim != 1) {
+			if (true || p.currAnim != 1) {
 					
 				if (rotatedToLeft) {
 					rotatedToLeft = false;
@@ -175,7 +175,7 @@ public:
 			p.currAnim = 4;
 		}
 
-		if(!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()){
+		if (!instance->ks.get_d() && !instance->ks.get_a() && !instance->ks.get_q() && !instance->ks.get_e()) {
             if (p.currAnim != 0 && p.currAnim != 5) {
                 //obj->setSpriteAnimation(Idle);//NOTE(daius)IMPORTANT(darius) disabled cause of bug in network sync. cause of ansynchronized animation change - bad optional acess
 

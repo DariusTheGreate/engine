@@ -6,16 +6,17 @@
  5# CrtSetReportHookW2 in ucrtbased
  6# VCrtDbgReportA in ucrtbased
  7# CrtDbgReport in ucrtbased
- 8# std::vector<Mesh,std::allocator<Mesh> >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
- 9# UI::showObjectWindow at E:\own\programming\engine\src\Engine\UI.cpp:496
-10# UI::sceneWindow at E:\own\programming\engine\src\Engine\UI.cpp:227
-11# UI::renderUI at E:\own\programming\engine\src\Engine\UI.cpp:48
-12# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:82
-13# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
-14# main at E:\own\programming\engine\src\main.cpp:26
-15# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-16# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-17# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-18# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-19# BaseThreadInitThunk in KERNEL32
-20# RtlUserThreadStart in ntdll
+ 8# std::vector<std::vector<unsigned __int64,std::allocator<unsigned __int64> >,std::allocator<std::vector<unsigned __int64,std::allocator<unsigned __int64> > > >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
+ 9# Scene::extractSpriteAnimatorFromToken at E:\own\programming\engine\src\Engine\Scene.cpp:1086
+10# Scene::parseScene at E:\own\programming\engine\src\Engine\Scene.cpp:747
+11# Scene::deserialize at E:\own\programming\engine\src\Engine\Scene.cpp:600
+12# Editor::updateInput at E:\own\programming\engine\src\Engine\Editor.cpp:161
+13# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:67
+14# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
+15# main at E:\own\programming\engine\src\main.cpp:26
+16# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+17# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+18# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+19# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+20# BaseThreadInitThunk in KERNEL32
+21# RtlUserThreadStart in ntdll
