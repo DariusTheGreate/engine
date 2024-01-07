@@ -31,6 +31,13 @@ void UnitTests::testSIMD()
 	}
 
 	{
+		std::array<int, 16> arr = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		auto sum = SIMD::sumOneBuff(arr.data(), 16);
+		println("sum is ", sum);
+		SIMD::assertEqual(sum, 16);
+	}
+
+	{
 		auto simdedPi = SIMD::convertFloatToSSE(3.1415926);
 		auto simdedE = SIMD::convertFloatToSSE(2.71828);
 		auto sum = SIMD::sumSSE(simdedPi, simdedE);

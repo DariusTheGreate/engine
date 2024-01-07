@@ -56,6 +56,18 @@ public:
 		return _mm_loadu_ps((const float*)&alignedBuff);
 	}
 
+	static simdSSEInt getZeroSSEInt()
+	{
+		return _mm_setzero_si128();
+	}
+
+	//NOTE(darius) just to not forget after many years: (1,1,1,1) + (1,1,1,1) = (2,2,2,2)
+	//NOTE(darius) https://www.cs.virginia.edu/~cr4bd/3330/S2018/simdref.html
+	static simdSSEInt addPackedSSEInts(simdSSEInt a, simdSSEInt b)
+	{
+		return _mm_add_epi32(a, b);	
+	}
+
 	static inline simdSSEFloat sumSSE(simdSSEFloat a, simdSSEFloat b)
 	{
 		return _mm_add_ps(a, b);
@@ -121,6 +133,30 @@ public:
 		}
 	}
 
+	//TODO(darius) wrong size, its not 256, its 128
+	static int sumOneBuff(int* a, int n)
+	{
+		simdSSEInt s = getZeroSSEInt(); 
+		simdSSEInt s2 = getZeroSSEInt(); 
+
+		for(int i = 0; i < n; i += 8){
+			s = addPackedSSEInts(s, _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(&a[i])));
+			s2 = addPackedSSEInts(s2, _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(&a[i+4])));
+		}
+
+		s = addPackedSSEInts(s,s2);
+
+		int t[4];
+		int horizontalS = 0;
+		_mm_storeu_si128((simdSSEInt*)t, s);
+
+		for(int i = 0; i < 4; ++i){
+			horizontalS += t[i];
+		}
+
+		return horizontalS;
+	}
+
 
 	template <char ...chars>
 	static constexpr bool is_in(char x) 
@@ -128,7 +164,7 @@ public:
 		return ((x == chars) || ...); 
 	}
 
-	template <char s0	>
+	template <char s0>
 	static inline simdSSEInt mm_is_in(simdSSEInt bytes)
 	{
 	    simdSSEInt eq0 = _mm_cmpeq_epi8(bytes, _mm_set1_epi8(s0));
@@ -170,6 +206,7 @@ public:
 
 	static void assertEqual(const char* const a, const char* const b)
 	{
+		//NOTE(darius) only 128 bits
 		auto str_A = _mm_load_si128((__m128i*)(a)); 
 		auto str_B = _mm_load_si128((__m128i*)(b)); 
 
