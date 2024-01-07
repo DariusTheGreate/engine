@@ -18,7 +18,9 @@ int main()
         StackTrace backtrace;
 
         #ifdef DEAN_UNIT_TEST_SHIT
+            println("Runing tests..");
             UnitTests::run();
+            println("Tests Passed!");
         #endif
 
         Application* app = new Application((char*)"Dean", 1920, 1080);

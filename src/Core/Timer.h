@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <GLFW/glfw3.h>
 
 struct Timer {
@@ -14,6 +13,8 @@ public:
 	void clearTime();
 
 	double currentTime();
+
+	static void printCurrentTime();
 
 private:
 	double timeOfBirth;

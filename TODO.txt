@@ -23,6 +23,7 @@
 		- batching memory consumption if we store batched objects
 		- write own hashtable, cause i hate std::hashtable) 
 		- connect renderdoc api
+		- steam api
 		- add namespaces
 		- sanitizers
 		- refactor PraticleSystem

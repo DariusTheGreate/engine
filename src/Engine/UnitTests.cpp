@@ -23,13 +23,20 @@ void UnitTests::testSIMD()
 	}
 
 	{
+		std::string text = "asdasdasdaskdjasdkalsdjasdlasjkdajlkadshuiStuffAfterHui"; 
+		std::string needle = "hui";
+
+		auto* findRes = SIMD::findFirstSymbolsSse<'h'>(text.c_str(), text.c_str() + text.size());
+		SIMD::assertEqual(findRes, "huiStuffAfterHui");
+	}
+
+	{
 		auto simdedPi = SIMD::convertFloatToSSE(3.1415926);
 		auto simdedE = SIMD::convertFloatToSSE(2.71828);
 		auto sum = SIMD::sumSSE(simdedPi, simdedE);
 
 		float desimdedSum = SIMD::convertSSEToFloat(sum);
 		SIMD::assertEqual(5.8598726, desimdedSum);
-
 	}
 
 	{

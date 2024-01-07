@@ -7,16 +7,19 @@
  6# VCrtDbgReportA in ucrtbased
  7# CrtDbgReport in ucrtbased
  8# std::vector<std::vector<unsigned __int64,std::allocator<unsigned __int64> >,std::allocator<std::vector<unsigned __int64,std::allocator<unsigned __int64> > > >::operator[] at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector:1948
- 9# Scene::extractSpriteAnimatorFromToken at E:\own\programming\engine\src\Engine\Scene.cpp:1086
-10# Scene::parseScene at E:\own\programming\engine\src\Engine\Scene.cpp:747
-11# Scene::deserialize at E:\own\programming\engine\src\Engine\Scene.cpp:600
-12# Editor::updateInput at E:\own\programming\engine\src\Engine\Editor.cpp:161
-13# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:67
-14# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
-15# main at E:\own\programming\engine\src\main.cpp:26
-16# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-17# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-18# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-19# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-20# BaseThreadInitThunk in KERNEL32
-21# RtlUserThreadStart in ntdll
+ 9# Animator<SpriteAnimation>::getNextAnimFromGraphLink at E:\own\programming\engine\src\Engine\Animation.h:233
+10# Animator<SpriteAnimation>::update at E:\own\programming\engine\src\Engine\Animation.h:176
+11# Object::updateSpriteAnimator at E:\own\programming\engine\src\Engine\Object.cpp:373
+12# Scene::updateSpriteAnimations at E:\own\programming\engine\src\Engine\Scene.cpp:130
+13# Renderer::renderScene at E:\own\programming\engine\src\Rendering\Renderer.cpp:658
+14# Renderer::EditorIDsStage at E:\own\programming\engine\src\Rendering\Renderer.cpp:400
+15# Renderer::render at E:\own\programming\engine\src\Rendering\Renderer.cpp:349
+16# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:77
+17# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
+18# main at E:\own\programming\engine\src\main.cpp:26
+19# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+20# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+21# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+22# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+23# BaseThreadInitThunk in KERNEL32
+24# RtlUserThreadStart in ntdll

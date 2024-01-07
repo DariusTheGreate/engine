@@ -207,7 +207,8 @@ void SpriteAnimation::update(float currentTime)
 		//if (currTime > points.size()-1 || currTime > length)
 		//	currTime = start;
 
-		currTime = fmod(++currTime, points.size()-1);
+		//currTime = fmod(++currTime, points.size()-1);
+		currTime++;
 	}
 	
 	if (animationUseMultipleTextures) 
@@ -223,7 +224,8 @@ void SpriteAnimation::update(float currentTime)
 			sprite->getTexturesRef()[0] = spritesList[id].getTexturesRef()[0];
 		}
 
-		currTime = fmod(++currTime, spritesList.size());
+		//currTime = fmod(++currTime, spritesList.size());
+		currTime++;
 	}
 
 	lastTime = currentTime;

@@ -9,6 +9,7 @@
 #include <Rendering/Model.h>
 #include <Rendering/FlatMesh.h>
 #include <Core/Printer.h>
+#include <Core/Timer.h>
 
 #include <chrono>
 #include <thread>
@@ -39,7 +40,12 @@ struct AnimationBase
 
 	bool isOver()
 	{
-		return currTime == length-1;
+		return currTime == length;
+	}
+
+	void reset()
+	{
+		currTime = 0;
 	}
 };
 
@@ -171,9 +177,9 @@ public:
 			animations[currAnim].update(t);
 		}
 		else{
-			animations[currAnim].update(t);
-			//println("switching animation");
+			animations[currAnim].reset();
 			currAnim = getNextAnimFromGraphLink(currAnim);
+			//Timer::printCurrentTime();
 		}
 	}
 
@@ -230,6 +236,9 @@ public:
 
 	size_t getNextAnimFromGraphLink(size_t animA)
 	{
+		if(animA >= animationsGraph.size())
+			return animA;
+
 		for(size_t i = 0; i < animationsGraph[animA].size(); ++i){
 			if(animationsGraph[animA][i])
 				return i;

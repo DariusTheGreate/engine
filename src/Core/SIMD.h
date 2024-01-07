@@ -3,6 +3,9 @@
 //TODO(darius) theres troubles here with different versions so work on that
 //NOTE(darius) _mm<size>_<action>_<type>
 #include <xmmintrin.h>
+#include <emmintrin.h>
+#include <intrin.h>
+
 #include <array>
 #include <cassert>
 
@@ -14,9 +17,12 @@ public:
 //TODO(darius) USE atleast AVX WTF
 
 
-//SSE:
+//SSE:k	
+//#if defined(__SSE2__)
+
 public:
-	using simdSSEFloat = __m128;//SSE
+	using simdSSEFloat = __m128;
+	using simdSSEInt = __m128i;
 
 	static std::array<float, 4> convertMM128ToUnalignedFloatArray(simdSSEFloat v)
 	{
@@ -115,10 +121,61 @@ public:
 		}
 	}
 
+
+	template <char ...chars>
+	static constexpr bool is_in(char x) 
+	{ 
+		return ((x == chars) || ...); 
+	}
+
+	template <char s0	>
+	static inline simdSSEInt mm_is_in(simdSSEInt bytes)
+	{
+	    simdSSEInt eq0 = _mm_cmpeq_epi8(bytes, _mm_set1_epi8(s0));
+	    return eq0;
+	}
+
+	template <char... symbols>
+	static inline const char* findFirstSymbolsSse(const char* const begin, const char* const end)
+	{
+	    const char* pos = begin;
+
+	    for (; pos + 15 < end; pos += 16)
+	    {
+	    	//TODO(darius) create 4 masks with pos; pos + 1; pos + 2; pos + 3, etc
+	        simdSSEInt bytes = _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(pos));
+
+	        simdSSEInt eq = mm_is_in<symbols...>(bytes);
+
+	        uint16_t bit_mask = uint16_t(_mm_movemask_epi8(eq));
+
+	        //NOTE(darius) dont use builtin?
+	        if (bit_mask)
+	            return pos + _tzcnt_u64 (bit_mask);
+	    }
+
+	    //NOTE(darius) tail
+	    for (; pos < end; ++pos)
+	        if (is_in<symbols...>(*pos))
+	            return pos;
+
+	    return end;
+	}
+
 	static void assertEqual(float a, float b)
 	{
 		float EPS = 0.00001;
-		assert(std::abs(a - b) < EPS);
+		assert(std::abs(a - b) < EPS, "Assertion of floats failed!");
+	}
+
+	static void assertEqual(const char* const a, const char* const b)
+	{
+		auto str_A = _mm_load_si128((__m128i*)(a)); 
+		auto str_B = _mm_load_si128((__m128i*)(b)); 
+
+		auto char_eq = (_mm_cmpeq_epi8(str_A, str_B)); 
+		uint16_t bit_mask = uint16_t(_mm_movemask_epi8(char_eq));
+		assert(~bit_mask != 0, "Assertion of char* failed!");		
 	}
 
 //TODO(darius) AVX here
