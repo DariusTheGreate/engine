@@ -23,17 +23,17 @@ void UnitTests::testSIMD()
 	}
 
 	{
-		std::string text = "asdasdasdaskdjasdkalsdjasdlasjkdajlkadshuiStuffAfterHui"; 
-		std::string needle = "hui";
+		std::string text = "123456789123456789hhuu789"; 
+		char needle[4] = {'h', 'h', 'u', 'u'};
 
-		auto* findRes = SIMD::findFirstSymbolsSse<'h'>(text.c_str(), text.c_str() + text.size());
-		SIMD::assertEqual(findRes, "huiStuffAfterHui");
+		auto* findRes = SIMD::findFirstSymbolsSse(text.data(), text.data() + text.size(), needle);
+		println("result: ", findRes);
 	}
 
 	{
 		std::array<int, 16> arr = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		auto sum = SIMD::sumOneBuff(arr.data(), 16);
-		println("sum is ", sum);
+		//println("sum is ", sum);
 		SIMD::assertEqual(sum, 16);
 	}
 

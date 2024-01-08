@@ -9,6 +9,8 @@
 #include <array>
 #include <cassert>
 
+#include <Core/Printer.h>
+
 class SIMD
 {
 public:
@@ -56,9 +58,30 @@ public:
 		return _mm_loadu_ps((const float*)&alignedBuff);
 	}
 
+	static simdSSEInt broadcastSSEInt(int a)
+	{
+		return _mm_set1_epi32(a);
+	}
+
 	static simdSSEInt getZeroSSEInt()
 	{
 		return _mm_setzero_si128();
+	}
+
+    //NOTE(darius) Create mask from the most significant bit of each 8-bit element in input, and store the result in res
+	static uint16_t getMask(simdSSEInt a)
+	{
+		return uint16_t(_mm_movemask_epi8(a));
+	}
+
+	static simdSSEInt getXOR(simdSSEInt a, simdSSEInt b)
+	{
+		return _mm_or_si128(a, b); 
+	}
+
+	static int testZero(simdSSEInt a, simdSSEInt b)
+	{
+		return _mm_testz_si128(a,b);
 	}
 
 	//NOTE(darius) just to not forget after many years: (1,1,1,1) + (1,1,1,1) = (2,2,2,2)
@@ -157,43 +180,71 @@ public:
 		return horizontalS;
 	}
 
-
-	template <char ...chars>
-	static constexpr bool is_in(char x) 
-	{ 
-		return ((x == chars) || ...); 
+	static simdSSEInt mm_is_in(simdSSEInt bytes, simdSSEInt needle)
+	{
+	    return _mm_cmpeq_epi8(bytes, needle);
 	}
 
-	template <char s0>
-	static inline simdSSEInt mm_is_in(simdSSEInt bytes)
+	static const char* findFirstSymbolsSse(char* begin, char* end, char needle[4])
 	{
-	    simdSSEInt eq0 = _mm_cmpeq_epi8(bytes, _mm_set1_epi8(s0));
-	    return eq0;
-	}
+		auto vectorisedNeedle = _mm_loadu_si128((simdSSEInt*)&needle[0]);// _mm_set_epi32((int)needle);
+		//println("vetoised needle: ", (char*)&vectorisedNeedle);
 
-	template <char... symbols>
-	static inline const char* findFirstSymbolsSse(const char* const begin, const char* const end)
-	{
-	    const char* pos = begin;
+	    char* pos = begin;
 
-	    for (; pos + 15 < end; pos += 16)
+	    for (; pos + 7 < end; pos += 8)
 	    {
-	    	//TODO(darius) create 4 masks with pos; pos + 1; pos + 2; pos + 3, etc
 	        simdSSEInt bytes = _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(pos));
+	        simdSSEInt eq = mm_is_in(bytes, vectorisedNeedle);
 
-	        simdSSEInt eq = mm_is_in<symbols...>(bytes);
+	        simdSSEInt bytes2 = _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(pos+1));
+	        simdSSEInt eq2 = mm_is_in(bytes2, vectorisedNeedle);
 
-	        uint16_t bit_mask = uint16_t(_mm_movemask_epi8(eq));
+	        simdSSEInt bytes3 = _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(pos+2));
+	        simdSSEInt eq3 = mm_is_in(bytes3, vectorisedNeedle);
+
+	        simdSSEInt bytes4 = _mm_loadu_si128(reinterpret_cast<const simdSSEInt *>(pos+3));
+	        simdSSEInt eq4 = mm_is_in(bytes4, vectorisedNeedle);
+
+	        uint16_t bit_mask = getMask(eq);
+	        uint16_t bit_mask2 = getMask(eq2);
+	        uint16_t bit_mask3 = getMask(eq3);
+	        uint16_t bit_mask4 = getMask(eq4);
+
+	        //println("bit_mask: ", bit_mask);
+	        //println("bit_mask2: ", bit_mask2);
+	        //println("bit_mask3: ", bit_mask3);
+	        //println("bit_mask4: ", bit_mask4);
+
+	        /*simdSSEInt m12 = getXOR(eq, eq2);
+	        simdSSEInt m34 = getXOR(eq3, eq4);
+	        simdSSEInt m = getXOR(m12, m34);
+	        if (!testZero(m, m)) {
+	            unsigned mask = (getMask(eq4) << 24)
+	                          + (getMask(eq3) << 16)
+	                          + (getMask(eq2) << 8)
+	                          +  getMask(eq);
+	            return pos + _tzcnt_u64(mask);
+	        }*/
+
+	        uint16_t res_mask = bit_mask | bit_mask2 | bit_mask3 | bit_mask4;
 
 	        //NOTE(darius) dont use builtin?
-	        if (bit_mask)
-	            return pos + _tzcnt_u64 (bit_mask);
+	        if (res_mask){
+	        	println("!resMask positive! ", pos);
+	        	for(int i = 0; i < 4; ++i){
+	        		if(assertEqual(pos + i, &needle[0], 4))
+	        			return pos + i;
+	        	}
+	            //return pos + _tzcnt_u64 (res_mask);
+	        }
 	    }
 
 	    //NOTE(darius) tail
-	    for (; pos < end; ++pos)
-	        if (is_in<symbols...>(*pos))
-	            return pos;
+	    /*for (; pos < end; ++pos){
+	    	if(std::strcmp(pos, needle) == 0);
+	    		return pos;
+	    }*/
 
 	    return end;
 	}
@@ -204,15 +255,27 @@ public:
 		assert(std::abs(a - b) < EPS, "Assertion of floats failed!");
 	}
 
-	static void assertEqual(const char* const a, const char* const b)
+	static bool assertEqual(char* a, char* b, int len)
 	{
 		//NOTE(darius) only 128 bits
-		auto str_A = _mm_load_si128((__m128i*)(a)); 
+		/*auto str_A = _mm_load_si128((__m128i*)(a)); 
 		auto str_B = _mm_load_si128((__m128i*)(b)); 
 
 		auto char_eq = (_mm_cmpeq_epi8(str_A, str_B)); 
 		uint16_t bit_mask = uint16_t(_mm_movemask_epi8(char_eq));
 		assert(~bit_mask != 0, "Assertion of char* failed!");		
+		*/
+
+		//for(; a != aend && *a == *b; a++, b++)
+		//	;
+		//return a == aend;
+
+		for(int i = 0; i < len; ++i){
+			if(a[i] != b[i])
+				return false;
+		}
+
+		return true;
 	}
 
 //TODO(darius) AVX here

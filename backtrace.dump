@@ -2,24 +2,27 @@
  1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
  2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# setmbcp in ucrtbased
- 5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportW in ucrtbased
- 7# CrtDbgReportW in ucrtbased
- 8# _threadid in ucrtbased
- 9# _threadid in ucrtbased
-10# abort in ucrtbased
-11# get_wide_winmain_command_line in ucrtbased
-12# get_wide_winmain_command_line in ucrtbased
-13# get_wide_winmain_command_line in ucrtbased
-14# wassert in ucrtbased
-15# SIMD::assertEqual at E:\own\programming\engine\src\Core\SIMD.h:204
-16# UnitTests::testSIMD at E:\own\programming\engine\src\Engine\UnitTests.cpp:41
-17# UnitTests::run at E:\own\programming\engine\src\Engine\UnitTests.cpp:12
-18# main at E:\own\programming\engine\src\main.cpp:23
-19# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-20# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-21# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-22# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-23# BaseThreadInitThunk in KERNEL32
-24# RtlUserThreadStart in ntdll
+ 4# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:28
+ 5# seh_filter_exe in ucrtbased
+ 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
+ 7# _C_specific_handler in VCRUNTIME140D
+ 8# _chkstk in ntdll
+ 9# RtlRaiseException in ntdll
+10# KiUserExceptionDispatcher in ntdll
+11# std::_Optional_construct_base<Model>::_Construct_from<std::_Optional_construct_base<Model> const &> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\optional:167
+12# std::_Non_trivial_copy<std::_Optional_construct_base<Model> >::_Non_trivial_copy<std::_Optional_construct_base<Model> > at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xsmf_control.h:30
+13# std::_Non_trivial_move<std::_Optional_construct_base<Model>,Model>::_Non_trivial_move<std::_Optional_construct_base<Model>,Model> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xsmf_control.h:49
+14# std::_Non_trivial_copy_assign<std::_Optional_construct_base<Model>,Model>::_Non_trivial_copy_assign<std::_Optional_construct_base<Model>,Model> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xsmf_control.h:70
+15# std::_Non_trivial_move_assign<std::_Optional_construct_base<Model>,Model>::_Non_trivial_move_assign<std::_Optional_construct_base<Model>,Model> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xsmf_control.h:108
+16# std::optional<Model>::optional<Model> in engine
+17# Object::Object at E:\own\programming\engine\src\Engine\Object.cpp:7
+18# Editor::updateInput at E:\own\programming\engine\src\Engine\Editor.cpp:118
+19# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:67
+20# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
+21# main at E:\own\programming\engine\src\main.cpp:28
+22# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+23# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+24# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+25# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+26# BaseThreadInitThunk in KERNEL32
+27# RtlUserThreadStart in ntdll
