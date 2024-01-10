@@ -71,6 +71,21 @@ void UnitTests::testSIMD()
 	}
 
 	{
+		std::string buff1;
+		int i = 0;
+		while(i++ < 256){
+			buff1.append("q");
+		}
+
+		std::string buff2 = "";
+		buff2.resize(buff1.size());
+		SIMD::memcpyBigChank(buff1.data(), buff2.data(), buff1.size());	
+
+		println(buff2);
+		println(buff2.size());
+	}
+
+	{
 		std::array<float, 8> buff1;
 		std::generate(buff1.begin(), buff1.end(), [](){ return rand(); });
 

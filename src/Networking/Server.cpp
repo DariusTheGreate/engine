@@ -82,11 +82,10 @@ void ClientConnection::process()
 //TODO(darius) here currScene is &, but in client is *. Choose one
 void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 {
+	socket_ptr socket2(new boost::asio::ip::tcp::socket(context));
+    acceptor.accept(*socket2);
 	while(1)
 	{
-		socket_ptr socket2(new boost::asio::ip::tcp::socket(context));
-        acceptor.accept(*socket2);
-
         boost::asio::streambuf buffer;
 		std::cout << "Waiting for client message.." << std::endl;
         boost::system::error_code error;

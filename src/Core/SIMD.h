@@ -18,7 +18,7 @@ public:
 //TODO(darius) UNITTEST THIS SHIT
 //TODO(darius) USE atleast AVX WTF
 
-
+//https://www.laruence.com/sse/#expand=3333,3333,1890,5019,6151,5022,94,5653,94,3864,4906,4966,3864,4906,4906,789,4070,5944&techs=SSE,SSE2,SSE3,SSSE3,SSE4_1,SSE4_2
 //SSE:k	
 //#if defined(__SSE2__)
 
@@ -276,6 +276,53 @@ public:
 		}
 
 		return true;
+	}
+
+	static void* memcpyBigChank(void* src_, void* dst_, size_t size)
+	{
+		char * __restrict dst = reinterpret_cast<char * __restrict>(dst_);
+	    const char * __restrict src = reinterpret_cast<const char * __restrict>(src_);
+	    size_t padding = (16 - (reinterpret_cast<size_t>(dst) & 15)) & 15;
+
+        if (padding > 0)
+        {
+            __m128i head = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src));
+            _mm_storeu_si128(reinterpret_cast<__m128i*>(dst), head);
+            dst += padding;
+            src += padding;
+            size -= padding;
+        }
+
+        /// Aligned unrolled copy. We will use half of available SSE registers.
+        /// It's not possible to have both src and dst aligned.
+        /// So, we will use aligned stores and unaligned loads.
+        __m128i c0, c1, c2, c3, c4, c5, c6, c7;
+
+        while (size >= 128)
+        {
+            c0 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 0);
+            c1 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 1);
+            c2 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 2);
+            c3 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 3);
+            c4 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 4);
+            c5 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 5);
+            c6 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 6);
+            c7 = _mm_loadu_si128(reinterpret_cast<const __m128i*>(src) + 7);
+            src += 128;
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 0), c0);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 1), c1);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 2), c2);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 3), c3);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 4), c4);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 5), c5);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 6), c6);
+            _mm_store_si128((reinterpret_cast<__m128i*>(dst) + 7), c7);
+            dst += 128;
+
+            size -= 128;
+        }
+
+        return src_;
 	}
 
 //TODO(darius) AVX here
