@@ -9,8 +9,8 @@ vec2 getPixelizedCoords();
 
 void main()
 { 
-	vec2 uv = TexCoords;
-	//vec2 uv = getPixelizedCoords();
+	//vec2 uv = TexCoords;
+	vec2 uv = getPixelizedCoords();
 
     FragColor = texture(screenTexture, uv);
     //FragColor = vec4(vec3(1.0 - texture(screenTexture, TexCoords)), 1.0);
@@ -18,7 +18,7 @@ void main()
 
 vec2 getPixelizedCoords()
 {
-	int pixelSize = 4;
+	int pixelSize = 3;
 
 	vec2 texSize  = textureSize(screenTexture, 0).xy;
 	vec2 texCoord = gl_FragCoord.xy / texSize;

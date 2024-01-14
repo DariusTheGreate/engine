@@ -70,30 +70,41 @@ void UI::AssetBrowserWindow()
     const char* resourcesNames[] = { "Scenes", "Prefabs"};
 
     float child_w = 300.0f;
+    static ImGuiTextFilter filterA;
+    static ImGuiTextFilter filterB;
 
     for (int i = 0; i < 2; i++)
     {
         if (i > 0) ImGui::SameLine();
+
         ImGui::BeginGroup();
         ImGui::TextUnformatted(resourcesNames[i]);
+
+        ImGui::Text("Search %s:", resourcesNames[i]);
+
+        ImGuiTextFilter* currFilter = nullptr;
+
+        if(i == 0) 
+            currFilter = &filterA;
+        if(i == 1)
+            currFilter = &filterB;
+
+        currFilter->Draw(std::string("##searchbar").append(std::to_string(i)).c_str(), 340.f);
 
         const ImGuiID child_id = ImGui::GetID((void*)(intptr_t)i);
         const bool child_is_visible = ImGui::BeginChild(child_id, ImVec2(child_w, 200.0f), true);
 
-        if (ImGui::BeginMenuBar())
-        {
-            ImGui::TextUnformatted("abc");
-            ImGui::EndMenuBar();
-        }
-        
         for (int item = 0; item < 100; item++)
         {
-            ImGui::Button("Item");
+            if(currFilter->PassFilter("Item"))
+                ImGui::Button("Item");
         }
 
         ImGui::EndChild();
         ImGui::EndGroup();
     }
+
+    std::vector<std::string> k_skins = {"a", "b", "c"};
 
     ImGui::End();
 }
