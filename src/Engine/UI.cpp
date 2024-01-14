@@ -66,10 +66,35 @@ void UI::apply() {
 void UI::AssetBrowserWindow()
 {
     ImGui::Begin("resources");
-    ImGui::BeginChild("path");
-    ImGui::SameLine();
-    ImGui::TextUnformatted(">");
-    ImGui::EndChild();
+
+    const char* resourcesNames[] = { "Scenes", "Prefabs"};
+
+    float child_w = 300.0f;
+
+    for (int i = 0; i < 2; i++)
+    {
+        if (i > 0) ImGui::SameLine();
+        ImGui::BeginGroup();
+        ImGui::TextUnformatted(resourcesNames[i]);
+
+        const ImGuiID child_id = ImGui::GetID((void*)(intptr_t)i);
+        const bool child_is_visible = ImGui::BeginChild(child_id, ImVec2(child_w, 200.0f), true);
+
+        if (ImGui::BeginMenuBar())
+        {
+            ImGui::TextUnformatted("abc");
+            ImGui::EndMenuBar();
+        }
+        
+        for (int item = 0; item < 100; item++)
+        {
+            ImGui::Button("Item");
+        }
+
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
+
     ImGui::End();
 }
 
