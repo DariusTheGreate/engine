@@ -1,20 +1,19 @@
 #pragma once
 #include <atomic>
-
+#include<array>
 class KeyboardState
 {
 public:
-	//TODO(darius) make macro for this shit
 	void set_w(bool state);
-	
+
 	void set_a(bool state);
-	
+
 	void set_s(bool state);
-	
+
 	void set_d(bool state);
-	
+
 	void set_q(bool state);
-	
+
 	void set_e(bool state);
 
 	void set_c(bool state);
@@ -77,25 +76,5 @@ public:
 
 	bool get_mouse_left_button();
 
-private:
-	std::atomic_bool w_pressed;
-	std::atomic_bool a_pressed;
-	std::atomic_bool s_pressed;
-	std::atomic_bool d_pressed;
-	std::atomic_bool q_pressed;
-	std::atomic_bool e_pressed;
-	std::atomic_bool c_pressed;
-	std::atomic_bool l_pressed;
-	std::atomic_bool lshift_pressed;
-
-	std::atomic_bool pressed_0;
-	std::atomic_bool pressed_1;
-	std::atomic_bool pressed_2;
-	std::atomic_bool pressed_3;
-	std::atomic_bool pressed_4;
-	std::atomic_bool pressed_9;
-	std::atomic_bool mouse_right_button_pressed;
-	std::atomic_bool mouse_left_button_pressed;
-
-	std::atomic_bool pressed_cntrl;
+	std::array<bool, 349> m_keys;
 };

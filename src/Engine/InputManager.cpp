@@ -3,23 +3,23 @@
 
 void InputManager::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
 }
 
 void InputManager::standart_input_processor(GLFWwindow* window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
 }
 
 void InputManager::framebuffer_size_standart_callback(GLFWwindow* window, int width, int height)
 {
-	glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
 }
 
 void InputManager::processInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
 
@@ -41,7 +41,7 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         GameState::instance->ks.set_e(true);
     }
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS) {
         GameState::instance->ks.set_c(true);
     }
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
@@ -70,7 +70,7 @@ void InputManager::processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         GameState::instance->ks.set_cntrl(true);
-    } 
+    }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
         GameState::instance->ks.set_w(false);
     }
@@ -89,7 +89,7 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE) {
         GameState::instance->ks.set_e(false);
     }
-	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE) {
         GameState::instance->ks.set_c(false);
     }
     if (glfwGetKey(window, GLFW_KEY_L) == GLFW_RELEASE) {
@@ -101,7 +101,7 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_0) == GLFW_RELEASE) {
         GameState::instance->ks.set_0(false);
     }
-	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_RELEASE) {
         GameState::instance->ks.set_1(false);
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_RELEASE) {
@@ -120,11 +120,11 @@ void InputManager::processInput(GLFWwindow* window)
         GameState::instance->ks.set_cntrl(false);
     }
 
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
         GameState::instance->ks.set_mouse_right_button(true);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         //glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
-        
+
         //std::cout << "press right\n";
         //save click position
 
@@ -133,7 +133,7 @@ void InputManager::processInput(GLFWwindow* window)
         //GameState::cam.cursor_hidden = true;
     }
     //this event HAPPENS every frame
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE){
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
         GameState::instance->ks.set_mouse_right_button(false);
         //GameState::ms.prev_x = GameState::ms.get_x();
         //GameState::ms.prev_y = GameState::ms.get_y();
@@ -141,25 +141,25 @@ void InputManager::processInput(GLFWwindow* window)
         //
         //glfwSetCursorPos(window, GameState::ms.prev_x, GameState::ms.prev_y);
         //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        
+
         //std::cout << "unpress right\n";
         //place into prev saved click position
         //GameState::ms.set_x(GameState::ms.prev_x);
         //GameState::ms.set_y(GameState::ms.prev_y);
     }
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         GameState::instance->ks.set_mouse_left_button(true);
     }
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE){
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
         GameState::instance->ks.set_mouse_left_button(false);
     }
 }
 
 void InputManager::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-    if (!GameState::instance->cam.cursor_hidden){
-    //    return;
-        //std::cout << "here " << xposIn << "|" << yposIn << "\n";
+    if (!GameState::instance->cam.cursor_hidden) {
+        //    return;
+            //std::cout << "here " << xposIn << "|" << yposIn << "\n";
         GameState::ms.click_x = static_cast<int>(xposIn);
         GameState::ms.click_y = static_cast<int>(yposIn);
     }
@@ -177,7 +177,7 @@ void InputManager::scroll_callback(GLFWwindow* window, double xoffset, double yo
 
 void InputManager::drop_callback(GLFWwindow* window, int count, const char** paths)
 {
-    for (size_t i = 0;  i < count; i++){
+    for (size_t i = 0; i < count; i++) {
         Editor::fileDropCallbackDispatch(paths[i]);
     }
 }
