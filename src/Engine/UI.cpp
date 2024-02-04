@@ -40,17 +40,17 @@ void UI::renderUI(Scene& scn, Renderer& r) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
     //TODO(darius) uncomment this in order to enable docking windows. But it brokes color of application cause you need to switch framebuffers
     //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-    
-    sceneWindow(scn, r);
     objectManipulationWindow(scn);
     guizmoWindow();
+    sceneWindow(scn, r);
     showConsoleWindow();
     showEditorSettingsWindow(r);
     sceneCamerasWindow(scn);
     AssetBrowserWindow();
+    setMenuBarCallback();
+
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ImGui::EndFrame();
@@ -65,7 +65,10 @@ void UI::apply() {
 
 void UI::AssetBrowserWindow()
 {
-    ImGui::Begin("resources");
+    if (!resources) {
+        return;
+    }
+    ImGui::Begin("resources", &resources);
 
     const char* resourcesNames[] = { "Scenes", "Prefabs"};
 
@@ -112,6 +115,9 @@ void UI::AssetBrowserWindow()
 //TODO(darius) check this out https://github.com/tksuoran/erhe/blob/7617e6eda85219346aa92c2c980c699e659c359d/src/editor/windows/layers_window.cpp#LL56C4-L56C4
 void UI::sceneWindow(Scene& scene, Renderer& r)
 {
+    if (!gameobjects) {
+        return;
+    }
     const ImGuiTreeNodeFlags parent_flags{
 		ImGuiTreeNodeFlags_OpenOnArrow |
 		ImGuiTreeNodeFlags_OpenOnDoubleClick |
@@ -122,8 +128,7 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
         ImGuiTreeNodeFlags_NoTreePushOnOpen |
         ImGuiTreeNodeFlags_Leaf
     };
-    
-    if (ImGui::Begin("Game Objects", &show_scene_window))//, ImGuiWindowFlags_AlwaysAutoResize))
+    if (ImGui::Begin("Game Objects", &gameobjects))//, ImGuiWindowFlags_AlwaysAutoResize))
     {
         if (ImGui::CollapsingHeader("NetworkSynchronizer"))//, ImGuiWindowFlags_AlwaysAutoResize))
         {
@@ -891,7 +896,10 @@ void UI::guizmoWindow()
 
 void UI::showConsoleWindow()
 {
-    ImGui::Begin("Console");
+    if (!console) {
+        return;
+    }
+    ImGui::Begin("Console", &console);
 
     if (state && ImGui::Button("Clear console")){
         state -> clear_msg();
@@ -907,7 +915,10 @@ void UI::showConsoleWindow()
 
 void UI::showEditorSettingsWindow(Renderer& hui)
 {
-    ImGui::Begin("Editor Settings");
+    if (!editorsettings) {
+        return;
+    }
+    ImGui::Begin("Editor Settings", &editorsettings);
 
     ImGui::DragFloat("camera speed", GameState::instance->cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
 
@@ -982,7 +993,10 @@ void UI::profilesWindow(std::vector<Profiler<float>>& profilers)
 
 void UI::sceneCamerasWindow(Scene& scene)
 {
-    ImGui::Begin("Scene Cameras");
+    if (!scenecameras) {
+        return;
+    }
+    ImGui::Begin("Scene Cameras", &scenecameras);
 
     if(ImGui::CollapsingHeader("EditorCamera")){
         auto& vec = GameState::instance->cam.getCameraPosRef();
@@ -1036,4 +1050,26 @@ void UI::setItemClickedForced(Object* obj)
 void UI::setTime(double time)
 {
     timeVal = time;
+}
+
+void UI::setMenuBarCallback() {
+    if (ImGui::BeginMainMenuBar())
+    {
+        if (ImGui::BeginMenu("Settings"))
+        {
+            if (ImGui::MenuItem("WindowSettings")) {}
+            if (ImGui::MenuItem("Exit")) {}
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Windows")) {
+            if (ImGui::MenuItem("Scene Cameras")) {scenecameras = true; }
+            if (ImGui::MenuItem("Editor Settings")) {editorsettings = true; }
+            if (ImGui::MenuItem("Resources")) {resources = true; }
+            if (ImGui::MenuItem("Console")) {console = true; }
+            if (ImGui::MenuItem("Game Objects")) {gameobjects = true; }
+            if (ImGui::MenuItem("All Windows")) { scenecameras = true; editorsettings = true; resources = true; console = true; gameobjects = true; }
+            ImGui::EndMenu();
+        }
+    }
+    ImGui::EndMainMenuBar();
 }

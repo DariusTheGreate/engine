@@ -1,6 +1,6 @@
- 0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:77
- 1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
- 2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:26
+ 0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\Dean\fedor\engine\vendor\boost\boost\stacktrace\stacktrace.hpp:77
+ 1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\Dean\fedor\engine\vendor\boost\boost\stacktrace\stacktrace.hpp:130
+ 2# StackTrace::setSignalHandlers at E:\Dean\fedor\engine\src\Engine\StackTrace.cpp:26
  3# raise in ucrtbased
  4# setmbcp in ucrtbased
  5# CrtSetReportHookW2 in ucrtbased
@@ -11,16 +11,18 @@
 10# abort in ucrtbased
 11# get_wide_winmain_command_line in ucrtbased
 12# get_wide_winmain_command_line in ucrtbased
-13# wassert in ucrtbased
-14# ImGui::EndChild at E:\own\programming\engine\vendor\imgui\imgui.cpp:5667
-15# UI::AssetBrowserWindow at E:\own\programming\engine\src\Engine\UI.cpp:94
-16# UI::renderUI at E:\own\programming\engine\src\Engine\UI.cpp:55
-17# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:82
-18# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:22
-19# main at E:\own\programming\engine\src\main.cpp:28
-20# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-21# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-22# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-23# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-24# BaseThreadInitThunk in KERNEL32
-25# RtlUserThreadStart in ntdll
+13# get_wide_winmain_command_line in ucrtbased
+14# wassert in ucrtbased
+15# ImGui::EndMenuBar at E:\Dean\fedor\engine\vendor\imgui\imgui_widgets.cpp:7012
+16# ImGui::EndMainMenuBar at E:\Dean\fedor\engine\vendor\imgui\imgui_widgets.cpp:7094
+17# UI::setMenuBarCallback at E:\Dean\fedor\engine\src\Engine\UI.cpp:1059
+18# UI::renderUI at E:\Dean\fedor\engine\src\Engine\UI.cpp:58
+19# Editor::update at E:\Dean\fedor\engine\src\Engine\Editor.cpp:82
+20# Application::Run at E:\Dean\fedor\engine\src\Engine\Application.cpp:22
+21# main at E:\Dean\fedor\engine\src\main.cpp:28
+22# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+23# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+24# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+25# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+26# BaseThreadInitThunk in KERNEL32
+27# RtlUserThreadStart in ntdll

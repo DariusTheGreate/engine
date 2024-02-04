@@ -127,6 +127,9 @@ public:
 
     void setTime(double time);
 
+    void setMenuBarCallback();
+
+
 private:
     bool show_scene_window = false;
     bool show_object_window = false;
@@ -156,4 +159,9 @@ private:
     //size_t historySize = 1000;
 
     Profiler<float> profile;
+    bool scenecameras = false;
+    bool editorsettings = false;
+    bool resources = false;
+    bool console = false;
+    bool gameobjects = false;
 };
