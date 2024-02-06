@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <Rendering/RenderQuad.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/ShaderLibrary.h>

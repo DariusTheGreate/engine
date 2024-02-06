@@ -85,7 +85,7 @@ public:
 
 	static void UnbindTexture();
 
-	static void ImageTexture(int format, int width, int height, unsigned char* data, int target = GL_TEXTURE_2D, int type = GL_UNSIGNED_BYTE, int lvl = 0, int border = 0);
+	static void ImageTexture(int format, size_t width, size_t height, unsigned char* data, int target = GL_TEXTURE_2D, int type = GL_UNSIGNED_BYTE, int lvl = 0, int border = 0);
 
 	static void ImageMultisampleTexture(int format, int width, int height, unsigned int samples, int target = GL_TEXTURE_2D_MULTISAMPLE);
 

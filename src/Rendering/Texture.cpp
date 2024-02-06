@@ -49,7 +49,7 @@ void Texture::generate()
 	OpenglWrapper::GenerateTextures(&texture);
 }
 
-void Texture::imageTexture(int format, unsigned int W, unsigned int H, const void* data)
+void Texture::imageTexture(int format, size_t W, size_t H, const void* data)
 {
 	OpenglWrapper::ImageTexture(format, W, H, (unsigned char*)data);
 

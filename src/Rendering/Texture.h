@@ -119,7 +119,7 @@ public:
 
 	void generate();
 	
-	void imageTexture(int format, unsigned int W, unsigned int H, const void* data = nullptr);
+	void imageTexture(int format, size_t W, size_t H, const void* data = nullptr);
 
 	void activate(GLenum unit, GLenum target = GL_TEXTURE_2D);
 
@@ -150,8 +150,8 @@ private:
 	GLenum minFilter = GL_NEAREST;//GL_LINEAR_MIPMAP_LINEAR;
 	GLenum magFilter = GL_NEAREST;
 
-	unsigned int Width = 0;
-	unsigned int Height = 0;
+	size_t Width = 0;
+	size_t Height = 0;
 
 	std::string type;
 	std::string path;

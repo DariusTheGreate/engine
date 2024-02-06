@@ -14,12 +14,12 @@ void UnitTests::run()
 void UnitTests::testSIMD()
 {
 	{
-		auto simdedPi = SIMD::convertFloatToSSE(3.1415926);
+		auto simdedPi = SIMD::convertFloatToSSE(3.1415926f);
 		//auto desimdedPiArr  = SIMD::convertMM128ToUnalignedFloatArray(simdedPi);
 		//for(auto i : desimdedPiArr)
 		//	println(i);
 		float desimdedPi = SIMD::convertSSEToFloat(simdedPi);
-		SIMD::assertEqual(3.1415926,  desimdedPi);
+		SIMD::assertEqual(3.1415926f,  desimdedPi);
 	}
 
 	{
@@ -34,16 +34,16 @@ void UnitTests::testSIMD()
 		std::array<int, 16> arr = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
 		auto sum = SIMD::sumOneBuff(arr.data(), 16);
 		//println("sum is ", sum);
-		SIMD::assertEqual(sum, 16);
+		SIMD::assertEqual(static_cast<float>(sum), 16);
 	}
 
 	{
-		auto simdedPi = SIMD::convertFloatToSSE(3.1415926);
-		auto simdedE = SIMD::convertFloatToSSE(2.71828);
+		auto simdedPi = SIMD::convertFloatToSSE(3.1415926f);
+		auto simdedE = SIMD::convertFloatToSSE(2.71828f);
 		auto sum = SIMD::sumSSE(simdedPi, simdedE);
 
 		float desimdedSum = SIMD::convertSSEToFloat(sum);
-		SIMD::assertEqual(5.8598726, desimdedSum);
+		SIMD::assertEqual(5.8598726f, desimdedSum);
 	}
 
 	{

@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <Engine/OcclusionCulling.h>
 #include <Engine/Object.h>
 
@@ -71,8 +72,8 @@ void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
 {
 	auto* buff = raster.getBuff();	
 
-	for(size_t i = 0; i < raster.getW(); ++i){
-		for(size_t j = 0; j < raster.getH(); ++j){
+	for(unsigned char i = 0; i < raster.getW(); ++i){
+		for(unsigned char j = 0; j < raster.getH(); ++j){
 			*raster.at(i, j) = (i + j) > 255 ? 6 : (i + j);
 		}
 	}

@@ -1,3 +1,5 @@
+#define _WIN32_WINNT 0x0601 
+
 #include <Engine/Editor.h>
 #include <Core/Timer.h>
 #include <Core/Printer.h>
@@ -372,7 +374,7 @@ void Editor::fileDropCallbackDispatch(std::string_view path)
 
     std::cout << path << "\n";
 
-    if(path.find(".PREFAB") != std::string_view::npos | path.find(".prefab") != std::string_view::npos)
+    if((path.find(".PREFAB") != std::string_view::npos) || (path.find(".prefab") != std::string_view::npos))
     {
         currScene.deserialize(path);
     }

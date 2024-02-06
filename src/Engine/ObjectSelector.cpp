@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <Engine/ObjectSelector.h>
 #include <Rendering/FrameBuffer.h>
 

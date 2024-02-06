@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x0601
 #include <Engine/UI.h>
 #include <Engine/Terrain.h>
 #include <Engine/StackTrace.h>
@@ -953,10 +954,10 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::SameLine();
     ImGui::Text(std::to_string(timeVal).c_str());
 
-    profile.addRecord(std::round(1 / timeVal));
+    profile.addRecord(static_cast<float&&>((std::round(1 / timeVal))));
 
     if(profile.size() > 0)
-        ImGui::PlotLines("Frame Times", &profile.getHistoryRef()[0], profile.getHistoryRef().size(), 0, NULL, 0, 500, ImVec2(0,100));
+        ImGui::PlotLines("Frame Times", &profile.getHistoryRef()[0], static_cast<int>(profile.getHistoryRef().size()), 0, NULL, 0, 500, ImVec2(0,100));
 
     if (ImGui::Button("Serialize profiler")){
         profile.serialize(GameState::engine_path + profile.getNameRef() + ".profile");
@@ -964,7 +965,7 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 
     ImGui::Text("Frame Rate: ");
     ImGui::SameLine();
-    long rate = std::round(1 / timeVal);
+    long rate = static_cast<long>(std::round(1 / timeVal));
     ImGui::Text(std::to_string(rate).c_str());
 
     ImGui::Text("Draw Calls Count: ");
@@ -985,7 +986,7 @@ void UI::profilesWindow(std::vector<Profiler<float>>& profilers)
     for(auto& p : profilers)
     {
         if(p.size() > 0)
-            ImGui::PlotLines(p.getNameRef().c_str(), &p.getHistoryRef()[0], p.getHistoryRef().size(), 0, NULL, 0, 1, ImVec2(0,100));
+            ImGui::PlotLines(p.getNameRef().c_str(), &p.getHistoryRef()[0], static_cast<int>(p.getHistoryRef().size()), 0, NULL, 0, 1, ImVec2(0,100));
     }
 
     ImGui::End();
@@ -1068,6 +1069,8 @@ void UI::setMenuBarCallback() {
             if (ImGui::MenuItem("Console")) {console = true; }
             if (ImGui::MenuItem("Game Objects")) {gameobjects = true; }
             if (ImGui::MenuItem("All Windows")) { scenecameras = true; editorsettings = true; resources = true; console = true; gameobjects = true; }
+            if (ImGui::MenuItem("Close All Windows")) { scenecameras = false; editorsettings = false; resources = false; console = false; gameobjects = false; }
+
             ImGui::EndMenu();
         }
     }

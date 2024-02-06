@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include "Mesh.h"
 #include <Rendering/OpenglWrapper.h>
 #include <Rendering/Renderer.h>
@@ -115,10 +116,10 @@ void Mesh::Draw(Shader& shader, int instancedAmount)
     vao.bind();
     //TODO(darius) perfomance issues?
     if(mode == DrawMode::DRAW_AS_ARRAYS)
-		glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+		glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertices.size()));
     else if(mode == DrawMode::DRAW_AS_INSTANCE)
          glDrawElementsInstanced(
-        GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, instancedAmount
+        GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0, instancedAmount
     );
     else            
         OpenglWrapper::DrawElements(static_cast<int>(indices.size()));
@@ -242,7 +243,7 @@ void Mesh::addVerticesBath(Mesh& batchee, glm::vec3 shift)
     auto verts = batchee.getVertices() | std::ranges::views::take(4);
     std::ranges::for_each(verts, [shift](auto& v){v.Position += shift; });
 
-    int offset = vertices.size();
+    size_t offset = vertices.size();
     vertices.insert(vertices.end(), verts.begin(), verts.end());
 
     auto indV = batchee.getIndices();
@@ -252,7 +253,7 @@ void Mesh::addVerticesBath(Mesh& batchee, glm::vec3 shift)
 
     for(auto& i : indV)
     {
-        i += offset;
+        i += static_cast<unsigned int>(offset);
     }
 
     indices.insert(indices.end(), indV.begin(), indV.begin() + 6);

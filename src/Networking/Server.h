@@ -30,7 +30,7 @@ size_t readSocket(boost::asio::ip::tcp::socket& hueket, boost::asio::streambuf& 
 class ClientConnection
 {
 public:
-	ClientConnection(size_t port) : clientPort(port), acceptor(context, tcp::endpoint(tcp::v4(), port)) {}
+	ClientConnection(size_t port) : clientPort(port), acceptor(context, tcp::endpoint(tcp::v4(), static_cast<boost::asio::ip::port_type>(port))) {}
 public:
 	void process();
 

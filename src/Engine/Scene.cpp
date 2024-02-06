@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x0601
 #include <Engine/Editor.h>
 #include <Engine/Scene.h>
 #include <Engine/Object.h>
@@ -1061,7 +1062,7 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 	std::optional<SpriteAnimator> resSpriteAnimator = std::nullopt;
 	resSpriteAnimator.emplace(Animator<SpriteAnimation>());
 
-	int currAnimId = extractCurrAnimIdFromToken(tkn, spriteAnimatorStart);
+	int currAnimId = extractCurrAnimIdFromToken(tkn, static_cast<int>(spriteAnimatorStart));
 
 	resSpriteAnimator->setCurrAnim(currAnimId);
 	std::vector<std::vector<size_t>> graphRes;
@@ -1111,7 +1112,7 @@ std::optional<SpriteAnimator> Scene::extractSpriteAnimatorFromToken(std::string_
 		size_t brcktStart = tkn.find("{", delayStart);
 		size_t brcktEnd = tkn.find("}", brcktStart);
 
-		float delayVal = std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1)));
+		float delayVal = static_cast<float>(std::stoi(std::string(tkn.substr(brcktStart + 1, brcktEnd - brcktStart - 1))));
 
 		size_t pointStart = tkn.find("Point:", currAnimStart);
 

@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x0601
 #include <Rendering/ShaderLibrary.h>
 #include <Core/Timer.h>
 #include <Engine/Editor.h>

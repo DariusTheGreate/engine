@@ -47,7 +47,7 @@ public:
     std::vector<glm::vec4> positions;
     std::vector<Particle> particles;
 
-	int amount = 21;
+	size_t amount = 21;
 
     std::optional<Mesh> particle; 
 

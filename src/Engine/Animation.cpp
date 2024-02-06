@@ -1,5 +1,8 @@
+#include <windows.h>
 #include <Engine/Animation.h>
 #include <Engine/StackTrace.h>
+
+#define WIN32_NO_STATUS
 
 SkeletalAnimation::SkeletalAnimation(const std::string& animationPath, Model* model)
 {
@@ -192,7 +195,10 @@ void SpriteAnimation::setSprite(FlatMesh* mesh)
 
 void SpriteAnimation::update(float currentTime) 
 {
-	assert(sprite, "sprite animation sprite not set\n");
+	if (!sprite) {
+		std::cout << "sprite animation sprite not set\n" << std::endl;
+		assert(sprite);
+	}
 	//TODO(darius) refactor this
 	if ((currentTime - lastTime)*1000 < delayMs || !play)
 		return;

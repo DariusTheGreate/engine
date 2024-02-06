@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <Rendering/CubeMap.h>
 #include <Rendering/Renderer.h>
 

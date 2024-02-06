@@ -1,3 +1,4 @@
+#include <Windows.h>
 #include <Rendering/FrameBuffer.h>
 #include <Rendering/Renderer.h>
 

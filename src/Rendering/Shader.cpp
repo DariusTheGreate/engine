@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include <Windows.h>
 
 Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filepath_in) {
 	shader = OpenglWrapper::CreateShader(type);
@@ -29,7 +30,7 @@ void Shader::load()
 
 		source = vShaderStream.str();
 	}
-	catch (std::ifstream::failure& e)
+	catch (std::ifstream::failure&)
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: " << filepath << std::endl;
 	}
@@ -169,7 +170,7 @@ bool Shader::checkForSourceChanges()
 			return true;
 		}
 	}
-	catch (std::ifstream::failure& e)
+	catch (std::ifstream::failure&)
 	{
 		std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ_AT_RELOADING: " << filepath << std::endl;
 	}

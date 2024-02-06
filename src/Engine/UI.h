@@ -1,4 +1,5 @@
 #pragma once
+#include <windows.h>
 #include <Engine/Scene.h>
 #include <Engine/GameState.h>
 #include <Rendering/Renderer.h>

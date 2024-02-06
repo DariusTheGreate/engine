@@ -1,3 +1,4 @@
+#include <windows.h>
 #include <Engine/ParticleSystem.h>
 #include <Engine/Object.h>
 #include <Rendering/Renderer.h>
@@ -67,7 +68,7 @@ void ParticleSystem::renderParticles()
         OpenglWrapper::UseProgram(sv.getProgram());
 
         Renderer::shaderLibInstance->shaderRoutine(&tmpObj);
-        particle->Draw(sv, positions.size());
+        particle->Draw(sv, static_cast<int>(positions.size()));
     }
 
     OpenglWrapper::DisableBlending();

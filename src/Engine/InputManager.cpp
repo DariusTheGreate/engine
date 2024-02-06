@@ -1,3 +1,4 @@
+#define _WIN32_WINNT 0x0601
 #include "InputManager.h"
 #include <Engine/Editor.h>
 

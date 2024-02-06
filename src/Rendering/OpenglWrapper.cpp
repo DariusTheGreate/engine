@@ -195,9 +195,9 @@ void OpenglWrapper::UnbindTexture()
     BindTexture(0);
 }
 
-void OpenglWrapper::ImageTexture(int format, int width, int height, unsigned char* data, int target, int type, int lvl, int border)
+void OpenglWrapper::ImageTexture(int format, size_t width, size_t height, unsigned char* data, int target, int type, int lvl, int border)
 {
-    glTexImage2D(target, lvl, format, width, height, border, format, type, data);
+    glTexImage2D(target, lvl, format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), border, format, type, data);
 }
 
 void OpenglWrapper::ImageMultisampleTexture(int format, int width, int height, unsigned int samples, int target)

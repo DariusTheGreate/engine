@@ -138,7 +138,7 @@ public:
 	{
 		simdSSEFloat sseA;
 		simdSSEFloat sseB;
-		simdSSEFloat sseSum;
+		//simdSSEFloat sseSum;
 
 		int i = 0;
 
@@ -251,8 +251,11 @@ public:
 
 	static void assertEqual(float a, float b)
 	{
-		float EPS = 0.00001;
-		assert(std::abs(a - b) < EPS, "Assertion of floats failed!");
+	    float EPS = 0.00001f;
+		if (!(std::abs(a - b) < EPS)) {
+			std::cout << "Assertion of floats failed!" << std::endl;
+			assert(std::abs(a - b) < EPS);
+		}
 	}
 
 	static bool assertEqual(char* a, char* b, int len)

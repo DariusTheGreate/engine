@@ -1,3 +1,5 @@
+#define _WIN32_WINNT 0x0601
+#include <Windows.h>
 #include <Engine/Terrain.h>
 #include <Rendering/Renderer.h>
 #include <Core/Printer.h>
@@ -27,13 +29,13 @@ Terrain::Terrain(std::string heightMap)
         }
     }
 
-    for(unsigned i = 0; i < imageLoader.H-1; i += rez)
+    for(size_t i = 0; i < imageLoader.H-1; i += rez)
     {
-        for(unsigned j = 0; j < imageLoader.W; j += rez)
+        for(size_t j = 0; j < imageLoader.W; j += rez)
         {
-            for(unsigned k = 0; k < 2; k++)
+            for(size_t k = 0; k < 2; k++)
             {
-                indices.push_back(j + imageLoader.W* (i + k*rez));
+                indices.push_back(static_cast<unsigned int&&>((j + static_cast<size_t>(imageLoader.W) * (i + k*rez))));
             }
         }
     }
@@ -73,7 +75,7 @@ void Terrain::draw()
 
 	terrainVAO.bind();
 
-    for(unsigned strip = 0; strip < numStrips; strip++)
+    for(size_t strip = 0; strip < numStrips; strip++)
     {
         glDrawElements(GL_TRIANGLE_STRIP, numTrisPerStrip+2, GL_UNSIGNED_INT, (void*)(sizeof(unsigned) * (numTrisPerStrip+2) * strip));
     }
