@@ -1,5 +1,8 @@
 #pragma once
+
 #include <stb_image.h>
+
+
 #include <string>
 #include <Rendering/OpenglWrapper.h>
 #include <Core/Printer.h>
@@ -57,6 +60,7 @@ struct ImageUtils
 		}
 	}
 
+	static void saveImageRawData(const char* filename, int32_t w, int32_t h, uint8_t* data);
 
 	static unsigned int TextureFromFile(const char* filename, bool rotateTextureOnLoad = false)
 	{

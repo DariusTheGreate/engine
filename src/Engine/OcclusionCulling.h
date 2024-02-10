@@ -18,6 +18,11 @@ public:
 
 	static void rasterizeOccluders(std::vector<Object*> objs);
 
+	static void saveRaster()
+	{
+		raster.saveBuffToImage();
+	}
+
 	static glm::vec2 intersectAABB(MeshAABB aabb, glm::vec3 rayDir) 
 	{
 		glm::vec2 res;	

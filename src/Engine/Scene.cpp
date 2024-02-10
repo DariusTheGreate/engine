@@ -222,12 +222,12 @@ void Scene::deleteFlatMesh(FlatMesh* mesh)
 	delete mesh;
 }
 
-EmptyScriptRoutine* Scene::createRoutine(std::string path)
+DllScriptRoutine* Scene::createRoutine(std::string path)
 {
-	return new EmptyScriptRoutine(std::move(path), GameState::instance);
+	return new DllScriptRoutine(std::move(path), GameState::instance);
 }
 
-void Scene::deleteRoutine(EmptyScriptRoutine* r)
+void Scene::deleteRoutine(DllScriptRoutine* r)
 {
 	delete r;
 }

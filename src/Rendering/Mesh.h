@@ -27,6 +27,13 @@ struct Vertex {
     float m_Weights[MAX_BONE_INFLUENCE];
 };
 
+struct Triangle 
+{
+    glm::vec3 x;
+    glm::vec3 y;
+    glm::vec3 z;
+};
+
 enum class DrawMode
 {
     DRAW_AS_ARRAYS,
@@ -67,6 +74,8 @@ public:
     std::vector<unsigned int> getIndices();
 
     std::vector<unsigned int>& getIndicesRef();
+
+    std::vector<Triangle> getTriangles();
 
     std::vector<Texture> getTextures();
 

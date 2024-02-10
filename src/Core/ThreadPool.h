@@ -85,3 +85,4 @@ private:
 	BlockingQueue<std::function<void()>> queue;
 	std::vector<std::thread> workers;
 };
+

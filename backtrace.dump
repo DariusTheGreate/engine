@@ -1,28 +1,22 @@
- 0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\Dean\fedor\engine\vendor\boost\boost\stacktrace\stacktrace.hpp:77
- 1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\Dean\fedor\engine\vendor\boost\boost\stacktrace\stacktrace.hpp:130
- 2# StackTrace::setSignalHandlers at E:\Dean\fedor\engine\src\Engine\StackTrace.cpp:26
+ 0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:77
+ 1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
+ 2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:26
  3# raise in ucrtbased
- 4# setmbcp in ucrtbased
- 5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportW in ucrtbased
- 7# CrtDbgReportW in ucrtbased
- 8# _threadid in ucrtbased
- 9# _threadid in ucrtbased
-10# abort in ucrtbased
-11# get_wide_winmain_command_line in ucrtbased
-12# get_wide_winmain_command_line in ucrtbased
-13# get_wide_winmain_command_line in ucrtbased
-14# wassert in ucrtbased
-15# ImGui::EndMenuBar at E:\Dean\fedor\engine\vendor\imgui\imgui_widgets.cpp:7012
-16# ImGui::EndMainMenuBar at E:\Dean\fedor\engine\vendor\imgui\imgui_widgets.cpp:7094
-17# UI::setMenuBarCallback at E:\Dean\fedor\engine\src\Engine\UI.cpp:1059
-18# UI::renderUI at E:\Dean\fedor\engine\src\Engine\UI.cpp:58
-19# Editor::update at E:\Dean\fedor\engine\src\Engine\Editor.cpp:82
-20# Application::Run at E:\Dean\fedor\engine\src\Engine\Application.cpp:22
-21# main at E:\Dean\fedor\engine\src\main.cpp:28
-22# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-23# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-24# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-25# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-26# BaseThreadInitThunk in KERNEL32
-27# RtlUserThreadStart in ntdll
+ 4# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:28
+ 5# seh_filter_exe in ucrtbased
+ 6# `__scrt_common_main_seh'::`1'::filt$0 at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:304
+ 7# _C_specific_handler in VCRUNTIME140D
+ 8# _chkstk in ntdll
+ 9# RtlRaiseException in ntdll
+10# KiUserExceptionDispatcher in ntdll
+11# OcclusionCuller::rasterizeOccluders at E:\own\programming\engine\src\Engine\OcclusionCulling.cpp:76
+12# Renderer::render at E:\own\programming\engine\src\Rendering\Renderer.cpp:315
+13# Editor::update at E:\own\programming\engine\src\Engine\Editor.cpp:77
+14# Application::Run at E:\own\programming\engine\src\Engine\Application.cpp:23
+15# main at E:\own\programming\engine\src\main.cpp:135
+16# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
+17# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
+18# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
+19# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
+20# BaseThreadInitThunk in KERNEL32
+21# RtlUserThreadStart in ntdll

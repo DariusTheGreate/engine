@@ -18,7 +18,7 @@ void main()
 
 vec2 getPixelizedCoords()
 {
-	int pixelSize = 3;
+	int pixelSize = 1;
 
 	vec2 texSize  = textureSize(screenTexture, 0).xy;
 	vec2 texCoord = gl_FragCoord.xy / texSize;

@@ -28,12 +28,14 @@ public:
 	virtual void setInstance(GameState* p) = 0;
 };
 
-class EmptyScriptRoutine 
+class DllScriptRoutine 
 {
 public:
-    EmptyScriptRoutine(std::string_view path, GameState* inst);
+    DllScriptRoutine(std::string_view path, GameState* inst);
 
-	EmptyScriptRoutine() = default;
+    DllScriptRoutine(ScriptRoutine* routine) : plugin(routine){}
+
+	DllScriptRoutine() = default;
 
 	void loadDll(std::string_view path);
 
@@ -51,4 +53,3 @@ private:
 	int time = 0;
 	std::string path;
 };
-

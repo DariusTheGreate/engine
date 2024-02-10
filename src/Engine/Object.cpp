@@ -17,7 +17,7 @@ Object::Object(std::string name_in)
     tr.setScale({1,1,1});
 }
 
-void Object::setupScript(EmptyScriptRoutine* r)
+void Object::setupScript(DllScriptRoutine* r)
 {
     script.value().set_scripts(r);
 }
@@ -127,7 +127,7 @@ void Object::moveTransform(glm::vec3 v)
     getTransform().addToPosition(v);
 }
 
-void Object::addScript(Scene* scn, EmptyScriptRoutine* routine)
+void Object::addScript(Scene* scn, DllScriptRoutine* routine)
 {
     if (script.has_value())
         return;

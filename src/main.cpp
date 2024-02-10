@@ -5,6 +5,7 @@
 #include <Engine/UI.h>
 #include "Engine/GameState.h"
 #include <Engine/StackTrace.h>
+#include <Core/ThreadPool.h>
 
 #define DEAN_UNIT_TEST_SHIT
 
@@ -26,6 +27,7 @@ int main()
 
         Application* app = new Application((char*)"Dean", 1920, 1080);
         app->Run();
+
         std::cout << "------\n";
     }
     catch(std::exception& e)
@@ -40,4 +42,3 @@ int main()
 
     return 0;
 }
-

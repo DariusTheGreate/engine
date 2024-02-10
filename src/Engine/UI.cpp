@@ -2,6 +2,7 @@
 #include <Engine/UI.h>
 #include <Engine/Terrain.h>
 #include <Engine/StackTrace.h>
+#include <Engine/OcclusionCulling.h>
 
 struct Indenter
 {
@@ -168,6 +169,11 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
         if (ImGui::Button("Add Entity")) {
             auto* enttobj = scene.AddEmpty(emptyCreated++);        
             scene.createEntity(enttobj, path, false);
+        }
+
+        if(ImGui::Button("save occluder image"))
+        {
+            OcclusionCuller::saveRaster();
         }
 
         if (ImGui::Button("Add Objects")) {
@@ -832,7 +838,7 @@ void UI::componentAdderWindow(Renderer& hui)
             path.shrink_to_fit();
             //DANGER(darius) leak
             //TODO(darius) make factories
-            EmptyScriptRoutine* routine = new EmptyScriptRoutine(path.c_str(), GameState::instance);
+            DllScriptRoutine* routine = new DllScriptRoutine(path.c_str(), GameState::instance);
             //Script s(hui.getScene(), item_clicked, routine);
             item_clicked->addScript(hui.getScene(), routine);
             item_clicked->getScript()->startScript();
