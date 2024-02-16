@@ -8,6 +8,11 @@
 #include <numeric>
 #include <functional>
 
+#include <glm/glm.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/quaternion.hpp >
+#include <glm/gtx/euler_angles.hpp>
+
 template<typename T>
 T vmin(T&&t)
 {
@@ -116,4 +121,33 @@ namespace Parallel
         };
     }
 
+};
+
+namespace Geometry
+{
+    template<size_t>
+	void Slerp(glm::quat q1, glm::quat q2, glm::quat& qr, double lambda) 
+	{
+		float dotproduct = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+		float theta, st, sut, sout, coeff1, coeff2;
+
+		// algorithm adapted from Shoemake's paper
+		lambda=lambda/2.0;
+
+		theta = (float) acos(dotproduct);
+		if (theta<0.0) theta=-theta;
+		
+		st = (float) sin(theta);
+		sut = (float) sin(lambda*theta);
+		sout = (float) sin((1-lambda)*theta);
+		coeff1 = sout/st;
+		coeff2 = sut/st;
+
+		qr.x = coeff1*q1.x + coeff2*q2.x;
+		qr.y = coeff1*q1.y + coeff2*q2.y;
+		qr.z = coeff1*q1.z + coeff2*q2.z;
+		qr.w = coeff1*q1.w + coeff2*q2.w;
+
+		glm::normalize(qr);
+	}
 };

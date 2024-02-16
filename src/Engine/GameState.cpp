@@ -37,13 +37,20 @@ void GameState::saveActiveCameraStateIntoEditorCamera()
 	*editorCamera = GameState::instance->cam;
 }
 
+void GameState::setCameraMotionPoints(const CameraPoints& points)
+{
+	GameState::cameraMotionPoints = points;
+}
+
 //std::string GameState::debug_msg;
 //size_t GameState::debug_len = 100;
 
 int GameState::editor_mode = 2;//0 - no UI
 Camera* GameState::editorCamera = nullptr;
 bool GameState::editorCameraMode = true;
+CameraPoints GameState::cameraMotionPoints;
 GameState* GameState::instance = nullptr;
+Timer GameState::currTime;
 
 std::string GameState::engine_path = "E:/own/programming/engine/";
 

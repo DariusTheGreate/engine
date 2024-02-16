@@ -4,6 +4,7 @@
 #include "Engine/Camera.h"
 #include "MouseState.h"
 #include "KeyboardState.h"
+#include <Core/Timer.h>
 
 //TODO(darius) fix this bullshit
 class GameState
@@ -20,12 +21,17 @@ public:
 	static void setEditorCameraMode();
 
 	static void saveActiveCameraStateIntoEditorCamera();
+
+	static void setCameraMotionPoints(const CameraPoints& points);
 	
 public:
 	//TODO(darius) make it not static? See why below
+	//TODO(darius) currently NO synchronization
 	Camera cam;// active camera
 	static Camera* editorCamera;
 	static bool editorCameraMode;
+	static CameraPoints cameraMotionPoints;
+	static Timer currTime;
 
 	static float gammaBrightness;
 	static float gammaFactor;

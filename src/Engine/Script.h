@@ -35,11 +35,11 @@ struct ScriptProperty
 class Script 
 {
 public:
-	Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r);
+	Script(Scene* scn, Object* pobj, DllScriptRoutine* r);
 
 	Script(Scene* scn, Object* pobj);
 
-	void set_scripts(EmptyScriptRoutine* r);
+	void set_scripts(DllScriptRoutine* r);
 
 	void set_scripts_from_file();
 
@@ -57,12 +57,12 @@ public:
 
 	std::vector<ScriptProperty<float>>& getFloatProperties();
 
-	EmptyScriptRoutine* getRoutine();
+	DllScriptRoutine* getRoutine();
 
 private:
 	//std::function<void(ScriptArgument*)> start;
 	//std::function<void(ScriptArgument*)> update;
-	EmptyScriptRoutine* routine = nullptr;
+	DllScriptRoutine* routine = nullptr;
 	
 	Scene* scriptScene = nullptr;
 	Object* parentObj = nullptr;

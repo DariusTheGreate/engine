@@ -960,6 +960,11 @@ void UI::showEditorSettingsWindow(Renderer& hui)
     ImGui::SameLine();
     ImGui::Text(std::to_string(timeVal).c_str());
 
+    ImGui::Text("Curr Time: ");
+    ImGui::SameLine();
+    ImGui::Text(std::to_string(GameState::currTime.checkTime()).c_str());
+
+
     profile.addRecord(static_cast<float&&>((std::round(1 / timeVal))));
 
     if(profile.size() > 0)

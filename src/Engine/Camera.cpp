@@ -203,3 +203,9 @@ void Camera::setAsActiveCamera()
     GameState::saveActiveCameraStateIntoEditorCamera();
     GameState::instance->cam = *this; 
 }
+
+void Camera::interpolateCamera(const CameraPoints& points, size_t pointI)
+{
+   
+
+}
