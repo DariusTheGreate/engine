@@ -40,6 +40,16 @@ std::vector<unsigned int>& Mesh::getIndicesRef()
     return indices;
 }
 
+std::vector<Triangle> Mesh::getTriangles() 
+{
+    std::vector<Triangle> triangles;
+    for (int32_t i = 0; i < vertices.size(); i += 3) 
+    {
+        triangles.push_back({vertices[i].Position, vertices[i+1].Position, vertices[i+2].Position});
+    }
+    return triangles;
+}
+
 std::vector<Texture> Mesh::getTextures()
 {
     return textures;

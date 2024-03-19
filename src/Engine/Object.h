@@ -29,7 +29,7 @@ public:
 
 	Object& operator =(const Object& obj) = delete;
 
-	void setupScript(EmptyScriptRoutine* r);
+	void setupScript(DllScriptRoutine* r);
 
 	void startScript();
 
@@ -55,7 +55,7 @@ public:
 
 	void moveTransform(glm::vec3 v);
 
-	void addScript(Scene* scn, EmptyScriptRoutine* routine);
+	void addScript(Scene* scn, DllScriptRoutine* routine);
 	
 	std::optional<Script>& getScript();
 	

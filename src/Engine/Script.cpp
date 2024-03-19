@@ -3,7 +3,7 @@
 #include <Engine/Object.h>
 #include <iostream>
 
-Script::Script(Scene* scn, Object* pobj, EmptyScriptRoutine* r) : scriptScene(scn), parentObj(pobj), routine(r)
+Script::Script(Scene* scn, Object* pobj, DllScriptRoutine* r) : scriptScene(scn), parentObj(pobj), routine(r)
 {
 }
 
@@ -11,7 +11,7 @@ Script::Script(Scene* scn, Object* pobj) : scriptScene(scn), parentObj(pobj)
 {
 }
 
-void Script::set_scripts(EmptyScriptRoutine* r)
+void Script::set_scripts(DllScriptRoutine* r)
 {
 	routine = r;
 }
@@ -62,7 +62,7 @@ std::vector<ScriptProperty<float>>& Script::getFloatProperties()
 	return float_properties;
 }
 
-EmptyScriptRoutine* Script::getRoutine()
+DllScriptRoutine* Script::getRoutine()
 {
 	return routine;
 }

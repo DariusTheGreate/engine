@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <thread>
+#include <cmath>
 
 //NOTE(darius) no UB here.
 void EditorEvent::operator delete(EditorEvent* p, std::destroying_delete_t) {
@@ -56,6 +57,11 @@ Editor::Editor(Window* wind) : ui(wind->getWindow(), &state), rendol(&currScene,
     tr.detach();
 
     Renderer::currentRendererPtr = &rendol;
+    
+    //CameraPoints points;
+    //points.points = { {0.0f, {0.0f, 0.0f, 0.0f}}, {1.0f, {1.0f, 1.0f, 1.0f}}, {2.0f, {2.0f, 2.0f, 2.0f}} };
+    //points.currPoint = 0;
+    //GameState::setCameraMotionPoints(points);
 }
 
 void Editor::update()
@@ -77,11 +83,13 @@ void Editor::update()
     rendol.render(window);
 
     if(GameState::editor_mode != 0){
-        ui.setTime(t.checkTime());
+        ui.setTime(t.checkTime());//TODO: move it to gamestate
         ui.renderUI(currScene, rendol);
     }
 
     rendol.updateBuffers(window);
+
+    //GameState::currTime += t.checkTime();
 }
 
 void Editor::setEditorMode(int mode)
@@ -263,6 +271,29 @@ void Editor::updateInput() {
 void Editor::updateCamera()
 {
     if (GameState::instance->cam.cursor_hidden == false) {
+		if (GameState::cameraMotionPoints.points.size() > 0)
+		{
+			auto& points = GameState::cameraMotionPoints.points;
+
+			size_t idx = GameState::cameraMotionPoints.currPoint;
+            size_t idx2 = idx + 1;
+
+            if (idx + 1 >= points.size()) {
+                idx = GameState::cameraMotionPoints.currPoint = 0;
+                idx2 = idx + 1;
+            }
+
+			float xl = std::lerp(points.at(idx).tr.x, points.at(idx2).tr.x, GameState::currTime.checkTime() - points.at(idx).timeStamp);
+			float yl = std::lerp(points.at(idx).tr.y, points.at(idx2).tr.y, GameState::currTime.checkTime() - points.at(idx).timeStamp);
+			float zl = std::lerp(points.at(idx).tr.z, points.at(idx2).tr.z, GameState::currTime.checkTime() - points.at(idx).timeStamp);
+
+            glm::vec3 posl = {xl, yl, zl};
+            //println(posl);
+            GameState::instance->cam.setCameraPos(posl);
+            //rendol.getDebugRenderer().renderDebugPoint(posl, glm::vec4{0.0f, 1.0f, 0.0f, 0.0f});
+
+            GameState::cameraMotionPoints.currPoint = idx;
+		}
         return;
     }
 

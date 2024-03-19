@@ -1,5 +1,9 @@
 #include "Texture.h"
 
+#define  __STDC_LIB_EXT1__
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h> 
+
 Texture::Texture()
 {
 	generate();
@@ -107,5 +111,10 @@ void Texture::set_type(std::string t)
 
 std::string Texture::get_path() {
 	return path;
+}
+
+void ImageUtils::saveImageRawData(const char* filename, int32_t w, int32_t h, uint8_t* data)
+{
+	stbi_write_jpg(filename, w, h, 1, data, 100);
 }
 

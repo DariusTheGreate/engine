@@ -178,9 +178,9 @@ public:
 
 	void deleteFlatMesh(FlatMesh* mesh);
 
-	EmptyScriptRoutine* createRoutine(std::string path);
+	DllScriptRoutine* createRoutine(std::string path);
 
-	void deleteRoutine(EmptyScriptRoutine*);
+	void deleteRoutine(DllScriptRoutine*);
 
 	Camera* createCamera();
 

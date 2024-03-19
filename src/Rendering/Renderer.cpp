@@ -310,7 +310,8 @@ void Renderer::render(Window* wind)
 	FrustumCuller::updateFrustum();
 	OcclusionCuller::updateOrigin();
 	//NOTE(darius) in progress uncomment to test
-	//	OcclusionCuller::cull(currScene->get_objects());
+	//OcclusionCuller::cull(currScene->get_objects());
+	OcclusionCuller::rasterizeOccluders(currScene->getObjects());
 
 	Renderer::drawCallsCount = 0;
 	Renderer::drawCallsInstancedCount = 0;

@@ -4,6 +4,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <vector>
+#include <Engine/Transform.h>
+
+struct CameraPoints
+{
+    struct Point
+    {
+        float timeStamp = 0.0f;
+        glm::vec3 tr;
+    };
+
+    std::vector<Point> points;
+
+    size_t currPoint = 0;
+};
 
 class Camera {
 public:
@@ -65,6 +79,8 @@ public:
     float getFov() const;
 
     void setAsActiveCamera();
+
+    void interpolateCamera(const CameraPoints& points, size_t pointI);
 
 public:
     bool cursor_hidden = true;

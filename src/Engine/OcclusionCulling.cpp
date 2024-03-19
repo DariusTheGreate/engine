@@ -72,13 +72,27 @@ void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
 {
 	auto* buff = raster.getBuff();	
 
-	for(unsigned char i = 0; i < raster.getW(); ++i){
-		for(unsigned char j = 0; j < raster.getH(); ++j){
-			*raster.at(i, j) = (i + j) > 255 ? 6 : (i + j);
+	for (size_t i = 0; i < raster.getW(); ++i) {
+		for(size_t j = 0; j < raster.getH(); ++j){
+			*raster.at(i, j) = 128;//(i + j) > 255 ? 6 : (i + j);
 		}
 	}
+	return;
 
-	raster.printBuff();	
+	for (const auto& o : objs) 
+	{
+		auto& objectMeshes = o->getModel()->meshes;
+
+		for (auto& m : objectMeshes) 
+		{
+			auto triangles = m.getTriangles();
+			for(auto& t : triangles)
+				raster.drawTri(t);
+		}
+
+	}
+
+	//raster.printBuff();	
 }
 
 glm::vec3 OcclusionCuller::origin = {0,0,0};

@@ -136,7 +136,7 @@ void main()
     else
         norm = normalize(Normal);
 
-    bool useTMN = true;
+    bool useTMN = false;
     if(useTMN){
         norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
     }

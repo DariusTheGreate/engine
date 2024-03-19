@@ -1,6 +1,7 @@
 #include <Engine/UnitTests.h>
 #include <Core/SIMD.h>
 #include <Core/Printer.h>
+#include <Core/Utility.h>
 
 #include <numbers>
 #include <algorithm>
@@ -103,6 +104,21 @@ void UnitTests::testSIMD()
 		for(int i = 0; i < 8; ++i){
 			//println(SIMD::convertSSEToFloat(buffSumSimd[i]), " ", buffSumNotSimd[i]);
 		}
+	}
+
+
+	{
+		glm::vec4 x1 = { 1.0f, 0.0f, 0.0f, 0.0f};
+		glm::vec4 y1 = { 0.0f, 1.0f, 0.0f,0.0f };
+		glm::vec4 z1 = { 0.0f, 0.0f, 1.0f,0.0f };
+
+		glm::mat4 r1(x1, y1, z1, glm::vec4(0.0f));
+
+		glm::quat q1(r1);
+
+		glm::mat4 r2(y1, x1, z1, glm::vec4(0.0f));
+
+		glm::quat q2(r2);
 	}
 
 }

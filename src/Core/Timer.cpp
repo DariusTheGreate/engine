@@ -1,9 +1,11 @@
 #include "Core/Timer.h"
 #include <Core/Printer.h>
 
+//TODO: why chrono AND glfw? 
 #include <chrono>
 #include <ctime>
 #include <array>
+#include <GLFW/glfw3.h>
 
 Timer::Timer(bool printOrNot) : print(printOrNot) {
 	time = 0.0;
