@@ -24,6 +24,13 @@ std::array<glm::vec3, 8> MeshAABB::getCorners()
     return points;
 }
 
+bool MeshAABB::isInside(const glm::vec3& point) {
+    if (max.x > point.x && max.y > point.y && max.z > point.z && min.x < point.x && min.y < point.y && min.z < point.z) {
+        return true;
+    }
+    return false;
+}
+
 bool MeshAABB::isOnOrForwardPlane(const Plane& plane) 
 {
     float r = size.x * std::abs(plane.normal.x) + size.y * std::abs(plane.normal.y) +

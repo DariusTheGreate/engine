@@ -29,4 +29,6 @@ struct MeshAABB
     bool isOnOrForwardPlane(const Plane& plane);
 
     bool isOnFrustum(Frustum& camFrustum);
+
+    bool isInside(const glm::vec3& point);
 };
