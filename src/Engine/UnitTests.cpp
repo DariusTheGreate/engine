@@ -5,7 +5,10 @@
 
 #include <numbers>
 #include <algorithm>
-
+#include <map>
+#include <limits>
+#include <iostream>
+#include <random>
 
 void UnitTests::run()
 {
@@ -88,10 +91,10 @@ void UnitTests::testSIMD()
 
 	{
 		std::array<float, 8> buff1;
-		std::generate(buff1.begin(), buff1.end(), [](){ return rand(); });
+		std::generate(buff1.begin(), buff1.end(), [](){ return static_cast<float>(rand()); });
 
 		std::array<float, 8> buff2;
-		std::generate(buff2.begin(), buff2.end(), [](){ return rand(); });
+		std::generate(buff2.begin(), buff2.end(), [](){ return static_cast<float>(rand()); });
 
 		std::array<float, 8> buffSumNotSimd;	
 		for(int i = 0; i < 8; ++i){

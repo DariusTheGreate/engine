@@ -1,8 +1,10 @@
-#include <windows.h>
 #include <Engine/Animation.h>
-#include <Engine/StackTrace.h>
 
-#define WIN32_NO_STATUS
+#include <Core/Printer.h>
+#include <Core/Timer.h>
+#include <Rendering/Model.h>
+
+#include <Engine/StackTrace.h>
 
 SkeletalAnimation::SkeletalAnimation(const std::string& animationPath, Model* model)
 {

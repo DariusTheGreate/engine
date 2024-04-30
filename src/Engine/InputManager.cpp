@@ -18,6 +18,8 @@ void InputManager::framebuffer_size_standart_callback(GLFWwindow* window, int wi
     glViewport(0, 0, width, height);
 }
 
+
+//TODO(darius) VERY expensive function
 void InputManager::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {

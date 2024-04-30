@@ -60,7 +60,7 @@ struct ImageUtils
 		}
 	}
 
-	static void saveImageRawData(const char* filename, int32_t w, int32_t h, uint8_t* data);
+	static void saveImageRawData(const char* filename, uint32_t w, uint32_t h, uint8_t* data);
 
 	static unsigned int TextureFromFile(const char* filename, bool rotateTextureOnLoad = false)
 	{

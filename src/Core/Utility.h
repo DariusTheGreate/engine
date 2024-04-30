@@ -114,10 +114,6 @@ namespace Parallel
 
         auto sort_block = [](Iterator first, Iterator last) {
             sort(first, last, std::less{});
-            std::cout << "s:";
-            for (Iterator i = first; i < last; ++i)
-                std::cout << *i;
-            std::cout << "\n";
         };
     }
 
@@ -150,4 +146,11 @@ namespace Geometry
 
 		glm::normalize(qr);
 	}
+};
+
+namespace Math
+{
+	glm::mat4 interpolatePosition(const glm::vec3& posa, const glm::vec3& posb, float scaleFactor);
+	
+	float getScaleFactor(float t1, float t2, float tStamp);
 };

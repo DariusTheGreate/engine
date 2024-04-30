@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Rendering/Mesh.h>
-#include <Rendering/Model.h>
-#include <Rendering/Texture.h>
 
 #include <string>
 

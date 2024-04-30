@@ -113,7 +113,7 @@ std::string Texture::get_path() {
 	return path;
 }
 
-void ImageUtils::saveImageRawData(const char* filename, int32_t w, int32_t h, uint8_t* data)
+void ImageUtils::saveImageRawData(const char* filename, uint32_t w, uint32_t h, uint8_t* data)
 {
 	stbi_write_jpg(filename, w, h, 1, data, 100);
 }

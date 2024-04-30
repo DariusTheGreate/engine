@@ -8,7 +8,6 @@
 #include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-#include <Rendering/Model.h>
 
 struct KeyPosition
 {
@@ -62,8 +61,6 @@ public:
 	int GetScaleIndex(float animationTime);
 
 private:
-	float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
-
 	glm::mat4 InterpolatePosition(float animationTime);
 
 	glm::mat4 InterpolateRotation(float animationTime);
@@ -84,3 +81,4 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, Bone& a);
+

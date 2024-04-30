@@ -7,7 +7,7 @@
 class Rasterizer
 {
 public:
-	Rasterizer(size_t w, size_t h) : W(w), H(h)
+	Rasterizer(uint32_t w, uint32_t h) : W(w), H(h)
 	{
 		//buff = std::make_unique_for_overwrite<unsigned char[]>(W*H);
 		buff = new unsigned char[W*H];//allocators or smart poiners
@@ -24,12 +24,12 @@ public:
 		return buff;
 	}
 
-	auto* at(size_t i, size_t j)
+	auto* at(uint32_t i, uint32_t j)
 	{
 		return &buff[i * H + j];
 	}
 
-	void set1(const glm::vec2& p, const int& w1)
+	void set1(const glm::vec2& p, const uint32_t& w1)
 	{
 		buff[(int)p.x * H + (int)p.y] = w1;
 	}
@@ -61,9 +61,9 @@ public:
 		return H;
 	}
 
-	float orient2d(const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)
+	int orient2d(const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)
 	{
-	    return (b.x-a.x)*(c.y-a.y) - (b.y-a.y)*(c.x-a.x);
+	    return int((b.x-a.x)*(c.y-a.y) - (b.y-a.y)*(c.x-a.x));
 	}
 
 	void drawTri(const Triangle& t) 
@@ -78,10 +78,10 @@ public:
 	    float maxX = vmax(v0.x, v1.x, v2.x);
 	    float maxY = vmax(v0.y, v1.y, v2.y);
 
-	    minX = vmax(minX, 0);
-	    minY = vmax(minY, 0);
-	    maxX = vmin(maxX, W - 1);
-	    maxY = vmin(maxY, H - 1);
+	    minX = vmax(minX, 0.0f);
+	    minY = vmax(minY, 0.0f);
+	    maxX = vmin(maxX, float(W - 1));
+	    maxY = vmin(maxY, float(H - 1));
 
 	    glm::vec2 p;
 	    for (p.y = minY; p.y <= maxY; p.y++) {
@@ -116,6 +116,6 @@ public:
 private:
 	//std::unique_ptr<unsigned char[]> buff = nullptr;
 	unsigned char* buff = nullptr;
-	size_t W = 0;
-	size_t H = 0;
+	uint32_t W = 0;
+	uint32_t H = 0;
 };

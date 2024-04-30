@@ -5,16 +5,18 @@
 #include <glm/glm.hpp>
 #include <assimp/scene.h>
 #include <Engine/Bone.h>
-#include <functional>
-#include <Rendering/Model.h>
+
 #include <Rendering/FlatMesh.h>
-#include <Core/Printer.h>
-#include <Core/Timer.h>
+#include <Rendering/Model.h>
+
+#include <functional>
 
 #include <chrono>
 #include <thread>
 #include <filesystem>
 #include <variant>
+
+class Model;
 
 struct AssimpNodeData
 {

@@ -276,6 +276,7 @@ void Mesh::clearBatch(size_t verticesNum, size_t indicesNum)
     indices.erase(indices.begin() + indicesNum, indices.end()); 
 }
 
+//TODO(darius) VERY expensive function
 //TODO(darius) apply scale?
 void Mesh::calculateAabb(Transform& tr) 
 {

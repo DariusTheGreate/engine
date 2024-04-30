@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 #include "Engine/Camera.h"
 #include "MouseState.h"
 #include "KeyboardState.h"

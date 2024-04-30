@@ -58,9 +58,11 @@ Editor::Editor(Window* wind) : ui(wind->getWindow(), &state), rendol(&currScene,
 
     Renderer::currentRendererPtr = &rendol;
     
-    //CameraPoints points;
-    //points.points = { {0.0f, {0.0f, 0.0f, 0.0f}}, {1.0f, {1.0f, 1.0f, 1.0f}}, {2.0f, {2.0f, 2.0f, 2.0f}} };
-    //points.currPoint = 0;
+    CameraPoints points;
+    points.points = { {0.0f, {0.0f, 0.0f, 0.0f}}, {3.0f, {1.0f, 1.0f, 1.0f}}, {6.0f, {2.0f, 2.0f, 2.0f}},
+    {20.0f, {4.0f, 4.0f, 4.0f}}, {60.0f, {8.0f, 8.0f, 8.0f}}};
+
+    points.currPoint = 0;
     //GameState::setCameraMotionPoints(points);
 }
 
@@ -278,21 +280,37 @@ void Editor::updateCamera()
 			size_t idx = GameState::cameraMotionPoints.currPoint;
             size_t idx2 = idx + 1;
 
-            if (idx + 1 >= points.size()) {
-                idx = GameState::cameraMotionPoints.currPoint = 0;
-                idx2 = idx + 1;
+            if (idx2 >= points.size()) {
+                GameState::cameraMotionPoints.currPoint = 0;
+                //idx = 0;
+                //idx2 = idx+1;
+                
+                GameState::instance->cam.setCameraPos(points.at(0).tr);
+
+				println("currPos: ", GameState::cameraMotionPoints.currPoint, " position: ", points.at(0).tr);
+
+                //std::vector<CameraPoints::Point> reversedPoints;
+                //for (CameraPoints::Point* e = &points.back(); e >= &points.front(); e--)
+                  //  reversedPoints.emplace_back(*e);
+                //points = reversedPoints;
             }
+            else if(GameState::currTime.checkTime() <= points.back().timeStamp) {
+                double ttotal = 0.0f;
+                if(idx > 0)
+					ttotal = (GameState::currTime.checkTime() - points.at(idx-1).timeStamp) / (points.at(idx).timeStamp  - points.at(idx-1).timeStamp);
 
-			float xl = std::lerp(points.at(idx).tr.x, points.at(idx2).tr.x, GameState::currTime.checkTime() - points.at(idx).timeStamp);
-			float yl = std::lerp(points.at(idx).tr.y, points.at(idx2).tr.y, GameState::currTime.checkTime() - points.at(idx).timeStamp);
-			float zl = std::lerp(points.at(idx).tr.z, points.at(idx2).tr.z, GameState::currTime.checkTime() - points.at(idx).timeStamp);
+                double xl = std::lerp(points.at(idx).tr.x, points.at(idx2).tr.x, ttotal);
+                double yl = std::lerp(points.at(idx).tr.y, points.at(idx2).tr.y, ttotal);
+                double zl = std::lerp(points.at(idx).tr.z, points.at(idx2).tr.z, ttotal);
 
-            glm::vec3 posl = {xl, yl, zl};
-            //println(posl);
-            GameState::instance->cam.setCameraPos(posl);
-            //rendol.getDebugRenderer().renderDebugPoint(posl, glm::vec4{0.0f, 1.0f, 0.0f, 0.0f});
+                glm::vec3 posl = { xl, yl, zl };
+                println("currPos: ", GameState::cameraMotionPoints.currPoint, " position: ", posl);
+                GameState::instance->cam.setCameraPos(posl);
+                //rendol.getDebugRenderer().renderDebugPoint(posl, glm::vec4{0.0f, 1.0f, 0.0f, 0.0f});
 
-            GameState::cameraMotionPoints.currPoint = idx;
+                if (GameState::currTime.checkTime() >= points.at(idx).timeStamp)
+                    GameState::cameraMotionPoints.currPoint = idx2;
+            }
 		}
         return;
     }

@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct Timer {
 public:
 	Timer(bool printOrNot = false);

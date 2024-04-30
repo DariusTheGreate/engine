@@ -1,6 +1,5 @@
 #define _WIN32_WINNT 0x0601
 #include <Networking/Client.h>
-#include <Engine/Editor.h>
 #include <sstream>
 #include <Core/Timer.h>
 

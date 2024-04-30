@@ -24,11 +24,11 @@ struct MeshAABB
         : center{ inCenter }, size{ iI, iJ, iK }
     {}
 
-    std::array<glm::vec3, 8> getCorners();
+    std::array<glm::vec3, 8> getCorners() const;
 
-    bool isOnOrForwardPlane(const Plane& plane);
+    bool isOnOrForwardPlane(const Plane& plane) const;
 
-    bool isOnFrustum(Frustum& camFrustum);
+    bool isOnFrustum(Frustum& camFrustum) const;
 
-    bool isInside(const glm::vec3& point);
+    bool isInside(const glm::vec3& point) const;
 };

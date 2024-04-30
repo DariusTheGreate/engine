@@ -365,6 +365,7 @@ void distanceRendering(Object* obj)
     }
 }
 
+//TODO(darius) try to pack all uniform data into one batch
 void ShaderLibrary::shaderRoutine(Object* obj)
 {
     //Timer t(true);//~0.0003

@@ -1,4 +1,6 @@
-Build/
+Build/engine/x64
+Build/engine/engine/x64
+Build/engine/.vs
 vendor/
 meshes/
 textures/

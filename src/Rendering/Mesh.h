@@ -110,6 +110,7 @@ protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation
     //TODO(darius) make those vertices that are outside viewport/depth NaN (in vertex shader prbbly)
+    //TODO(darius) store it in chache friendly way? Its important for Mesh::CalculateAABB(). It uses only positions now
     std::vector<Vertex>       vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;

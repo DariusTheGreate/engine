@@ -6,11 +6,8 @@
 #include <vector>
 #include <array>
 
-#include <Engine/Transform.h>
-#include <Physics/RigidBody.h>
-#include <Engine/Simplex.h>
-
 struct Simplex;
+struct Transform;
 
 constexpr float collisionEpsilon = 0.000000000000000001f;
 

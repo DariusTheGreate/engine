@@ -1,7 +1,7 @@
 #include <Engine/AABB.h>
 #include <Engine/FrustumCulling.h>
 
-std::array<glm::vec3, 8> MeshAABB::getCorners()
+std::array<glm::vec3, 8> MeshAABB::getCorners() const
 {
     std::array<glm::vec3, 8> points;  
     glm::vec3 p(min.x, min.y, min.z);
@@ -24,14 +24,12 @@ std::array<glm::vec3, 8> MeshAABB::getCorners()
     return points;
 }
 
-bool MeshAABB::isInside(const glm::vec3& point) {
-    if (max.x > point.x && max.y > point.y && max.z > point.z && min.x < point.x && min.y < point.y && min.z < point.z) {
-        return true;
-    }
-    return false;
+bool MeshAABB::isInside(const glm::vec3& point) const
+{
+    return max.x > point.x&& max.y > point.y&& max.z > point.z&& min.x < point.x&& min.y < point.y&& min.z < point.z;
 }
 
-bool MeshAABB::isOnOrForwardPlane(const Plane& plane) 
+bool MeshAABB::isOnOrForwardPlane(const Plane& plane) const 
 {
     float r = size.x * std::abs(plane.normal.x) + size.y * std::abs(plane.normal.y) +
         size.z * std::abs(plane.normal.z);
@@ -39,7 +37,7 @@ bool MeshAABB::isOnOrForwardPlane(const Plane& plane)
     return -r <= plane.getSignedDistanceToPlane(center);
 }
 
-bool MeshAABB::isOnFrustum(Frustum& camFrustum)
+bool MeshAABB::isOnFrustum(Frustum& camFrustum) const
 {
     //NOTE(darius) TEMPO while scale dont work
     //if(transform.getScale() != glm::vec3{1,1,1})
@@ -57,3 +55,4 @@ bool MeshAABB::isOnFrustum(Frustum& camFrustum)
         isOnOrForwardPlane(camFrustum.nearFace) &&
         isOnOrForwardPlane(camFrustum.farFace));
 }
+
