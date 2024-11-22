@@ -1,6 +1,9 @@
 #pragma once
-#include <Rendering/Mesh.h>
 
+#include <glm/glm.hpp>
+#include <vector>
+
+class Mesh;
 class Object;
 
 class InstancedRenderer

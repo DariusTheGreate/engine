@@ -4,6 +4,8 @@
 #include <Core/NonBlockingQueue.h>
 #include <Core/Timer.h>
 
+#include <Networking/PriorityScheduler.h>
+
 void sendData(boost::asio::ip::tcp::socket& hueket, const std::string& data)
 {
 	boost::asio::write(hueket, boost::asio::buffer(data));
@@ -101,6 +103,11 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
         	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
         	//std::cout << s << "\n"; 	
 
+        	if(std::strcmp(s.c_str(), "REGISTER@") == 0)
+        	{
+        		continue;
+        	}
+
         	if(std::strcmp(s.c_str(), "EMPTY_SYNCER@") != 0)
 	        	currScene.parseSynchronizationMsg(s);
 
@@ -140,6 +147,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 
 void Server::listen()
 {
+	PriorityScheduler sched;
 	while(true)
 	{
 		if(connections > 8)

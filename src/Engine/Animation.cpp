@@ -168,7 +168,7 @@ SpriteAnimation::SpriteAnimation(std::string animationFolderPathStr) : pathToFol
 
 	for (const auto& dirEntry : directory_iterator(animationFolderPath)) {
 		if (f_path{ dirEntry }.extension() == ".png") {
-			std::cout << dirEntry.path().string() << std::endl;
+			println(dirEntry.path().string());
 			FlatMesh m;
 			m.setTexture((dirEntry.path().string()));
 			spritesList.push_back(m);

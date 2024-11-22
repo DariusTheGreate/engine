@@ -90,6 +90,18 @@ private:
     glm::mat4 cameraView = glm::mat4(1.0f);
 };
 
+struct CustomWindow
+{
+    std::string name;
+    std::function<void()> func;
+    bool isOpen = true;
+
+    void operator()() const
+    {
+        func();
+    }
+};
+
 class UI {
 
 public:
@@ -130,6 +142,9 @@ public:
 
     void setMenuBarCallback();
 
+    static void pushCustomWindow(const CustomWindow& wnd);
+
+    void updateCustomWindows();
 
 private:
     bool show_scene_window = false;
@@ -147,7 +162,6 @@ private:
 	Object* item_clicked = nullptr;
     Object* item_copy = nullptr;
 
-
     GameState* state= nullptr;
 
     int max_name_length = 21;
@@ -156,13 +170,13 @@ private:
 
     GuizmoTool guizmoTool;
 
-    //std::deque<float> framerateHistory;
-    //size_t historySize = 1000;
-
     Profiler<float> profile;
     bool scenecameras = false;
     bool editorsettings = false;
     bool resources = false;
     bool console = false;
     bool gameobjects = false;
+
+
+    static std::vector<CustomWindow> customWindows;
 };

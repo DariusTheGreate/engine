@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <Rendering/InstancedRenderer.h>
 #include <Rendering/Renderer.h>
+#include <Rendering/Mesh.h>
 
 void InstancedRenderer::init()
 {

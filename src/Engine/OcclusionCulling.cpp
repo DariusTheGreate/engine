@@ -2,6 +2,8 @@
 #include <Engine/OcclusionCulling.h>
 #include <Engine/Object.h>
 
+#include <Engine/UI.h>
+
 #include <algorithm>
 
 void OcclusionCuller::cull(std::vector<Object*> objs)
@@ -74,12 +76,11 @@ void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
 
 	for (uint32_t i = 0; i < raster.getW(); ++i) {
 		for(uint32_t j = 0; j < raster.getH(); ++j){
-			*raster.at(i, j) = 128;//(i + j) > 255 ? 6 : (i + j);
+			*raster.at(i, j) = (i + j) > 255 ? 200 : (i + j);
 		}
 	}
-	return;
 
-	for (const auto& o : objs) 
+	/*for (const auto& o : objs)
 	{
 		auto& objectMeshes = o->getModel()->meshes;
 
@@ -90,6 +91,24 @@ void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
 				raster.drawTri(t);
 		}
 
+	}*/
+
+	if (buff) {
+		UI::pushCustomWindow({
+			"rasterizedImage",
+			[]() {
+				//std::vector<uint8_t> buff(255, 128*128);
+				//static Texture t(GameState::engine_path + "buff.jpg", GL_RGB, GL_RGB);
+				//t = Texture(buff.data(), 128, 128);
+				Texture t = raster.genTexture();
+
+				ImGui::Image((void*)(intptr_t)(t.get_texture()), {static_cast<float>(raster.getW()), static_cast<float>(raster.getH())});
+				if (ImGui::Button("Save")) 
+				{
+					raster.saveBuffToImage();
+				}
+			}
+		});
 	}
 
 	//raster.printBuff();	
@@ -97,3 +116,4 @@ void OcclusionCuller::rasterizeOccluders(std::vector<Object*> objs)
 
 glm::vec3 OcclusionCuller::origin = {0,0,0};
 Rasterizer OcclusionCuller::raster = Rasterizer(512, 256);
+

@@ -5,6 +5,7 @@
 #include <Core/Timer.h>
 #include <Engine/FrustumCulling.h>
 #include <Engine/OcclusionCulling.h>
+#include <Engine/UI.h>
 
 
 #include <optional>
@@ -123,6 +124,7 @@ void DebugRenderer::setupSceneGrid()
 	length = (GLuint)indices_grid.size() * 4;
 	glLineWidth(2);
 }
+
 void DebugRenderer::renderDebugColider(Window* wind, std::optional<Colider>& collider, std::optional<RigidBody>& body)
 {
 	if(!collider)
