@@ -318,7 +318,7 @@ void Editor::updateCamera()
     if(GameState::editorCameraMode)
     {
         GameState::instance->cam.setCameraLook(GameState::ms.prev_x, GameState::ms.prev_y);
-        GameState::instance->cam.setScroolState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
+        GameState::instance->cam.setScrollState(GameState::ms.get_offset_x(), GameState::ms.get_offset_y());
     }
 
     //GameState::cam.setCameraLook(GameState::ms.get_x(), GameState::ms.get_y());

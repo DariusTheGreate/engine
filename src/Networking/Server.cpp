@@ -6,6 +6,13 @@
 
 #include <Networking/PriorityScheduler.h>
 
+#include <boost/interprocess/shared_memory_object.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+#include <boost/interprocess/sync/interprocess_condition.hpp>
+
+using namespace boost::interprocess;
+
 void sendData(boost::asio::ip::tcp::socket& hueket, const std::string& data)
 {
 	boost::asio::write(hueket, boost::asio::buffer(data));
@@ -169,3 +176,45 @@ void Server::listen()
         connections++;
 	}		
 }
+
+// Shared memory structure
+struct SharedData {
+	interprocess_mutex mutex;
+	interprocess_condition cond_var;
+	bool has_data = false;
+	std::array<uint8_t, 1024> data;
+
+	static void createSharedData() 
+	{
+		managed_shared_memory managed_shm{ open_or_create, "BinanceSharedMemory", 1024 };
+		SharedData* shared_data = managed_shm.construct<SharedData>("SharedData")();
+	}
+
+	static void readSharedData()
+	{
+		// Open existing managed shared memory
+		managed_shared_memory managed_shm{ open_only, "BinanceSharedMemory" };
+
+		// Find the shared data structure in shared memory
+		SharedData* shared_data = managed_shm.find<SharedData>("SharedData").first;
+
+		if (!shared_data) {
+			std::cerr << "Consumer: Shared data not found!\n";
+			return;
+		}
+
+		scoped_lock<interprocess_mutex> lock(shared_data->mutex);
+
+		shared_data->cond_var.wait(lock, [&shared_data] { return shared_data->has_data; });
+
+		// do stuff with data
+	}
+};
+
+
+void Server::createSharedMemory() 
+{
+	boost::interprocess::shared_memory_object shm_obj(boost::interprocess::create_only, "shared_memory", boost::interprocess::read_write);
+	shm_obj.truncate(10000);
+}
+

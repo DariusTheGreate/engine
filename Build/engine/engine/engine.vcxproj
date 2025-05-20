@@ -107,7 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\own\programming\engine\vendor\imgui\;E:\own\programming\engine\src;E:\own\c++\libs\assimp-5.3.1\assimp-5.3.1\include;E:\own\programming\engine\vendor\glfw64\include;E:\own\programming\engine\vendor\stb;E:\own\programming\engine\vendor\glm;E:\own\programming\engine\vendor\glad\include;E:\own\programming\engine\vendor\ImGuizmo;E:\own\c++\libs\boost_1_82_0\boost;E:\own\programming\engine\vendor\bullet3\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\own\programming\engine\vendor\imgui\;E:\own\programming\engine\src;E:\own\c++\libs\assimp-5.3.1\assimp-5.3.1\include;E:\own\programming\engine\vendor\glfw64\include;E:\own\programming\engine\vendor\stb;E:\own\programming\engine\vendor\glm;E:\own\programming\engine\vendor\glad\include;E:\own\programming\engine\vendor\ImGuizmo;E:\own\c++\libs\boost_1_82_0\boost;E:\own\c++\libs\simdjson\include;E:\own\programming\engine\vendor\bullet3\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
@@ -115,7 +115,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>E:\own\programming\engine\vendor\glfw64\lib-vc2022;E:\own\c++\libs\boost_1_82_0\boost\stage\lib;E:\own\c++\libs\assimp-5.3.1\assimp-5.3.1\lib\Debug;E:\own\c++\libs\assimp-5.3.1\assimp-5.3.1\contrib\zlib\Debug;E:\own\programming\engine\vendor\bullet3\build\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;glfw3.lib;opengl32.lib;libboost_filesystem-vc143-mt-gd-x64-1_82.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;glfw3.lib;opengl32.lib;libboost_filesystem-vc143-mt-gd-x64-1_82.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;BulletDynamics_Debug.lib;BulletCollision_Debug.lib;LinearMath_Debug.lib;E:\own\c++\libs\simdjson\cmakeInstalledDir\lib\simdjson.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

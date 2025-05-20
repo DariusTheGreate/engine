@@ -48,7 +48,7 @@ void Camera::setCameraLook(double xposIn, double yposIn)
     cameraUp = glm::normalize(glm::cross(cameraRight, cameraFront));
 }
 
-void Camera::setScroolState(double xoffset, double yoffset)
+void Camera::setScrollState(double xoffset, double yoffset)
 {
     return;
     if(GameState::editor_mode == 3){

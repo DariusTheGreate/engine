@@ -185,6 +185,11 @@ public:
 	    return _mm_cmpeq_epi8(bytes, needle);
 	}
 
+	static int findDigit(char* begin, char* end)
+	{
+
+	}
+
 	static const char* findFirstSymbolsSse(char* begin, char* end, char needle[4])
 	{
 		auto vectorisedNeedle = _mm_loadu_si128((simdSSEInt*)&needle[0]);// _mm_set_epi32((int)needle);

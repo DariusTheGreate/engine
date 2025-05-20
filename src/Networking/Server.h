@@ -50,6 +50,8 @@ public:
 	void listen();
 
 private:	
+	void createSharedMemory();
+private:
     NetworkSynchronizer& netSync;
     Scene& currScene;
     ThreadPool workers;

@@ -24,7 +24,7 @@ public:
 
     void setCameraPos(const glm::vec3& pos_in);
 
-    void setScroolState(double xoffset, double yoffset);
+    void setScrollState(double xoffset, double yoffset);
 
     void moveCameraLeft();
 

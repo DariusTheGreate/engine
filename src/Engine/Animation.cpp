@@ -88,9 +88,9 @@ void SkeletalAnimation::update(float dt)
 
 void SkeletalAnimation::calculateBoneTransform(const AssimpNodeData* node, glm::mat4 parentTransform)
 {
-	if (!node) {
+	if (!node)
 		return;
-	}
+
 	std::string nodeName = node->name;
 	glm::mat4 nodeTransform = node->transformation;
 
