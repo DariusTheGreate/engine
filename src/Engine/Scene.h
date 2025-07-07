@@ -212,6 +212,8 @@ public:
 	//NOTE(darius) I know it can be done much better, but i dont want to waste time on it NOW, will have to return later to it anyway
 	void serialize(std::string_view path);
 
+	void serializeJson(std::string_view path);
+
 	void serializePrefab(Object* obj, std::string_view path);
 
 	void deserialize(std::string_view path);
@@ -219,6 +221,8 @@ public:
 	void parseSynchronizationMsg(std::string msg);
 
 	void parseScene(std::string_view scene);
+
+	void parseSceneViaSimdJson(std::string_view scene);
 
 	std::string readFileToString(std::string_view path);
 

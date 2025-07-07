@@ -6,6 +6,8 @@
 #include <Rendering/Model.h>
 #include <Engine/ParticleSystem.h>
 
+#include "simdjson.h"
+#include <boost/json.hpp>
 
 #include <string>
 #include <iostream>
@@ -521,8 +523,48 @@ void Scene::addTerrain(Terrain&& trin)
 	terrains.emplace_back(std::move(trin));
 }
 
+void Scene::serializeJson(std::string_view path)
+{
+	namespace json = boost::json;
+
+	// Create JSON object
+	json::object root;
+
+	// Get camera position
+	auto camPos = GameState::instance->cam.getCameraPos();
+
+	// Add CameraPos object
+	root["CameraPos"] = {
+		{"x", camPos.x},
+		{"y", camPos.y},
+		{"z", camPos.z}
+	};
+
+	// Add NetworkSynchronizer object (example fields)
+	root["NetworkSynchronizer"] = {
+		{"field1", "value1"},
+		{"field2", 42}
+	};
+
+	// Serialize JSON to string
+	std::string json_str = json::serialize(root);
+
+	// Write JSON to file
+	std::ofstream file(path.data());
+	if (!file.is_open()) {
+		println("Unable to create file");
+		// Handle error
+		return;
+	}
+
+	file << json_str;
+	file.close();
+}
+
 void Scene::serialize(std::string_view path)
 {
+	serializeJson(path);
+	return;
 	std::ofstream file(path.data());
     if(!file.is_open())
         return;
@@ -661,6 +703,11 @@ void Scene::parseSynchronizationMsg(std::string data)
 			}
 		}
 	}
+}
+
+void Scene::parseSceneViaSimdJson(std::string_view data) 
+{
+	std::unique_lock<std::mutex> lck(sceneLock);
 }
 
 //TODO(darius) refactor
