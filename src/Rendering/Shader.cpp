@@ -1,5 +1,7 @@
 #include "Shader.h"
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 
 Shader::Shader(const std::string& filepath_in, ShaderType type) : filepath(filepath_in) {
 	shader = OpenglWrapper::CreateShader(type);

@@ -1,5 +1,7 @@
 #pragma once
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <Engine/Scene.h>
 #include <Engine/GameState.h>
 #include <Rendering/Renderer.h>

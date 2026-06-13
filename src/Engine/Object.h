@@ -14,11 +14,12 @@
 #include <Physics/RigidBody.h>
 #include <Engine/Transform.h>
 #include <Engine/Script.h>
-#include <Engine/Scene.h>
 #include <Rendering/CubeMesh.h>
 #include <Engine/PointLight.h>
 #include <Engine/ParticleSystem.h>
 #include <Engine/Animation.h>
+
+class Scene;
 
 class Object
 {

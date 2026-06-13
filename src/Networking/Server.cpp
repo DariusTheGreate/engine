@@ -41,7 +41,7 @@ void ClientConnection::process()
         size_t bytes_transferred = boost::asio::read_until(*socket2, buffer, '@');
 
         if (bytes_transferred > 0){ 
-        	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+        	std::string s(static_cast<const char*>(buffer.data().data()), buffer.size());
         	//std::cout << "ID: " << std::this_thread::get_id() << " ";
 			std::cout << "MSG: " << s << "\n";
 
@@ -107,7 +107,7 @@ void ClientConnection::sync(NetworkSynchronizer& syncer, Scene& currScene)
 
         if(bytes_transferred > 0)
         {
-        	std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+        	std::string s(static_cast<const char*>(buffer.data().data()), buffer.size());
         	//std::cout << s << "\n"; 	
 
         	if(std::strcmp(s.c_str(), "REGISTER@") == 0)

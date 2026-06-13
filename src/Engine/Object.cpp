@@ -1,6 +1,9 @@
 
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <Engine/Object.h>
+#include <Engine/Scene.h>
 #include <fstream>
 #include <iostream>
 #include <string>

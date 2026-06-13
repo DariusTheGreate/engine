@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtx/transform.hpp>
-#include <glm/gtc/quaternion.hpp >
+#include <glm/gtc/quaternion.hpp>
 #include <vector>
 
 // https://www.brainvoyager.com/bv/doc/UsersGuide/CoordsAndTransforms/SpatialTransformationMatrices.html

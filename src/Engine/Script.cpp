@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 #include <Engine/Script.h>
 #include <Engine/Object.h>
 #include <iostream>

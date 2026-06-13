@@ -33,7 +33,7 @@ std::string Client::query(const std::string& port, const std::string& data_in) /
             size_t bytes_transferred = boost::asio::read_until(socket, buffer, '@');
 
             if(bytes_transferred > 0){
-	            std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+	            std::string s(static_cast<const char*>(buffer.data().data()), buffer.size());
 	            return s;
 	        }
 
@@ -97,7 +97,7 @@ void Client::sync(const std::string& port, NetworkSynchronizer& syncer, Scene* c
 	    });        	
 
         if(bytes_transferred > 0){
-            std::string s(boost::asio::buffer_cast<const char*>(buffer.data()), buffer.size());
+            std::string s(static_cast<const char*>(buffer.data().data()), buffer.size());
             std::cout << "response: " << s << "\n";
             if(std::strcmp(s.c_str(), "EMPTY_SYNCER@") != 0)
 	        	currScene->parseSynchronizationMsg(s);

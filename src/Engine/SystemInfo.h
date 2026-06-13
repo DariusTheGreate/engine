@@ -2,18 +2,22 @@
 //#include <OpenglWrapper.h>
 
 #include <string>
+#include <cstdint>
+#include <cstddef>
 
+#ifdef _WIN32
 #include "windows.h"
 #include "psapi.h"
+#endif
 
 struct MemInfo
 {
-	DWORDLONG totalVirtualMem;
-	DWORDLONG virtualMemUsed;
-	DWORDLONG  physMemUsed;
+	uint64_t totalVirtualMem = 0;
+	uint64_t virtualMemUsed = 0;
+	uint64_t physMemUsed = 0;
 
-	SIZE_T virtualMemUsedByMe;
-	SIZE_T physMemUsedByMe ;
+	size_t virtualMemUsedByMe = 0;
+	size_t physMemUsedByMe = 0;
 };
 
 class SystemInfo 

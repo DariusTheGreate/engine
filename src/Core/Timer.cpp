@@ -42,7 +42,11 @@ void Timer::printCurrentTime()
     auto timeFormatted = std::chrono::system_clock::to_time_t(currTime);
 
     std::array<char, 26> formatBuff;
-    ctime_s(formatBuff.data(), 26, &timeFormatted);
+#ifdef _WIN32
+    ctime_s(formatBuff.data(), formatBuff.size(), &timeFormatted);
+#else
+    ctime_r(&timeFormatted, formatBuff.data());
+#endif
 	println("Time: ", formatBuff.data());
 }
 

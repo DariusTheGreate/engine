@@ -1,6 +1,8 @@
 #include "Window.h"
 #include "InputManager.h"
 
+#include <stdexcept>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -16,6 +18,9 @@ Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_n
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+#ifdef __APPLE__
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
 
 	m_window = glfwCreateWindow(width, height, m_window_name, nullptr, nullptr);
 	
@@ -40,10 +45,14 @@ Window::Window(char* windowName, int w, int h) : width(w), height(h), m_window_n
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
-		throw std::exception("can not init glad");
+		throw std::runtime_error("can not init glad");
 	}
 
-	glViewport(0,0,w,h);
+	int fbWidth = 0, fbHeight = 0;
+	glfwGetFramebufferSize(m_window, &fbWidth, &fbHeight);
+	width = fbWidth;
+	height = fbHeight;
+	glViewport(0, 0, fbWidth, fbHeight);
 }
 
 Window::~Window()

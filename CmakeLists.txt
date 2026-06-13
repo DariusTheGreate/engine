@@ -1,12 +1,130 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.16)
+
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
 
 project(DEAN VERSION 0.0.1
 	DESCRIPTION "dean engine"
-	)
+	LANGUAGES C CXX)
 
-file(GLOB_RECURSE source_list src/*.cpp src/*.h)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_executable(DEAN 
-	${source_list}
-	)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+	set(CMAKE_BUILD_TYPE Debug CACHE STRING "" FORCE)
+endif()
 
+if(APPLE)
+	find_program(BREW_EXECUTABLE brew)
+	if(BREW_EXECUTABLE)
+		execute_process(COMMAND ${BREW_EXECUTABLE} --prefix
+			OUTPUT_VARIABLE HOMEBREW_PREFIX OUTPUT_STRIP_TRAILING_WHITESPACE)
+		list(APPEND CMAKE_PREFIX_PATH "${HOMEBREW_PREFIX}")
+	endif()
+endif()
+
+include(FetchContent)
+set(FETCHCONTENT_QUIET OFF)
+
+find_package(Threads REQUIRED)
+find_package(OpenGL REQUIRED)
+
+find_package(Boost CONFIG REQUIRED COMPONENTS json filesystem)
+find_package(simdjson CONFIG REQUIRED)
+
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(glfw
+	GIT_REPOSITORY https://github.com/glfw/glfw.git
+	GIT_TAG 3.4)
+
+FetchContent_Declare(glm
+	GIT_REPOSITORY https://github.com/g-truc/glm.git
+	GIT_TAG 1.0.1)
+
+set(GLAD_PROFILE "core" CACHE STRING "" FORCE)
+set(GLAD_API "gl=4.1" CACHE STRING "" FORCE)   # 4.1 is the max core profile macOS exposes
+set(GLAD_GENERATOR "c" CACHE STRING "" FORCE)
+set(GLAD_INSTALL OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(glad
+	GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+	GIT_TAG v0.1.36)
+
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB OFF CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(assimp
+	GIT_REPOSITORY https://github.com/assimp/assimp.git
+	GIT_TAG v5.4.3)
+
+FetchContent_Declare(stb
+	GIT_REPOSITORY https://github.com/nothings/stb.git
+	GIT_TAG f0569113c93ad095470c54bf34a17b36646bbbb5)
+
+FetchContent_Declare(imgui
+	GIT_REPOSITORY https://github.com/ocornut/imgui.git
+	GIT_TAG docking)   # docking branch: engine uses ImGuiConfigFlags_DockingEnable
+
+FetchContent_Declare(imguizmo
+	GIT_REPOSITORY https://github.com/CedricGuillemet/ImGuizmo.git
+	GIT_TAG master   # master is kept compatible with modern imgui (1.90.x)
+	SOURCE_SUBDIR  this-dir-does-not-exist)
+
+FetchContent_MakeAvailable(glfw glm glad assimp stb imgui imguizmo)
+
+add_library(imgui_lib STATIC
+	${imgui_SOURCE_DIR}/imgui.cpp
+	${imgui_SOURCE_DIR}/imgui_draw.cpp
+	${imgui_SOURCE_DIR}/imgui_tables.cpp
+	${imgui_SOURCE_DIR}/imgui_widgets.cpp
+	${imgui_SOURCE_DIR}/imgui_demo.cpp
+	${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+	${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+	${imguizmo_SOURCE_DIR}/src/ImGuizmo.cpp)
+target_include_directories(imgui_lib PUBLIC
+	${imgui_SOURCE_DIR}
+	${imgui_SOURCE_DIR}/backends
+	${imguizmo_SOURCE_DIR}/src)
+target_compile_definitions(imgui_lib PUBLIC IMGUI_DEFINE_MATH_OPERATORS)
+target_link_libraries(imgui_lib PUBLIC glfw OpenGL::GL)
+
+file(GLOB_RECURSE source_list CONFIGURE_DEPENDS src/*.cpp src/*.h)
+
+add_executable(DEAN ${source_list})
+
+target_include_directories(DEAN PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}/src
+	${stb_SOURCE_DIR})
+
+target_compile_definitions(DEAN PRIVATE
+	GLM_ENABLE_EXPERIMENTAL                     
+	BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED    
+	DEAN_ENGINE_ROOT="${CMAKE_CURRENT_SOURCE_DIR}/")
+
+target_link_libraries(DEAN PRIVATE
+	glfw
+	glad
+	glm::glm
+	assimp::assimp
+	imgui_lib
+	Boost::json
+	Boost::filesystem
+	Boost::headers
+	simdjson::simdjson
+	OpenGL::GL
+	Threads::Threads
+	${CMAKE_DL_LIBS})
+
+if(APPLE)
+	target_link_libraries(DEAN PRIVATE
+		"-framework Cocoa"
+		"-framework IOKit"
+		"-framework CoreVideo"
+		"-framework CoreFoundation")
+endif()

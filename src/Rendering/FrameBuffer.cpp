@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 #include <Rendering/FrameBuffer.h>
 #include <Rendering/Renderer.h>
 
@@ -116,7 +118,10 @@ void FrameBuffer::SetImage(int i)
 
 void FrameBuffer::Resize(unsigned int width, unsigned int height)
 {
-    for(auto& t : textures)    
+    Width = width;
+    Height = height;
+
+    for(auto& t : textures)
         t.resize(width, height);
 }
 

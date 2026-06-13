@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <Rendering/InstancedRenderer.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Mesh.h>

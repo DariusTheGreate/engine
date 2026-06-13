@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <Engine/ParticleSystem.h>
 #include <Engine/Object.h>
 #include <Rendering/Renderer.h>

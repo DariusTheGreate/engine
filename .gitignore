@@ -1,6 +1,7 @@
 Build/engine/x64
 Build/engine/engine/x64
 Build/engine/.vs
+build-mac/
 vendor/
 meshes/
 textures/

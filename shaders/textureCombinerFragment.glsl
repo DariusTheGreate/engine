@@ -1,9 +1,9 @@
-#version 420 core
+#version 410 core
 out vec4 FragColor;
   
 in vec2 TexCoords;
-layout(binding = 0) uniform sampler2D scene;
-layout(binding = 1) uniform sampler2D bloomBlur;
+uniform sampler2D scene;
+uniform sampler2D bloomBlur;
 
 //uniform float exposure;
 

@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include <Engine/OcclusionCulling.h>
 #include <Engine/Object.h>
 

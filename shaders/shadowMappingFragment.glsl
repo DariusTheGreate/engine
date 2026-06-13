@@ -1,4 +1,4 @@
-#version 420 core
+#version 410 core
 //out vec4 FragColor;
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 BrightColor;
@@ -14,8 +14,8 @@ in VS_OUT {
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
-layout(binding = 0) uniform sampler2D diffuseTexture;
-layout(binding = 1) uniform sampler2D shadowMap;
+uniform sampler2D diffuseTexture;
+uniform sampler2D shadowMap;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {

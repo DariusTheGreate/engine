@@ -1,5 +1,7 @@
 #define _WIN32_WINNT 0x0601
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 #include <Engine/Terrain.h>
 #include <Rendering/Renderer.h>
 #include <Core/Printer.h>

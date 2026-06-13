@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include "Rendering/Model.h"
 #include <Core/Printer.h>
 #include <Rendering/Renderer.h>

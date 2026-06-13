@@ -12,11 +12,14 @@
 
 void UnitTests::run()
 {
-	testSIMD();	
+#ifdef DEAN_HAS_SIMD
+	testSIMD();
+#endif
 }
 
 void UnitTests::testSIMD()
 {
+#ifdef DEAN_HAS_SIMD
 	{
 		auto simdedPi = SIMD::convertFloatToSSE(3.1415926f);
 		//auto desimdedPiArr  = SIMD::convertMM128ToUnalignedFloatArray(simdedPi);
@@ -123,5 +126,5 @@ void UnitTests::testSIMD()
 
 		glm::quat q2(r2);
 	}
-
+#endif // DEAN_HAS_SIMD
 }

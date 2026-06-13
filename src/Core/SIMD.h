@@ -1,10 +1,15 @@
-#pragma once 
+#pragma once
+
+#if defined(__x86_64__) || defined(_M_X64) || defined(__i386__) || defined(_M_IX86)
+#define DEAN_HAS_SIMD 1
 
 //TODO(darius) theres troubles here with different versions so work on that
 //NOTE(darius) _mm<size>_<action>_<type>
 #include <xmmintrin.h>
 #include <emmintrin.h>
+#ifdef _WIN32
 #include <intrin.h>
+#endif
 
 #include <array>
 #include <cassert>
@@ -337,3 +342,5 @@ public:
 public:
 
 };
+
+#endif // x86 SIMD

@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include "Renderer.h"
 #include <Physics/Colider.h>
 #include <Engine/ObjectSelector.h>
@@ -303,8 +305,6 @@ Renderer::Renderer(Scene* currScene_in, GameState* instance, Window* wind_in) : 
 
 	OpenglWrapper::UnbindFrameBuffer(GL_FRAMEBUFFER);
 
-	OpenglWrapper::SetWindowSize(wind, 1600, 800);
-    resizeFrameBuffers(1600, 800);
 }
 
 void Renderer::render(Window* wind)
@@ -560,6 +560,9 @@ void Renderer::bloomStage()
 
 	Shader shad = shaderLibInstance->getTextureCombinerShader();
 	OpenglWrapper::UseProgram(shad.getProgram());
+
+	shad.setInt("scene", 0);
+	shad.setInt("bloomBlur", 1);
 
 	quad.bindQuadVAO();
 

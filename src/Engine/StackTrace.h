@@ -3,6 +3,9 @@
 #include <iostream>
 #include <signal.h>     // ::signal, ::raise
 #include <boost/stacktrace.hpp>
+#include <boost/exception/error_info.hpp>
+#include <boost/exception/info.hpp>
+#include <boost/exception/enable_error_info.hpp>
 
 using traced = boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace>;
 

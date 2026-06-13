@@ -1,12 +1,15 @@
 #pragma once
 
 #include <boost/dll/import.hpp>
+#include <memory>
 #include <string_view>
 
 //NOTE(darius) needed to check dll creation date
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef _WIN32
 #define stat _stat
+#endif
 
 class Scene;
 class Object;
@@ -49,7 +52,7 @@ public:
 
 private:
 	GameState* instance = nullptr;
-    boost::shared_ptr<ScriptRoutine> plugin;
+    std::shared_ptr<ScriptRoutine> plugin;   // boost::dll::import_symbol returns std::shared_ptr
 	int time = 0;
 	std::string path;
 };

@@ -1,4 +1,6 @@
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 #include "Mesh.h"
 #include <Rendering/OpenglWrapper.h>
 #include <Rendering/Renderer.h>
@@ -175,6 +177,7 @@ void Mesh::prepareTextures(Shader& shader)
 
         //OpenglWrapper::SetShaderInt(shader.getShader(), (name + "_was_set").c_str(), 666);
         shader.setInt((name + "_was_set"), 666);
+        shader.setInt(name + "1", number);
         OpenglWrapper::ActivateTexture(GL_TEXTURE0 + number);
         OpenglWrapper::BindTexture(static_cast<int>(textures[i].get_texture()));
         //OpenglWrapper::BindTexture(Renderer::shaderLibInstance->depthMap);
