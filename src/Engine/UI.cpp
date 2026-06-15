@@ -935,6 +935,10 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 	ImGui::DragFloat("camera speed", GameState::instance->cam.getCameraSpeed(), 0.1f, 0, 100, "%.3f", 1);
 
 	ImGui::Checkbox("Enable Frustum Culling", &GameState::cullEnabled);
+	ImGui::Checkbox("Enable Occlusion Culling", &GameState::occlusionCullEnabled);
+	ImGui::Checkbox("Log Occlusion Debug", &OcclusionCuller::debugLog);
+	ImGui::SliderInt("Occluder Budget", &OcclusionCuller::occluderBudget, 0, 256);
+	ImGui::SliderInt("Occluder Tri Budget", &OcclusionCuller::occluderTriBudget, 0, 50000);
 	ImGui::Checkbox("Enable Shadows", &GameState::shadowEnabled);
 
 	ImGui::DragFloat("gamma brightness", &GameState::gammaBrightness, 0.005f, 0, 10, "%.0001f", 1);
@@ -991,6 +995,22 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 	ImGui::Text("Instanced Draw Calls Count: ");
 	ImGui::SameLine();
 	ImGui::Text(std::to_string(Renderer::drawCallsInstancedCount).c_str());
+
+	ImGui::Text("Occlusion Culled Count: ");
+	ImGui::SameLine();
+	ImGui::Text(std::to_string(OcclusionCuller::culledCount).c_str());
+
+	ImGui::Text("Occlusion Considered Count: ");
+	ImGui::SameLine();
+	ImGui::Text(std::to_string(OcclusionCuller::consideredCount).c_str());
+
+	ImGui::Text("Occlusion Skipped Draws: ");
+	ImGui::SameLine();
+	ImGui::Text(std::to_string(OcclusionCuller::skippedDraws).c_str());
+
+	ImGui::Text("Occluders Rasterized: ");
+	ImGui::SameLine();
+	ImGui::Text(std::to_string(OcclusionCuller::occluderCount).c_str());
 
 	ImGui::End();
 }

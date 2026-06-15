@@ -41,6 +41,7 @@ public:
     static int editor_mode;
 	static std::string engine_path;
 	static bool cullEnabled;
+	static bool occlusionCullEnabled;
 	static bool shadowEnabled;
 
 	//TODO(darius) make it a class

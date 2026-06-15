@@ -85,7 +85,21 @@ public:
     	origin = GameState::instance->cam.getCameraPos();
     }
 
-private:	
+	static int culledCount;
+
+	static int consideredCount;
+
+	static bool debugLog;
+
+	static int skippedDraws;
+
+	static int occluderCount;
+
+	static int occluderBudget;
+
+	static int occluderTriBudget;
+
+private:
 	static glm::vec3 origin;
 	static Rasterizer raster;
 };

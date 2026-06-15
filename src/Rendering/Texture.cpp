@@ -42,7 +42,7 @@ Texture::Texture(unsigned char* data, size_t W, size_t H, unsigned int format)
 	bind();
 
 	if(data){
-		imageTexture(format, W, H);
+		imageTexture(format, W, H, data);
 		filters();
 	}
 

@@ -111,11 +111,12 @@ MeshAABB Mesh::getAABB()
 
 void Mesh::updateAABB(Transform tr)
 {
-    //Timer t(1);
-    //TODO(darius) optimise here
-    glm::vec3 aabbNewCenter = tr.matrix * glm::vec4(((aabb.min + aabb.max) * 0.5f), 1.0f); 
-    if(aabb.size != tr.getScale() || aabb.center != aabbNewCenter)
-        calculateAabb(tr);
+    //TODO(darius) verify this optimisation works when stuff moves around
+    if(tr.matrix == aabbCacheMatrix)
+        return;
+
+    calculateAabb(tr);
+    aabbCacheMatrix = tr.matrix;
 }
 
 void Mesh::Draw(Shader& shader, int instancedAmount)

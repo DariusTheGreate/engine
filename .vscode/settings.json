@@ -1,3 +1,36 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+
+    // ---- C++ language server: use clangd (reads build-mac/compile_commands.json),
+    //      disable the Microsoft IntelliSense engine so they don't fight ----
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.arguments": [
+        "--compile-commands-dir=build-mac",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=never",
+        "--completion-style=detailed"
+    ],
+
+    // ---- (4) Inlay hints: show parameter names at call sites (+ type hints) ----
+    "editor.inlayHints.enabled": "on",
+    "clangd.inlayHints.enable": true,
+    "clangd.inlayHints.parameterNames": true,
+    "clangd.inlayHints.deducedTypes": true,
+
+    // ---- (3) Vim normal-mode navigation (gd / gD / gb) ----
+    "vim.normalModeKeyBindingsNonRecursive": [
+        {
+            "before": ["g", "d"],
+            "commands": ["editor.action.revealDefinition"]
+        },
+        {
+            "before": ["g", "D"],
+            "commands": ["editor.action.revealDeclaration"]
+        },
+        {
+            "before": ["g", "b"],
+            "commands": ["workbench.action.navigateBack"]
+        }
+    ]
 }

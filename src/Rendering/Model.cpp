@@ -51,10 +51,14 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
 
         //TODO(darius) move to separate thread?
 
-        if(GameState::cullEnabled)
-            meshes[i].updateAABB(obj->getTransform());//TODO(darius) mega slow 
+        if(GameState::occlusionCullEnabled && meshes[i].isOccluded())
+        {
+            OcclusionCuller::skippedDraws++;
+            continue;
+        }
 
-        //OcclusionCuller::cull(meshes[i].getAABB(), {});
+        if(GameState::cullEnabled)
+            meshes[i].updateAABB(obj->getTransform());//TODO(darius) mega slow
 
         //if(!GameState::cullEnabled || FrustumCuller::cull(meshes[i].getAABB()))
         if(FrustumCuller::cull(meshes[i].getAABB()))

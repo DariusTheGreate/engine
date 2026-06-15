@@ -105,7 +105,11 @@ public:
     std::vector<unsigned int> generateLOD();
 
     void updateAABB(Transform tr);
-    
+
+    void setOccluded(bool v) { occluded = v; }
+
+    bool isOccluded() const { return occluded; }
+
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation
@@ -121,6 +125,10 @@ protected:
     bool initialized = false;
 
     MeshAABB aabb;
+
+    glm::mat4 aabbCacheMatrix = glm::mat4(0.0f);
+
+    bool occluded = false;
 
     //NOTE(darius) probably not the best way to do it
     MeshType type = MeshType::MESH;

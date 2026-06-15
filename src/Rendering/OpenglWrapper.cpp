@@ -197,6 +197,7 @@ void OpenglWrapper::UnbindTexture()
 
 void OpenglWrapper::ImageTexture(int format, size_t width, size_t height, unsigned char* data, int target, int type, int lvl, int border)
 {
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexImage2D(target, lvl, format, static_cast<GLsizei>(width), static_cast<GLsizei>(height), border, format, type, data);
 }
 

@@ -76,5 +76,6 @@ float GameState::gammaFactor = 1.0f;
 MouseState GameState::ms;
 
 bool GameState::cullEnabled = true;
+bool GameState::occlusionCullEnabled = true;
 bool GameState::shadowEnabled = true;
 //KeyboardState GameState::ks;

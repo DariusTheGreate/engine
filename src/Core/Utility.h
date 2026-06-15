@@ -43,9 +43,9 @@ typename std::common_type<
 >::type vmax(T0&& val1, T1&& val2, Ts&&... vs)
 {
   if (val2 < val1)
-    return vmax(val2, std::forward<Ts>(vs)...);
-  else
     return vmax(val1, std::forward<Ts>(vs)...);
+  else
+    return vmax(val2, std::forward<Ts>(vs)...);
 }
 
 
