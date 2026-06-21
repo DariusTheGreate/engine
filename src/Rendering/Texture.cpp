@@ -111,7 +111,7 @@ void Texture::set_type(std::string t)
 	type = t;
 }
 
-std::string Texture::get_path() {
+std::string Texture::get_path() const {
 	return path;
 }
 

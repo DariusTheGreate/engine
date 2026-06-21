@@ -357,7 +357,17 @@ void Renderer::render(Window* wind)
 
 	//bokeStage();
 
-	quad.DrawQuad(intermidiateFramebuffer);
+	// Screen-space ray tracing: when SSR or SSAO is on, run the G-buffer prepass
+	// and the tracing pass which composites + presents. Otherwise present as before.
+	if (GameState::ssrEnabled || GameState::ssaoEnabled || GameState::ssShadowEnabled)
+	{
+		gBufferStage();
+		ssrStage();
+	}
+	else
+	{
+		quad.DrawQuad(intermidiateFramebuffer);
+	}
 }
 
 void Renderer::deferredStage()
@@ -377,6 +387,124 @@ void Renderer::deferredStage()
 	deferredLightingBuffer.Unbind();
 
 	intermidiateFramebuffer.Blit(deferredLightingBuffer, intermidiateFramebuffer);
+}
+
+// Build (or rebuild) the float G-buffer used by screen-space ray tracing.
+// We use RGBA16F so world-space positions survive — the shared FrameBuffer helper
+// stores RGB8, which would clamp positions to [0,1] and make SSR/SSAO useless.
+void Renderer::setupGBuffer(int W, int H)
+{
+	gBufferW = W;
+	gBufferH = H;
+
+	if (gBufferFBO == 0)
+		glGenFramebuffers(1, &gBufferFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
+
+	auto makeTex = [&](unsigned int& tex, GLenum attachment) {
+		if (tex == 0)
+			glGenTextures(1, &tex);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, W, H, 0, GL_RGBA, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, tex, 0);
+	};
+
+	// GBufferFragment.glsl outputs: location 0 = gNormal, 1 = gPosition, 2 = gAlbedoSpec
+	makeTex(gNormalTex,   GL_COLOR_ATTACHMENT0);
+	makeTex(gPositionTex, GL_COLOR_ATTACHMENT1);
+	makeTex(gAlbedoTex,   GL_COLOR_ATTACHMENT2);
+
+	unsigned int attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+	glDrawBuffers(3, attachments);
+
+	if (gBufferDepthRBO == 0)
+		glGenRenderbuffers(1, &gBufferDepthRBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, gBufferDepthRBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, W, H);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, gBufferDepthRBO);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::GBUFFER:: Framebuffer is not complete!" << std::endl;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Geometry prepass: render the scene with the G-buffer shaders so SSR/SSAO have
+// world-space position + normal per pixel to march through.
+void Renderer::gBufferStage()
+{
+	if (gBufferFBO == 0 || gBufferW != (int)wind->getWidth() || gBufferH != (int)wind->getHeight())
+		setupGBuffer(wind->getWidth(), wind->getHeight());
+
+	shaderLibInstance->stage = ShaderLibrary::STAGE::DEFERRED;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, gBufferFBO);
+	glViewport(0, 0, gBufferW, gBufferH);
+
+	// clear to zero so background pixels have a zero normal (our "no geometry" flag)
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	OpenglWrapper::EnableDepthTest();
+
+	renderAll(wind);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Full-screen screen-space ray tracing pass: trace reflections + ambient occlusion
+// through the G-buffer, composite onto the lit image, and present to the screen.
+void Renderer::ssrStage()
+{
+	Shader& ssr = shaderLibInstance->getSsrShader();
+	shaderLibInstance->getCache().SwitchShader(ssr.getProgram());
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(0, 0, wind->getWidth(), wind->getHeight());
+	OpenglWrapper::DisableDepthTest();
+	glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glm::mat4 projection = GameState::instance->cam.getPerspective(wind->getWidth(), wind->getHeight());
+	glm::mat4 view = GameState::instance->cam.getBasicLook();
+
+	ssr.setMat4("view", view);
+	ssr.setMat4("projection", projection);
+	ssr.setVec3("viewPos", GameState::instance->cam.getCameraPos());
+
+	ssr.setInt("ssrEnabled", GameState::ssrEnabled ? 1 : 0);
+	ssr.setInt("aoEnabled", GameState::ssaoEnabled ? 1 : 0);
+	ssr.setInt("shadowEnabled", GameState::ssShadowEnabled ? 1 : 0);
+	ssr.setFloat("reflectionStrength", GameState::ssrReflectionStrength);
+	ssr.setFloat("stepScale", GameState::ssrStepScale);
+	ssr.setInt("maxSteps", GameState::ssrMaxSteps);
+	ssr.setFloat("thicknessScale", GameState::ssrThicknessScale);
+	ssr.setFloat("aoStrength", GameState::ssaoStrength);
+	ssr.setFloat("aoRadiusScale", GameState::ssaoRadiusScale);
+	ssr.setFloat("shadowStrength", GameState::ssShadowStrength);
+	ssr.setFloat("shadowStepScale", GameState::ssShadowStepScale);
+	ssr.setInt("shadowMaxSteps", GameState::ssShadowMaxSteps);
+	ssr.setVec3("lightPos", DirectionalLight::lightPos);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, gPositionTex);
+	ssr.setInt("gPosition", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, gNormalTex);
+	ssr.setInt("gNormal", 1);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, intermidiateFramebuffer.getTexture().get_texture());
+	ssr.setInt("sceneColor", 2);
+
+	quad.bindQuadVAO();
+	quad.drawArrays();
+
+	glActiveTexture(GL_TEXTURE0);
 }
 
 void Renderer::EditorIDsStage() 

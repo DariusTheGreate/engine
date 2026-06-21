@@ -74,6 +74,12 @@ void InputManager::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
         GameState::instance->ks.set_cntrl(true);
     }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+        GameState::instance->ks.set_space(true);
+    }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+        GameState::instance->ks.set_space(false);
+    }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_RELEASE) {
         GameState::instance->ks.set_w(false);
     }

@@ -66,6 +66,13 @@ public:
 
 	void addChild(Object* obj);
 
+	Object* getParent();
+
+	void setParent(Object* p);
+
+	//removes `child` from this object's child list (does not delete it)
+	void removeChild(Object* child);
+
 	void traverseChilds(std::function<void(Object*)> functor);
 
 	void traverseObjects(std::function<void(Object*)> functor, bool include_root = false);

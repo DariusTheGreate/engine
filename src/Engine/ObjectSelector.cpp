@@ -59,6 +59,29 @@ int ObjectSelector::ReadPixel(int x, int y)
     return static_cast<int>(pickedID);
 }
 
+PickResult ObjectSelector::ReadPick(int x, int y)
+{
+    buff.setTaget(GL_READ_FRAMEBUFFER);
+    buff.Bind();
+
+    OpenglWrapper::ReadBuffer();
+    float pixel[4] = { 0, 0, 0, 0 };
+    OpenglWrapper::ReadPixels(x, y, &pixel);
+
+    buff.Unbind();
+    OpenglWrapper::ReadZeroBuffer();
+
+    //NOTE(darius) must match the encoding in ShaderLibrary::shaderRoutine (EDITOR_ID):
+    //R = object ID, G = mesh index low byte, B = mesh index high byte.
+    PickResult res;
+    res.objectID  = static_cast<int>(pixel[0] * 255 + 0.5f);
+    int meshLow   = static_cast<int>(pixel[1] * 255 + 0.5f);
+    int meshHigh  = static_cast<int>(pixel[2] * 255 + 0.5f);
+    res.meshIndex = (meshHigh << 8) | meshLow;
+
+    return res;
+}
+
 glm::vec3 ObjectSelector::GetRayFromMouse(float mouseX, float mouseY, Window* w)
 {
     mouseX = (2.0f * mouseX) / static_cast<float>(w->getWidth()) - 1.0f;

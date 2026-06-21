@@ -31,8 +31,10 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         cubeMapVertex(GameState::engine_path + "shaders/cubeMapVertex.glsl", GL_VERTEX_SHADER),
         cubeMapFragment(GameState::engine_path + "shaders/cubeMapFragment.glsl", GL_FRAGMENT_SHADER),
         quadVertex(GameState::engine_path + "shaders/quadShader.glsl", GL_VERTEX_SHADER),
-        quadFragment(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER)
-    
+        quadFragment(GameState::engine_path + "shaders/quadShaderFragment.glsl", GL_FRAGMENT_SHADER),
+        ssrVertex(GameState::engine_path + "shaders/ssrVertex.glsl", GL_VERTEX_SHADER),
+        ssrFragment(GameState::engine_path + "shaders/ssrFragment.glsl", GL_FRAGMENT_SHADER)
+
     {
         lightingVertex.compile();
         lightingFragment.compile();
@@ -89,7 +91,11 @@ ShaderLibrary::ShaderLibrary() : lightingVertex(GameState::engine_path + "shader
         quadVertex.compile();
         quadFragment.compile();
         quadVertex.link(quadFragment);
-        
+
+        ssrVertex.compile();
+        ssrFragment.compile();
+        ssrVertex.link(ssrFragment);
+
         stage = STAGE::DEPTH;
     }
 
@@ -184,6 +190,11 @@ Shader& ShaderLibrary::getCubeMapShader()
 Shader& ShaderLibrary::getQuadShader()
 {
     return quadVertex;
+}
+
+Shader& ShaderLibrary::getSsrShader()
+{
+    return ssrVertex;
 }
 
 void ShaderLibrary::checkForShaderReload() 
@@ -332,6 +343,18 @@ void ShaderLibrary::checkForShaderReload()
 
         std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN QUAD SHADER: " << std::endl;
     }
+
+    if (ssrFragment.checkForSourceChanges() || ssrVertex.checkForSourceChanges())
+    {
+        ssrVertex.reload();
+        ssrFragment.reload();
+
+        ssrVertex.compile();
+        ssrFragment.compile();
+        ssrVertex.link(ssrFragment);
+
+        std::cout << "NOTIFICATION::SHADER_LIBRARY::FILE_WAS_CHANGED_RELOADING_HAPPENED IN SSR SHADER: " << std::endl;
+    }
 }
 
 void ShaderLibrary::loadCurrentShader()
@@ -391,14 +414,19 @@ void ShaderLibrary::shaderRoutine(Object* obj)
     {
         sv.setVec3("viewPos", GameState::instance->cam.getCameraPos());
         sv.setInt("lightsCount", PointLight::LightsCount);
-        sv.setFloat("gammaFactor", GameState::gammaFactor); 
-        sv.setFloat("gammaBrightness", GameState::gammaBrightness); 
+        sv.setFloat("gammaFactor", GameState::gammaFactor);
+        sv.setFloat("gammaBrightness", GameState::gammaBrightness);
         sv.setBool("shadowCaster", obj->shadowCasterRef());
+        sv.setBool("parallaxEnabled", GameState::parallaxEnabled);
+        sv.setFloat("parallaxHeightScale", GameState::parallaxHeightScale);
     }
 
     if(stage == STAGE::EDITOR_ID){
+        //NOTE(darius) R channel = object ID, G/B channels = mesh index (low/high byte).
+        //Lets us pick both the object and the exact sub-mesh in a single pass.
         double id = obj->getID();
-        sv.setVec4("PickingColor", glm::vec4{id/255,id/255,id/255,0});
+        int meshIdx = meshPickingIndex;
+        sv.setVec4("PickingColor", glm::vec4{id/255.0, (meshIdx & 0xFF)/255.0, ((meshIdx >> 8) & 0xFF)/255.0, 0});
     }
 
     if(GameState::shadowEnabled){

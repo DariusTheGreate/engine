@@ -43,6 +43,22 @@ public:
 	static bool cullEnabled;
 	static bool occlusionCullEnabled;
 	static bool shadowEnabled;
+	static bool parallaxEnabled;
+	static float parallaxHeightScale;
+
+	// --- screen-space ray tracing (SSR reflections + SSAO) ---
+	static bool ssrEnabled;
+	static bool ssaoEnabled;
+	static bool ssShadowEnabled;
+	static float ssrReflectionStrength;
+	static float ssrStepScale;
+	static int   ssrMaxSteps;
+	static float ssrThicknessScale;
+	static float ssaoStrength;
+	static float ssaoRadiusScale;
+	static float ssShadowStrength;
+	static float ssShadowStepScale;
+	static int   ssShadowMaxSteps;
 
 	//TODO(darius) make it a class
 	std::string debug_msg;

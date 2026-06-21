@@ -73,6 +73,14 @@ void KeyboardState::set_cntrl(bool state) {
 	m_keys[GLFW_KEY_LEFT_CONTROL] = state;
 }
 
+void KeyboardState::set_space(bool state) {
+	m_keys[GLFW_KEY_SPACE] = state;
+}
+
+bool KeyboardState::get_space() {
+	return m_keys[GLFW_KEY_SPACE];
+}
+
 bool KeyboardState::get_cntrl() {
 	return m_keys[GLFW_KEY_LEFT_CONTROL];
 }

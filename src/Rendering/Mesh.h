@@ -71,6 +71,10 @@ public:
 
     std::vector<Vertex>& getVerticesRef();
 
+    //shifts every vertex position by `delta` and re-uploads the vertex buffer.
+    //Used to recenter a mesh's pivot to its geometric center.
+    void offsetVertices(glm::vec3 delta);
+
     std::vector<unsigned int> getIndices();
 
     std::vector<unsigned int>& getIndicesRef();
@@ -110,6 +114,10 @@ public:
 
     bool isOccluded() const { return occluded; }
 
+    void setShininess(float s) { shininess = s; }
+
+    float getShininess() const { return shininess; }
+
 protected:
     //TODO(darius) memoryManage that
     //TODO(darius) recaclculate vertext normals after rotation
@@ -129,6 +137,9 @@ protected:
     glm::mat4 aabbCacheMatrix = glm::mat4(0.0f);
 
     bool occluded = false;
+
+    //per-mesh phong exponent (material Ns); 0 means "not provided"
+    float shininess = 0.0f;
 
     //NOTE(darius) probably not the best way to do it
     MeshType type = MeshType::MESH;

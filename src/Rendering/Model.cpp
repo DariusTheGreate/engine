@@ -9,6 +9,7 @@
 #include <Engine/OcclusionCulling.h>
 
 #include <iostream>
+#include <unordered_map>
 
 #include <stb_image.h>
 
@@ -71,6 +72,7 @@ void Model::Draw(Object* obj, std::optional<PointLight>& light, std::optional<Ma
                     Renderer::shaderLibInstance->stage = ShaderLibrary::STAGE::ALBEDO;
             }
 
+            Renderer::shaderLibInstance->meshPickingIndex = i;
             Renderer::shaderLibInstance->shaderRoutine(obj);
             meshes[i].Draw(Renderer::shaderLibInstance->getCurrShader());
         }
@@ -227,9 +229,27 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     //println("normMaps size ", normalMaps.size());
     textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
 
+    // OBJ/.mtl normal maps are often stored as map_Disp (-> DISPLACEMENT in assimp),
+    // e.g. Sponza's *_ddn.tga files. glTF/FBX use NORMALS. Treat both as normal maps.
+    std::vector<Texture> dispNormalMaps = loadMaterialTextures(material, aiTextureType_DISPLACEMENT, "texture_normal");
+    textures.insert(textures.end(), dispNormalMaps.begin(), dispNormalMaps.end());
+
+    std::vector<Texture> normalsSlotMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal");
+    textures.insert(textures.end(), normalsSlotMaps.begin(), normalsSlotMaps.end());
+
+    // real displacement map reconstructed offline from the *_ddn normals -> parallax
+    for (const auto* nm : {&normalMaps, &dispNormalMaps, &normalsSlotMaps}) {
+        std::vector<Texture> dispMaps = loadDisplacementSibling(*nm);
+        textures.insert(textures.end(), dispMaps.begin(), dispMaps.end());
+    }
+
     std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     //println("heightMaps size ", heightMaps.size());
     textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+
+    // map_d alpha mask (Sponza foliage/chains/thorns) -> per-pixel cutout
+    std::vector<Texture> opacityMaps = loadMaterialTextures(material, aiTextureType_OPACITY, "texture_opacity");
+    textures.insert(textures.end(), opacityMaps.begin(), opacityMaps.end());
 
     if (diffuseMaps.size() == 0) 
     {
@@ -268,7 +288,15 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
     ExtractBoneWeightForVertices(vertices,mesh,scene);
 
-    return Mesh(vertices, indices, textures);
+    Mesh resultMesh(vertices, indices, textures);
+
+    //per-material phong exponent (Ns); 0 means the shader uses its default
+    float shininess = 0.0f;
+    if (material->Get(AI_MATKEY_SHININESS, shininess) != AI_SUCCESS)
+        shininess = 0.0f;
+    resultMesh.setShininess(shininess);
+
+    return resultMesh;
 }
 
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName)
@@ -306,6 +334,45 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
     //println("textures loaded size ", textures.size());
 
     return textures;
+}
+
+std::vector<Texture> Model::loadDisplacementSibling(const std::vector<Texture>& normalTextures)
+{
+    // owns its key strings (unlike the string_view textures_set), safe to cache across meshes
+    static std::unordered_map<std::string, Texture> dispCache;
+
+    std::vector<Texture> out;
+    for (const auto& nt : normalTextures)
+    {
+        std::string p = nt.get_path();
+
+        // derive the "_height" sibling filename (e.g. xxx_ddn.tga -> xxx_height.tga)
+        std::string hp;
+        size_t pos = p.find("_ddn");
+        if (pos != std::string::npos)
+            hp = p.substr(0, pos) + "_height" + p.substr(pos + 4);
+        else {
+            size_t dot = p.find_last_of('.');
+            if (dot == std::string::npos)
+                continue;
+            hp = p.substr(0, dot) + "_height" + p.substr(dot);
+        }
+
+        auto cached = dispCache.find(hp);
+        if (cached != dispCache.end()) {
+            out.push_back(cached->second);
+            continue;
+        }
+
+        auto textID = ImageUtils::TextureFromFile(hp.c_str(), this->directory);
+        if (textID == 0)
+            continue;
+
+        Texture t(textID, hp, "texture_disp");
+        dispCache.emplace(hp, t);
+        out.push_back(t);
+    }
+    return out;
 }
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)

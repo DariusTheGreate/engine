@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <algorithm>
 
 Object::Object(const Object& copy_me) = default;
 
@@ -119,6 +120,21 @@ Transform& Object::getTransform()
 Transform& Object::getParentTransform()
 {
     return tr;
+}
+
+Object* Object::getParent()
+{
+    return parent;
+}
+
+void Object::setParent(Object* p)
+{
+    parent = p;
+}
+
+void Object::removeChild(Object* child)
+{
+    childObjects.erase(std::remove(childObjects.begin(), childObjects.end(), child), childObjects.end());
 }
 
 void Object::moveTransform(glm::vec3 v)

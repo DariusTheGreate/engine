@@ -40,6 +40,8 @@ public:
 
 	void set_9(bool state);
 
+	void set_space(bool state);
+
 	bool get_w();
 
 	bool get_a();
@@ -69,6 +71,8 @@ public:
 	bool get_4();
 
 	bool get_9();
+
+	bool get_space();
 
 	bool get_cntrl();
 

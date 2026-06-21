@@ -97,6 +97,11 @@ public:
 
     void updateInput();
 
+    //NOTE(darius) splits mesh `meshIndex` out of `src`'s Model into its own
+    //standalone scene Object (placed at the same transform) and removes it from
+    //the source. Returns the new object, or nullptr if the index is invalid.
+    Object* extractSubMesh(Object* src, int meshIndex);
+
     void updateCamera();
 
     void processEvents();

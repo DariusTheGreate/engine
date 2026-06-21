@@ -144,7 +144,7 @@ public:
 
 	void set_type(std::string t);
 	
-	std::string get_path();
+	std::string get_path() const;
 
 private:
 	unsigned int texture = 0;

@@ -279,6 +279,14 @@ public:
     
     void deferredStage();
 
+    // --- screen-space ray tracing (SSR + SSAO) ---
+    // float G-buffer prepass (world-space position + normal) feeding the SSR pass
+    void setupGBuffer(int W, int H);
+    void gBufferStage();
+    // full-screen pass that traces reflections / AO through the G-buffer and
+    // composites onto the lit image, then presents to the screen
+    void ssrStage();
+
     void resizeFrameBuffers(int W, int H);
 
     void resizeWindow(int W, int H);
@@ -299,6 +307,16 @@ public:
 	FrameBuffer bufferCombination;
     FrameBuffer bokeBuffer;
     FrameBuffer deferredLightingBuffer;
+
+    // raw-GL float G-buffer for screen-space ray tracing (RGB16F so world-space
+    // positions aren't clamped to [0,1] like the shared RGB8 FrameBuffers are)
+    unsigned int gBufferFBO = 0;
+    unsigned int gPositionTex = 0;
+    unsigned int gNormalTex = 0;
+    unsigned int gAlbedoTex = 0;
+    unsigned int gBufferDepthRBO = 0;
+    int gBufferW = 0;
+    int gBufferH = 0;
 
     static ShaderLibrary* shaderLibInstance;
 

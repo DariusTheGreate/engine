@@ -246,10 +246,32 @@ void Editor::updateInput() {
     if(GameState::instance->ks.get_mouse_left_button() && !leftMouseButtonIsOnHold)
     {
         //selector.ProbeSceneObjects(&currScene, static_cast<float>(GameState::ms.click_x), static_cast<float>(GameState::ms.click_y), getWindow(), getRenderer());
-        int picked = selector.ReadPixel(GameState::ms.click_x, getWindow()->getHeight() - 1 - GameState::ms.click_y);
-        Object* pickedObj = currScene.getObjectByID(picked);
+        //NOTE(darius) the cursor position is in window points but the picking buffer is
+        //sized in framebuffer pixels. On high-DPI/Retina displays these differ (e.g. 2x),
+        //so scale the click into pixel space before sampling. On 1:1 displays scale == 1.
+        int winW = 0, winH = 0, fbW = 0, fbH = 0;
+        glfwGetWindowSize(getWindow()->getWindow(), &winW, &winH);
+        glfwGetFramebufferSize(getWindow()->getWindow(), &fbW, &fbH);
+        float scaleX = winW ? static_cast<float>(fbW) / winW : 1.0f;
+        float scaleY = winH ? static_cast<float>(fbH) / winH : 1.0f;
+        int pickX = static_cast<int>(GameState::ms.click_x * scaleX);
+        int pickY = static_cast<int>(GameState::ms.click_y * scaleY);
+        PickResult pick = selector.ReadPick(pickX, fbH - 1 - pickY);
+        Object* pickedObj = currScene.getObjectByID(pick.objectID);
         if (pickedObj != nullptr) {
-            ui.setItemClicked(pickedObj);
+            //NOTE(darius) space + click extracts the exact sub-mesh under the cursor
+            //into its own standalone object instead of selecting the whole model.
+            if (GameState::instance->ks.get_space() && pickedObj->getModel()
+                && pick.meshIndex >= 0 && pick.meshIndex < static_cast<int>(pickedObj->getModel()->meshes.size()))
+            {
+                Object* extracted = extractSubMesh(pickedObj, pick.meshIndex);
+                if (extracted)
+                    ui.setItemClickedForced(extracted);
+            }
+            else
+            {
+                ui.setItemClicked(pickedObj);
+            }
             /*if(currScene.recoverBatch(pickedObj))
             {
                 rendol.EditorIDsStage();
@@ -268,6 +290,39 @@ void Editor::updateInput() {
     {
         leftMouseButtonIsOnHold = false;
     }
+}
+
+Object* Editor::extractSubMesh(Object* src, int meshIndex)
+{
+    auto& srcModel = src->getModel();
+    if (!srcModel || meshIndex < 0 || meshIndex >= static_cast<int>(srcModel->meshes.size()))
+        return nullptr;
+
+    //NOTE(darius) Mesh copy shares the same VAO/VBO/EBO (no GPU re-upload), and Mesh
+    //has no destructor that frees them, so both the copy and the soon-to-be-erased
+    //source element stay valid.
+    Mesh extractedMesh = srcModel->meshes[meshIndex];
+
+    Object* obj = currScene.createObject(src->getName() + "_mesh" + std::to_string(meshIndex));
+    obj->addModel(std::move(extractedMesh));
+
+    //place the new object exactly where the source sat so the mesh doesn't move.
+    //Vertices are still in the source model's local space, so the gizmo pivot stays
+    //at the source origin until the object is promoted to standalone (see UI).
+    obj->getTransform().setMatrix(src->getTransform().matrix);
+
+    //nest it under the source in the hierarchy. It stays a top-level scene object too
+    //(so it keeps an ID and remains pickable in the viewport); the scene tree hides the
+    //duplicate top-level entry for objects that have a parent.
+    obj->setParent(src);
+    src->addChild(obj);
+
+    //remove it from the source model so it isn't drawn (and picked) twice
+    srcModel->meshes.erase(srcModel->meshes.begin() + meshIndex);
+
+    currScene.updateObjectsIDs();
+
+    return obj;
 }
 
 void Editor::updateCamera()

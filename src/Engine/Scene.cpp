@@ -731,12 +731,16 @@ void Scene::parseScene(std::string_view data)
 	{
 		size_t i = 0;
 
-		while (i < data.size()) 
+		while (i < data.size())
 		{
 			size_t oPos1 = data.find("Object", i);
+			if (oPos1 == std::string::npos)
+				break;
 			size_t oPos2 = data.find("Object", oPos1+1);
+			objectTokens.emplace_back(data.substr(oPos1, oPos2 == std::string::npos ? std::string::npos : oPos2-oPos1));
+			if (oPos2 == std::string::npos)
+				break;
 			i = oPos2;
-			objectTokens.emplace_back(data.substr(oPos1, oPos2-oPos1));
 		}
 	}
 

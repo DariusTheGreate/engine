@@ -220,6 +220,11 @@ void UI::sceneWindow(Scene& scene, Renderer& r)
 				if (!objects[i])
 					continue;
 
+				//objects with a parent are shown nested under that parent below, so
+				//skip them here to avoid a duplicate top-level entry
+				if (objects[i]->getParent())
+					continue;
+
 				//TODO(darius) selectalbes here? This chunk can be used to create selectable think
 				/*
 				ImGui::Selectable(objects[i]->getName().c_str());
@@ -594,6 +599,39 @@ void UI::showObjectWindow(Object* obj, Renderer& r, Scene& scene)
 		Object* child = scene.createSubobject(obj, emptyCreated++);
 	}
 
+	//Detaches this object from its parent and recenters its pivot onto its own
+	//geometry, so the transform gizmo ends up at the center of the mesh instead
+	//of at the (inherited) parent origin. Only meaningful for parented objects
+	//(e.g. a mesh extracted out of a big model via space+click).
+	if (obj->getParent() && ImGui::Button("Make standalone")) {
+		auto& model = obj->getModel();
+		if (model && !model->meshes.empty()) {
+			//geometric center of all the object's meshes, in local vertex space
+			glm::vec3 vmin(FLT_MAX), vmax(-FLT_MAX);
+			for (auto& mesh : model->meshes)
+				for (auto& v : mesh.getVerticesRef()) {
+					vmin = glm::min(vmin, glm::vec3(v.Position));
+					vmax = glm::max(vmax, glm::vec3(v.Position));
+				}
+			glm::vec3 center = (vmin + vmax) * 0.5f;
+
+			//world location of that center (the shader applies a 0.1 scale after the
+			//object matrix, so account for it here)
+			glm::mat4 T = obj->getTransform().matrix;
+			glm::vec3 worldCenter = glm::vec3(T * glm::vec4(0.1f * center, 1.0f));
+
+			//move the geometry so its pivot is the center, then move the object so it
+			//still renders in the exact same place -> gizmo now sits on the mesh
+			for (auto& mesh : model->meshes)
+				mesh.offsetVertices(-center);
+			obj->getTransform().setPosition(worldCenter);
+		}
+
+		//become a fully independent top-level object
+		obj->getParent()->removeChild(obj);
+		obj->setParent(nullptr);
+	}
+
 	//guizmoWindow();
 
 	ImGui::End();
@@ -940,6 +978,23 @@ void UI::showEditorSettingsWindow(Renderer& hui)
 	ImGui::SliderInt("Occluder Budget", &OcclusionCuller::occluderBudget, 0, 256);
 	ImGui::SliderInt("Occluder Tri Budget", &OcclusionCuller::occluderTriBudget, 0, 50000);
 	ImGui::Checkbox("Enable Shadows", &GameState::shadowEnabled);
+	ImGui::Checkbox("Enable Parallax Mapping", &GameState::parallaxEnabled);
+	ImGui::DragFloat("Parallax Height Scale", &GameState::parallaxHeightScale, 0.005f, 0, 1, "%.003f", 1);
+
+	ImGui::Separator();
+	ImGui::Text("Screen-space ray tracing");
+	ImGui::Checkbox("Enable SSR (reflections)", &GameState::ssrEnabled);
+	ImGui::Checkbox("Enable SSAO (occlusion)", &GameState::ssaoEnabled);
+	ImGui::Checkbox("Enable SS Contact Shadows", &GameState::ssShadowEnabled);
+	ImGui::DragFloat("SSR Reflection Strength", &GameState::ssrReflectionStrength, 0.01f, 0, 2, "%.003f", 1);
+	ImGui::DragFloat("SSR Step Scale", &GameState::ssrStepScale, 0.01f, 0.05f, 10, "%.003f", 1);
+	ImGui::SliderInt("SSR Max Steps", &GameState::ssrMaxSteps, 1, 128);
+	ImGui::DragFloat("SSR Thickness Scale", &GameState::ssrThicknessScale, 0.05f, 0.1f, 20, "%.003f", 1);
+	ImGui::DragFloat("SSAO Strength", &GameState::ssaoStrength, 0.01f, 0, 4, "%.003f", 1);
+	ImGui::DragFloat("SSAO Radius Scale", &GameState::ssaoRadiusScale, 0.001f, 0.001f, 0.5f, "%.004f", 1);
+	ImGui::DragFloat("Shadow Strength", &GameState::ssShadowStrength, 0.01f, 0, 1, "%.003f", 1);
+	ImGui::DragFloat("Shadow Step Scale", &GameState::ssShadowStepScale, 0.01f, 0.05f, 10, "%.003f", 1);
+	ImGui::SliderInt("Shadow Max Steps", &GameState::ssShadowMaxSteps, 1, 128);
 
 	ImGui::DragFloat("gamma brightness", &GameState::gammaBrightness, 0.005f, 0, 10, "%.0001f", 1);
 

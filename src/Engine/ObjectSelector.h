@@ -14,14 +14,25 @@
 
 class Object;
 
+//NOTE(darius) result of a single picking-buffer read: which object and which
+//sub-mesh within that object's Model were under the cursor. meshIndex is only
+//meaningful when the EDITOR_ID stage encoded it (it always does now).
+struct PickResult
+{
+    int objectID = -1;
+    int meshIndex = -1;
+};
+
 class ObjectSelector
 {
 public:
     ObjectSelector() = default;
 
     ObjectSelector(int W, int H);
-    
+
     int ReadPixel(int x, int y);
+
+    PickResult ReadPick(int x, int y);
 
     glm::vec3 GetRayFromMouse(float mouseX, float mouseY, Window* w);
 

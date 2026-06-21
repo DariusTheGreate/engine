@@ -82,6 +82,10 @@ private:
 
     std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, const std::string& typeName);
 
+    // loads a sibling "_height" grayscale map for a "_ddn" normal map (real
+    // displacement reconstructed offline). Returns empty if none exists.
+    std::vector<Texture> loadDisplacementSibling(const std::vector<Texture>& normalTextures);
+
     void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
   
 public:

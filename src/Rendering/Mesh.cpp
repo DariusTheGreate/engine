@@ -89,6 +89,18 @@ void Mesh::clearMesh()
     ebo.deleteEBO();
 }
 
+void Mesh::offsetVertices(glm::vec3 delta)
+{
+    for (auto& v : vertices)
+        v.Position += delta;
+
+    //re-upload the modified positions to the existing GPU buffers
+    setupMesh();
+
+    //invalidate the cached AABB so it gets recomputed on next draw
+    aabbCacheMatrix = glm::mat4(0.0f);
+}
+
 VAO Mesh::getVao()
 {
     return vao;
@@ -150,6 +162,11 @@ void Mesh::prepareTextures(Shader& shader)
     shader.setInt(("texture_normal_was_set"), 667);
     shader.setInt(("texture_specular_was_set"), 667);
     shader.setInt(("texture_height_was_set"), 667);
+    shader.setInt(("texture_opacity_was_set"), 667);
+    shader.setInt(("texture_disp_was_set"), 667);
+
+    //per-mesh phong exponent (material Ns); shader falls back to a default when 0
+    shader.setFloat("meshShininess", shininess);
 
     for (int i = 0; i < textures.size(); i++)
     {
@@ -163,6 +180,11 @@ void Mesh::prepareTextures(Shader& shader)
             number = (2);
         else if (name == "texture_height")
             number = (3);
+        //NOTE(darius) unit 4 is reserved for the shadow depthMap
+        else if (name == "texture_opacity")
+            number = (5);
+        else if (name == "texture_disp")
+            number = (6);
 
         //std::cout << (name + std::to_string(number)) << "\n";
         //std::cout << "texture: " << textures[i].get_path() << " " << textures[i].get_type() << "\n";

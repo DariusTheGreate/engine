@@ -56,6 +56,8 @@ public:
 
     Shader& getQuadShader();
 
+    Shader& getSsrShader();
+
     void loadCurrentShader();
     
     void shaderRoutine(Object* obj);
@@ -70,6 +72,10 @@ public:
     }
 
     STAGE stage;
+
+    //NOTE(darius) index of the mesh currently being drawn within its Model.
+    //Used by the EDITOR_ID stage to encode per-mesh picking IDs (green/blue channels).
+    int meshPickingIndex = 0;
 
     unsigned int depthMap = 0;
 private:
@@ -115,6 +121,9 @@ private:
 
     Shader quadVertex;
     Shader quadFragment;
+
+    Shader ssrVertex;
+    Shader ssrFragment;
 
     GraphicsStateCache cache;
 };

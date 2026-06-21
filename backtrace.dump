@@ -1,20 +1,11 @@
- 0# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::init at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:77
- 1# boost::stacktrace::basic_stacktrace<std::allocator<boost::stacktrace::frame> >::basic_stacktrace<std::allocator<boost::stacktrace::frame> > at E:\own\c++\libs\boost_1_82_0\boost\boost\stacktrace\stacktrace.hpp:130
- 2# StackTrace::setSignalHandlers at E:\own\programming\engine\src\Engine\StackTrace.cpp:26
- 3# raise in ucrtbased
- 4# setmbcp in ucrtbased
- 5# CrtSetReportHookW2 in ucrtbased
- 6# VCrtDbgReportA in ucrtbased
- 7# CrtDbgReport in ucrtbased
- 8# std::_Tree_const_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<int const ,char> > > >::operator* at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xtree:183
- 9# std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<int const ,char> > > >::operator* at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xtree:276
-10# std::_Tree_iterator<std::_Tree_val<std::_Tree_simple_types<std::pair<int const ,char> > > >::operator-> at C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xtree:279
-11# interval_map<int,char>::assign at E:\own\programming\engine\src\Engine\UnitTests.cpp:89
-12# UnitTests::run at E:\own\programming\engine\src\Engine\UnitTests.cpp:183
-13# main at E:\own\programming\engine\src\main.cpp:25
-14# invoke_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:79
-15# __scrt_common_main_seh at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:288
-16# __scrt_common_main at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_common.inl:331
-17# mainCRTStartup at D:\a\_work\1\s\src\vctools\crt\vcstartup\src\startup\exe_main.cpp:17
-18# BaseThreadInitThunk in KERNEL32
-19# RtlUserThreadStart in ntdll
+ 0# StackTrace::setSignalHandlers(int) in /Users/wayne/Desktop/engine/build-mac/DEAN
+ 1# _sigtramp in /usr/lib/system/libsystem_platform.dylib
+ 2# pthread_kill in /usr/lib/system/libsystem_pthread.dylib
+ 3# abort in /usr/lib/system/libsystem_c.dylib
+ 4# __cxxabiv1::__shim_type_info::~__shim_type_info() in /usr/lib/libc++abi.dylib
+ 5# demangling_terminate_handler() in /usr/lib/libc++abi.dylib
+ 6# _objc_terminate() in /usr/lib/libobjc.A.dylib
+ 7# std::__terminate(void (*)()) in /usr/lib/libc++abi.dylib
+ 8# __cxa_get_exception_ptr in /usr/lib/libc++abi.dylib
+ 9# __cxa_get_globals in /usr/lib/libc++abi.dylib
+10# main in /Users/wayne/Desktop/engine/build-mac/DEAN

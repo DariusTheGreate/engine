@@ -55,13 +55,24 @@ uniform bool shadowCaster;
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_normal1;
 uniform sampler2D texture_specular1;
-uniform sampler2D texture_height1;
+uniform sampler2D texture_height1;   // map_Ka (ambient) map
+uniform sampler2D texture_opacity1;  // map_d (alpha mask)
+uniform sampler2D texture_disp1;     // reconstructed displacement/height (grayscale)
 uniform sampler2D depthMap;
 
 uniform int texture_diffuse_was_set;
 uniform int texture_normal_was_set;
 uniform int texture_specular_was_set;
 uniform int texture_height_was_set;
+uniform int texture_opacity_was_set;
+uniform int texture_disp_was_set;
+
+// per-mesh phong exponent from the material (Ns); 0 means "not provided"
+uniform float meshShininess;
+
+// parallax occlusion mapping (height sampled from the normal/_ddn map alpha)
+uniform bool  parallaxEnabled;
+uniform float parallaxHeightScale;
 
 uniform float gammaBrightness;
 
@@ -100,7 +111,43 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     if(closestDepth + bias < currentDepth)
         return 0.95;
     return 0.8;
-}  
+}
+
+// UV actually sampled by the material (may be parallax-offset). Set in main().
+vec2 finalUV;
+
+// Steep / occlusion parallax. Height is stored in the alpha of the _ddn normal map.
+vec2 parallaxMapping(vec2 texCoords, vec3 viewDirTS)
+{
+    const float minLayers = 8.0;
+    const float maxLayers = 32.0;
+    float numLayers = mix(maxLayers, minLayers, abs(dot(vec3(0.0, 0.0, 1.0), viewDirTS)));
+
+    float layerDepth = 1.0 / numLayers;
+    float currentLayerDepth = 0.0;
+
+    vec2 P = viewDirTS.xy * parallaxHeightScale;
+    vec2 deltaTexCoords = P / numLayers;
+
+    vec2 currentTexCoords = texCoords;
+    float currentDepthMapValue = 1.0 - texture(texture_disp1, currentTexCoords).r;
+
+    for(int i = 0; i < 64; ++i)
+    {
+        if(currentLayerDepth >= currentDepthMapValue)
+            break;
+        currentTexCoords -= deltaTexCoords;
+        currentDepthMapValue = 1.0 - texture(texture_disp1, currentTexCoords).r;
+        currentLayerDepth += layerDepth;
+    }
+
+    // interpolate between the last two layers for a smooth result
+    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+    float afterDepth  = currentDepthMapValue - currentLayerDepth;
+    float beforeDepth = (1.0 - texture(texture_disp1, prevTexCoords).r) - currentLayerDepth + layerDepth;
+    float weight = afterDepth / (afterDepth - beforeDepth);
+    return mix(currentTexCoords, prevTexCoords, weight);
+}
 
 void main()
 {
@@ -125,23 +172,35 @@ void main()
             return;
     }
 
-    vec4 texColor = texture(texture_diffuse1, TexCoords);
+    // --- parallax occlusion mapping (height in normal/_ddn map alpha) ---
+    finalUV = TexCoords;
+    if(parallaxEnabled && parallaxHeightScale > 0.0 && texture_disp_was_set == 666)
+    {
+        // world-space view dir transformed into tangent space (TBN is orthonormal)
+        vec3 viewDirTS = normalize(transpose(TBN) * (viewPos - FragPos));
+        finalUV = parallaxMapping(TexCoords, viewDirTS);
+        // NOTE: no edge discard here — Sponza textures are tiled (UVs outside [0,1] with
+        // GL_REPEAT), so discarding out-of-[0,1] fragments would erase the walls.
+    }
+
+    // --- alpha-mask cutout (map_d / OPACITY), e.g. Sponza foliage & chains ---
+    if(texture_opacity_was_set == 666 && texture(texture_opacity1, finalUV).r < 0.5)
+        discard;
+
+    vec4 texColor = texture(texture_diffuse1, finalUV);
     if(texColor.a < 0.1)
         discard;
 
     vec3 norm = vec3(0.0f,0.0f,1.0f);
 
-    if(texture_normal_was_set == 666)
-        norm = texture(texture_normal1, TexCoords).rgb;
-    else
-        norm = normalize(Normal);
-
-    bool useTMN = true;
-    if(useTMN){
-        norm = normalize(TBN * (norm * 2.0 - 1.0));//if TBN exists
+    if(texture_normal_was_set == 666){
+        // tangent-space normal map: decode [0,1] -> [-1,1], then to world space via TBN
+        norm = texture(texture_normal1, finalUV).rgb;
+        norm = normalize(TBN * (norm * 2.0 - 1.0));
     }
     else{
-        norm = normalize((norm * 2.0 - 1.0)); //for flatMeshes dont forget to uncomment
+        // geometric normal is already a unit vector in [-1,1]; use as-is
+        norm = normalize(Normal);
     }
 
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -171,20 +230,38 @@ void main()
         BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
 }   
 
+// Phong exponent: per-mesh Ns first, then object-material override, else a sane default.
+float effectiveShininess()
+{
+    if(meshShininess > 0.0)
+        return meshShininess;
+    if(material.shininess > 0.0)
+        return material.shininess;
+    return 32.0;
+}
+
+// Ambient color source: dedicated ambient map (map_Ka) if present, else the diffuse texel.
+vec3 ambientTexel()
+{
+    if(texture_height_was_set == 666)
+        return vec3(texture(texture_height1, finalUV));
+    return vec3(texture(texture_diffuse1, finalUV));
+}
+
 vec3 calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
     vec3 lightDir = normalize(-light.direction);
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), effectiveShininess());
 
-    vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
+    vec3 ambient = light.ambient * ambientTexel();
+    vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, finalUV));
 
     vec3 specular = vec3(0.0f,0.0f,0.0f);
     if(texture_specular_was_set == 666)
-        specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
+        specular = light.specular * spec * vec3(texture(texture_specular1, finalUV));
 
     return (ambient + diffuse + specular);
 }
@@ -196,20 +273,20 @@ vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float diff = max(dot(normal, lightDir), 0.0);
 
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 1);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), effectiveShininess());
 
-    //vec3 halfwayDir = normalize(lightDir + viewDir);  
+    //vec3 halfwayDir = normalize(lightDir + viewDir);
     //float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
 
     float distance = length(light.position - fragPos);
     //distance /= 10;
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
-    vec3 ambient = light.ambient * vec3(texture(texture_diffuse1, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, TexCoords));
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    vec3 ambient = light.ambient * ambientTexel();
+    vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse1, finalUV));
 
     vec3 specular = vec3(0.0f,0.0f,0.0f);
     if(texture_specular_was_set == 666)
-        specular = light.specular * spec * vec3(texture(texture_specular1, TexCoords));
+        specular = light.specular * spec * vec3(texture(texture_specular1, finalUV));
 
     ambient *= attenuation;
     diffuse *= attenuation;

@@ -54,9 +54,10 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 		Mesh* mesh;
 		glm::mat4 mvp;
 		int x0, y0, x1, y1;
-		float dNear;       
-		float area;        
-		bool testable;     
+		float dNear;
+		float area;
+		bool testable;
+		bool renderable;
 	};
 
 	std::vector<Item> items;
@@ -89,26 +90,45 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 			it.mesh = &m;
 			it.mvp = mvp;
 			it.testable = true;
+			it.renderable = true;
 
 			float minX = 1e30f, minY = 1e30f, maxX = -1e30f, maxY = -1e30f, dNear = 1e30f;
+			bool anyBehind = false;
 			for(const auto& c : box.getCorners())
 			{
 				glm::vec2 s;
 				float d;
-				if(!project(VP, c, s, d)) 
+				if(!project(VP, c, s, d))
 				{
-					it.testable = false;
-					break;
+					anyBehind = true;
+					continue;
 				}
 				minX = glm::min(minX, s.x); maxX = glm::max(maxX, s.x);
 				minY = glm::min(minY, s.y); maxY = glm::max(maxY, s.y);
 				dNear = glm::min(dNear, d);
 			}
 
-			if(it.testable && (maxX < 0 || minX > Wf - 1 || maxY < 0 || minY > Hf - 1))
+			if(anyBehind)
+			{
+				// The AABB straddles the near plane. Keep it as an occluder
+				// (rasterTri clips triangles against the near plane), but we
+				// can't build a reliable screen rect / dNear, so skip the
+				// occlusion query for it. It's close to the camera, so give it
+				// top occluder priority.
 				it.testable = false;
+				it.renderable = true;
+				it.area = 1e30f;
+				items.push_back(it);
+				continue;
+			}
 
-			if(it.testable)
+			if(maxX < 0 || minX > Wf - 1 || maxY < 0 || minY > Hf - 1)
+			{
+				it.testable = false;
+				it.renderable = false;
+			}
+
+			if(it.renderable)
 			{
 				it.x0 = std::max(0, static_cast<int>(std::floor(minX)));
 				it.y0 = std::max(0, static_cast<int>(std::floor(minY)));
@@ -136,17 +156,64 @@ void OcclusionCuller::cull(std::vector<Object*> objs)
 	std::vector<int> order;
 	order.reserve(items.size());
 	for(int i = 0; i < static_cast<int>(items.size()); ++i)
-		if(items[i].testable)
+		if(items[i].renderable)
 			order.push_back(i);
 
 	std::sort(order.begin(), order.end(), [&](int a, int b){ return items[a].area > items[b].area; });
 
+	const float wNear = 1e-4f;
+
+	auto toScreen = [&](const glm::vec4& clip, glm::vec2& s, float& d)
+	{
+		float invw = 1.0f / clip.w;
+		s.x = (clip.x * invw * 0.5f + 0.5f) * Wf;
+		s.y = (clip.y * invw * 0.5f + 0.5f) * Hf;
+		d = clip.w;
+	};
+
 	auto rasterTri = [&](const glm::mat4& mvp, const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2)
 	{
-		glm::vec2 s0, s1, s2;
-		float d0, d1, d2;
-		if(project(mvp, p0, s0, d0) && project(mvp, p1, s1, d1) && project(mvp, p2, s2, d2))
+		const glm::vec4 clip[3] = {
+			mvp * glm::vec4(p0, 1.0f),
+			mvp * glm::vec4(p1, 1.0f),
+			mvp * glm::vec4(p2, 1.0f)
+		};
+
+		// Sutherland-Hodgman clip of the triangle against the near plane (w >= wNear).
+		// Without this a triangle with any vertex behind the camera would be dropped
+		// entirely, making large meshes (e.g. walls) vanish from the depth buffer when
+		// viewed up close from either side.
+		glm::vec4 poly[4];
+		int n = 0;
+		for(int i = 0; i < 3; ++i)
+		{
+			const glm::vec4& cur = clip[i];
+			const glm::vec4& prv = clip[(i + 2) % 3];
+			bool curIn = cur.w >= wNear;
+			bool prvIn = prv.w >= wNear;
+			if(curIn != prvIn)
+			{
+				float t = (wNear - prv.w) / (cur.w - prv.w);
+				poly[n++] = prv + t * (cur - prv);
+			}
+			if(curIn)
+				poly[n++] = cur;
+		}
+
+		if(n < 3)
+			return;
+
+		glm::vec2 s0;
+		float d0;
+		toScreen(poly[0], s0, d0);
+		for(int i = 1; i + 1 < n; ++i)
+		{
+			glm::vec2 s1, s2;
+			float d1, d2;
+			toScreen(poly[i], s1, d1);
+			toScreen(poly[i + 1], s2, d2);
 			raster.rasterizeTriangleDepth(s0, s1, s2, d0, d1, d2);
+		}
 	};
 
 	int budget = std::min(static_cast<int>(order.size()), occluderBudget);
